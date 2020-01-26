@@ -1148,6 +1148,24 @@ export type TPseudoClass<T extends TClasses = TClasses> = (className: T) => TTai
 
 export const classnames: TTailwind = classnamesLib as any;
 
+const style = document.createElement('style');
+const head = document.querySelector('head');
+
+head?.appendChild(style);
+
+export const addClasses = (classes: string[]) => {
+  let css = '';
+  for (let x = 0; x < classes.length; x++) {
+    const className = classes[x];
+    const cssString = classes[x + 1];
+
+    css += `.${className} ${cssString}\n`;
+    x++;
+  }
+
+  style.appendChild(document.createTextNode(css));
+};
+
 export const hover: TPseudoClass = className => `hover:${className}` as TTailwindString;
 
 export const sm: TPseudoClass = className => `sm:${className}` as TTailwindString;
