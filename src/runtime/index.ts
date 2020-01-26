@@ -12,10 +12,12 @@ head?.appendChild(style);
 export const addClasses = (classes: string[]) => {
   let css = '';
   for (let x = 0; x < classes.length; x++) {
-    const className = classes[x];
+    const classNameArray = classes[x].split(':');
+    const className = classNameArray.length === 1 ? classNameArray[0] : classNameArray[1];
+    const pseudo = classNameArray.length === 1 ? null : classNameArray[0];
     const cssString = classes[x + 1];
 
-    css += `.${className} ${cssString}\n`;
+    css += `.${pseudo ? pseudo + ':' : ''}${className}${pseudo ? ':' + pseudo : ''} ${cssString}\n`;
     x++;
   }
 
