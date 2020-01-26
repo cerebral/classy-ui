@@ -1,0 +1,12 @@
+language: node_js
+node_js:
+  - lts/boron
+  - lts/carbon
+  - lts/dubnium
+  - stable
+cache:
+  directories:
+    - $HOME/.npm
+after_success:
+  - npm i -g coveralls
+  - cat coverage/lcov.info | coveralls

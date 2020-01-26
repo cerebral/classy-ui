@@ -1,0 +1,14 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug",
+      "type": "node",
+      "request": "launch",
+      "protocol": "inspector",
+      "program": "${workspaceRoot}/node_modules/jest/bin/jest.js",
+      "args": ["--env=jsdom", "--no-cache", "--runInBand", "--findRelatedTests", "${file}"],
+      "skipFiles": ["<node_internals>/**/*.js"]
+    }
+  ]
+}
