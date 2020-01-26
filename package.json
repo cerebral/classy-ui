@@ -40,9 +40,11 @@
   ],
   "dependencies": {
     "@types/node": "^8.0.0",
+    "classnames": "^2.2.6",
     "tslib": "^1.9.3"
   },
   "devDependencies": {
+    "@types/classnames": "^2.2.9",
     "@types/jest": "^23.0.0",
     "dts-bundle": "^0.7.2",
     "jest": "^23.0.0",
