@@ -44,6 +44,36 @@ function camleToDash(string) {
     .toLowerCase();
 }
 
+function generateShortName(number) {
+  var baseChar = 'A'.charCodeAt(0),
+    letters = '';
+
+  do {
+    number -= 1;
+    letters = String.fromCharCode(baseChar + (number % 26)) + letters;
+    number = (number / 26) >> 0;
+  } while (number > 0);
+
+  return letters;
+}
+
+let globalCounter = 1;
+const classNameMap = new Map();
+
+function getClassname(realName) {
+  if (isProduction) {
+    if (classNameMap.has(realName)) {
+      return classNameMap.get(realName);
+    } else {
+      const shortName = generateShortName(globalCounter++);
+      classNameMap.set(realName, shortName);
+      return shortName;
+    }
+  } else {
+    return realName;
+  }
+}
+
 function classyUiMacro({ references, state, babel }) {
   const { types: t } = babel;
 
@@ -74,7 +104,7 @@ function classyUiMacro({ references, state, babel }) {
       if (t.isStringLiteral(node)) {
         const className = `${prefix}${node.value}`;
         collect.add(className);
-        return aggr.concat([t.stringLiteral(className)]);
+        return aggr.concat([t.stringLiteral(getClassname(className))]);
       } else if (t.isIdentifier(node)) {
         return aggr.concat([node]);
       } else if (t.isCallExpression(node) && t.isIdentifier(node.callee)) {
@@ -90,7 +120,9 @@ function classyUiMacro({ references, state, babel }) {
         return node.properties.map(prop => {
           const className = `${prefix}${prop.key.value}`;
           collect.add(className);
-          return aggr.concat(t.conditionalExpression(prop.value, t.stringLiteral(className), t.stringLiteral('')));
+          return aggr.concat(
+            t.conditionalExpression(prop.value, t.stringLiteral(getClassname(className)), t.stringLiteral('')),
+          );
         });
       }
       return aggr.concat(node);
@@ -98,16 +130,38 @@ function classyUiMacro({ references, state, babel }) {
   }
 
   function createClassnameCss(aggr, name) {
-    const [partA, partB] = name.split(':');
-    const className = partB || partA;
-    const pseudo = partB ? partA : 'NOOP';
-    let css = classes[className];
+    const parts = name.split(':');
 
-    if (pseudo) {
-      css = `:${pseudo}${classes[className]}`;
+    // This is the mapped classname
+    // that is used in production it is a short string
+    // in dev it is the same as the name
+
+    // : needs to be repleaced in the css declaration
+    const mappedClassName = getClassname(name).replace(/:/g, '\\:');
+
+    let css;
+    if (parts.length == 1) {
+      css = `.${mappedClassName}${classes[parts[0]]}`;
+    } else if (parts.length > 1) {
+      const maybeSizeClass = config.breakpoints[parts[0]];
+      let className = parts.pop();
+      if (maybeSizeClass) {
+        parts.shift(); // This is the sizeclass
+        let pseudo = parts.join(':');
+        if (pseudo.length > 0) {
+          pseudo = ':' + pseudo;
+        }
+        css = `@media(max-width: ${maybeSizeClass}){.${mappedClassName + pseudo}${classes[className]}}`;
+      } else {
+        let pseudo = parts.join(':');
+        if (pseudo.length > 0) {
+          pseudo = ':' + pseudo;
+        }
+        css = `.${mappedClassName + pseudo}${classes[className]}`;
+      }
     }
 
-    return aggr.concat([t.stringLiteral(className), t.stringLiteral(css)]);
+    return aggr.concat([t.stringLiteral(getClassname(name)), t.stringLiteral(css)]);
   }
 
   const classCollection = new Set();
