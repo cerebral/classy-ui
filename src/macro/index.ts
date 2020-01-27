@@ -1,7 +1,7 @@
 // @ts-nocheck
 import '../classy-ui';
 
-import { writeFileSync } from 'fs';
+import { writeFileSync, unlinkSync, appendFileSync } from 'fs';
 import { join } from 'path';
 
 import { config } from '../config/base.config';
@@ -9,6 +9,11 @@ import { transform as transformCss } from '../config/transform-css';
 import { transform as transformTypes } from '../config/transform-types';
 
 const isProduction = process.env.NODE_ENV === 'production';
+const prodSylePath = join(process.cwd(), 'src', 'style.css');
+
+if (isProduction) {
+  unlinkSync(prodSylePath);
+}
 
 export default classyUiMacro;
 
@@ -167,32 +172,46 @@ function classyUiMacro({ references, state, babel }) {
   const classCollection = new Set();
   const classnames = references.classnames || [];
 
-  classnames
-    .map(ref => ref.findParent(p => t.isCallExpression(p)))
-    .forEach(call => {
-      const rewrite = rewriteAndCollectArguments('', call.get('arguments'), classCollection);
-      const newExpression = convertToExpression(rewrite);
-      if (newExpression) {
-        call.replaceWith(newExpression);
-      } else {
-        call.remove();
-      }
-    });
-  if (isProduction) {
-    // TODO: Write to a CSS-File
-  } else {
-    const localAddClassUid = state.file.scope.generateUidIdentifier('addClasses');
+  if (classnames.length > 0) {
+    classnames
+      .map(ref => ref.findParent(p => t.isCallExpression(p)))
+      .forEach(call => {
+        const rewrite = rewriteAndCollectArguments('', call.get('arguments'), classCollection);
+        const newExpression = convertToExpression(rewrite);
+        if (newExpression) {
+          call.replaceWith(newExpression);
+        } else {
+          call.remove();
+        }
+      });
 
-    const runtimeCall = t.callExpression(localAddClassUid, [
-      t.arrayExpression([...classCollection].reduce(createClassnameCss, [])),
-    ]);
+    if (isProduction) {
+      appendFileSync(
+        prodSylePath,
+        [...classCollection]
+          .reduce(createClassnameCss, [])
+          .filter((_, i) => i % 2 !== 0)
+          .flatMap(v => v)
+          .map(v => v.value)
+          .join('\n'),
+      );
 
-    state.file.ast.program.body.push(runtimeCall);
-    state.file.ast.program.body.unshift(
-      t.importDeclaration(
-        [t.importSpecifier(localAddClassUid, t.identifier('addClasses'))],
-        t.stringLiteral('classy-ui/runtime'),
-      ),
-    );
+      const relativePath = path.relative(state.file.filename, prodSylePath);
+      state.file.ast.program.body.unshift(t.importDeclaration([], t.stringLiteral(relativePath)));
+    } else {
+      const localAddClassUid = state.file.scope.generateUidIdentifier('addClasses');
+
+      const runtimeCall = t.callExpression(localAddClassUid, [
+        t.arrayExpression([...classCollection].reduce(createClassnameCss, [])),
+      ]);
+
+      state.file.ast.program.body.push(runtimeCall);
+      state.file.ast.program.body.unshift(
+        t.importDeclaration(
+          [t.importSpecifier(localAddClassUid, t.identifier('addClasses'))],
+          t.stringLiteral('classy-ui/runtime'),
+        ),
+      );
+    }
   }
 }
