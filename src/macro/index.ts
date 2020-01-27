@@ -6,6 +6,8 @@ import { config } from '../config/base.config';
 import { transform as transformCss } from '../config/transform-css';
 import { transform as transformTypes } from '../config/transform-types';
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 export default classyUiMacro;
 
 classyUiMacro.isBabelMacro = true;
@@ -120,18 +122,21 @@ function classyUiMacro({ references, state, babel }) {
         call.remove();
       }
     });
+  if (isProduction) {
+    // TODO: Write to a CSS-File
+  } else {
+    const localAddClassUid = state.file.scope.generateUidIdentifier('addClasses');
 
-  const localAddClassUid = state.file.scope.generateUidIdentifier('addClasses');
+    const runtimeCall = t.callExpression(localAddClassUid, [
+      t.arrayExpression([...classCollection].reduce(createClassnameCss, [])),
+    ]);
 
-  const runtimeCall = t.callExpression(localAddClassUid, [
-    t.arrayExpression([...classCollection].reduce(createClassnameCss, [])),
-  ]);
-
-  state.file.ast.program.body.push(runtimeCall);
-  state.file.ast.program.body.unshift(
-    t.importDeclaration(
-      [t.importSpecifier(localAddClassUid, t.identifier('addClasses'))],
-      t.stringLiteral('classy-ui/runtime'),
-    ),
-  );
+    state.file.ast.program.body.push(runtimeCall);
+    state.file.ast.program.body.unshift(
+      t.importDeclaration(
+        [t.importSpecifier(localAddClassUid, t.identifier('addClasses'))],
+        t.stringLiteral('classy-ui/runtime'),
+      ),
+    );
+  }
 }
