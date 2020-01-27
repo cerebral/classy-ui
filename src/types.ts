@@ -1,13 +1,3 @@
-export type TClasses = '';
-
-export type TClassyUiString = string & 'CLASSY_UI_STRING';
-
-export type TArgs<T extends TClasses> = T | null | undefined | { [key in T]?: boolean } | TClassyUiString;
-
-export type TClassyUi<T extends TClasses = TClasses> = (...args: Array<TArgs<T>>) => TClassyUiString;
-
-export type TPseudoClass<T extends TClasses = TClasses> = (className: T) => TClassyUiString;
-
 export type IConfigValue<T> = ((config: IConfig) => IConfigValue<T>) | T;
 
 export interface IConfig {
