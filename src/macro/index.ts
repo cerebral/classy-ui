@@ -6,10 +6,10 @@ import { config } from '../config/base.config';
 import { transform as transformCss } from '../config/transform-css';
 import { transform as transformTypes } from '../config/transform-types';
 
-export default myMacro;
+export default classyUiMacro;
 
-myMacro.isBabelMacro = true;
-myMacro.options = {};
+classyUiMacro.isBabelMacro = true;
+classyUiMacro.options = {};
 
 function camleToDash(string) {
   return string
@@ -19,95 +19,91 @@ function camleToDash(string) {
     .toLowerCase();
 }
 
-function myMacro({ references, state, babel }) {
+function classyUiMacro({ references, state, babel }) {
   const { types: t } = babel;
   const classes = transformCss(config);
 
   writeFileSync(join(process.cwd(), 'classy-ui.d.ts'), transformTypes(classes));
 
-  function getResolvedName(name, scope) {
+  function convertToExpression(arr) {
+    if (arr.length == 1) {
+      return arr[0];
+    } else {
+      // TODO: This could be better 
+      // using a binaryExpression + some logic to join stringLiterals etc.
+      // curerntly just doing a ['', ''].join(' ')
+      return t.expressionStatement(
+      	t.callExpression(
+        	t.memberExpression(
+            	t.arrayExpression(
+                	arr
+                ),
+              	t.identifier('join')
+            ),
+          	[t.stringLiteral(' ')]
+        )
+      );
+    }
+  }
+
+
+  function getClassyName(name, scope) {
     const binding = scope.getBinding(name);
-    if (binding) {
-      if (t.isImportSpecifier(binding.path.node)) {
-        return binding.path.node.imported.name;
-      }
+    if (binding && t.isImportSpecifier(binding.path.node) && binding.path.parent.source.value === 'classy-ui/macro' ) {
+      return binding.path.node.imported.name;
     }
-
-    return name;
+    return null;
   }
+  
+  function rewriteAndCollectArguments(prefix, argumentPaths, collect) {
+  	return argumentPaths.flatMap((argPath) => {
+          	const node = argPath.node;
+        	if (t.isStringLiteral(node)) {
+             	collect.add(`${prefix}${node.value}`);
+            	return [node]
+            } else if (t.isIdentifier(node)) {
+            	return  [node];
+            } else if (t.isCallExpression(node) && t.isIdentifier(node.callee)) {
+             	// To support import { hover as ho }... 
+            	const name = getClassyName(node.callee.name, argPath.scope);
+              	// When not found it is not part of classy ui
+             	if (name != null) { 
+                  return rewriteAndCollectArguments(`${prefix}${camleToDash(name)}:`, argPath.get('arguments'), collect);
+                }
+            } else if (t.isObjectExpression(node)) {
+            	return node.properties.map((prop) => {
+             		collect.add(`${prefix}${prop.key.value}`);
+                	return t.conditionalExpression(
+                    	prop.value, 
+                    	prop.key,
+                      t.stringLiteral('')
+                    )
+                })           
+            }
+          	return node;
+        });
+  }
+	
 
-  function extractStringArgs(args, usedClasses, scope) {
-    args = args
-      .map(arg => {
-        if (t.isStringLiteral(arg)) {
-          return arg.value;
-        } else if (t.isCallExpression(arg)) {
-          const name = getResolvedName(arg.callee.name, scope);
-          return `${camleToDash(name)}:${arg.arguments[0].value}`;
+  const classCollection = new Set();
+  
+  references.classnames
+    .map(ref => ref.findParent(p => t.isCallExpression(p)))
+    .forEach(call => {
+    	const rewrite = rewriteAndCollectArguments('', call.get('arguments'), classCollection);
+    	const newExpression = convertToExpression(rewrite);
+    	if (newExpression) {
+    		call.replaceWith(newExpression);
+        } else {
+          call.remove();
         }
-      })
-      .filter(Boolean);
-    if (args.length > 0) {
-      // add tracking
-      args.forEach(cn => usedClasses.add(cn));
-
-      return t.stringLiteral(args.join(' '));
-    }
-  }
-
-  function extractObjectAndIdentifiersArgs(args, usedClasses) {
-    let idArgs = args.filter(t.isIdentifier);
-
-    let objectArgs = args
-      .reduce((aggr, arg) => {
-        if (t.isObjectExpression(arg)) {
-          return aggr.concat(arg.properties);
-        }
-
-        return aggr;
-      }, [])
-      .filter(Boolean);
-
-    let newArgs = [];
-    if (idArgs.length > 0) {
-      newArgs = newArgs.concat(idArgs);
-    }
-    if (objectArgs.length > 0) {
-      // add tracking
-      objectArgs.forEach(prop => usedClasses.add(prop.key.value));
-
-      newArgs.push(t.objectExpression(objectArgs));
-    }
-    if (newArgs.length > 0) {
-      return t.callExpression(t.identifier('classnames'), newArgs);
-    }
-  }
-
-  function rewriteClasssnames(refs, usedClasses) {
-    refs
-      .map(ref => ref.findParent(p => t.isCallExpression(p)))
-      .forEach(parent => {
-        let stringArgs = extractStringArgs(parent.node.arguments, usedClasses, parent.scope);
-        let objectArgs = extractObjectAndIdentifiersArgs(parent.node.arguments, usedClasses, parent.scope);
-
-        if (stringArgs && objectArgs) {
-          parent.replaceWith(t.binaryExpression('+', objectArgs, stringArgs));
-        } else if (stringArgs) {
-          parent.replaceWith(stringArgs);
-        } else if (objectArgs) {
-          parent.replaceWith(objectArgs);
-        }
-      });
-  }
-
-  let usedClasses = new Set();
-  rewriteClasssnames(references.classnames, usedClasses);
-
+    });
+    
   const localAddClassUid = state.file.scope.generateUidIdentifier('addClasses');
 
   const runtimeCall = t.callExpression(localAddClassUid, [
     t.arrayExpression(
-      [...usedClasses].reduce((aggr, name) => aggr.concat([t.stringLiteral(name), t.stringLiteral(classes[name])]), []),
+      [...classCollection].reduce((aggr, name) => aggr.concat([t.stringLiteral(name), t.stringLiteral(classes[name] ||'')]), []),
     ),
   ]);
 
