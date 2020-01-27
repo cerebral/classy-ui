@@ -15,7 +15,7 @@ export const addClasses = (classes: string[]) => {
     classCache.add(className);
     const cssString = classes[x + 1];
 
-    css += `.${className}${cssString}\n`;
+    css += `${cssString}\n`;
     x++;
   }
 
