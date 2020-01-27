@@ -103,7 +103,7 @@ function classyUiMacro({ references, state, babel }) {
 
   const runtimeCall = t.callExpression(localAddClassUid, [
     t.arrayExpression(
-      [...classCollection].reduce((aggr, name) => aggr.concat([t.stringLiteral(name), t.stringLiteral(classes[name])]), []),
+      [...classCollection].reduce((aggr, name) => aggr.concat([t.stringLiteral(name), t.stringLiteral(classes[name] ||'')]), []),
     ),
   ]);
 
