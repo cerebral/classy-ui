@@ -2,17 +2,19 @@
 import '../classy-ui';
 
 import { writeFileSync, unlinkSync, appendFileSync } from 'fs';
-import { join } from 'path';
+import { join, relative } from 'path';
 
 import { config } from '../config/base.config';
 import { transform as transformCss } from '../config/transform-css';
 import { transform as transformTypes } from '../config/transform-types';
 
 const isProduction = process.env.NODE_ENV === 'production';
-const prodSylePath = join(process.cwd(), 'src', 'style.css');
+const prodSylePath = join(process.cwd(), 'node_modules', 'classy-ui', 'style.css');
 
 if (isProduction) {
-  unlinkSync(prodSylePath);
+  try {
+    unlinkSync(prodSylePath);
+  } catch (e) {}
 }
 
 export default classyUiMacro;
@@ -195,8 +197,7 @@ function classyUiMacro({ references, state, babel }) {
           .map(v => v.value)
           .join('\n'),
       );
-
-      const relativePath = path.relative(state.file.filename, prodSylePath);
+      const relativePath = relative(state.file.opts.cwd, prodSylePath);
       state.file.ast.program.body.unshift(t.importDeclaration([], t.stringLiteral(relativePath)));
     } else {
       const localAddClassUid = state.file.scope.generateUidIdentifier('addClasses');
