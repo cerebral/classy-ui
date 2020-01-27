@@ -11,7 +11,24 @@ export default classyUiMacro;
 classyUiMacro.isBabelMacro = true;
 classyUiMacro.options = {};
 
-const classes = transformCss(config);
+let userConfig = {};
+
+try {
+  userConfig = require(join(process.cwd(), 'classy-ui.config.js'));
+} catch (error) {
+  setTimeout(() => {
+    console.log('No user config...', error);
+  }, 1000);
+}
+
+function mergeConfigs(configA, configB) {
+  return {
+    ...configA,
+    ...configB,
+  };
+}
+
+const classes = transformCss(mergeConfigs(config, userConfig));
 
 writeFileSync(join(process.cwd(), 'classy-ui.d.ts'), transformTypes(classes));
 
