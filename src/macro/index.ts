@@ -11,6 +11,10 @@ export default classyUiMacro;
 classyUiMacro.isBabelMacro = true;
 classyUiMacro.options = {};
 
+const classes = transformCss(config);
+
+writeFileSync(join(process.cwd(), 'classy-ui.d.ts'), transformTypes(classes));
+
 function camleToDash(string) {
   return string
     .replace(/[\w]([A-Z])/g, function(m) {
@@ -21,9 +25,6 @@ function camleToDash(string) {
 
 function classyUiMacro({ references, state, babel }) {
   const { types: t } = babel;
-  const classes = transformCss(config);
-
-  writeFileSync(join(process.cwd(), 'classy-ui.d.ts'), transformTypes(classes));
 
   function convertToExpression(arr) {
     if (arr.length == 1) {
@@ -47,30 +48,45 @@ function classyUiMacro({ references, state, babel }) {
   }
 
   function rewriteAndCollectArguments(prefix, argumentPaths, collect) {
-    return argumentPaths.flatMap(argPath => {
+    return argumentPaths.reduce((aggr, argPath) => {
       const node = argPath.node;
       if (t.isStringLiteral(node)) {
         const className = `${prefix}${node.value}`;
         collect.add(className);
-        return [t.stringLiteral(className)];
+        return aggr.concat([t.stringLiteral(className)]);
       } else if (t.isIdentifier(node)) {
-        return [node];
+        return aggr.concat([node]);
       } else if (t.isCallExpression(node) && t.isIdentifier(node.callee)) {
         // To support import { hover as ho }...
         const name = getClassyName(node.callee.name, argPath.scope);
         // When not found it is not part of classy ui
         if (name != null) {
-          return rewriteAndCollectArguments(`${prefix}${camleToDash(name)}:`, argPath.get('arguments'), collect);
+          return aggr.concat(
+            rewriteAndCollectArguments(`${prefix}${camleToDash(name)}:`, argPath.get('arguments'), collect),
+          );
         }
       } else if (t.isObjectExpression(node)) {
         return node.properties.map(prop => {
           const className = `${prefix}${prop.key.value}`;
           collect.add(className);
-          return t.conditionalExpression(prop.value, t.stringLiteral(className), t.stringLiteral(''));
+          return aggr.concat(t.conditionalExpression(prop.value, t.stringLiteral(className), t.stringLiteral('')));
         });
       }
-      return node;
-    });
+      return aggr.concat(node);
+    }, []);
+  }
+
+  function createClassnameCss(aggr, name) {
+    const [partA, partB] = name.split(':');
+    const className = partB || partA;
+    const pseudo = partB ? partA : 'NOOP';
+    let css = classes[className];
+
+    if (pseudo) {
+      css = `:${pseudo}${classes[className]}`;
+    }
+
+    return aggr.concat([t.stringLiteral(className), t.stringLiteral(css)]);
   }
 
   const classCollection = new Set();
@@ -91,12 +107,7 @@ function classyUiMacro({ references, state, babel }) {
   const localAddClassUid = state.file.scope.generateUidIdentifier('addClasses');
 
   const runtimeCall = t.callExpression(localAddClassUid, [
-    t.arrayExpression(
-      [...classCollection].reduce(
-        (aggr, name) => aggr.concat([t.stringLiteral(name), t.stringLiteral(classes[name] || '')]),
-        [],
-      ),
-    ),
+    t.arrayExpression([...classCollection].reduce(createClassnameCss, [])),
   ]);
 
   state.file.ast.program.body.push(runtimeCall);
