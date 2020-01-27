@@ -1,4 +1,11 @@
 // @ts-nocheck
+import { writeFileSync } from 'fs';
+import { join } from 'path';
+
+import { config } from '../config/base.config';
+import { transform as transformCss } from '../config/transform-css';
+import { transform as transformTypes } from '../config/transform-types';
+
 export default myMacro;
 
 myMacro.isBabelMacro = true;
@@ -14,9 +21,9 @@ function camleToDash(string) {
 
 function myMacro({ references, state, babel }) {
   const { types: t } = babel;
+  const classes = transformCss(config);
 
-  console.log('HELLO!');
-  console.log('FILE', state.file.opts.filename);
+  writeFileSync(join(process.cwd(), 'classy-ui.d.ts'), transformTypes(classes));
 
   function getResolvedName(name, scope) {
     const binding = scope.getBinding(name);
@@ -99,13 +106,15 @@ function myMacro({ references, state, babel }) {
   const localAddClassUid = state.file.scope.generateUidIdentifier('addClasses');
 
   const runtimeCall = t.callExpression(localAddClassUid, [
-    t.arrayExpression([...usedClasses].map(name => t.stringLiteral(name))),
+    t.arrayExpression(
+      [...usedClasses].reduce((aggr, name) => aggr.concat([t.stringLiteral(name), t.stringLiteral(classes[name])]), []),
+    ),
   ]);
 
   state.file.ast.program.body.push(runtimeCall);
   state.file.ast.program.body.unshift(
     t.importDeclaration(
-      [t.importSpecifier(t.identifier('addClasses'), localAddClassUid)],
+      [t.importSpecifier(localAddClassUid, t.identifier('addClasses'))],
       t.stringLiteral('classy-ui/runtime'),
     ),
   );

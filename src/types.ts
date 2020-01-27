@@ -8,72 +8,30 @@ export type TClassyUi<T extends TClasses = TClasses> = (...args: Array<TArgs<T>>
 
 export type TPseudoClass<T extends TClasses = TClasses> = (className: T) => TClassyUiString;
 
-export type TThemeValue =
-  | ((theme: (path: string, placeholder?: string) => any) => any)
-  | { [key: string]: string | { [subKey: string]: string } | string[] };
-
-export interface ITheme {
-  screens: TThemeValue;
-  colors: TThemeValue;
-  spacing: TThemeValue;
-  backgroundColor: TThemeValue;
-  backgroundPosition: TThemeValue;
-  backgroundSize: TThemeValue;
-  borderColor: TThemeValue;
-  borderRadius: TThemeValue;
-  borderWidth: TThemeValue;
-  boxShadow: TThemeValue;
-  container: TThemeValue;
-  cursor: TThemeValue;
-  fill: TThemeValue;
-  flex: TThemeValue;
-  flexGrow: TThemeValue;
-  flexShrink: TThemeValue;
-  fontFamily: TThemeValue;
-  fontSize: TThemeValue;
-  fontWeight: TThemeValue;
-  height: TThemeValue;
-  inset: TThemeValue;
-  letterSpacing: TThemeValue;
-  lineHeight: TThemeValue;
-  listStyleType: TThemeValue;
-  margin: TThemeValue;
-  maxHeight: TThemeValue;
-  maxWidth: TThemeValue;
-  minHeight: TThemeValue;
-  minWidth: TThemeValue;
-  objectPosition: TThemeValue;
-  opacity: TThemeValue;
-  order: TThemeValue;
-  padding: TThemeValue;
-  placeholderColor: TThemeValue;
-  stroke: TThemeValue;
-  strokeWidth: TThemeValue;
-  textColor: TThemeValue;
-  width: TThemeValue;
-  zIndex: TThemeValue;
-  gap: TThemeValue;
-  rowGap: TThemeValue;
-  columnGap: TThemeValue;
-  gridTemplateColumns: TThemeValue;
-  gridColumn: TThemeValue;
-  gridColumnStart: TThemeValue;
-  gridColumnEnd: TThemeValue;
-  gridTemplateRows: TThemeValue;
-  gridRow: TThemeValue;
-  gridRowStart: TThemeValue;
-  gridRowEnd: TThemeValue;
-  transformOrigin: TThemeValue;
-  scale: TThemeValue;
-  rotate: TThemeValue;
-  translate: TThemeValue;
-  skew: TThemeValue;
-  transitionProperty: TThemeValue;
-  transitionTimingFunction: TThemeValue;
-  transitionDuration: TThemeValue;
-}
+export type IConfigValue<T> = ((config: IConfig) => T) | T;
 
 export interface IConfig {
-  important: false;
-  theme: ITheme;
+  space: IConfigValue<string[] | { [key: string]: string }>;
+  fontSizes: IConfigValue<string[]>;
+  breakpoints: IConfigValue<string[]>;
+  colors: IConfigValue<{ [name: string]: string | string[] | { [name: string]: string } }>;
+  fonts: IConfigValue<{ [name: string]: string }>;
+  fontWeights: IConfigValue<string[] | { [name: string]: string }>;
+  lineHeights: IConfigValue<string[] | { [name: string]: string }>;
+  letterSpacings: IConfigValue<string[] | { [name: string]: string }>;
+  sizes: IConfigValue<string[] | { [name: string]: string }>;
+  borders: IConfigValue<{ [name: string]: string }>;
+  borderWidths: IConfigValue<string[] | { [name: string]: string }>;
+  borderStyles: IConfigValue<{ [name: string]: string }>;
+  radii: IConfigValue<string[] | { [name: string]: string }>;
+  shadows: IConfigValue<string[] | { [name: string]: string }>;
+  zIndices: IConfigValue<number[] | { [name: string]: number }>;
+  transitions: IConfigValue<{ [name: string]: string }>;
+  mediaQueries: IConfigValue<{
+    [name: string]: string;
+  }>;
+  aliases?: Partial<{
+    fontSizes: IConfigValue<void>;
+    space: IConfigValue<void>;
+  }>;
 }

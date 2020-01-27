@@ -4,5 +4,5 @@
   "main": "../lib/macro",
   "module": "../es/macro",
   "jsnext:main": "../es/macro",
-  "typings": "../lib/macro/index.d.ts"
+  "typings": "../lib/runtime/index.d.ts"
 }
