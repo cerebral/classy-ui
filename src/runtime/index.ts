@@ -6,12 +6,17 @@ export const classnames: TTailwind = classnamesLib as any;
 
 const style = document.createElement('style');
 const head = document.querySelector('head');
+const classCache = new Set<string>();
 
 head?.appendChild(style);
 
 export const addClasses = (classes: string[]) => {
   let css = '';
   for (let x = 0; x < classes.length; x++) {
+    if (classCache.has(classes[x])) {
+      continue;
+    }
+    classCache.add(classes[x]);
     const classNameArray = classes[x].split(':');
     const className = classNameArray.length === 1 ? classNameArray[0] : classNameArray[1];
     const pseudo = classNameArray.length === 1 ? null : classNameArray[0];

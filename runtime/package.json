@@ -1,0 +1,8 @@
+{
+  "name": "classy-ui/runtime",
+  "private": true,
+  "main": "../lib/runtime",
+  "module": "../es/runtime",
+  "jsnext:main": "../es/runtime",
+  "typings": "../lib/runtime/index.d.ts"
+}
