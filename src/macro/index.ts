@@ -1,4 +1,6 @@
 // @ts-nocheck
+import '../classy-ui';
+
 import { writeFileSync } from 'fs';
 import { join } from 'path';
 
@@ -30,7 +32,7 @@ function mergeConfigs(configA, configB) {
 
 const classes = transformCss(mergeConfigs(config, userConfig));
 
-writeFileSync(join(process.cwd(), 'classy-ui.d.ts'), transformTypes(classes));
+writeFileSync(join(process.cwd(), 'node_modules', 'classy-ui', 'lib', 'classy-ui.d.ts'), transformTypes(classes));
 
 function camleToDash(string) {
   return string

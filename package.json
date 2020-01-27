@@ -8,7 +8,7 @@
   "main": "lib/index.js",
   "module": "es/index.js",
   "browser": "dist/bundle.js",
-  "types": "dist/bundle.d.ts",
+  "types": "lib/classy-ui.d.ts",
   "scripts": {
     "build": "npm run build:lib & npm run build:umd",
     "build:lib": "tsc --outDir lib --module commonjs",
