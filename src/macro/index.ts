@@ -50,8 +50,9 @@ function classyUiMacro({ references, state, babel }) {
     return argumentPaths.flatMap(argPath => {
       const node = argPath.node;
       if (t.isStringLiteral(node)) {
-        collect.add(`${prefix}${node.value}`);
-        return [node];
+        const className = `${prefix}${node.value}`;
+        collect.add(className);
+        return [t.stringLiteral(className)];
       } else if (t.isIdentifier(node)) {
         return [node];
       } else if (t.isCallExpression(node) && t.isIdentifier(node.callee)) {
@@ -63,8 +64,9 @@ function classyUiMacro({ references, state, babel }) {
         }
       } else if (t.isObjectExpression(node)) {
         return node.properties.map(prop => {
-          collect.add(`${prefix}${prop.key.value}`);
-          return t.conditionalExpression(prop.value, prop.key, t.stringLiteral(''));
+          const className = `${prefix}${prop.key.value}`;
+          collect.add(className);
+          return t.conditionalExpression(prop.value, t.stringLiteral(className), t.stringLiteral(''));
         });
       }
       return node;
