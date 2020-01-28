@@ -93,12 +93,28 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
     if (arr.length == 1) {
       return arr[0];
     } else {
-      // TODO: This could be better
-      // using a binaryExpression + some logic to join stringLiterals etc.
-      // curerntly just doing a ['', ''].join(' ')
-      return t.expressionStatement(
-        t.callExpression(t.memberExpression(t.arrayExpression(arr), t.identifier('join')), [t.stringLiteral(' ')]),
-      );
+      const strings = [];
+      const others = [];
+      for (let item of arr) {
+        if (t.isStringLiteral(item)) {
+          strings.push(item.value);
+        } else {
+          others.push(item);
+        }
+      }
+      if (strings.length > 0 && others.length > 0) {
+        others.unshift(t.stringLiteral(strings.join(' ')));
+      } else if (strings.length > 0) {
+        return t.stringLiteral(strings.join(' '));
+      }
+
+      let max = others.length - 1;
+      let start = others[max];
+      for (let i = max - 1; i >= 0; i--) {
+        start = t.binaryExpression('+', others[i], start);
+      }
+
+      return start;
     }
   }
 
