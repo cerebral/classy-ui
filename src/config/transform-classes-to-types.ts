@@ -1,6 +1,6 @@
-import { ICssClasses } from './transform-css';
+import { IClasses } from '../types';
 
-export const transform = (transformedConfig: ICssClasses) => {
+export const transform = (transformedConfig: IClasses) => {
   return `
   export type TClassyUiString = string & 'CLASSY_UI_STRING';
   export type TArgs = TClasses | null | undefined | { [key in TClasses]?: boolean } | TClassyUiString;
