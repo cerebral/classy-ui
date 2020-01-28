@@ -123,7 +123,7 @@ function classyUiMacro({ references, state, babel }) {
   const { types: t } = babel;
   const isProduction = babel.getEnv() === 'production';
 
-  setTimeout(() => console.log('Running:', isProduction), 1000);
+  setTimeout(() => console.log('Running:', babel.getEnv()), 1000);
 
   function convertToExpression(arr) {
     if (arr.length == 1) {
