@@ -67,4 +67,8 @@ It will just work.
 
 ## Components
 
+## Custom config
+
+## Themes
+
 ## How does it work?

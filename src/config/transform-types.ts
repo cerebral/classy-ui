@@ -1,4 +1,6 @@
-export const transform = (transformedConfig: { [className: string]: string }) => {
+import { ICssClasses } from './transform-css';
+
+export const transform = (transformedConfig: ICssClasses) => {
   return `
   export type TClassyUiString = string & 'CLASSY_UI_STRING';
   export type TArgs<T extends TClasses> = T | null | undefined | { [key in T]?: boolean } | TClassyUiString;

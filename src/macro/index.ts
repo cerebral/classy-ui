@@ -22,10 +22,14 @@ try {
 } catch (error) {}
 
 function mergeConfigs(configA, configB) {
-  return {
-    ...configA,
-    ...configB,
-  };
+  return Object.keys(configA).reduce((aggr, key) => {
+    aggr[key] = {
+      ...configA[key],
+      ...configB[key],
+    };
+
+    return aggr;
+  }, {});
 }
 
 setTimeout(() => {
@@ -62,6 +66,7 @@ const classNameMap = new Map();
 const prodCss = {
   breakpoints: {},
   common: {},
+  themes: {},
 };
 
 function getClassname(realName, isProduction) {
@@ -80,7 +85,9 @@ function getClassname(realName, isProduction) {
 
 function classyUiMacro({ references, state, babel }) {
   const { types: t } = babel;
-  const isProduction = state.file.opts.envName === 'production';
+  const isProduction = false; //babel.getEnv() === 'production';
+
+  setTimeout(() => console.log('Running:', isProduction), 1000);
 
   function convertToExpression(arr) {
     if (arr.length == 1) {
@@ -140,6 +147,7 @@ function classyUiMacro({ references, state, babel }) {
 
   function createClassnameCss(name) {
     const parts = name.split(':');
+    const className = parts.pop();
 
     // This is the mapped classname
     // that is used in production it is a short string
@@ -148,26 +156,21 @@ function classyUiMacro({ references, state, babel }) {
     // : needs to be repleaced in the css declaration
     const mappedClassName = getClassname(name, isProduction).replace(/:/g, '\\:');
 
-    let css;
-    if (parts.length == 1) {
-      css = `.${mappedClassName}${classes[parts[0]]}`;
-    } else if (parts.length > 1) {
-      const maybeSizeClass = config.breakpoints[parts[0]];
-      let className = parts.pop();
-      if (maybeSizeClass) {
-        parts.shift(); // This is the sizeclass
-        let pseudo = parts.join(':');
-        if (pseudo.length > 0) {
-          pseudo = ':' + pseudo;
-        }
-        css = `@media(max-width: ${maybeSizeClass}){.${mappedClassName + pseudo}${classes[className]}}`;
-      } else {
-        let pseudo = parts.join(':');
-        if (pseudo.length > 0) {
-          pseudo = ':' + pseudo;
-        }
-        css = `.${mappedClassName + pseudo}${classes[className]}`;
-      }
+    const breakpoints = parts.filter(pseudo => config.breakpoints[pseudo]);
+    const pseudos = parts.filter(pseudo => !config.breakpoints[pseudo]).join(':');
+    const classCss = `.${mappedClassName}${pseudos.length ? `:${pseudos}` : ''}${classes[className].css}`;
+    let css = '';
+
+    if (breakpoints.length) {
+      breakpoints.forEach(breakpoint => {
+        css += `@media(max-width: ${breakpoint})${classCss}\n`;
+      });
+    } else {
+      css = classCss;
+    }
+
+    if (classes[className].theme) {
+      css = `.themes-${classes[className].theme?.name}{--${classes[className].theme}=${classes[className].theme?.value};}${css}`;
     }
 
     return [getClassname(name, isProduction), css];
@@ -198,7 +201,7 @@ function classyUiMacro({ references, state, babel }) {
       });
 
       writeFileSync(
-        join(process.cwd(), 'node_modules', 'classy-ui', 'styles.css'),
+        cssPath,
         Object.keys(prodCss.common).reduce((aggr, name) => aggr + prodCss.common[name], ''),
       );
 
