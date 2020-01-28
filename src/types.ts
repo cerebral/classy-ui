@@ -72,3 +72,15 @@ export interface IClassesByType {
     [id: string]: IClass;
   };
 }
+
+export interface IExtractedClass {
+  id: string;
+  uid: string;
+  name: string;
+  pseudos: string[];
+  breakpoints: Array<'sm' | 'md' | 'lg' | 'xl'>;
+}
+
+export interface IExtractedClasses {
+  [uid: string]: IExtractedClass;
+}

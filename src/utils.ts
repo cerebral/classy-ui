@@ -110,3 +110,13 @@ export const createProductionCss = (productionClassesByType: IClassesByType, con
 
   return css;
 };
+
+export const createClassEntry = (name: string, pseudos: string[], css: string) => {
+  return `.${name.replace(/\:/g, ':')}${pseudos.length ? `:${pseudos.join(':')}` : ''}${css}`;
+};
+
+export const getConfigValue = (category: keyof TClassesConfig, label: string, config: TClassesConfig) => {
+  const values = typeof config[category] === 'function' ? (config[category] as any)(config) : config[category];
+
+  return values[label];
+};

@@ -4,8 +4,8 @@ import { join } from 'path';
 import { config as baseConfig } from '../config/base.config';
 import { transform as transformClassesToTypes } from '../config/transform-classes-to-types';
 import { transform as transformConfigToClasses } from '../config/transform-config-to-classes';
-import { IClassesByType } from '../types';
-import { getUserConfig, isBreakpoint, mergeConfigs } from '../utils';
+import { IClassesByType, IExtractedClass, IExtractedClasses } from '../types';
+import { createClassEntry, getConfigValue, getUserConfig, isBreakpoint, mergeConfigs } from '../utils';
 
 const typesPath = join(process.cwd(), 'node_modules', 'classy-ui', 'lib', 'classy-ui.d.ts');
 const cssPath = join(process.cwd(), 'node_modules', 'classy-ui', 'styles.css');
@@ -122,14 +122,17 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
     return null;
   }
 
-  function createClassObject(id: string, { pseudos, breakpoints }: { pseudos: string[]; breakpoints: string[] }) {
+  function createClassObject(
+    id: string,
+    { pseudos, breakpoints }: { pseudos: string[]; breakpoints: string[] },
+  ): IExtractedClass {
     const uid = breakpoints.sort().join(':') + ':' + id + ':' + pseudos.sort().join(':');
     return {
       uid,
       id,
       name: isProduction ? computeProductionName(id) : uid,
       pseudos: pseudos.slice(),
-      breakpoints: breakpoints.slice(),
+      breakpoints: breakpoints.slice() as IExtractedClass['breakpoints'],
     };
   }
 
@@ -160,14 +163,14 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
     }
   }
 
-  function rewriteAndCollectArguments(context: any, argumentPaths: any, collect: any) {
+  function rewriteAndCollectArguments(context: any, argumentPaths: any, collect: IExtractedClasses) {
     return argumentPaths.reduce((aggr: any[], argPath: any) => {
       const node = argPath.node;
 
       if (t.isStringLiteral(node)) {
         const classObj = createClassObject(node.value, context);
         throwCodeFragmentIfIdNotFound(argPath, classObj.id);
-        collect.add(classObj);
+        collect[classObj.uid] = classObj;
         return aggr.concat([t.stringLiteral(classObj.name)]);
       } else if (t.isIdentifier(node)) {
         return aggr.concat([node]);
@@ -184,7 +187,7 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
           const id = getIdOrThrow(propPath.get('key'));
           const classObj = createClassObject(id, context);
           throwCodeFragmentIfIdNotFound(propPath, classObj.id);
-          collect.add(classObj);
+          collect[classObj.uid] = classObj;
           return aggr.concat(
             t.conditionalExpression(propPath.node.value, t.stringLiteral(classObj.name), t.stringLiteral('')),
           );
@@ -195,7 +198,7 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
     }, []);
   }
 
-  const classCollection = new Set();
+  const classCollection: IExtractedClasses = {};
   classnamesRefs
     .map((ref: any) => ref.findParent((p: any) => t.isCallExpression(p)))
     .forEach((call: any) => {
@@ -212,6 +215,48 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
       }
     });
 
-  // TODO: Implement generating instead of throwing.
+  const localAddClassUid = state.file.scope.generateUidIdentifier('addClasses');
+
+  const runtimeCall = t.callExpression(localAddClassUid, [
+    t.arrayExpression(
+      Object.keys(classCollection).reduce((aggr, uid) => {
+        const extractedClass = classCollection[uid];
+        const configClass = classes[extractedClass.id];
+        const classEntry = createClassEntry(extractedClass.name, extractedClass.pseudos, configClass.css);
+        let css = '';
+
+        if (extractedClass.breakpoints.length) {
+          extractedClass.breakpoints.forEach(breakpoint => {
+            css += `@media(max-width: ${config.breakpoints[breakpoint]}){${classEntry}}\n`;
+          });
+        } else {
+          css = classEntry;
+        }
+
+        configClass.themes.forEach(theme => {
+          css += `:root{--${configClass.id}:${getConfigValue(
+            configClass.category,
+            configClass.label,
+            config,
+          )};} .themes-${theme}{--${configClass.id}:${getConfigValue(
+            configClass.category,
+            configClass.label,
+            config.themes![theme],
+          )};}${css}`;
+        });
+
+        return aggr.concat([t.stringLiteral(extractedClass.name), t.stringLiteral(css)]);
+      }, [] as any[]),
+    ),
+  ]);
+
+  state.file.ast.program.body.push(runtimeCall);
+  state.file.ast.program.body.unshift(
+    t.importDeclaration(
+      [t.importSpecifier(localAddClassUid, t.identifier('addClasses'))],
+      t.stringLiteral('classy-ui/runtime'),
+    ),
+  );
+
   throw new Error(JSON.stringify([...classCollection], null, 2));
 }
