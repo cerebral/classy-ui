@@ -120,3 +120,5 @@ export const getConfigValue = (category: keyof TClassesConfig, label: string, co
 
   return values[label];
 };
+
+export const flat = (array: any[]) => array.reduce((aggr, item) => aggr.concat(item), []);

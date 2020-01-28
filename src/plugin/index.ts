@@ -8,6 +8,7 @@ import { IClassesByType, IExtractedClass, IExtractedClasses } from '../types';
 import {
   createClassEntry,
   createProductionCss,
+  flat,
   getConfigValue,
   getUserConfig,
   isBreakpoint,
@@ -279,7 +280,7 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
         call.get('arguments'),
         classCollection,
       );
-      const newExpression = convertToExpression(rewrite.flat());
+      const newExpression = convertToExpression(flat(rewrite));
       if (newExpression) {
         call.replaceWith(newExpression);
       } else {

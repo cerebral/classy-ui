@@ -1,4 +1,6 @@
 import { config } from '../config/base.config';
+
+/*
 import { transform as transformCss } from '../config/transform-css';
 import { transform as transformTypes } from '../config/transform-types';
 
@@ -15,3 +17,4 @@ describe('TRANSFORM', () => {
     console.log(transformed);
   });
 });
+*/
