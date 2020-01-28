@@ -1,7 +1,12 @@
 import { IConfig } from '../types';
 
 export const config: IConfig = {
-  space: ['0', '0.5rem', '1rem', '2rem'],
+  space: {
+    '0': '0',
+    '1': '0.5rem',
+    '2': '1rem',
+    '3': '2rem',
+  },
   sizes: {
     '0': '0',
     '1': '0.25rem',
@@ -71,19 +76,65 @@ export const config: IConfig = {
     double: 'double',
     none: 'none',
   },
-  borderWidths: ['0', '1px', '2px', '4px'],
+  borderWidths: {
+    '0': '0',
+    '1': '1px',
+    '2': '2px',
+    '3': '4px',
+  },
   borderColors: ({ colors }) => colors,
-  radii: ['0', '.125rem', '.25rem', '.5rem', '50%'],
-  fontSizes: ['0.75rem', '0.875rem', '1rem', '1.125rem', '1.25rem', '1.5rem', '1.875rem', '2.25rem', '3rem', '4rem'],
-  fontWeights: ['100', '200', '300', '400', '500', '600', '600', '700', '800', '900'],
+  radii: {
+    '0': '0',
+    '1': '.125rem',
+    '2': '.25rem',
+    '3': '.5rem',
+    '4': '50%',
+  },
+  fontSizes: {
+    '0': '0.75rem',
+    '1': '0.875rem',
+    '2': '1rem',
+    '3': '1.125rem',
+    '4': '1.25rem',
+    '5': '1.5rem',
+    '6': '1.875rem',
+    '7': '2.25rem',
+    '8': '3rem',
+    '9': '4rem',
+  },
+  fontWeights: {
+    '100': '100',
+    '200': '200',
+    '300': '300',
+    '400': '400',
+    '500': '500',
+    '600': '600',
+    '700': '700',
+    '800': '800',
+    '900': '900',
+  },
   fonts: {
     sans:
       '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
     serif: 'Georgia, Cambria, "Times New Roman", Times, serif',
     mono: 'Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
   },
-  letterSpacings: ['-0.05em', '-0.025em', '0', '0.025em', '0.05em', '0.1em'],
-  lineHeights: ['1', '1.25', '1.375', '1.5', '1.625', '2'],
+  letterSpacings: {
+    '0': '-0.05em',
+    '1': '-0.025em',
+    '2': '0',
+    '3': '0.025em',
+    '4': '0.05em',
+    '5': '0.1em',
+  },
+  lineHeights: {
+    '0': '1',
+    '1': '1.25',
+    '2': '1.375',
+    '3': '1.5',
+    '4': '1.625',
+    '5': '2',
+  },
   shadows: {
     default: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
     md: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
@@ -96,5 +147,10 @@ export const config: IConfig = {
   transitions: {
     'fade-in': 'opacity 0.5s ease-in',
   },
-  zIndices: [0, 10, 20, 30, 40],
+  zIndices: {
+    '0': '0',
+    '1': '20',
+    '2': '30',
+    '3': '40',
+  },
 };

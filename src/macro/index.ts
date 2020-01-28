@@ -22,10 +22,19 @@ try {
 } catch (error) {}
 
 function mergeConfigs(configA, configB) {
-  return {
-    ...configA,
-    ...configB,
-  };
+  return Object.keys(configA).reduce(
+    (aggr, key) => {
+      aggr[key] = {
+        ...configA[key],
+        ...configB[key],
+      };
+
+      return aggr;
+    },
+    {
+      themes: configB.themes,
+    },
+  );
 }
 
 setTimeout(() => {
@@ -62,6 +71,8 @@ const classNameMap = new Map();
 const prodCss = {
   breakpoints: {},
   common: {},
+  themes: {},
+  variables: {},
 };
 
 function getClassname(realName, isProduction) {
@@ -78,9 +89,41 @@ function getClassname(realName, isProduction) {
   }
 }
 
+function createProductionCss() {
+  let css = Object.keys(prodCss.common).reduce((aggr, name) => aggr + prodCss.common[name], '');
+
+  Object.keys(prodCss.breakpoints).forEach(breakpoint => {
+    breakpoint.forEach(classCss => {
+      css += `@media(max-width: ${config.breakpoints[breakpoint]}){${classCss}}`;
+    });
+  });
+
+  const variableKeys = Object.keys(prodCss.variables);
+
+  if (variableKeys.length) {
+    css += ':root{';
+    variableKeys.forEach(key => {
+      css += `--${key}:${prodCss.variables[key]};`;
+    });
+    css += '}';
+  }
+
+  Object.keys(prodCss.themes).forEach(theme => {
+    const variables = Object.keys(prodCss.themes[theme]).reduce(
+      (aggr, variableKey) => `${aggr}${prodCss.themes[theme][variableKey]}`,
+      '',
+    );
+    css += `.themes-${theme}{${variables}}`;
+  });
+
+  return css;
+}
+
 function classyUiMacro({ references, state, babel }) {
   const { types: t } = babel;
-  const isProduction = state.file.opts.envName === 'production';
+  const isProduction = false; // babel.getEnv() === 'production';
+
+  setTimeout(() => console.log('Running:', isProduction), 1000);
 
   function convertToExpression(arr) {
     if (arr.length == 1) {
@@ -140,6 +183,7 @@ function classyUiMacro({ references, state, babel }) {
 
   function createClassnameCss(name) {
     const parts = name.split(':');
+    const className = parts.pop();
 
     // This is the mapped classname
     // that is used in production it is a short string
@@ -148,29 +192,15 @@ function classyUiMacro({ references, state, babel }) {
     // : needs to be repleaced in the css declaration
     const mappedClassName = getClassname(name, isProduction).replace(/:/g, '\\:');
 
-    let css;
-    if (parts.length == 1) {
-      css = `.${mappedClassName}${classes[parts[0]]}`;
-    } else if (parts.length > 1) {
-      const maybeSizeClass = config.breakpoints[parts[0]];
-      let className = parts.pop();
-      if (maybeSizeClass) {
-        parts.shift(); // This is the sizeclass
-        let pseudo = parts.join(':');
-        if (pseudo.length > 0) {
-          pseudo = ':' + pseudo;
-        }
-        css = `@media(max-width: ${maybeSizeClass}){.${mappedClassName + pseudo}${classes[className]}}`;
-      } else {
-        let pseudo = parts.join(':');
-        if (pseudo.length > 0) {
-          pseudo = ':' + pseudo;
-        }
-        css = `.${mappedClassName + pseudo}${classes[className]}`;
-      }
-    }
+    const breakpoints = parts.filter(pseudo => config.breakpoints[pseudo]);
+    const pseudos = parts.filter(pseudo => !config.breakpoints[pseudo]).join(':');
+    const classCss = `.${mappedClassName}${pseudos.length ? `:${pseudos}` : ''}${classes[className].css}`;
 
-    return [getClassname(name, isProduction), css];
+    return {
+      breakpoint: breakpoints[0],
+      classCss,
+      theme: classes[className].theme,
+    };
   }
 
   const classCollection = new Set();
@@ -191,16 +221,23 @@ function classyUiMacro({ references, state, babel }) {
 
     if (isProduction) {
       classCollection.forEach(name => {
-        const [className, css] = createClassnameCss(name);
+        const { breakpoint, classCss, theme } = createClassnameCss(name);
 
-        // Have to manage media queries here
-        prodCss.common[className] = css;
+        if (breakpoint) {
+          prodCss.breakpoints[breakpoint] = prodCss.breakpoints[breakpoint] || [];
+          prodCss.breakpoints[breakpoint].push(classCss);
+        } else {
+          prodCss.common[name] = classCss;
+        }
+
+        if (theme) {
+          prodCss.themes[theme.name] = prodCss.themes[theme.name] || {};
+          prodCss.themes[theme.name][theme.variable] = `--${theme?.variable}:${theme?.value};`;
+          prodCss.variables[theme.variable] = theme.originValue;
+        }
       });
 
-      writeFileSync(
-        join(process.cwd(), 'node_modules', 'classy-ui', 'styles.css'),
-        Object.keys(prodCss.common).reduce((aggr, name) => aggr + prodCss.common[name], ''),
-      );
+      writeFileSync(cssPath, createProductionCss());
 
       state.file.ast.program.body.unshift(t.importDeclaration([], t.stringLiteral('classy-ui/styles.css')));
     } else {
@@ -208,10 +245,23 @@ function classyUiMacro({ references, state, babel }) {
 
       const runtimeCall = t.callExpression(localAddClassUid, [
         t.arrayExpression(
-          [...classCollection].reduce(
-            (aggr, name) => aggr.concat(createClassnameCss(name).map(value => t.stringLiteral(value))),
-            [],
-          ),
+          [...classCollection].reduce((aggr, name) => {
+            const { breakpoint, classCss, theme } = createClassnameCss(name);
+
+            let css = '';
+
+            if (breakpoint) {
+              css += `@media(max-width: ${config.breakpoints[breakpoint]}){${classCss}}\n`;
+            } else {
+              css = classCss;
+            }
+
+            if (theme) {
+              css += `:root{--${theme?.variable}:${theme.originValue};} .themes-${theme?.name}{--${theme?.variable}:${theme?.value};}${css}`;
+            }
+
+            return aggr.concat([t.stringLiteral(getClassname(name, isProduction)), t.stringLiteral(css)]);
+          }, []),
         ),
       ]);
 

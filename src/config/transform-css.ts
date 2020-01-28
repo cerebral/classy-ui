@@ -2,10 +2,11 @@ import * as CSS from 'csstype';
 
 import { IConfig } from '../types';
 
-type TCssConfig = Omit<IConfig, 'aliases' | 'breakpoints'>;
+type TCssConfig = Omit<IConfig, 'themes' | 'breakpoints'>;
+type CSSProperty = keyof CSS.StandardShorthandProperties | keyof CSS.StandardPropertiesHyphen;
 
 const classes: {
-  [key in keyof TCssConfig]: Array<keyof CSS.StandardShorthandProperties | keyof CSS.StandardPropertiesHyphen>;
+  [key in keyof TCssConfig]: CSSProperty[];
 } = {
   space: [
     'margin',
@@ -41,21 +42,53 @@ const classes: {
   zIndices: ['z-index'],
 };
 
-export interface ICssClasses {
-  [name: string]: string;
+export interface ITheme {
+  name: string;
+  variable: string;
+  value: string;
+  originValue: string;
 }
 
-function buildClassesFromArray(cssProperty: string, value: string[]) {
-  return value.reduce((aggr, item, index) => {
-    aggr[`${cssProperty}-${index}`] = `{${cssProperty}:${item};}`;
+export interface ICssClasses {
+  [name: string]: {
+    theme?: ITheme;
+    css: string;
+  };
+}
+
+function getTheme(name: string, mainKey: keyof IConfig, valueKey: string, config: IConfig): ITheme {
+  const themes = config.themes || {};
+  return Object.keys(themes).reduce((aggr, themeKey) => {
+    if (aggr) {
+      return aggr;
+    }
+    if (themes[themeKey][mainKey] && (themes[themeKey][mainKey] as any)[valueKey]) {
+      return {
+        name: themeKey,
+        variable: name,
+        value: (themes[themeKey][mainKey] as any)[valueKey],
+        originValue: (config[mainKey] as any)[valueKey],
+      };
+    }
 
     return aggr;
-  }, {} as ICssClasses);
+  }, undefined as any);
 }
 
-function buildClassesFromObject(cssProperty: string, value: { [key: string]: string }) {
-  return Object.keys(value).reduce((aggr, key) => {
-    aggr[`${cssProperty}-${key}`] = `{${cssProperty}:${value[key]};}`;
+function buildClassesFromObject(
+  mainKey: keyof IConfig,
+  cssProperty: string,
+  values: { [key: string]: string },
+  config: IConfig,
+) {
+  return Object.keys(values).reduce((aggr, key) => {
+    const name = `${cssProperty}-${key}`;
+    const theme = getTheme(name, mainKey, key, config);
+
+    aggr[name] = {
+      theme,
+      css: `{${cssProperty}:${theme ? `var(--${theme.variable})` : values[key]};}`,
+    };
 
     return aggr;
   }, {} as ICssClasses);
@@ -63,18 +96,11 @@ function buildClassesFromObject(cssProperty: string, value: { [key: string]: str
 
 function getClasses(key: keyof TCssConfig, config: IConfig) {
   return classes[key].reduce((allAggr, cssProperty) => {
-    const value = typeof config[key] === 'function' ? (config[key] as any)(config) : config[key];
-
-    if (Array.isArray(value)) {
-      return {
-        ...allAggr,
-        ...buildClassesFromArray(cssProperty, value),
-      };
-    }
+    const values = typeof config[key] === 'function' ? (config[key] as any)(config) : config[key];
 
     return {
       ...allAggr,
-      ...buildClassesFromObject(cssProperty, value),
+      ...buildClassesFromObject(key, cssProperty, values, config),
     };
   }, {} as ICssClasses);
 }
