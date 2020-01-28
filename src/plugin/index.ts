@@ -1,8 +1,29 @@
-import { config } from '../config/base.config';
+import { writeFileSync } from 'fs';
+import { join } from 'path';
+
+import { config as baseConfig } from '../config/base.config';
+import { transform as transformClassesToTypes } from '../config/transform-classes-to-types';
 import { transform as transformConfigToClasses } from '../config/transform-config-to-classes';
+import { IClassesByType } from '../types';
 import { getUserConfig, isBreakpoint, mergeConfigs } from '../utils';
 
-const classes = transformConfigToClasses(mergeConfigs(config, getUserConfig()));
+const typesPath = join(process.cwd(), 'node_modules', 'classy-ui', 'lib', 'classy-ui.d.ts');
+const cssPath = join(process.cwd(), 'node_modules', 'classy-ui', 'styles.css');
+const config = mergeConfigs(baseConfig, getUserConfig());
+const classes = transformConfigToClasses(config);
+const productionClassesByType: IClassesByType = {
+  breakpoints: {
+    sm: [],
+    md: [],
+    lg: [],
+    xl: [],
+  },
+  common: {},
+  themes: {},
+  variables: {},
+};
+
+writeFileSync(typesPath, transformClassesToTypes(classes));
 
 export default (babel: any) => {
   return {

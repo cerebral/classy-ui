@@ -29,7 +29,12 @@ export type TCssClasses = {
 export interface IConfig {
   space: IConfigValue;
   fontSizes: IConfigValue;
-  breakpoints: IConfigValue;
+  breakpoints: {
+    sm: string;
+    md: string;
+    lg: string;
+    xl: string;
+  };
   colors: IConfigValue;
   fonts: IConfigValue;
   fontWeights: IConfigValue;
@@ -45,5 +50,25 @@ export interface IConfig {
   transitions: IConfigValue;
   themes?: {
     [theme: string]: TClassesConfig;
+  };
+}
+
+export interface IClassesByType {
+  breakpoints: {
+    sm: IClass[];
+    md: IClass[];
+    lg: IClass[];
+    xl: IClass[];
+  };
+  common: {
+    [id: string]: IClass;
+  };
+  themes: {
+    [theme: string]: {
+      [id: string]: IClass;
+    };
+  };
+  variables: {
+    [id: string]: IClass;
   };
 }

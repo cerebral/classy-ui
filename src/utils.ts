@@ -1,6 +1,6 @@
 import { join } from 'path';
 
-import { CSSProperty, IClasses, IConfig, TClassesConfig, TCssClasses } from './types';
+import { CSSProperty, IClasses, IClassesByType, IConfig, TClassesConfig, TCssClasses } from './types';
 
 export const getClassesFromConfig = (category: keyof TCssClasses, config: IConfig, cssProperties: CSSProperty[]) => {
   const values = typeof config[category] === 'function' ? (config[category] as any)(config) : config[category];
@@ -73,4 +73,38 @@ export const getUserConfig = () => {
   } catch (error) {
     return {};
   }
+};
+
+export const createProductionCss = (productionClassesByType: IClassesByType, config: IConfig) => {
+  let css = Object.keys(productionClassesByType.common).reduce(
+    (aggr, name) => aggr + productionClassesByType.common[name],
+    '',
+  );
+
+  const breakpointKeys = Object.keys(productionClassesByType.breakpoints) as Array<keyof IClassesByType['breakpoints']>;
+  breakpointKeys.forEach(breakpoint => {
+    productionClassesByType.breakpoints[breakpoint].forEach(classCss => {
+      css += `@media(max-width: ${config.breakpoints[breakpoint]}){${classCss}}`;
+    });
+  });
+
+  const variableKeys = Object.keys(productionClassesByType.variables);
+
+  if (variableKeys.length) {
+    css += ':root{';
+    variableKeys.forEach(key => {
+      css += `--${key}:${productionClassesByType.variables[key]};`;
+    });
+    css += '}';
+  }
+
+  Object.keys(productionClassesByType.themes).forEach(theme => {
+    const variables = Object.keys(productionClassesByType.themes[theme]).reduce(
+      (aggr, variableKey) => `${aggr}${productionClassesByType.themes[theme][variableKey]}`,
+      '',
+    );
+    css += `.themes-${theme}{${variables}}`;
+  });
+
+  return css;
 };
