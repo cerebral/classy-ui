@@ -93,7 +93,7 @@ function createProductionCss() {
   let css = Object.keys(prodCss.common).reduce((aggr, name) => aggr + prodCss.common[name], '');
 
   Object.keys(prodCss.breakpoints).forEach(breakpoint => {
-    prodCss[breakpoint].forEach(classCss => {
+    prodCss.breakpoints[breakpoint].forEach(classCss => {
       css += `@media(max-width: ${config.breakpoints[breakpoint]}){${classCss}}`;
     });
   });
