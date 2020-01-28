@@ -8,13 +8,13 @@ import { config } from '../config/base.config';
 import { transform as transformCss } from '../config/transform-css';
 import { transform as transformTypes } from '../config/transform-types';
 
-const isProduction = process.env.NODE_ENV === 'production';
-
 export default classyUiMacro;
 
 classyUiMacro.isBabelMacro = true;
 classyUiMacro.options = {};
 
+const typesPath = join(process.cwd(), 'node_modules', 'classy-ui', 'lib', 'classy-ui.d.ts');
+const cssPath = join(process.cwd(), 'node_modules', 'classy-ui', 'styles.css');
 let userConfig = null;
 
 try {
@@ -30,16 +30,11 @@ function mergeConfigs(configA, configB) {
 
 setTimeout(() => {
   console.log(userConfig ? 'Found user config' : 'No user config...');
-  console.log('Production?', isProduction, process.env.BABEL_ENV);
 }, 1000);
 
 const classes = transformCss(mergeConfigs(config, userConfig || {}));
 
-if (isProduction) {
-  writeFileSync(join(process.cwd(), 'node_modules', 'classy-ui', 'styles.css'), '');
-} else {
-  writeFileSync(join(process.cwd(), 'node_modules', 'classy-ui', 'lib', 'classy-ui.d.ts'), transformTypes(classes));
-}
+writeFileSync(typesPath, transformTypes(classes));
 
 function camleToDash(string) {
   return string
@@ -69,7 +64,7 @@ const prodCss = {
   common: {},
 };
 
-function getClassname(realName) {
+function getClassname(realName, isProduction) {
   if (isProduction) {
     if (classNameMap.has(realName)) {
       return classNameMap.get(realName);
@@ -85,6 +80,7 @@ function getClassname(realName) {
 
 function classyUiMacro({ references, state, babel }) {
   const { types: t } = babel;
+  const isProduction = state.file.opts.envName === 'production';
 
   function convertToExpression(arr) {
     if (arr.length == 1) {
@@ -113,7 +109,7 @@ function classyUiMacro({ references, state, babel }) {
       if (t.isStringLiteral(node)) {
         const className = `${prefix}${node.value}`;
         collect.add(className);
-        return aggr.concat([t.stringLiteral(getClassname(className))]);
+        return aggr.concat([t.stringLiteral(getClassname(className, isProduction))]);
       } else if (t.isIdentifier(node)) {
         return aggr.concat([node]);
       } else if (t.isCallExpression(node) && t.isIdentifier(node.callee)) {
@@ -130,7 +126,11 @@ function classyUiMacro({ references, state, babel }) {
           const className = `${prefix}${prop.key.value}`;
           collect.add(className);
           return aggr.concat(
-            t.conditionalExpression(prop.value, t.stringLiteral(getClassname(className)), t.stringLiteral('')),
+            t.conditionalExpression(
+              prop.value,
+              t.stringLiteral(getClassname(className, isProduction)),
+              t.stringLiteral(''),
+            ),
           );
         });
       }
@@ -146,7 +146,7 @@ function classyUiMacro({ references, state, babel }) {
     // in dev it is the same as the name
 
     // : needs to be repleaced in the css declaration
-    const mappedClassName = getClassname(name).replace(/:/g, '\\:');
+    const mappedClassName = getClassname(name, isProduction).replace(/:/g, '\\:');
 
     let css;
     if (parts.length == 1) {
@@ -170,7 +170,7 @@ function classyUiMacro({ references, state, babel }) {
       }
     }
 
-    return [getClassname(name), css];
+    return [getClassname(name, isProduction), css];
   }
 
   const classCollection = new Set();
@@ -208,7 +208,10 @@ function classyUiMacro({ references, state, babel }) {
 
       const runtimeCall = t.callExpression(localAddClassUid, [
         t.arrayExpression(
-          [...classCollection].reduce((aggr, name) => aggr.concat(createClassnameCss(name).map(t.stringLiteral)), []),
+          [...classCollection].reduce(
+            (aggr, name) => aggr.concat(createClassnameCss(name).map(value => t.stringLiteral(value))),
+            [],
+          ),
         ),
       ]);
 
