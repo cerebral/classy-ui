@@ -8,22 +8,18 @@ import { config } from '../config/base.config';
 import { transform as transformCss } from '../config/transform-css';
 import { transform as transformTypes } from '../config/transform-types';
 
-const isProduction = process.env.NODE_ENV === 'production';
-
 export default classyUiMacro;
 
 classyUiMacro.isBabelMacro = true;
 classyUiMacro.options = {};
 
-let userConfig = {};
+const typesPath = join(process.cwd(), 'node_modules', 'classy-ui', 'lib', 'classy-ui.d.ts');
+const cssPath = join(process.cwd(), 'node_modules', 'classy-ui', 'styles.css');
+let userConfig = null;
 
 try {
   userConfig = require(join(process.cwd(), 'classy-ui.config.js'));
-} catch (error) {
-  setTimeout(() => {
-    console.log('No user config...', error);
-  }, 1000);
-}
+} catch (error) {}
 
 function mergeConfigs(configA, configB) {
   return {
@@ -32,9 +28,13 @@ function mergeConfigs(configA, configB) {
   };
 }
 
-const classes = transformCss(mergeConfigs(config, userConfig));
+setTimeout(() => {
+  console.log(userConfig ? 'Found user config' : 'No user config...');
+}, 1000);
 
-writeFileSync(join(process.cwd(), 'node_modules', 'classy-ui', 'lib', 'classy-ui.d.ts'), transformTypes(classes));
+const classes = transformCss(mergeConfigs(config, userConfig || {}));
+
+writeFileSync(typesPath, transformTypes(classes));
 
 function camleToDash(string) {
   return string
@@ -59,8 +59,12 @@ function generateShortName(number) {
 
 let globalCounter = 1;
 const classNameMap = new Map();
+const prodCss = {
+  breakpoints: {},
+  common: {},
+};
 
-function getClassname(realName) {
+function getClassname(realName, isProduction) {
   if (isProduction) {
     if (classNameMap.has(realName)) {
       return classNameMap.get(realName);
@@ -76,6 +80,7 @@ function getClassname(realName) {
 
 function classyUiMacro({ references, state, babel }) {
   const { types: t } = babel;
+  const isProduction = state.file.opts.envName === 'production';
 
   function convertToExpression(arr) {
     if (arr.length == 1) {
@@ -104,7 +109,7 @@ function classyUiMacro({ references, state, babel }) {
       if (t.isStringLiteral(node)) {
         const className = `${prefix}${node.value}`;
         collect.add(className);
-        return aggr.concat([t.stringLiteral(getClassname(className))]);
+        return aggr.concat([t.stringLiteral(getClassname(className, isProduction))]);
       } else if (t.isIdentifier(node)) {
         return aggr.concat([node]);
       } else if (t.isCallExpression(node) && t.isIdentifier(node.callee)) {
@@ -121,7 +126,11 @@ function classyUiMacro({ references, state, babel }) {
           const className = `${prefix}${prop.key.value}`;
           collect.add(className);
           return aggr.concat(
-            t.conditionalExpression(prop.value, t.stringLiteral(getClassname(className)), t.stringLiteral('')),
+            t.conditionalExpression(
+              prop.value,
+              t.stringLiteral(getClassname(className, isProduction)),
+              t.stringLiteral(''),
+            ),
           );
         });
       }
@@ -129,7 +138,7 @@ function classyUiMacro({ references, state, babel }) {
     }, []);
   }
 
-  function createClassnameCss(aggr, name) {
+  function createClassnameCss(name) {
     const parts = name.split(':');
 
     // This is the mapped classname
@@ -137,7 +146,7 @@ function classyUiMacro({ references, state, babel }) {
     // in dev it is the same as the name
 
     // : needs to be repleaced in the css declaration
-    const mappedClassName = getClassname(name).replace(/:/g, '\\:');
+    const mappedClassName = getClassname(name, isProduction).replace(/:/g, '\\:');
 
     let css;
     if (parts.length == 1) {
@@ -161,38 +170,58 @@ function classyUiMacro({ references, state, babel }) {
       }
     }
 
-    return aggr.concat([t.stringLiteral(getClassname(name)), t.stringLiteral(css)]);
+    return [getClassname(name, isProduction), css];
   }
 
   const classCollection = new Set();
   const classnames = references.classnames || [];
 
-  classnames
-    .map(ref => ref.findParent(p => t.isCallExpression(p)))
-    .forEach(call => {
-      const rewrite = rewriteAndCollectArguments('', call.get('arguments'), classCollection);
-      const newExpression = convertToExpression(rewrite);
-      if (newExpression) {
-        call.replaceWith(newExpression);
-      } else {
-        call.remove();
-      }
-    });
-  if (isProduction) {
-    // TODO: Write to a CSS-File
-  } else {
-    const localAddClassUid = state.file.scope.generateUidIdentifier('addClasses');
+  if (classnames.length > 0) {
+    classnames
+      .map(ref => ref.findParent(p => t.isCallExpression(p)))
+      .forEach(call => {
+        const rewrite = rewriteAndCollectArguments('', call.get('arguments'), classCollection);
+        const newExpression = convertToExpression(rewrite);
+        if (newExpression) {
+          call.replaceWith(newExpression);
+        } else {
+          call.remove();
+        }
+      });
 
-    const runtimeCall = t.callExpression(localAddClassUid, [
-      t.arrayExpression([...classCollection].reduce(createClassnameCss, [])),
-    ]);
+    if (isProduction) {
+      classCollection.forEach(name => {
+        const [className, css] = createClassnameCss(name);
 
-    state.file.ast.program.body.push(runtimeCall);
-    state.file.ast.program.body.unshift(
-      t.importDeclaration(
-        [t.importSpecifier(localAddClassUid, t.identifier('addClasses'))],
-        t.stringLiteral('classy-ui/runtime'),
-      ),
-    );
+        // Have to manage media queries here
+        prodCss.common[className] = css;
+      });
+
+      writeFileSync(
+        join(process.cwd(), 'node_modules', 'classy-ui', 'styles.css'),
+        Object.keys(prodCss.common).reduce((aggr, name) => aggr + prodCss.common[name], ''),
+      );
+
+      state.file.ast.program.body.unshift(t.importDeclaration([], t.stringLiteral('classy-ui/styles.css')));
+    } else {
+      const localAddClassUid = state.file.scope.generateUidIdentifier('addClasses');
+
+      const runtimeCall = t.callExpression(localAddClassUid, [
+        t.arrayExpression(
+          [...classCollection].reduce(
+            (aggr, name) => aggr.concat(createClassnameCss(name).map(value => t.stringLiteral(value))),
+            [],
+          ),
+        ),
+      ]);
+
+      state.file.ast.program.body.push(runtimeCall);
+      state.file.ast.program.body.unshift(
+        t.importDeclaration(
+          [t.importSpecifier(localAddClassUid, t.identifier('addClasses'))],
+          t.stringLiteral('classy-ui/runtime'),
+        ),
+      );
+    }
   }
 }
