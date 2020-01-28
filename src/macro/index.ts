@@ -1,36 +1,25 @@
 // @ts-nocheck
 import '../classy-ui';
 
-import { writeFileSync, unlinkSync, appendFileSync } from 'fs';
-import { join, relative } from 'path';
+import { writeFileSync } from 'fs';
+import { join } from 'path';
 
 import { config } from '../config/base.config';
 import { transform as transformCss } from '../config/transform-css';
 import { transform as transformTypes } from '../config/transform-types';
 
 const isProduction = process.env.NODE_ENV === 'production';
-const prodSylePath = join(process.cwd(), 'node_modules', 'classy-ui', 'style.css');
-
-if (isProduction) {
-  try {
-    unlinkSync(prodSylePath);
-  } catch (e) {}
-}
 
 export default classyUiMacro;
 
 classyUiMacro.isBabelMacro = true;
 classyUiMacro.options = {};
 
-let userConfig = {};
+let userConfig = null;
 
 try {
   userConfig = require(join(process.cwd(), 'classy-ui.config.js'));
-} catch (error) {
-  setTimeout(() => {
-    console.log('No user config...', error);
-  }, 1000);
-}
+} catch (error) {}
 
 function mergeConfigs(configA, configB) {
   return {
@@ -39,9 +28,18 @@ function mergeConfigs(configA, configB) {
   };
 }
 
-const classes = transformCss(mergeConfigs(config, userConfig));
+setTimeout(() => {
+  console.log(userConfig ? 'Found user config' : 'No user config...');
+  console.log('Production?', isProduction, process.env.BABEL_ENV);
+}, 1000);
 
-writeFileSync(join(process.cwd(), 'node_modules', 'classy-ui', 'lib', 'classy-ui.d.ts'), transformTypes(classes));
+const classes = transformCss(mergeConfigs(config, userConfig || {}));
+
+if (isProduction) {
+  writeFileSync(join(process.cwd(), 'node_modules', 'classy-ui', 'styles.css'), '');
+} else {
+  writeFileSync(join(process.cwd(), 'node_modules', 'classy-ui', 'lib', 'classy-ui.d.ts'), transformTypes(classes));
+}
 
 function camleToDash(string) {
   return string
@@ -66,6 +64,10 @@ function generateShortName(number) {
 
 let globalCounter = 1;
 const classNameMap = new Map();
+const prodCss = {
+  breakpoints: {},
+  common: {},
+};
 
 function getClassname(realName) {
   if (isProduction) {
@@ -136,7 +138,7 @@ function classyUiMacro({ references, state, babel }) {
     }, []);
   }
 
-  function createClassnameCss(aggr, name) {
+  function createClassnameCss(name) {
     const parts = name.split(':');
 
     // This is the mapped classname
@@ -168,7 +170,7 @@ function classyUiMacro({ references, state, babel }) {
       }
     }
 
-    return aggr.concat([t.stringLiteral(getClassname(name)), t.stringLiteral(css)]);
+    return [getClassname(name), css];
   }
 
   const classCollection = new Set();
@@ -188,22 +190,26 @@ function classyUiMacro({ references, state, babel }) {
       });
 
     if (isProduction) {
-      appendFileSync(
-        prodSylePath,
-        [...classCollection]
-          .reduce(createClassnameCss, [])
-          .filter((_, i) => i % 2 !== 0)
-          .flatMap(v => v)
-          .map(v => v.value)
-          .join('\n'),
+      classCollection.forEach(name => {
+        const [className, css] = createClassnameCss(name);
+
+        // Have to manage media queries here
+        prodCss.common[className] = css;
+      });
+
+      writeFileSync(
+        join(process.cwd(), 'node_modules', 'classy-ui', 'styles.css'),
+        Object.keys(prodCss.common).reduce((aggr, name) => aggr + prodCss.common[name], ''),
       );
-      const relativePath = relative(state.file.opts.cwd, prodSylePath);
-      state.file.ast.program.body.unshift(t.importDeclaration([], t.stringLiteral(relativePath)));
+
+      state.file.ast.program.body.unshift(t.importDeclaration([], t.stringLiteral('classy-ui/styles.css')));
     } else {
       const localAddClassUid = state.file.scope.generateUidIdentifier('addClasses');
 
       const runtimeCall = t.callExpression(localAddClassUid, [
-        t.arrayExpression([...classCollection].reduce(createClassnameCss, [])),
+        t.arrayExpression(
+          [...classCollection].reduce((aggr, name) => aggr.concat(createClassnameCss(name).map(t.stringLiteral)), []),
+        ),
       ]);
 
       state.file.ast.program.body.push(runtimeCall);
