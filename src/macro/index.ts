@@ -93,7 +93,7 @@ function createProductionCss() {
   let css = Object.keys(prodCss.common).reduce((aggr, name) => aggr + prodCss.common[name], '');
 
   Object.keys(prodCss.breakpoints).forEach(breakpoint => {
-    breakpoint.forEach(classCss => {
+    prodCss[breakpoint].forEach(classCss => {
       css += `@media(max-width: ${config.breakpoints[breakpoint]}){${classCss}}`;
     });
   });
@@ -121,7 +121,7 @@ function createProductionCss() {
 
 function classyUiMacro({ references, state, babel }) {
   const { types: t } = babel;
-  const isProduction = false; // babel.getEnv() === 'production';
+  const isProduction = babel.getEnv() === 'production';
 
   setTimeout(() => console.log('Running:', isProduction), 1000);
 
