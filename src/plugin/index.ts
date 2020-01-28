@@ -5,23 +5,19 @@ import { config as baseConfig } from '../config/base.config';
 import { transform as transformClassesToTypes } from '../config/transform-classes-to-types';
 import { transform as transformConfigToClasses } from '../config/transform-config-to-classes';
 import { IClassesByType, IExtractedClass, IExtractedClasses } from '../types';
-import { createClassEntry, getConfigValue, getUserConfig, isBreakpoint, mergeConfigs } from '../utils';
+import {
+  createClassEntry,
+  createProductionCss,
+  getConfigValue,
+  getUserConfig,
+  isBreakpoint,
+  mergeConfigs,
+} from '../utils';
 
 const typesPath = join(process.cwd(), 'node_modules', 'classy-ui', 'lib', 'classy-ui.d.ts');
 const cssPath = join(process.cwd(), 'node_modules', 'classy-ui', 'styles.css');
 const config = mergeConfigs(baseConfig, getUserConfig());
 const classes = transformConfigToClasses(config);
-const productionClassesByType: IClassesByType = {
-  breakpoints: {
-    sm: [],
-    md: [],
-    lg: [],
-    xl: [],
-  },
-  common: {},
-  themes: {},
-  variables: {},
-};
 
 writeFileSync(typesPath, transformClassesToTypes(classes));
 
@@ -78,6 +74,82 @@ function computeProductionName(id: string) {
     nameCache.set(id, name);
     return name;
   }
+}
+
+function injectProduction(classCollection: IExtractedClasses) {
+  const productionClassesByType: IClassesByType = {
+    breakpoints: {
+      sm: [],
+      md: [],
+      lg: [],
+      xl: [],
+    },
+    common: {},
+    themes: {},
+    variables: {},
+  };
+
+  Object.keys(classCollection).forEach(uid => {
+    const extractedClass = classCollection[uid];
+    const configClass = classes[extractedClass.id];
+    const classEntry = createClassEntry(extractedClass.name, extractedClass.pseudos, configClass.css);
+
+    if (extractedClass.breakpoints.length) {
+      extractedClass.breakpoints.forEach(breakpoint => {
+        productionClassesByType.breakpoints[breakpoint] = productionClassesByType.breakpoints[breakpoint] || [];
+        productionClassesByType.breakpoints[breakpoint].push(classEntry);
+      });
+    } else {
+      productionClassesByType.common[configClass.id] = classEntry;
+    }
+
+    configClass.themes.forEach(theme => {
+      productionClassesByType.themes[theme] = productionClassesByType.themes[theme] || {};
+      productionClassesByType.themes[theme][configClass.id] = `--${configClass.id}:${getConfigValue(
+        configClass.category,
+        configClass.label,
+        config.themes![theme],
+      )};`;
+      productionClassesByType.variables[configClass.id] = getConfigValue(
+        configClass.category,
+        configClass.label,
+        config,
+      );
+    });
+  });
+
+  writeFileSync(cssPath, createProductionCss(productionClassesByType, config));
+}
+
+function injectDevelopment(classCollection: IExtractedClasses) {
+  return Object.keys(classCollection).reduce((aggr, uid) => {
+    const extractedClass = classCollection[uid];
+    const configClass = classes[extractedClass.id];
+    const classEntry = createClassEntry(extractedClass.name, extractedClass.pseudos, configClass.css);
+    let css = '';
+
+    if (extractedClass.breakpoints.length) {
+      extractedClass.breakpoints.forEach(breakpoint => {
+        css += `@media(max-width: ${config.breakpoints[breakpoint]}){${classEntry}}\n`;
+      });
+    } else {
+      css = classEntry;
+    }
+
+    configClass.themes.forEach(theme => {
+      css += `:root{--${configClass.id}:${getConfigValue(
+        configClass.category,
+        configClass.label,
+        config,
+      )};} .themes-${theme}{--${configClass.id}:${getConfigValue(
+        configClass.category,
+        configClass.label,
+        config.themes![theme],
+      )};}${css}`;
+    });
+
+    return aggr.concat([extractedClass.name, css]);
+  }, [] as any[]);
 }
 
 export function processReferences(babel: any, state: any, classnamesRefs: any) {
@@ -215,48 +287,22 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
       }
     });
 
-  const localAddClassUid = state.file.scope.generateUidIdentifier('addClasses');
+  if (isProduction) {
+    injectProduction(classCollection);
+    state.file.ast.program.body.unshift(t.importDeclaration([], t.stringLiteral('classy-ui/styles.css')));
+  } else {
+    const localAddClassUid = state.file.scope.generateUidIdentifier('addClasses');
 
-  const runtimeCall = t.callExpression(localAddClassUid, [
-    t.arrayExpression(
-      Object.keys(classCollection).reduce((aggr, uid) => {
-        const extractedClass = classCollection[uid];
-        const configClass = classes[extractedClass.id];
-        const classEntry = createClassEntry(extractedClass.name, extractedClass.pseudos, configClass.css);
-        let css = '';
+    const runtimeCall = t.callExpression(localAddClassUid, [
+      t.arrayExpression(injectDevelopment(classCollection).map(value => t.stringLiteral(value))),
+    ]);
 
-        if (extractedClass.breakpoints.length) {
-          extractedClass.breakpoints.forEach(breakpoint => {
-            css += `@media(max-width: ${config.breakpoints[breakpoint]}){${classEntry}}\n`;
-          });
-        } else {
-          css = classEntry;
-        }
-
-        configClass.themes.forEach(theme => {
-          css += `:root{--${configClass.id}:${getConfigValue(
-            configClass.category,
-            configClass.label,
-            config,
-          )};} .themes-${theme}{--${configClass.id}:${getConfigValue(
-            configClass.category,
-            configClass.label,
-            config.themes![theme],
-          )};}${css}`;
-        });
-
-        return aggr.concat([t.stringLiteral(extractedClass.name), t.stringLiteral(css)]);
-      }, [] as any[]),
-    ),
-  ]);
-
-  state.file.ast.program.body.push(runtimeCall);
-  state.file.ast.program.body.unshift(
-    t.importDeclaration(
-      [t.importSpecifier(localAddClassUid, t.identifier('addClasses'))],
-      t.stringLiteral('classy-ui/runtime'),
-    ),
-  );
-
-  throw new Error(JSON.stringify([...classCollection], null, 2));
+    state.file.ast.program.body.push(runtimeCall);
+    state.file.ast.program.body.unshift(
+      t.importDeclaration(
+        [t.importSpecifier(localAddClassUid, t.identifier('addClasses'))],
+        t.stringLiteral('classy-ui/runtime'),
+      ),
+    );
+  }
 }

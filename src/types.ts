@@ -55,21 +55,21 @@ export interface IConfig {
 
 export interface IClassesByType {
   breakpoints: {
-    sm: IClass[];
-    md: IClass[];
-    lg: IClass[];
-    xl: IClass[];
+    sm: string[];
+    md: string[];
+    lg: string[];
+    xl: string[];
   };
   common: {
-    [id: string]: IClass;
+    [id: string]: string;
   };
   themes: {
     [theme: string]: {
-      [id: string]: IClass;
+      [id: string]: string;
     };
   };
   variables: {
-    [id: string]: IClass;
+    [id: string]: string;
   };
 }
 
