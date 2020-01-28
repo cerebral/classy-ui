@@ -1,1 +1,1 @@
-.A{background-color:#FFF;}.B{color:#000;}.C:hover{color:#FFF;}
+.A{background-color:#000;}.B:hover{background-color:var(--background-color-white);}.themes-dark{--background-color-white:green;}

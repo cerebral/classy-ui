@@ -3,9 +3,9 @@ import { ICssClasses } from './transform-css';
 export const transform = (transformedConfig: ICssClasses) => {
   return `
   export type TClassyUiString = string & 'CLASSY_UI_STRING';
-  export type TArgs<T extends TClasses> = T | null | undefined | { [key in T]?: boolean } | TClassyUiString;
-  export type TClassyUi<T extends TClasses = TClasses> = (...args: Array<TArgs<T>>) => TClassyUiString;
-  export type TPseudoClass<T extends TClasses = TClasses> = (...classNames: T[]) => TClassyUiString;
+  export type TArgs = TClasses | null | undefined | { [key in TClasses]?: boolean } | TClassyUiString;
+  export type TClassyUi = (...args: Array<TArgs<TClasses>>) => TClassyUiString;
+  export type TPseudoClass = (...classNames: Array<TClasses | TClassyUiString>) => TClassyUiString;
   export const classnames: TClassyUi;
   export const hover: TPseudoClass;
   export const sm: TPseudoClass;

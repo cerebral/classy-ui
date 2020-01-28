@@ -72,6 +72,7 @@ const prodCss = {
   breakpoints: {},
   common: {},
   themes: {},
+  variables: {},
 };
 
 function getClassname(realName, isProduction) {
@@ -88,9 +89,39 @@ function getClassname(realName, isProduction) {
   }
 }
 
+function createProductionCss() {
+  let css = Object.keys(prodCss.common).reduce((aggr, name) => aggr + prodCss.common[name], '');
+
+  Object.keys(prodCss.breakpoints).forEach(breakpoint => {
+    breakpoint.forEach(classCss => {
+      css += `@media(max-width: ${config.breakpoints[breakpoint]}){${classCss}}`;
+    });
+  });
+
+  const variableKeys = Object.keys(prodCss.variables);
+
+  if (variableKeys.length) {
+    css += ':root{';
+    variableKeys.forEach(key => {
+      css += `--${key}:${prodCss.variables[key]};`;
+    });
+    css += '}';
+  }
+
+  Object.keys(prodCss.themes).forEach(theme => {
+    const variables = Object.keys(prodCss.themes[theme]).reduce(
+      (aggr, variableKey) => `${aggr}${prodCss.themes[theme][variableKey]}`,
+      '',
+    );
+    css += `.themes-${theme}{${variables}}`;
+  });
+
+  return css;
+}
+
 function classyUiMacro({ references, state, babel }) {
   const { types: t } = babel;
-  const isProduction = false; //babel.getEnv() === 'production';
+  const isProduction = false; // babel.getEnv() === 'production';
 
   setTimeout(() => console.log('Running:', isProduction), 1000);
 
@@ -164,21 +195,12 @@ function classyUiMacro({ references, state, babel }) {
     const breakpoints = parts.filter(pseudo => config.breakpoints[pseudo]);
     const pseudos = parts.filter(pseudo => !config.breakpoints[pseudo]).join(':');
     const classCss = `.${mappedClassName}${pseudos.length ? `:${pseudos}` : ''}${classes[className].css}`;
-    let css = '';
 
-    if (breakpoints.length) {
-      breakpoints.forEach(breakpoint => {
-        css += `@media(max-width: ${breakpoint})${classCss}\n`;
-      });
-    } else {
-      css = classCss;
-    }
-
-    if (classes[className].theme) {
-      css = `.themes-${classes[className].theme?.name}{--${classes[className].theme?.variable}:${classes[className].theme?.value};}${css}`;
-    }
-
-    return [getClassname(name, isProduction), css];
+    return {
+      breakpoint: breakpoints[0],
+      classCss,
+      theme: classes[className].theme,
+    };
   }
 
   const classCollection = new Set();
@@ -199,16 +221,23 @@ function classyUiMacro({ references, state, babel }) {
 
     if (isProduction) {
       classCollection.forEach(name => {
-        const [className, css] = createClassnameCss(name);
+        const { breakpoint, classCss, theme } = createClassnameCss(name);
 
-        // Have to manage media queries here
-        prodCss.common[className] = css;
+        if (breakpoint) {
+          prodCss.breakpoints[breakpoint] = prodCss.breakpoints[breakpoint] || [];
+          prodCss.breakpoints[breakpoint].push(classCss);
+        } else {
+          prodCss.common[name] = classCss;
+        }
+
+        if (theme) {
+          prodCss.themes[theme.name] = prodCss.themes[theme.name] || {};
+          prodCss.themes[theme.name][theme.variable] = `--${theme?.variable}:${theme?.value};`;
+          prodCss.variables[theme.variable] = theme.originValue;
+        }
       });
 
-      writeFileSync(
-        cssPath,
-        Object.keys(prodCss.common).reduce((aggr, name) => aggr + prodCss.common[name], ''),
-      );
+      writeFileSync(cssPath, createProductionCss());
 
       state.file.ast.program.body.unshift(t.importDeclaration([], t.stringLiteral('classy-ui/styles.css')));
     } else {
@@ -216,15 +245,28 @@ function classyUiMacro({ references, state, babel }) {
 
       const runtimeCall = t.callExpression(localAddClassUid, [
         t.arrayExpression(
-          [...classCollection].reduce(
-            (aggr, name) => aggr.concat(createClassnameCss(name).map(value => t.stringLiteral(value))),
-            [],
-          ),
+          [...classCollection].reduce((aggr, name) => {
+            const { breakpoint, classCss, theme } = createClassnameCss(name);
+
+            let css = '';
+
+            if (breakpoint) {
+              css += `@media(max-width: ${config.breakpoints[breakpoint]}){${classCss}}\n`;
+            } else {
+              css = classCss;
+            }
+
+            if (theme) {
+              css += `:root{--${theme?.variable}:${theme.originValue};} .themes-${theme?.name}{--${theme?.variable}:${theme?.value};}${css}`;
+            }
+
+            return aggr.concat([t.stringLiteral(getClassname(name, isProduction)), t.stringLiteral(css)]);
+          }, []),
         ),
       ]);
 
       state.file.ast.program.body.push(runtimeCall);
-      state.file.ast.program.body.push(
+      state.file.ast.program.body.unshift(
         t.importDeclaration(
           [t.importSpecifier(localAddClassUid, t.identifier('addClasses'))],
           t.stringLiteral('classy-ui/runtime'),

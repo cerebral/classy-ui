@@ -46,6 +46,7 @@ export interface ITheme {
   name: string;
   variable: string;
   value: string;
+  originValue: string;
 }
 
 export interface ICssClasses {
@@ -66,6 +67,7 @@ function getTheme(name: string, mainKey: keyof IConfig, valueKey: string, config
         name: themeKey,
         variable: name,
         value: (themes[themeKey][mainKey] as any)[valueKey],
+        originValue: (config[mainKey] as any)[valueKey],
       };
     }
 
