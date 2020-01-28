@@ -257,6 +257,4 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
       t.stringLiteral('classy-ui/runtime'),
     ),
   );
-
-  throw new Error(JSON.stringify([...classCollection], null, 2));
 }

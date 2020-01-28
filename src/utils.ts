@@ -112,7 +112,7 @@ export const createProductionCss = (productionClassesByType: IClassesByType, con
 };
 
 export const createClassEntry = (name: string, pseudos: string[], css: string) => {
-  return `.${name.replace(/\:/g, ':')}${pseudos.length ? `:${pseudos.join(':')}` : ''}${css}`;
+  return `.${name.replace(/\:/g, '\\:')}${pseudos.length ? `:${pseudos.join(':')}` : ''}${css}`;
 };
 
 export const getConfigValue = (category: keyof TClassesConfig, label: string, config: TClassesConfig) => {
