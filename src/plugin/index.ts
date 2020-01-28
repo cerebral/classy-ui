@@ -294,9 +294,11 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
   } else {
     const localAddClassUid = state.file.scope.generateUidIdentifier('addClasses');
 
-    const runtimeCall = t.callExpression(localAddClassUid, [
-      t.arrayExpression(injectDevelopment(classCollection).map(value => t.stringLiteral(value))),
-    ]);
+    const runtimeCall = t.expressionStatement(
+      t.callExpression(localAddClassUid, [
+        t.arrayExpression(injectDevelopment(classCollection).map(value => t.stringLiteral(value))),
+      ]),
+    );
 
     state.file.ast.program.body.push(runtimeCall);
     state.file.ast.program.body.unshift(
