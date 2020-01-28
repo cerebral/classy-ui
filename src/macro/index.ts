@@ -22,14 +22,19 @@ try {
 } catch (error) {}
 
 function mergeConfigs(configA, configB) {
-  return Object.keys(configA).reduce((aggr, key) => {
-    aggr[key] = {
-      ...configA[key],
-      ...configB[key],
-    };
+  return Object.keys(configA).reduce(
+    (aggr, key) => {
+      aggr[key] = {
+        ...configA[key],
+        ...configB[key],
+      };
 
-    return aggr;
-  }, {});
+      return aggr;
+    },
+    {
+      themes: configB.themes,
+    },
+  );
 }
 
 setTimeout(() => {
@@ -170,7 +175,7 @@ function classyUiMacro({ references, state, babel }) {
     }
 
     if (classes[className].theme) {
-      css = `.themes-${classes[className].theme?.name}{--${classes[className].theme}=${classes[className].theme?.value};}${css}`;
+      css = `.themes-${classes[className].theme?.name}{--${classes[className].theme?.variable}:${classes[className].theme?.value};}${css}`;
     }
 
     return [getClassname(name, isProduction), css];
@@ -219,7 +224,7 @@ function classyUiMacro({ references, state, babel }) {
       ]);
 
       state.file.ast.program.body.push(runtimeCall);
-      state.file.ast.program.body.unshift(
+      state.file.ast.program.body.push(
         t.importDeclaration(
           [t.importSpecifier(localAddClassUid, t.identifier('addClasses'))],
           t.stringLiteral('classy-ui/runtime'),
