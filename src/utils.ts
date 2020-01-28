@@ -57,8 +57,10 @@ export const mergeConfigs = (configA: IConfig, configB: IConfig): IConfig => {
     (aggr, key) => {
       return {
         ...aggr,
-        ...configA[key],
-        ...configB[key],
+        [key]: {
+          ...configA[key],
+          ...configB[key],
+        },
       };
     },
     {

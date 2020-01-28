@@ -70,17 +70,13 @@ function generateShortName(number: number) {
 let nameCounter = 1;
 const nameCache = new Map();
 
-function computeName(id: string, isProduction: boolean) {
-  if (isProduction) {
-    if (nameCache.has(id)) {
-      return nameCache.get(id);
-    } else {
-      const name = generateShortName(nameCounter++);
-      nameCache.set(id, name);
-      return name;
-    }
+function computeProductionName(id: string) {
+  if (nameCache.has(id)) {
+    return nameCache.get(id);
   } else {
-    return id;
+    const name = generateShortName(nameCounter++);
+    nameCache.set(id, name);
+    return name;
   }
 }
 
@@ -127,8 +123,14 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
   }
 
   function createClassObject(id: string, { pseudos, breakpoints }: { pseudos: string[]; breakpoints: string[] }) {
-    const name = computeName(id, isProduction);
-    return { id, name, pseudos: pseudos.slice(), breakpoints: breakpoints.slice() };
+    const uid = breakpoints.sort().join(':') + ':' + id + ':' + pseudos.sort().join(':');
+    return {
+      uid,
+      id,
+      name: isProduction ? computeProductionName(id) : uid,
+      pseudos: pseudos.slice(),
+      breakpoints: breakpoints.slice(),
+    };
   }
 
   function updateContext({ pseudos, breakpoints }: { pseudos: string[]; breakpoints: string[] }, value: string) {
