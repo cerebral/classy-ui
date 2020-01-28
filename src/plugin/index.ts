@@ -1,12 +1,16 @@
-// @ts-nocheck
+import { config } from '../config/base.config';
+import { transform as transformConfigToClasses } from '../config/transform-config-to-classes';
+import { getUserConfig, isBreakpoint, mergeConfigs } from '../utils';
 
-export default babel => {
+const classes = transformConfigToClasses(mergeConfigs(config, getUserConfig()));
+
+export default (babel: any) => {
   return {
     name: 'classy-ui/plugin',
     visitor: {
-      Program(programmPath, state) {
+      Program(programmPath: any, state: any) {
         programmPath.traverse({
-          ImportDeclaration(path) {
+          ImportDeclaration(path: any) {
             if (path?.node?.source?.value === 'classy-ui') {
               const binding = path.scope.getBinding('classnames');
 
@@ -21,16 +25,7 @@ export default babel => {
   };
 };
 
-// TODO: FIX ME
-function isIdAvaiable(id) {
-  return true;
-}
-// TODO: FIX ME
-function isBreakpoint(name) {
-  return ['md', 'lg'].indexOf(name) > -1;
-}
-
-function camleToDash(string) {
+function camleToDash(string: string) {
   return string
     .replace(/[\w]([A-Z])/g, function(m) {
       return m[0] + '-' + m[1];
@@ -38,7 +33,7 @@ function camleToDash(string) {
     .toLowerCase();
 }
 
-function generateShortName(number) {
+function generateShortName(number: number) {
   let baseChar = 'A'.charCodeAt(0);
   let letters = '';
 
@@ -53,7 +48,8 @@ function generateShortName(number) {
 
 let nameCounter = 1;
 const nameCache = new Map();
-function computeName(id, isProduction) {
+
+function computeName(id: string, isProduction: boolean) {
   if (isProduction) {
     if (nameCache.has(id)) {
       return nameCache.get(id);
@@ -67,12 +63,12 @@ function computeName(id, isProduction) {
   }
 }
 
-export function processReferences(babel, state, classnamesRefs) {
+export function processReferences(babel: any, state: any, classnamesRefs: any) {
   const { types: t } = babel;
 
   const isProduction = babel.getEnv() === 'production';
 
-  function convertToExpression(arr) {
+  function convertToExpression(arr: any[]) {
     if (arr.length == 1) {
       return arr[0];
     } else {
@@ -85,7 +81,7 @@ export function processReferences(babel, state, classnamesRefs) {
     }
   }
 
-  function getImportName(name, scope) {
+  function getImportName(name: string, scope: any) {
     const binding = scope.getBinding(name);
     if (binding && t.isImportSpecifier(binding.path.node) && binding.path.parent.source.value.startsWith('classy-ui')) {
       return binding.path.node.imported.name;
@@ -93,12 +89,12 @@ export function processReferences(babel, state, classnamesRefs) {
     return null;
   }
 
-  function createClassObject(id, { pseudos, breakpoints }) {
+  function createClassObject(id: string, { pseudos, breakpoints }: { pseudos: string[]; breakpoints: string[] }) {
     const name = computeName(id, isProduction);
     return { id, name, pseudos: pseudos.slice(), breakpoints: breakpoints.slice() };
   }
 
-  function updateContext({ pseudos, breakpoints }, value) {
+  function updateContext({ pseudos, breakpoints }: { pseudos: string[]; breakpoints: string[] }, value: string) {
     const context = { pseudos: pseudos.slice(), breakpoints: breakpoints.slice() };
     value = camleToDash(value);
     if (isBreakpoint(value)) {
@@ -109,13 +105,13 @@ export function processReferences(babel, state, classnamesRefs) {
     return context;
   }
 
-  function throwCodeFragmentIfIdNotFound(path, id) {
-    if (!isIdAvaiable(id)) {
+  function throwCodeFragmentIfIdNotFound(path: any, id: string) {
+    if (!classes[id]) {
       throw path.buildCodeFrameError(`Could not find class ${id}`);
     }
   }
 
-  function getIdOrThrow(path) {
+  function getIdOrThrow(path: any) {
     if (t.isStringLiteral(path.node)) {
       return path.node.value;
     } else if (t.isIdentifier(path.node)) {
@@ -125,8 +121,8 @@ export function processReferences(babel, state, classnamesRefs) {
     }
   }
 
-  function rewriteAndCollectArguments(context, argumentPaths, collect) {
-    return argumentPaths.reduce((aggr, argPath) => {
+  function rewriteAndCollectArguments(context: any, argumentPaths: any, collect: any) {
+    return argumentPaths.reduce((aggr: any[], argPath: any) => {
       const node = argPath.node;
 
       if (t.isStringLiteral(node)) {
@@ -145,7 +141,7 @@ export function processReferences(babel, state, classnamesRefs) {
           return aggr.concat(rewriteAndCollectArguments(newContext, argPath.get('arguments'), collect));
         }
       } else if (t.isObjectExpression(node)) {
-        return argPath.get('properties').map(propPath => {
+        return argPath.get('properties').map((propPath: any) => {
           const id = getIdOrThrow(propPath.get('key'));
           const classObj = createClassObject(id, context);
           throwCodeFragmentIfIdNotFound(propPath, classObj.id);
@@ -162,8 +158,8 @@ export function processReferences(babel, state, classnamesRefs) {
 
   const classCollection = new Set();
   classnamesRefs
-    .map(ref => ref.findParent(p => t.isCallExpression(p)))
-    .forEach(call => {
+    .map((ref: any) => ref.findParent((p: any) => t.isCallExpression(p)))
+    .forEach((call: any) => {
       const rewrite = rewriteAndCollectArguments(
         { pseudos: [], breakpoints: [] },
         call.get('arguments'),

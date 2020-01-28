@@ -1,3 +1,5 @@
+import { join } from 'path';
+
 import { CSSProperty, IClasses, IConfig, TClassesConfig, TCssClasses } from './types';
 
 export const getClassesFromConfig = (category: keyof TCssClasses, config: IConfig, cssProperties: CSSProperty[]) => {
@@ -39,4 +41,36 @@ export const getThemesFromConfig = (category: keyof TClassesConfig, label: strin
 
     return aggr;
   }, [] as string[]);
+};
+
+export const isBreakpoint = (() => {
+  const breakpoints = ['sm', 'md', 'lg', 'xl'];
+  return (name: string) => {
+    return breakpoints.includes(name);
+  };
+})();
+
+export const mergeConfigs = (configA: IConfig, configB: IConfig): IConfig => {
+  const configKeys = Object.keys(configA) as Array<keyof IConfig>;
+
+  return configKeys.reduce(
+    (aggr, key) => {
+      return {
+        ...aggr,
+        ...configA[key],
+        ...configB[key],
+      };
+    },
+    {
+      themes: configB.themes,
+    } as IConfig,
+  );
+};
+
+export const getUserConfig = () => {
+  try {
+    return require(join(process.cwd(), 'classy-ui.config.js'));
+  } catch (error) {
+    return {};
+  }
 };
