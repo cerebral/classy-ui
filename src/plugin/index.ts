@@ -198,7 +198,7 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
     id: string,
     { pseudos, breakpoints }: { pseudos: string[]; breakpoints: string[] },
   ): IExtractedClass {
-    const uid = breakpoints.sort().join(':') + ':' + id + ':' + pseudos.sort().join(':');
+    const uid = [breakpoints.sort().join(':'), id, pseudos.sort()].filter(i => i.length > 0).join(':');
     return {
       uid,
       id,
