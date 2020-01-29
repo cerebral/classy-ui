@@ -125,7 +125,7 @@ export const config: IConfig = {
       '56': '14rem',
       '64': '16rem',
     },
-    backgroundColor: theme => theme('colors'),
+    backgroundColor: defaults => defaults('colors'),
     backgroundPosition: {
       bottom: 'bottom',
       center: 'center',
@@ -142,9 +142,9 @@ export const config: IConfig = {
       cover: 'cover',
       contain: 'contain',
     },
-    borderColor: theme => ({
-      ...theme('colors'),
-      default: theme('colors.gray-300', 'currentColor'),
+    borderColor: defaults => ({
+      ...defaults('colors'),
+      default: defaults('colors.gray-300', 'currentColor'),
     }),
     borderRadius: {
       none: '0',
@@ -242,9 +242,9 @@ export const config: IConfig = {
       extrabold: '800',
       black: '900',
     },
-    height: theme => ({
+    height: defaults => ({
       auto: 'auto',
-      ...theme('spacing'),
+      ...defaults('spacing'),
       full: '100%',
       screen: '100vh',
     }),
@@ -273,16 +273,16 @@ export const config: IConfig = {
       disc: 'disc',
       decimal: 'decimal',
     },
-    margin: (theme, { negative }) => ({
+    margin: (defaults, { negative }) => ({
       auto: 'auto',
-      ...theme('spacing'),
-      ...negative(theme('spacing')),
+      ...defaults('spacing'),
+      ...negative(defaults('spacing')),
     }),
     maxHeight: {
       full: '100%',
       screen: '100vh',
     },
-    maxWidth: (theme, { screens }) => ({
+    maxWidth: (defaults, { screens }) => ({
       none: 'none',
       xs: '20rem',
       sm: '24rem',
@@ -295,7 +295,7 @@ export const config: IConfig = {
       '5xl': '64rem',
       '6xl': '72rem',
       full: '100%',
-      ...screens(theme('screens')),
+      ...screens(defaults('screens')),
     }),
     minHeight: {
       '0': '0',
@@ -341,8 +341,8 @@ export const config: IConfig = {
       '11': '11',
       '12': '12',
     },
-    padding: theme => theme('spacing'),
-    placeholderColor: theme => theme('colors'),
+    padding: defaults => defaults('spacing'),
+    placeholderColor: defaults => defaults('colors'),
     stroke: {
       current: 'currentColor',
     },
@@ -351,10 +351,10 @@ export const config: IConfig = {
       '1': '1',
       '2': '2',
     },
-    textColor: theme => theme('colors'),
-    width: theme => ({
+    color: defaults => defaults('colors'),
+    width: defaults => ({
       auto: 'auto',
-      ...theme('spacing'),
+      ...defaults('spacing'),
       '1/2': '50%',
       '1/3': '33.333333%',
       '2/3': '66.666667%',
@@ -393,7 +393,7 @@ export const config: IConfig = {
       '40': '40',
       '50': '50',
     },
-    gap: theme => theme('spacing'),
+    gap: defaults => defaults('spacing'),
     rowGap: {},
     columnGap: {},
     gridTemplateColumns: {
@@ -494,9 +494,9 @@ export const config: IConfig = {
       '90': '90deg',
       '180': '180deg',
     },
-    translate: (theme, { negative }) => ({
-      ...theme('spacing'),
-      ...negative(theme('spacing')),
+    translate: (defaults, { negative }) => ({
+      ...defaults('spacing'),
+      ...negative(defaults('spacing')),
       '-full': '-100%',
       '-1/2': '-50%',
       '1/2': '50%',

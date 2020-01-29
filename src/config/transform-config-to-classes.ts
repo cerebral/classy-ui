@@ -62,7 +62,7 @@ const cssClasses: TCssClasses = {
   maxWidth: ['max-width'],
   minHeight: ['min-height'],
   minWidth: ['min-width'],
-  textColor: ['color'],
+  color: ['color'],
 };
 
 export const transform = (config: IEvaluatedConfig): IClasses => {

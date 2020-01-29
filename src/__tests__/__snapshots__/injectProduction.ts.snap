@@ -2,9 +2,9 @@
 
 exports[`INJECT PRODUCTION should group breakpoints 1`] = `"@media(max-width: 768px){.background-color-red-500{background-color:#f56565;}.background-color-red-600{background-color:#e53e3e;}}"`;
 
-exports[`INJECT PRODUCTION should group themes 1`] = `".background-color-red-700{background-color:#c53030;}.background-color-red-800{background-color:#9b2c2c;}"`;
+exports[`INJECT PRODUCTION should group themes 1`] = `".background-color-red-700{background-color:var(--background-color-red-700);}.background-color-red-800{background-color:var(--background-color-red-800);}:root{--background-color-red-700:#c53030;--background-color-red-800:#9b2c2c;}.themes-dark{--background-color-red-700:green;--background-color-red-800:blue;}"`;
 
-exports[`INJECT PRODUCTION should group themes and breakpoints 1`] = `"@media(max-width: 768px){.background-color-red-700{background-color:#c53030;}.background-color-red-800{background-color:#9b2c2c;}}"`;
+exports[`INJECT PRODUCTION should group themes and breakpoints 1`] = `"@media(max-width: 768px){.background-color-red-700{background-color:var(--background-color-red-700);}.background-color-red-800{background-color:var(--background-color-red-800);}}:root{--background-color-red-700:#c53030;--background-color-red-800:#9b2c2c;}.themes-dark{--background-color-red-700:green;--background-color-red-800:blue;}"`;
 
 exports[`INJECT PRODUCTION should inject both pseudo selector and breakpoint 1`] = `"@media(max-width: 768px){.background-color-red-500:hover{background-color:#f56565;}}"`;
 
@@ -12,7 +12,7 @@ exports[`INJECT PRODUCTION should inject multiple 1`] = `"@media(max-width: 768p
 
 exports[`INJECT PRODUCTION should inject simple 1`] = `".background-color-red-500{background-color:#f56565;}"`;
 
-exports[`INJECT PRODUCTION should inject themes 1`] = `"@media(max-width: 768px){.background-color-red-700{background-color:#c53030;}}"`;
+exports[`INJECT PRODUCTION should inject themes 1`] = `"@media(max-width: 768px){.background-color-red-700{background-color:var(--background-color-red-700);}}:root{--background-color-red-700:#c53030;}.themes-dark{--background-color-red-700:green;}"`;
 
 exports[`INJECT PRODUCTION should inject with breakpoint 1`] = `"@media(max-width: 768px){.background-color-red-500{background-color:#f56565;}}"`;
 

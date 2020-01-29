@@ -1,5 +1,7 @@
 import * as CSS from 'csstype';
 
+import { ThemeValue } from './config/ThemeValue';
+
 export interface IConfigDefaults<T = IEvaluatedConfigValue> {
   screens: T;
   colors: T;
@@ -37,7 +39,7 @@ export interface IConfigDefaults<T = IEvaluatedConfigValue> {
   placeholderColor: T;
   stroke: T;
   strokeWidth: T;
-  textColor: T;
+  color: T;
   width: T;
   zIndex: T;
   gap: T;
@@ -65,7 +67,7 @@ export interface IClass {
   id: string;
   category: keyof IConfigDefaults;
   label: string;
-  themes: string[];
+  themeValue: ThemeValue;
   css: string;
 }
 
@@ -89,11 +91,11 @@ export interface IGetConfigUtils {
 }
 
 export type TConfigValue =
-  | ((defaults: TConfigDefaults, utils: IGetConfigUtils) => IEvaluatedConfigValue)
-  | IEvaluatedConfigValue;
+  | ((defaults: TConfigDefaults, utils: IGetConfigUtils) => ThemeValue)
+  | { [key: string]: string };
 
 export interface IEvaluatedConfigValue {
-  [key: string]: string;
+  [key: string]: ThemeValue;
 }
 
 export type TCssClasses = {
@@ -102,16 +104,16 @@ export type TCssClasses = {
 
 export interface IConfig {
   defaults: IConfigDefaults<TConfigValue>;
-  themes?: {
-    [theme: string]: Partial<IConfigDefaults>;
-  };
+  themes?: IThemes;
+}
+
+export interface IThemes {
+  [theme: string]: Partial<IConfigDefaults<{ [label: string]: string }>>;
 }
 
 export interface IEvaluatedConfig {
   defaults: IConfigDefaults;
-  themes?: {
-    [theme: string]: Partial<IConfigDefaults>;
-  };
+  themes?: IThemes;
 }
 
 export interface IClassesByType {
