@@ -240,8 +240,6 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
       }
     });
 
-  throw new Error(JSON.stringify(classCollection, null, 2));
-
   if (isProduction) {
     writeFileSync(cssPath, injectProduction(classCollection, classes, config));
     state.file.ast.program.body.unshift(t.importDeclaration([], t.stringLiteral('classy-ui/styles.css')));
