@@ -56,13 +56,6 @@ export const getThemesFromConfig = (category: keyof IConfigDefaults, label: stri
   }, [] as string[]);
 };
 
-export const isBreakpoint = (() => {
-  const breakpoints = ['sm', 'md', 'lg', 'xl'];
-  return (name: string) => {
-    return breakpoints.includes(name);
-  };
-})();
-
 export const createThemeValues = (
   category: keyof IConfigDefaults,
   value: { [key: string]: string | ThemeValue },
@@ -171,8 +164,23 @@ export const createProductionCss = (productionClassesByType: IClassesByType, con
   return css;
 };
 
-export const createClassEntry = (name: string, pseudos: string[], css: string) => {
-  return `.${name.replace(/\:/g, '\\:')}${pseudos.length ? `:${pseudos.join(':')}` : ''}${css}`;
+export const camelToDash = (string: string) => {
+  return string
+    .replace(/[\w]([A-Z])/g, function(m) {
+      return m[0] + '-' + m[1];
+    })
+    .toLowerCase();
+};
+
+export const createClassEntry = (name: string, decorators: string[], css: string) => {
+  const groupDecorators = decorators
+    .filter(decorator => decorator.startsWith('group') && decorator !== 'group')
+    .map(decorator => camelToDash(decorator.substr(5)));
+  const pseudoDecorators = decorators.filter(decorator => decorator !== 'group');
+
+  return `${groupDecorators.length ? `.group:${groupDecorators.join(':')} ` : ''}.${name.replace(/\:/g, '\\:')}${
+    pseudoDecorators.length ? `:${pseudoDecorators.join(':')}` : ''
+  }${css}`;
 };
 
 export const flat = (array: any[]) => array.reduce((aggr, item) => aggr.concat(item), []);

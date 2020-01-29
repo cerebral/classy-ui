@@ -86,4 +86,11 @@ describe('INJECT DEVELOPMENT', () => {
 
     expect(injectDevelopment(classCollection, classes, config)).toMatchSnapshot();
   });
+  test('should inject group decorators', () => {
+    const classCollection: IExtractedClasses = {
+      ['background-color-red-700']: createExtractedClass('background-color-red-700', 'classnames', ['groupHover']),
+    };
+
+    expect(injectDevelopment(classCollection, classes, config)).toMatchSnapshot();
+  });
 });

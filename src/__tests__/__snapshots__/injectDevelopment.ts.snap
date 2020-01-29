@@ -9,6 +9,15 @@ Array [
 ]
 `;
 
+exports[`INJECT DEVELOPMENT should inject group decorators 1`] = `
+Array [
+  "background-color-red-700",
+  ".group:hover .background-color-red-700:groupHover{background-color:var(--background-color-red-700);}:root{--background-color-red-700:#c53030;}
+.themes-dark{--background-color-red-700:green;}
+",
+]
+`;
+
 exports[`INJECT DEVELOPMENT should inject multiple 1`] = `
 Array [
   "background-color-red-500",

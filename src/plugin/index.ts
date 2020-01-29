@@ -5,7 +5,7 @@ import { config as baseConfig } from '../config/base.config';
 import { transform as transformClassesToTypes } from '../config/transform-classes-to-types';
 import { transform as transformConfigToClasses } from '../config/transform-config-to-classes';
 import { IExtractedClass, IExtractedClasses } from '../types';
-import { flat, getUserConfig, injectDevelopment, injectProduction, mergeConfigs } from '../utils';
+import { camelToDash, flat, getUserConfig, injectDevelopment, injectProduction, mergeConfigs } from '../utils';
 
 const typesPath = join(process.cwd(), 'node_modules', 'classy-ui', 'lib', 'classy-ui.d.ts');
 const cssPath = join(process.cwd(), 'node_modules', 'classy-ui', 'styles.css');
@@ -45,14 +45,6 @@ export default (babel: any) => {
     },
   };
 };
-
-function camleToDash(string: string) {
-  return string
-    .replace(/[\w]([A-Z])/g, function(m) {
-      return m[0] + '-' + m[1];
-    })
-    .toLowerCase();
-}
 
 function generateShortName(number: number) {
   let baseChar = 'A'.charCodeAt(0);
@@ -138,7 +130,7 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
 
   function updateContext({ decorators, origin }: { decorators: string[]; origin: string }, value: string) {
     const context = { decorators: decorators.slice(), origin };
-    value = camleToDash(value);
+    value = camelToDash(value);
     context.decorators.push(value);
     return context;
   }
