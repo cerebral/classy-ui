@@ -47,6 +47,7 @@
   "devDependencies": {
     "@types/classnames": "^2.2.9",
     "@types/jest": "^23.0.0",
+    "babel-plugin-tester": "^8.0.1",
     "dts-bundle": "^0.7.2",
     "jest": "^25.1.0",
     "pascal-case": "^2.0.1",

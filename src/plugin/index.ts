@@ -12,7 +12,9 @@ const cssPath = join(process.cwd(), 'node_modules', 'classy-ui', 'styles.css');
 const config = mergeConfigs(baseConfig, getUserConfig());
 const classes = transformConfigToClasses(config);
 
-writeFileSync(typesPath, transformClassesToTypes(classes));
+if (process.env.NODE_ENV !== 'test') {
+  writeFileSync(typesPath, transformClassesToTypes(classes));
+}
 
 export default (babel: any) => {
   return {
