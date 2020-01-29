@@ -1,10 +1,69 @@
 import * as CSS from 'csstype';
 
-export type TClassesConfig = Omit<IConfig, 'themes' | 'breakpoints'>;
+export interface IConfigDefaults<T = IEvaluatedConfigValue> {
+  screens: T;
+  colors: T;
+  spacing: T;
+  backgroundColor: T;
+  backgroundPosition: T;
+  backgroundSize: T;
+  borderColor: T;
+  borderRadius: T;
+  borderWidth: T;
+  boxShadow: T;
+  container: T;
+  cursor: T;
+  fill: T;
+  flex: T;
+  flexGrow: T;
+  flexShrink: T;
+  fontFamily: T;
+  fontSize: T;
+  fontWeight: T;
+  height: T;
+  inset: T;
+  letterSpacing: T;
+  lineHeight: T;
+  listStyleType: T;
+  margin: T;
+  maxHeight: T;
+  maxWidth: T;
+  minHeight: T;
+  minWidth: T;
+  objectPosition: T;
+  opacity: T;
+  order: T;
+  padding: T;
+  placeholderColor: T;
+  stroke: T;
+  strokeWidth: T;
+  textColor: T;
+  width: T;
+  zIndex: T;
+  gap: T;
+  rowGap: T;
+  columnGap: T;
+  gridTemplateColumns: T;
+  gridColumn: T;
+  gridColumnStart: T;
+  gridColumnEnd: T;
+  gridTemplateRows: T;
+  gridRow: T;
+  gridRowStart: T;
+  gridRowEnd: T;
+  transformOrigin: T;
+  scale: T;
+  rotate: T;
+  translate: T;
+  skew: T;
+  transitionProperty: T;
+  transitionTimingFunction: T;
+  transitionDuration: T;
+}
 
 export interface IClass {
   id: string;
-  category: keyof TClassesConfig;
+  category: keyof IConfigDefaults;
   label: string;
   themes: string[];
   css: string;
@@ -14,51 +73,50 @@ export interface IClasses {
   [name: string]: IClass;
 }
 
-export interface TConfigValue {
-  [name: string]: string;
+export type CSSProperty =
+  | keyof CSS.StandardShorthandProperties
+  | keyof CSS.StandardPropertiesHyphen
+  | 'fill'
+  | 'stroke'
+  | 'stroke-width'
+  | 'skew';
+
+export type TConfigDefaults = (path: string, fallback?: string) => any;
+
+export interface IGetConfigUtils {
+  negative: (scale: any) => any;
+  screens: (screens: any) => any;
 }
 
-export type CSSProperty = keyof CSS.StandardShorthandProperties | keyof CSS.StandardPropertiesHyphen;
+export type TConfigValue =
+  | ((defaults: TConfigDefaults, utils: IGetConfigUtils) => IEvaluatedConfigValue)
+  | IEvaluatedConfigValue;
 
-export type IConfigValue<T = { [key: string]: string }> = ((config: IConfig) => IConfigValue<T>) | T;
+export interface IEvaluatedConfigValue {
+  [key: string]: string;
+}
 
 export type TCssClasses = {
-  [key in keyof TClassesConfig]: CSSProperty[];
+  [key in keyof Omit<IConfigDefaults, 'screens' | 'spacing' | 'colors'>]: CSSProperty[];
 };
 
 export interface IConfig {
-  space: IConfigValue;
-  fontSizes: IConfigValue;
-  breakpoints: {
-    sm: string;
-    md: string;
-    lg: string;
-    xl: string;
-  };
-  colors: IConfigValue;
-  fonts: IConfigValue;
-  fontWeights: IConfigValue;
-  lineHeights: IConfigValue;
-  letterSpacings: IConfigValue;
-  sizes: IConfigValue;
-  borderColors: IConfigValue;
-  borderWidths: IConfigValue;
-  borderStyles: IConfigValue;
-  radii: IConfigValue;
-  shadows: IConfigValue;
-  zIndices: IConfigValue;
-  transitions: IConfigValue;
+  defaults: IConfigDefaults<TConfigValue>;
   themes?: {
-    [theme: string]: Partial<TClassesConfig>;
+    [theme: string]: Partial<IConfigDefaults>;
+  };
+}
+
+export interface IEvaluatedConfig {
+  defaults: IConfigDefaults;
+  themes?: {
+    [theme: string]: Partial<IConfigDefaults>;
   };
 }
 
 export interface IClassesByType {
-  breakpoints: {
-    sm: string[];
-    md: string[];
-    lg: string[];
-    xl: string[];
+  screens: {
+    [type: string]: string[];
   };
   common: {
     [id: string]: string;
@@ -72,8 +130,6 @@ export interface IClassesByType {
     [id: string]: string;
   };
 }
-
-export type TBreakpoints = Array<'sm' | 'md' | 'lg' | 'xl'>;
 
 export interface IExtractedClass {
   id: string;

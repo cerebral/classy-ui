@@ -14,7 +14,7 @@ With great inspiration from [tailwindcss](https://tailwindcss.com/) we wanted to
 - The runtime **completely** disappears in production, meaning it does not affect your
 - Supports themes by automatically converting themed configuration to CSS variables
 
-The design system is based on [system-ui specification](https://system-ui.com/theme/) and [tailwindcss](https://tailwindcss.com/).
+The design system is based on [tailwindcss](https://tailwindcss.com/).
 
 > The name **classy-ui** enforces the idea that your UI becomes an elegant, optimized and concise set of classnames based on a design system
 

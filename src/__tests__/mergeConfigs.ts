@@ -5,19 +5,25 @@ describe('MERGE CONFIGS', () => {
     expect(
       mergeConfigs(
         {
-          foo: {
-            bar: 'baz',
+          defaults: {
+            foo: {
+              bar: 'baz',
+            },
           },
         } as any,
         {
-          foo: {
-            mip: 'mop',
+          defaults: {
+            foo: {
+              mip: 'mop',
+            },
           },
         } as any,
       ),
     ).toEqual({
-      foo: {
-        mip: 'mop',
+      defaults: {
+        foo: {
+          mip: 'mop',
+        },
       },
     });
   });
@@ -25,17 +31,23 @@ describe('MERGE CONFIGS', () => {
     expect(
       mergeConfigs(
         {
-          foo: {
-            bar: 'baz',
+          defaults: {
+            foo: {
+              bar: 'baz',
+            },
           },
         } as any,
         {
-          foo: (value: any) => value,
+          defaults: {
+            foo: (theme: any) => theme('foo'),
+          },
         } as any,
       ),
     ).toEqual({
-      foo: {
-        bar: 'baz',
+      defaults: {
+        foo: {
+          bar: 'baz',
+        },
       },
     });
   });
@@ -43,15 +55,21 @@ describe('MERGE CONFIGS', () => {
     expect(
       mergeConfigs(
         {
-          foo: () => ({ foo: 'bar' }),
+          defaults: {
+            foo: () => ({ foo: 'bar' }),
+          },
         } as any,
         {
-          foo: (value: any) => value,
+          defaults: {
+            foo: (theme: any) => theme('foo'),
+          },
         } as any,
       ),
     ).toEqual({
-      foo: {
-        foo: 'bar',
+      defaults: {
+        foo: {
+          foo: 'bar',
+        },
       },
     });
   });

@@ -1,17 +1,24 @@
 import { join } from 'path';
 
+import reduceCalc from 'reduce-css-calc';
+
 import {
   CSSProperty,
   IClasses,
   IClassesByType,
   IConfig,
+  IConfigDefaults,
+  IEvaluatedConfig,
   IExtractedClasses,
-  TClassesConfig,
   TCssClasses,
 } from './types';
 
-export const getClassesFromConfig = (category: keyof TCssClasses, config: IConfig, cssProperties: CSSProperty[]) => {
-  const values = typeof config[category] === 'function' ? (config[category] as any)(config) : config[category];
+export const getClassesFromConfig = (
+  category: keyof TCssClasses,
+  config: IEvaluatedConfig,
+  cssProperties: CSSProperty[],
+) => {
+  const values = config.defaults[category];
 
   return cssProperties.reduce((cssPropertiesAggr, cssProperty) => {
     return {
@@ -34,14 +41,11 @@ export const getClassesFromConfig = (category: keyof TCssClasses, config: IConfi
   }, {} as IClasses);
 };
 
-export const getThemesFromConfig = (category: keyof TClassesConfig, label: string, config: IConfig) => {
+export const getThemesFromConfig = (category: keyof IConfigDefaults, label: string, config: IEvaluatedConfig) => {
   const themes = config.themes || {};
 
   return Object.keys(themes).reduce((aggr, themeKey) => {
-    const values =
-      typeof themes[themeKey][category] === 'function'
-        ? (themes[themeKey][category] as any)(config)
-        : themes[themeKey][category];
+    const values = themes[themeKey][category];
 
     if (values && values[label]) {
       return aggr.concat(themeKey);
@@ -58,23 +62,44 @@ export const isBreakpoint = (() => {
   };
 })();
 
-export const mergeConfigs = (configA: IConfig, configB: Partial<IConfig>): IConfig => {
-  const configKeys = Object.keys(configA) as Array<keyof IConfig>;
+export const mergeConfigs = (
+  configA: IConfig,
+  configB: { themes?: IConfig['themes']; defaults?: Partial<IConfig['defaults']> },
+): IEvaluatedConfig => {
+  const defaultKeys = Object.keys(configA.defaults) as Array<keyof IConfigDefaults>;
 
-  return configKeys.reduce(
-    (aggr, key) => {
+  const defaults = (path: string) => {
+    const value = path.split('.').reduce((aggr: any, key) => aggr[key], configA.defaults);
+
+    return typeof value === 'function' ? value(defaults, utils) : value;
+  };
+  const utils = {
+    negative,
+    screens,
+  };
+
+  return {
+    defaults: defaultKeys.reduce((aggr, key) => {
+      if (configB.defaults && configB.defaults[key]) {
+        return {
+          ...aggr,
+          [key]:
+            typeof configB.defaults[key] === 'function'
+              ? (configB.defaults[key] as any)(defaults, utils)
+              : configB.defaults[key],
+        };
+      }
+
       return {
         ...aggr,
         [key]:
-          typeof configB[key] === 'function'
-            ? (configB[key] as any)(typeof configA[key] === 'function' ? (configA[key] as any)(configA) : configA[key])
-            : configB[key] || configA[key],
+          typeof configA.defaults[key] === 'function'
+            ? (configA.defaults[key] as any)(defaults, utils)
+            : configA.defaults[key],
       };
-    },
-    {
-      themes: configB.themes,
-    } as IConfig,
-  );
+    }, {} as IConfigDefaults),
+    themes: configB.themes,
+  };
 };
 
 export const getUserConfig = () => {
@@ -85,17 +110,17 @@ export const getUserConfig = () => {
   }
 };
 
-export const createProductionCss = (productionClassesByType: IClassesByType, config: IConfig) => {
+export const createProductionCss = (productionClassesByType: IClassesByType, config: IEvaluatedConfig) => {
   let css = Object.keys(productionClassesByType.common).reduce(
     (aggr, name) => aggr + productionClassesByType.common[name],
     '',
   );
 
-  const breakpointKeys = Object.keys(productionClassesByType.breakpoints) as Array<keyof IClassesByType['breakpoints']>;
-  breakpointKeys.forEach(breakpoint => {
-    if (productionClassesByType.breakpoints[breakpoint].length) {
-      css += `@media(max-width: ${config.breakpoints[breakpoint]}){`;
-      productionClassesByType.breakpoints[breakpoint].forEach(classCss => {
+  const screenKeys = Object.keys(productionClassesByType.screens);
+  screenKeys.forEach(screen => {
+    if (productionClassesByType.screens[screen].length) {
+      css += `@media(max-width: ${config.defaults.screens[screen]}){`;
+      productionClassesByType.screens[screen].forEach(classCss => {
         css += classCss;
       });
       css += '}';
@@ -127,22 +152,11 @@ export const createClassEntry = (name: string, pseudos: string[], css: string) =
   return `.${name.replace(/\:/g, '\\:')}${pseudos.length ? `:${pseudos.join(':')}` : ''}${css}`;
 };
 
-export const getConfigValue = (category: keyof TClassesConfig, label: string, config: Partial<TClassesConfig>) => {
-  const values = typeof config[category] === 'function' ? (config[category] as any)(config) : config[category];
-
-  return values[label];
-};
-
 export const flat = (array: any[]) => array.reduce((aggr, item) => aggr.concat(item), []);
 
-export const injectProduction = (classCollection: IExtractedClasses, classes: IClasses, config: IConfig) => {
+export const injectProduction = (classCollection: IExtractedClasses, classes: IClasses, config: IEvaluatedConfig) => {
   const productionClassesByType: IClassesByType = {
-    breakpoints: {
-      sm: [],
-      md: [],
-      lg: [],
-      xl: [],
-    },
+    screens: {},
     common: {},
     themes: {},
     variables: {},
@@ -151,12 +165,14 @@ export const injectProduction = (classCollection: IExtractedClasses, classes: IC
   Object.keys(classCollection).forEach(uid => {
     const extractedClass = classCollection[uid];
     const configClass = classes[extractedClass.id];
-    const classEntry = createClassEntry(extractedClass.name, extractedClass.pseudos, configClass.css);
+    const screenDecorators = extractedClass.decorators.filter(decorator => decorator in config.defaults.screens);
+    const otherDecorators = extractedClass.decorators.filter(decorator => !(decorator in config.defaults.screens));
+    const classEntry = createClassEntry(extractedClass.name, otherDecorators, configClass.css);
 
-    if (extractedClass.breakpoints.length) {
-      extractedClass.breakpoints.forEach(breakpoint => {
-        productionClassesByType.breakpoints[breakpoint] = productionClassesByType.breakpoints[breakpoint] || [];
-        productionClassesByType.breakpoints[breakpoint].push(classEntry);
+    if (screenDecorators.length) {
+      screenDecorators.forEach(screen => {
+        productionClassesByType.screens[screen] = productionClassesByType.screens[screen] || [];
+        productionClassesByType.screens[screen].push(classEntry);
       });
     } else {
       productionClassesByType.common[configClass.id] = classEntry;
@@ -164,49 +180,71 @@ export const injectProduction = (classCollection: IExtractedClasses, classes: IC
 
     configClass.themes.forEach(theme => {
       productionClassesByType.themes[theme] = productionClassesByType.themes[theme] || {};
-      productionClassesByType.themes[theme][configClass.id] = `--${configClass.id}:${getConfigValue(
-        configClass.category,
-        configClass.label,
-        config.themes![theme],
-      )};`;
-      productionClassesByType.variables[configClass.id] = getConfigValue(
-        configClass.category,
-        configClass.label,
-        config,
-      );
+      productionClassesByType.themes[theme][configClass.id] = `--${configClass.id}:${
+        config.themes![theme]![configClass.category]![configClass.label]
+      };`;
+      productionClassesByType.variables[configClass.id] = config.defaults![configClass.category]![configClass.label];
     });
   });
 
   return createProductionCss(productionClassesByType, config);
 };
 
-export const injectDevelopment = (classCollection: IExtractedClasses, classes: IClasses, config: IConfig) => {
+export const injectDevelopment = (classCollection: IExtractedClasses, classes: IClasses, config: IEvaluatedConfig) => {
   return Object.keys(classCollection).reduce((aggr, uid) => {
     const extractedClass = classCollection[uid];
     const configClass = classes[extractedClass.id];
-    const classEntry = createClassEntry(extractedClass.name, extractedClass.pseudos, configClass.css);
+    const screenDecorators = extractedClass.decorators.filter(decorator => decorator in config.defaults.screens);
+    const otherDecorators = extractedClass.decorators.filter(decorator => !(decorator in config.defaults.screens));
+    const classEntry = createClassEntry(extractedClass.name, otherDecorators, configClass.css);
+
     let css = '';
 
-    if (extractedClass.breakpoints.length) {
-      extractedClass.breakpoints.forEach(breakpoint => {
-        css += `@media(max-width:${config.breakpoints[breakpoint]}){${classEntry}}\n`;
+    if (screenDecorators.length) {
+      screenDecorators.forEach(screen => {
+        css += `@media(max-width:${config.defaults.screens[screen]}){${classEntry}}\n`;
       });
     } else {
       css = classEntry;
     }
 
     configClass.themes.forEach(theme => {
-      css += `:root{--${configClass.id}:${getConfigValue(
-        configClass.category,
-        configClass.label,
-        config,
-      )};}\n.themes-${theme}{--${configClass.id}:${getConfigValue(
-        configClass.category,
-        configClass.label,
-        config.themes![theme],
-      )};}`;
+      css += `:root{--${configClass.id}:${
+        config.defaults[configClass.category][configClass.label]
+      };}\n.themes-${theme}{--${configClass.id}:${config.themes![theme]![configClass.category]![configClass.label]};}`;
     });
 
     return aggr.concat([extractedClass.name, `${css}\n`]);
   }, [] as any[]);
+};
+
+export const negative = (scale: { [key: string]: string }) => {
+  return Object.keys(scale)
+    .filter(key => scale[key] !== '0')
+    .reduce(
+      (negativeScale, key) => ({
+        ...negativeScale,
+        [`-${key}`]: negateValue(scale[key]),
+      }),
+      {},
+    );
+};
+export const screens = (value: { [key: string]: any }) => {
+  return Object.keys(value)
+    .filter(key => typeof value[key] === 'string')
+    .reduce(
+      (breakpoints, key) => ({
+        ...breakpoints,
+        [`screen-${key}`]: value[key],
+      }),
+      {},
+    );
+};
+
+export const negateValue = (value: string) => {
+  try {
+    return reduceCalc(`calc(${value} * -1)`);
+  } catch (e) {
+    return value;
+  }
 };
