@@ -114,25 +114,26 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
     return null;
   }
 
-  function createClassObject(
-    id: string,
-    { decorators, origin }: { decorators: string[]; origin: string },
-  ): IExtractedClass {
-    const uid = [decorators.sort().join(':'), id].filter(i => i.length > 0).join(':');
+  function createClassObject(id: IExtractedClass['id'], decorators: IExtractedClass['decorators']): IExtractedClass {
+    const uid = [decorators.sort().join(':'), id]
+      .filter(Boolean)
+      .filter(i => i!.length > 0)
+      .join(':');
     return {
       id,
       uid,
-      name: isProduction ? computeProductionName(id) : uid,
+      // THIS IS NOT WORKING, we need to build a valid classname with all supported features e.g. group hover stuff
+      // this name might even be null if adding this classname won't make sens
+      // having no name needs to be supported in rewriteAndCollectArguments
+      name: uid,
       decorators: decorators.slice() as IExtractedClass['decorators'],
-      origin,
     };
   }
 
-  function updateContext({ decorators, origin }: { decorators: string[]; origin: string }, value: string) {
-    const context = { decorators: decorators.slice(), origin };
-    value = camelToDash(value);
-    context.decorators.push(value);
-    return context;
+  function updateContext(decorators: string[], value: string) {
+    const newDecorators = decorators.slice();
+    newDecorators.push(camelToDash(value));
+    return newDecorators;
   }
 
   function throwCodeFragmentIfIdNotFound(path: any, id: string) {
@@ -140,8 +141,8 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
       throw path.buildCodeFrameError(`Could not find class ${id}`);
     }
   }
-  function throwIfForbiddenName(path: any, context: { decorators: string[]; origin: string }, name: string) {
-    if (context.origin === name || context.decorators.includes(name)) {
+  function throwIfForbiddenName(path: any, decorators: string[], name: string) {
+    if (decorators.includes(name)) {
       throw path.buildCodeFrameError(`Duplicating ${name} is not allowed.`);
     }
   }
@@ -156,13 +157,21 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
     }
   }
 
-  function rewriteAndCollectArguments(context: any, argumentPaths: any, collect: IExtractedClasses) {
+  function rewriteAndCollectArguments(decorators: any, argumentPaths: any, collect: IExtractedClasses) {
+    // if root call has no arguments
+    if (argumentPaths.length === 0) {
+      const classObj = createClassObject(undefined, decorators);
+      collect[classObj.uid] = classObj;
+      return [t.stringLiteral(classObj.name)];
+    }
+    // process arguments
     return argumentPaths.reduce((aggr: any[], argPath: any) => {
       const node = argPath.node;
 
       if (t.isStringLiteral(node)) {
-        const classObj = createClassObject(node.value, context);
-        throwCodeFragmentIfIdNotFound(argPath, classObj.id);
+        const id = node.value;
+        throwCodeFragmentIfIdNotFound(argPath, id);
+        const classObj = createClassObject(node.value, decorators);
         collect[classObj.uid] = classObj;
         return aggr.concat([t.stringLiteral(classObj.name)]);
       } else if (t.isIdentifier(node)) {
@@ -172,15 +181,23 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
         const name = getImportName(node.callee.name, argPath.scope);
         // When not found it is not part of classy ui
         if (name != null) {
-          throwIfForbiddenName(argPath, context, name);
-          const newContext = updateContext(context, name);
-          return aggr.concat(rewriteAndCollectArguments(newContext, argPath.get('arguments'), collect));
+          throwIfForbiddenName(argPath, decorators, name);
+          const newDecorators = updateContext(decorators, name);
+          const childArguments = argPath.get('arguments');
+          if (Boolean(childArguments.length)) {
+            return aggr.concat(rewriteAndCollectArguments(newDecorators, childArguments, collect));
+          } else {
+            // if subsequent calls have no arguments
+            const classObj = createClassObject(undefined, newDecorators);
+            collect[classObj.uid] = classObj;
+            return aggr.concat([t.stringLiteral(classObj.name)]);
+          }
         }
       } else if (t.isObjectExpression(node)) {
         return argPath.get('properties').map((propPath: any) => {
           const id = getIdOrThrow(propPath.get('key'));
-          const classObj = createClassObject(id, context);
-          throwCodeFragmentIfIdNotFound(propPath, classObj.id);
+          throwCodeFragmentIfIdNotFound(propPath, id);
+          const classObj = createClassObject(id, decorators);
           collect[classObj.uid] = classObj;
           return aggr.concat(
             t.conditionalExpression(propPath.node.value, t.stringLiteral(classObj.name), t.stringLiteral('')),
@@ -209,7 +226,7 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
     .forEach((path: any) => {
       const statementPath = path.parentPath;
       const rewrite = rewriteAndCollectArguments(
-        { decorators: [], origin: getImportName(path.node.name, path.scope) },
+        [getImportName(path.node.name, path.scope)],
         statementPath.get('arguments'),
         classCollection,
       );
@@ -217,9 +234,13 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
       if (newExpression) {
         statementPath.replaceWith(newExpression);
       } else {
-        statementPath.remove();
+        // We can't safely remove the whole expression
+        // becasue in JSX you need to have a actual argument
+        statementPath.replaceWith(t.stringLiteral(''));
       }
     });
+
+  throw new Error(JSON.stringify(classCollection, null, 2));
 
   if (isProduction) {
     writeFileSync(cssPath, injectProduction(classCollection, classes, config));

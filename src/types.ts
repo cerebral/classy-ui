@@ -134,11 +134,10 @@ export interface IClassesByType {
 }
 
 export interface IExtractedClass {
-  id: string;
+  id?: string;
   uid: string;
   name: string;
   decorators: string[];
-  origin: string;
 }
 
 export interface IExtractedClasses {
