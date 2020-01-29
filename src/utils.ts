@@ -65,10 +65,10 @@ export const mergeConfigs = (configA: IConfig, configB: Partial<IConfig>): IConf
     (aggr, key) => {
       return {
         ...aggr,
-        [key]: {
-          ...configA[key],
-          ...configB[key],
-        },
+        [key]:
+          typeof configB[key] === 'function'
+            ? (configB[key] as any)(typeof configA[key] === 'function' ? (configA[key] as any)(configA) : configA[key])
+            : configB[key] || configA[key],
       };
     },
     {

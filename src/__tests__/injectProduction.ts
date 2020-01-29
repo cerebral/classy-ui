@@ -25,7 +25,7 @@ function createExtractedClass(id: string, pseudos: string[] = [], breakpoints: T
   };
 }
 
-describe('INJECT DEVELOPMENT', () => {
+describe('INJECT PRODUCTION', () => {
   test('should inject simple', () => {
     const classCollection: IExtractedClasses = {
       ['background-color-red-500']: createExtractedClass('background-color-red-500'),
