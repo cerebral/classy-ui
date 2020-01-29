@@ -4,7 +4,7 @@ export const transform = (transformedConfig: IClasses) => {
   return `
   export type TClassyUiString = string & 'CLASSY_UI_STRING';
   export type TArgs = TClasses | null | undefined | { [key in TClasses]?: boolean } | TClassyUiString;
-  export type TClassyUi = (...args: Array<TArgs<TClasses>>) => TClassyUiString;
+  export type TClassyUi = (...args: TArgs[]) => TClassyUiString;
   export type TPseudoClass = (...classNames: Array<TClasses | TClassyUiString>) => TClassyUiString;
   export const classnames: TClassyUi;
   export const hover: TPseudoClass;
