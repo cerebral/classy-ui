@@ -4,16 +4,8 @@ import { join } from 'path';
 import { config as baseConfig } from '../config/base.config';
 import { transform as transformClassesToTypes } from '../config/transform-classes-to-types';
 import { transform as transformConfigToClasses } from '../config/transform-config-to-classes';
-import { IClassesByType, IExtractedClass, IExtractedClasses } from '../types';
-import {
-  createClassEntry,
-  createProductionCss,
-  flat,
-  getConfigValue,
-  getUserConfig,
-  isBreakpoint,
-  mergeConfigs,
-} from '../utils';
+import { IExtractedClass, IExtractedClasses } from '../types';
+import { flat, getUserConfig, injectDevelopment, injectProduction, isBreakpoint, mergeConfigs } from '../utils';
 
 const typesPath = join(process.cwd(), 'node_modules', 'classy-ui', 'lib', 'classy-ui.d.ts');
 const cssPath = join(process.cwd(), 'node_modules', 'classy-ui', 'styles.css');
@@ -75,82 +67,6 @@ function computeProductionName(id: string) {
     nameCache.set(id, name);
     return name;
   }
-}
-
-function injectProduction(classCollection: IExtractedClasses) {
-  const productionClassesByType: IClassesByType = {
-    breakpoints: {
-      sm: [],
-      md: [],
-      lg: [],
-      xl: [],
-    },
-    common: {},
-    themes: {},
-    variables: {},
-  };
-
-  Object.keys(classCollection).forEach(uid => {
-    const extractedClass = classCollection[uid];
-    const configClass = classes[extractedClass.id];
-    const classEntry = createClassEntry(extractedClass.name, extractedClass.pseudos, configClass.css);
-
-    if (extractedClass.breakpoints.length) {
-      extractedClass.breakpoints.forEach(breakpoint => {
-        productionClassesByType.breakpoints[breakpoint] = productionClassesByType.breakpoints[breakpoint] || [];
-        productionClassesByType.breakpoints[breakpoint].push(classEntry);
-      });
-    } else {
-      productionClassesByType.common[configClass.id] = classEntry;
-    }
-
-    configClass.themes.forEach(theme => {
-      productionClassesByType.themes[theme] = productionClassesByType.themes[theme] || {};
-      productionClassesByType.themes[theme][configClass.id] = `--${configClass.id}:${getConfigValue(
-        configClass.category,
-        configClass.label,
-        config.themes![theme],
-      )};`;
-      productionClassesByType.variables[configClass.id] = getConfigValue(
-        configClass.category,
-        configClass.label,
-        config,
-      );
-    });
-  });
-
-  writeFileSync(cssPath, createProductionCss(productionClassesByType, config));
-}
-
-function injectDevelopment(classCollection: IExtractedClasses) {
-  return Object.keys(classCollection).reduce((aggr, uid) => {
-    const extractedClass = classCollection[uid];
-    const configClass = classes[extractedClass.id];
-    const classEntry = createClassEntry(extractedClass.name, extractedClass.pseudos, configClass.css);
-    let css = '';
-
-    if (extractedClass.breakpoints.length) {
-      extractedClass.breakpoints.forEach(breakpoint => {
-        css += `@media(max-width: ${config.breakpoints[breakpoint]}){${classEntry}}\n`;
-      });
-    } else {
-      css = classEntry;
-    }
-
-    configClass.themes.forEach(theme => {
-      css += `:root{--${configClass.id}:${getConfigValue(
-        configClass.category,
-        configClass.label,
-        config,
-      )};} .themes-${theme}{--${configClass.id}:${getConfigValue(
-        configClass.category,
-        configClass.label,
-        config.themes![theme],
-      )};}${css}`;
-    });
-
-    return aggr.concat([extractedClass.name, css]);
-  }, [] as any[]);
 }
 
 export function processReferences(babel: any, state: any, classnamesRefs: any) {
@@ -289,14 +205,14 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
     });
 
   if (isProduction) {
-    injectProduction(classCollection);
+    writeFileSync(cssPath, injectProduction(classCollection, classes, config));
     state.file.ast.program.body.unshift(t.importDeclaration([], t.stringLiteral('classy-ui/styles.css')));
   } else {
     const localAddClassUid = state.file.scope.generateUidIdentifier('addClasses');
 
     const runtimeCall = t.expressionStatement(
       t.callExpression(localAddClassUid, [
-        t.arrayExpression(injectDevelopment(classCollection).map(value => t.stringLiteral(value))),
+        t.arrayExpression(injectDevelopment(classCollection, classes, config).map(value => t.stringLiteral(value))),
       ]),
     );
 

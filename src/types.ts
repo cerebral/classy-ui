@@ -49,7 +49,7 @@ export interface IConfig {
   zIndices: IConfigValue;
   transitions: IConfigValue;
   themes?: {
-    [theme: string]: TClassesConfig;
+    [theme: string]: Partial<TClassesConfig>;
   };
 }
 
@@ -73,12 +73,14 @@ export interface IClassesByType {
   };
 }
 
+export type TBreakpoints = Array<'sm' | 'md' | 'lg' | 'xl'>;
+
 export interface IExtractedClass {
   id: string;
   uid: string;
   name: string;
   pseudos: string[];
-  breakpoints: Array<'sm' | 'md' | 'lg' | 'xl'>;
+  breakpoints: TBreakpoints;
 }
 
 export interface IExtractedClasses {
