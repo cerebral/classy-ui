@@ -5,7 +5,7 @@ import { config as baseConfig } from '../config/base.config';
 import { transform as transformClassesToTypes } from '../config/transform-classes-to-types';
 import { transform as transformConfigToClasses } from '../config/transform-config-to-classes';
 import { IExtractedClass, IExtractedClasses } from '../types';
-import { flat, getUserConfig, injectDevelopment, injectProduction, isBreakpoint, mergeConfigs } from '../utils';
+import { flat, getUserConfig, injectDevelopment, injectProduction, mergeConfigs } from '../utils';
 
 const typesPath = join(process.cwd(), 'node_modules', 'classy-ui', 'lib', 'classy-ui.d.ts');
 const cssPath = join(process.cwd(), 'node_modules', 'classy-ui', 'styles.css');
@@ -17,6 +17,7 @@ if (process.env.NODE_ENV !== 'test') {
 }
 
 export default (babel: any) => {
+  const { types: t } = babel;
   return {
     name: 'classy-ui/plugin',
     visitor: {
@@ -24,10 +25,18 @@ export default (babel: any) => {
         programmPath.traverse({
           ImportDeclaration(path: any) {
             if (path?.node?.source?.value === 'classy-ui') {
-              const binding = path.scope.getBinding('classnames');
+              const imports = path.node.specifiers.map((s: any) => s.local.name);
 
-              if (binding && Boolean(binding.referencePaths.length)) {
-                processReferences(babel, state, binding.referencePaths);
+              const referencePaths = imports.reduce((aggr: any[], localName: string) => {
+                const binding = path.scope.getBinding(localName);
+                if (binding && Boolean(binding.referencePaths.length)) {
+                  aggr = aggr.concat(binding.referencePaths);
+                }
+                return aggr;
+              }, []);
+
+              if (Boolean(referencePaths.length)) {
+                processReferences(babel, state, referencePaths);
               }
             }
           },
@@ -115,32 +124,33 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
 
   function createClassObject(
     id: string,
-    { pseudos, breakpoints }: { pseudos: string[]; breakpoints: string[] },
+    { decorators, origin }: { decorators: string[]; origin: string },
   ): IExtractedClass {
-    const uid = [breakpoints.sort().join(':'), id, pseudos.sort()].filter(i => i.length > 0).join(':');
+    const uid = [decorators.sort().join(':'), id].filter(i => i.length > 0).join(':');
     return {
-      uid,
       id,
+      uid,
       name: isProduction ? computeProductionName(id) : uid,
-      pseudos: pseudos.slice(),
-      breakpoints: breakpoints.slice() as IExtractedClass['breakpoints'],
+      decorators: decorators.slice() as IExtractedClass['decorators'],
+      origin,
     };
   }
 
-  function updateContext({ pseudos, breakpoints }: { pseudos: string[]; breakpoints: string[] }, value: string) {
-    const context = { pseudos: pseudos.slice(), breakpoints: breakpoints.slice() };
+  function updateContext({ decorators, origin }: { decorators: string[]; origin: string }, value: string) {
+    const context = { decorators: decorators.slice(), origin };
     value = camleToDash(value);
-    if (isBreakpoint(value)) {
-      context.breakpoints.push(value);
-    } else {
-      context.pseudos.push(value);
-    }
+    context.decorators.push(value);
     return context;
   }
 
   function throwCodeFragmentIfIdNotFound(path: any, id: string) {
     if (!classes[id]) {
       throw path.buildCodeFrameError(`Could not find class ${id}`);
+    }
+  }
+  function throwIfForbiddenName(path: any, context: { decorators: string[]; origin: string }, name: string) {
+    if (context.origin === name || context.decorators.includes(name)) {
+      throw path.buildCodeFrameError(`Duplicating ${name} is not allowed.`);
     }
   }
 
@@ -170,6 +180,7 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
         const name = getImportName(node.callee.name, argPath.scope);
         // When not found it is not part of classy ui
         if (name != null) {
+          throwIfForbiddenName(argPath, context, name);
           const newContext = updateContext(context, name);
           return aggr.concat(rewriteAndCollectArguments(newContext, argPath.get('arguments'), collect));
         }
@@ -190,19 +201,31 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
   }
 
   const classCollection: IExtractedClasses = {};
+
   classnamesRefs
-    .map((ref: any) => ref.findParent((p: any) => t.isCallExpression(p)))
-    .forEach((call: any) => {
+    // Only use top-most class
+    .filter((path: any) => {
+      // path.node will always be an identifier
+      // if path.parentPath.parent is a CallExpression
+      // it's callee name must not be part of classy-ui to be allowed here
+
+      if (t.isCallExpression(path.parentPath.parent)) {
+        return getImportName(path.parentPath.parent.callee.name, path.scope) === null;
+      }
+      return true;
+    })
+    .forEach((path: any) => {
+      const statementPath = path.parentPath;
       const rewrite = rewriteAndCollectArguments(
-        { pseudos: [], breakpoints: [] },
-        call.get('arguments'),
+        { decorators: [], origin: getImportName(path.node.name, path.scope) },
+        statementPath.get('arguments'),
         classCollection,
       );
       const newExpression = convertToExpression(flat(rewrite));
       if (newExpression) {
-        call.replaceWith(newExpression);
+        statementPath.replaceWith(newExpression);
       } else {
-        call.remove();
+        statementPath.remove();
       }
     });
 

@@ -79,8 +79,8 @@ export interface IExtractedClass {
   id: string;
   uid: string;
   name: string;
-  pseudos: string[];
-  breakpoints: TBreakpoints;
+  decorators: string[];
+  origin: string;
 }
 
 export interface IExtractedClasses {

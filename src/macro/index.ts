@@ -7,5 +7,11 @@ classyUiMacro.isBabelMacro = true;
 classyUiMacro.options = {};
 
 function classyUiMacro({ references, state, babel }) {
-  processReferences(babel, state, references.classnames || []);
+  processReferences(
+    babel,
+    state,
+    Object.values(references).reduce((aggr, bindings) => {
+      return (aggr = aggr.concat(bindings));
+    }, []),
+  );
 }

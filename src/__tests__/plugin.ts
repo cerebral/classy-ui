@@ -42,5 +42,29 @@ import { classnames, hover, md, lg } from 'classy-ui'
 
 classnames('background-color-red-600', md(lg(hover('background-color-red-500'))))`,
     },
+    {
+      error: true,
+      title: 'should throw when nesting classnames call',
+      code: `
+import { classnames } from 'classy-ui'
+
+classnames(classnames('background-color-red-600'))`,
+    },
+    {
+      error: true,
+      title: 'should throw when using group inside classnames call',
+      code: `
+import { classnames, group } from 'classy-ui'
+
+classnames(group())`,
+    },
+    {
+      error: false,
+      title: 'should not throw if group was renamed',
+      code: `
+import { classnames, group as g } from 'classy-ui'
+
+classnames(group())`,
+    },
   ],
 });
