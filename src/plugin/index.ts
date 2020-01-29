@@ -13,7 +13,7 @@ const config = mergeConfigs(baseConfig, getUserConfig());
 const classes = transformConfigToClasses(config);
 
 if (process.env.NODE_ENV !== 'test') {
-  writeFileSync(typesPath, transformClassesToTypes(classes));
+  writeFileSync(typesPath, transformClassesToTypes(classes, config));
 }
 
 export default (babel: any) => {

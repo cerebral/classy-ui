@@ -11,10 +11,24 @@ import {
   IConfigDefaults,
   IEvaluatedConfig,
   IEvaluatedConfigValue,
+  IExtractedClass,
   IExtractedClasses,
   IThemes,
   TCssClasses,
 } from './types';
+
+export const allowedPseudoDecorators = [
+  'hover',
+  'focus',
+  'active',
+  'disabled',
+  'visited',
+  'firstChild',
+  'lastChild',
+  'oddChild',
+  'evenChild',
+  'focusWithin',
+];
 
 export const getClassesFromConfig = (
   category: keyof TCssClasses,
@@ -176,7 +190,9 @@ export const createClassEntry = (name: string, decorators: string[], css: string
   const groupDecorators = decorators
     .filter(decorator => decorator.startsWith('group') && decorator !== 'group')
     .map(decorator => camelToDash(decorator.substr(5)));
-  const pseudoDecorators = decorators.filter(decorator => decorator !== 'group');
+  const pseudoDecorators = decorators
+    .filter(decorator => allowedPseudoDecorators.includes(decorator))
+    .map(decorator => camelToDash(decorator));
 
   return `${groupDecorators.length ? `.group:${groupDecorators.join(':')} ` : ''}.${name.replace(/\:/g, '\\:')}${
     pseudoDecorators.length ? `:${pseudoDecorators.join(':')}` : ''
