@@ -66,5 +66,12 @@ import { classnames, group as g } from 'classy-ui'
 
 classnames(group())`,
     },
+    {
+      title: 'should allow pseudo selectors as base',
+      code: `
+import { classnames, hover } from 'classy-ui'
+
+hover('background-color-red-500')`,
+    },
   ],
 });

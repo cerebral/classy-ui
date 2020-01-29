@@ -1,5 +1,22 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`classy-ui should allow pseudo selectors as base: should allow pseudo selectors as base 1`] = `
+
+import { classnames, hover } from 'classy-ui'
+
+hover('background-color-red-500')
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { addClasses as _addClasses } from 'classy-ui/runtime';
+import { classnames, hover } from 'classy-ui';
+('background-color-red-500');
+
+_addClasses(['background-color-red-500', '.background-color-red-500{background-color:#f56565;}\\n']);
+
+
+`;
+
 exports[`classy-ui should convert both breakpoints and pseudos: should convert both breakpoints and pseudos 1`] = `
 
 import { classnames, hover, md } from 'classy-ui'
