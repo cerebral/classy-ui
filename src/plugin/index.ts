@@ -79,6 +79,12 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
     }
   }
 
+  function updateContext(decorators: string[], value: string) {
+    const newDecorators = decorators.slice();
+    newDecorators.push(value);
+    return newDecorators;
+  }
+
   function getImportName(name: string, scope: any) {
     const binding = scope.getBinding(name);
     if (binding && t.isImportSpecifier(binding.path.node) && binding.path.parent.source.value.startsWith('classy-ui')) {

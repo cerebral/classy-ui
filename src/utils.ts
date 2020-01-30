@@ -336,9 +336,3 @@ export const createClassObject = (
     decorators: withoutWrappingDecorators.slice() as IExtractedClass['decorators'],
   };
 };
-
-function updateContext(decorators: string[], value: string) {
-  const newDecorators = decorators.slice();
-  newDecorators.push(value);
-  return newDecorators;
-}
