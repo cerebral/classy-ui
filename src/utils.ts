@@ -1,5 +1,6 @@
 import { join } from 'path';
 
+// @ts-ignore
 import reduceCalc from 'reduce-css-calc';
 
 import { ThemeValue } from './config/ThemeValue';
@@ -112,11 +113,17 @@ export const mergeConfigs = (
         configB.themes,
       );
 
+      aggr = {
+        ...aggr,
+        [key]: configAValues,
+      };
+
       if (configB.defaults && configB.defaults[key]) {
         const configBValues =
           typeof configB.defaults[key] === 'function'
             ? (configB.defaults[key] as any)(configAValues)
             : configB.defaults[key];
+
         return {
           ...aggr,
           [key]: createThemeValues(
@@ -127,10 +134,7 @@ export const mergeConfigs = (
         };
       }
 
-      return {
-        ...aggr,
-        [key]: configAValues,
-      };
+      return aggr;
     }, {} as IConfigDefaults),
     themes: configB.themes,
   };

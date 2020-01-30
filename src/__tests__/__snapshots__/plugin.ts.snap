@@ -123,7 +123,7 @@ group()
 
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 import { classnames, group } from 'classy-ui';
-('group');
+('group ');
 
 _addClasses([]);
 
@@ -157,7 +157,7 @@ classnames(group())
 
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 import { classnames, group } from 'classy-ui';
-('group');
+('group ');
 
 _addClasses([]);
 
