@@ -52,40 +52,36 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
 
   const classCollection: IExtractedClasses = {};
 
-  function collectAndRewrite(classObj: IExtractedClass, transformer: (name: string) => any) {
+  function collectAndRewrite(classObj: IExtractedClass, transformer?: (name: string) => any): any[] {
     if (classObj.uid && classObj.id) {
       classCollection[classObj.uid] = classObj;
     }
-    return classObj.name ? [transformer(classObj.name)] : [];
+    return classObj.name ? (transformer ? [transformer(classObj.name)] : classObj.name.split(' ')) : [];
   }
 
-  function convertToExpression(arr: any[]) {
-    if (arr.length === 1) {
-      return arr[0];
-    } else {
-      const strings = [];
-      const others = [];
-      for (const item of arr) {
-        if (t.isStringLiteral(item)) {
-          strings.push(item.value);
-        } else {
-          others.push(item);
-        }
+  function convertToExpression(classAttribs: Set<any>) {
+    const strings = [];
+    const others = [];
+    for (const item of classAttribs.values()) {
+      if (typeof item === 'string') {
+        strings.push(item);
+      } else {
+        others.push(item);
       }
-      if (strings.length > 0 && others.length > 0) {
-        others.unshift(t.stringLiteral(strings.join(' ')));
-      } else if (strings.length > 0) {
-        return t.stringLiteral(strings.join(' '));
-      }
-
-      const max = others.length - 1;
-      let start = others[max];
-      for (let i = max - 1; i >= 0; i--) {
-        start = t.binaryExpression('+', others[i], start);
-      }
-
-      return start;
     }
+    if (strings.length > 0 && others.length > 0) {
+      others.unshift(t.stringLiteral(strings.join(' ')));
+    } else if (strings.length > 0) {
+      return t.stringLiteral(strings.join(' '));
+    }
+
+    const max = others.length - 1;
+    let start = others[max];
+    for (let i = max - 1; i >= 0; i--) {
+      start = t.binaryExpression('+', others[i], start);
+    }
+
+    return start;
   }
 
   function updateContext(decorators: string[], value: string) {
@@ -103,10 +99,6 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
   }
 
   function throwCodeFragmentIfInvalidId(path: any, id: string, decorators: string[]) {
-    if (decorators[decorators.length - 1] === 'theme' && id in (config.themes || {})) {
-      return;
-    }
-
     if (!classes[id]) {
       throw path.buildCodeFrameError(`Could not find class ${id}`);
     }
@@ -127,28 +119,29 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
     }
   }
 
-  function rewriteAndCollectArguments(decorators: any, argumentPaths: any) {
+  function rewriteAndCollectArguments(decorators: any, argumentPaths: any): Set<any> {
     // if root call has no arguments
     if (argumentPaths.length === 0) {
       const classObj = createClassObject(undefined, decorators);
-      return collectAndRewrite(classObj, t.stringLiteral);
+      return new Set(collectAndRewrite(classObj));
     }
     // process arguments
-    return argumentPaths.reduce((aggr: any[], argPath: any) => {
+    return argumentPaths.reduce((aggr: Set<any>, argPath: any) => {
       const node = argPath.node;
 
       if (t.isStringLiteral(node)) {
         const id = node.value;
         throwCodeFragmentIfInvalidId(argPath, id, decorators);
         const classObj = createClassObject(node.value, decorators);
-        return aggr.concat(collectAndRewrite(classObj, t.stringLiteral));
+        collectAndRewrite(classObj).forEach(aggr.add, aggr);
+        return aggr;
       } else if (t.isIdentifier(node)) {
         // This is the only knowlage the plugin has
         // about the imports from classy-ui
         if (decorators[0] !== 'classnames') {
           throw argPath.buildCodeFrameError(`Composing variabels is only allowed with classnames()`);
         }
-        return aggr.concat([node]);
+        return aggr.add(node);
       } else if (t.isCallExpression(node) && t.isIdentifier(node.callee)) {
         // To support import { hover as ho }...
         const name = getImportName(node.callee.name, argPath.scope);
@@ -158,11 +151,13 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
           const newDecorators = updateContext(decorators, name);
           const childArguments = argPath.get('arguments');
           if (Boolean(childArguments.length)) {
-            return aggr.concat(rewriteAndCollectArguments(newDecorators, childArguments));
+            rewriteAndCollectArguments(newDecorators, childArguments).forEach(aggr.add, aggr);
+            return aggr;
           } else {
             // if subsequent calls have no arguments
             const classObj = createClassObject(undefined, newDecorators);
-            return aggr.concat(collectAndRewrite(classObj, t.stringLiteral));
+            collectAndRewrite(classObj).forEach(aggr.add, aggr);
+            return aggr;
           }
         } else {
           throw argPath.buildCodeFrameError(`Composing variabels is only allowed with classnames()`);
@@ -170,9 +165,9 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
       } else if (t.isObjectExpression(node)) {
         return argPath.get('properties').map((propPath: any) => {
           const id = getIdOrThrow(propPath.get('key'));
-          throwCodeFragmentIfInvalidId(propPath, id, decorators);
           const classObj = createClassObject(id, decorators);
-          return aggr.concat(
+          throwCodeFragmentIfInvalidId(propPath, id, decorators);
+          return aggr.add(
             collectAndRewrite(classObj, name =>
               t.conditionalExpression(propPath.node.value, t.stringLiteral(name), t.stringLiteral('')),
             ),
@@ -180,8 +175,8 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
         });
       }
 
-      return aggr.concat(node);
-    }, []);
+      return aggr.add(node);
+    }, new Set());
   }
 
   classnamesRefs
@@ -198,11 +193,11 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
     })
     .forEach((path: any) => {
       const statementPath = path.parentPath;
-      const rewrite = rewriteAndCollectArguments(
+      const extractedClassAttributes = rewriteAndCollectArguments(
         [getImportName(path.node.name, path.scope)],
         statementPath.get('arguments'),
       );
-      const newExpression = convertToExpression(flat(rewrite));
+      const newExpression = convertToExpression(extractedClassAttributes);
       if (newExpression) {
         statementPath.replaceWith(newExpression);
       } else {

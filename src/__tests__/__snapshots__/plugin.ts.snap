@@ -10,7 +10,7 @@ group('background-color-red-600', 'background-color-red-500')
 
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 import { group } from 'classy-ui';
-('group background-color-red-600 group background-color-red-500');
+('group background-color-red-600 background-color-red-500');
 
 _addClasses([]);
 
