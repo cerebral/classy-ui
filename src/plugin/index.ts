@@ -64,7 +64,9 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
     const others = [];
     for (const item of classAttribs.values()) {
       if (typeof item === 'string') {
-        strings.push(item);
+        if (item.length !== 0) {
+          strings.push(item);
+        }
       } else {
         others.push(item);
       }
@@ -73,15 +75,17 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
       others.unshift(t.stringLiteral(strings.join(' ')));
     } else if (strings.length > 0) {
       return t.stringLiteral(strings.join(' '));
+    } else if (others.length > 0) {
+      const max = others.length - 1;
+      let start = others[max];
+      for (let i = max - 1; i >= 0; i--) {
+        start = t.binaryExpression('+', others[i], start);
+      }
+      return start;
     }
-
-    const max = others.length - 1;
-    let start = others[max];
-    for (let i = max - 1; i >= 0; i--) {
-      start = t.binaryExpression('+', others[i], start);
-    }
-
-    return start;
+    // We can't safely remove the whole expression
+    // becasue in JSX you need to have a actual argument
+    return t.stringLiteral('');
   }
 
   function updateContext(decorators: string[], value: string) {
@@ -119,29 +123,30 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
     }
   }
 
-  function rewriteAndCollectArguments(decorators: any, argumentPaths: any): Set<any> {
+  function rewriteAndCollectArguments(decorators: any, argumentPaths: any, classArgs: Set<any>) {
     // if root call has no arguments
     if (argumentPaths.length === 0) {
       const classObj = createClassObject(undefined, decorators);
-      return new Set(collectAndRewrite(classObj));
+      collectAndRewrite(classObj).forEach(classArgs.add, classArgs);
     }
     // process arguments
-    return argumentPaths.reduce((aggr: Set<any>, argPath: any) => {
+    argumentPaths.forEach((argPath: any) => {
       const node = argPath.node;
 
       if (t.isStringLiteral(node)) {
         const id = node.value;
         throwCodeFragmentIfInvalidId(argPath, id);
         const classObj = createClassObject(node.value, decorators);
-        collectAndRewrite(classObj).forEach(aggr.add, aggr);
-        return aggr;
+        collectAndRewrite(classObj).forEach(classArgs.add, classArgs);
+        return;
       } else if (t.isIdentifier(node)) {
         // This is the only knowlage the plugin has
         // about the imports from classy-ui
         if (decorators[0] !== 'classnames') {
           throw argPath.buildCodeFrameError(`Composing variabels is only allowed with classnames()`);
         }
-        return aggr.add(node);
+        classArgs.add(node);
+        return;
       } else if (t.isCallExpression(node) && t.isIdentifier(node.callee)) {
         // To support import { hover as ho }...
         const name = getImportName(node.callee.name, argPath.scope);
@@ -151,31 +156,31 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
           const newDecorators = updateContext(decorators, name);
           const childArguments = argPath.get('arguments');
           if (Boolean(childArguments.length)) {
-            rewriteAndCollectArguments(newDecorators, childArguments).forEach(aggr.add, aggr);
-            return aggr;
+            rewriteAndCollectArguments(newDecorators, childArguments, classArgs);
+            return;
           } else {
             // if subsequent calls have no arguments
             const classObj = createClassObject(undefined, newDecorators);
-            collectAndRewrite(classObj).forEach(aggr.add, aggr);
-            return aggr;
+            collectAndRewrite(classObj).forEach(classArgs.add, classArgs);
+            return;
           }
         } else {
           throw argPath.buildCodeFrameError(`Composing variabels is only allowed with classnames()`);
         }
       } else if (t.isObjectExpression(node)) {
-        return argPath.get('properties').map((propPath: any) => {
+        argPath.get('properties').forEach((propPath: any) => {
           const id = getIdOrThrow(propPath.get('key'));
           const classObj = createClassObject(id, decorators);
           throwCodeFragmentIfInvalidId(propPath, id);
-          return aggr.add(
-            collectAndRewrite(classObj, name =>
-              t.conditionalExpression(propPath.node.value, t.stringLiteral(name), t.stringLiteral('')),
-            ),
-          );
-        });
-      }
 
-      return aggr.add(node);
+          collectAndRewrite(classObj, name =>
+            t.conditionalExpression(propPath.node.value, t.stringLiteral(name), t.stringLiteral('')),
+          ).forEach(classArgs.add, classArgs);
+        });
+        return;
+      }
+      classArgs.add(node);
+      return classArgs;
     }, new Set());
   }
 
@@ -193,18 +198,13 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
     })
     .forEach((path: any) => {
       const statementPath = path.parentPath;
-      const extractedClassAttributes = rewriteAndCollectArguments(
+      const extractedClassAttributes = new Set();
+      rewriteAndCollectArguments(
         [getImportName(path.node.name, path.scope)],
         statementPath.get('arguments'),
+        extractedClassAttributes,
       );
-      const newExpression = convertToExpression(extractedClassAttributes);
-      if (newExpression) {
-        statementPath.replaceWith(newExpression);
-      } else {
-        // We can't safely remove the whole expression
-        // becasue in JSX you need to have a actual argument
-        statementPath.replaceWith(t.stringLiteral(''));
-      }
+      statementPath.replaceWith(convertToExpression(extractedClassAttributes));
     });
 
   if (isProduction) {
