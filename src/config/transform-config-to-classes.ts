@@ -65,13 +65,22 @@ const cssClasses: TCssClasses = {
   color: ['color'],
 };
 
-export const transform = (config: IEvaluatedConfig): IClasses => {
+export const transform = (config: IEvaluatedConfig): { defaults: IClasses; themes: { [name: string]: boolean } } => {
   const keys = Object.keys(cssClasses) as Array<keyof TCssClasses>;
 
-  return keys.reduce((aggr, key) => {
+  const defaults = keys.reduce((aggr, key) => {
     return {
       ...aggr,
       ...getClassesFromConfig(key, config, cssClasses[key]),
     };
   }, {});
+
+  return {
+    defaults,
+    themes: Object.keys(config.themes || {}).reduce((aggr, theme) => {
+      aggr[`themes-${theme}`] = true;
+
+      return aggr;
+    }, {} as any),
+  };
 };

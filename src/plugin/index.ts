@@ -4,7 +4,7 @@ import { join } from 'path';
 import { config as baseConfig } from '../config/base.config';
 import { transform as transformClassesToTypes } from '../config/transform-classes-to-types';
 import { transform as transformConfigToClasses } from '../config/transform-config-to-classes';
-import { IExtractedClasses, IExtractedClass } from '../types';
+import { IExtractedClass, IExtractedClasses } from '../types';
 import { createClassObject, flat, getUserConfig, injectDevelopment, injectProduction, mergeConfigs } from '../utils';
 
 const typesPath = join(process.cwd(), 'node_modules', 'classy-ui', 'lib', 'classy-ui.d.ts');
@@ -13,7 +13,7 @@ const config = mergeConfigs(baseConfig, getUserConfig());
 const classes = transformConfigToClasses(config);
 
 if (process.env.NODE_ENV !== 'test') {
-  writeFileSync(typesPath, transformClassesToTypes(classes, config));
+  writeFileSync(typesPath, transformClassesToTypes(classes.defaults, config));
 }
 
 export default (babel: any) => {
@@ -98,8 +98,8 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
     return null;
   }
 
-  function throwCodeFragmentIfInvalidId(path: any, id: string, decorators: string[]) {
-    if (!classes[id]) {
+  function throwCodeFragmentIfInvalidId(path: any, id: string) {
+    if (!classes.defaults[id] && !classes.themes[id]) {
       throw path.buildCodeFrameError(`Could not find class ${id}`);
     }
   }
@@ -208,14 +208,16 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
     });
 
   if (isProduction) {
-    writeFileSync(cssPath, injectProduction(classCollection, classes, config));
+    writeFileSync(cssPath, injectProduction(classCollection, classes.defaults, config));
     state.file.ast.program.body.unshift(t.importDeclaration([], t.stringLiteral('classy-ui/styles.css')));
   } else {
     const localAddClassUid = state.file.scope.generateUidIdentifier('addClasses');
 
     const runtimeCall = t.expressionStatement(
       t.callExpression(localAddClassUid, [
-        t.arrayExpression(injectDevelopment(classCollection, classes, config).map(value => t.stringLiteral(value))),
+        t.arrayExpression(
+          injectDevelopment(classCollection, classes.defaults, config).map(value => t.stringLiteral(value)),
+        ),
       ]),
     );
 
