@@ -74,7 +74,7 @@ import { classnames, group } from 'classy-ui'
 group()`,
     },
     {
-      title: 'should allow pseudo selectors as base',
+      title: 'should allow pseudo decorators as base',
       code: `
 import { classnames, hover } from 'classy-ui'
 

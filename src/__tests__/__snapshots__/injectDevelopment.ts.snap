@@ -71,7 +71,7 @@ Array [
 exports[`INJECT DEVELOPMENT should inject with multiple pseudo selectors 1`] = `
 Array [
   "background-color-red-500",
-  ".background-color-red-500:hover{background-color:#f56565;}
+  ".background-color-red-500:hover:first-child{background-color:#f56565;}
 ",
 ]
 `;

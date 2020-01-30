@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`classy-ui should allow pseudo selectors as base: should allow pseudo selectors as base 1`] = `
+exports[`classy-ui should allow pseudo decorators as base: should allow pseudo decorators as base 1`] = `
 
 import { classnames, hover } from 'classy-ui'
 

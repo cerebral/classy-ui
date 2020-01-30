@@ -17,7 +17,6 @@ if (process.env.NODE_ENV !== 'test') {
 }
 
 export default (babel: any) => {
-  const { types: t } = babel;
   return {
     name: 'classy-ui/plugin',
     visitor: {
@@ -57,19 +56,6 @@ function generateShortName(number: number) {
   } while (number > 0);
 
   return letters;
-}
-
-let nameCounter = 1;
-const nameCache = new Map();
-
-function computeProductionName(id: string) {
-  if (nameCache.has(id)) {
-    return nameCache.get(id);
-  } else {
-    const name = generateShortName(nameCounter++);
-    nameCache.set(id, name);
-    return name;
-  }
 }
 
 export function processReferences(babel: any, state: any, classnamesRefs: any) {
@@ -121,7 +107,9 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
       .join(':');
     let name = '';
 
-    if (id) {
+    if (decorators.length === 1 && decorators[0] === 'theme') {
+      name = `themes-${id}`;
+    } else if (id) {
       name = uid;
     } else if (decorators.length === 1 && decorators[0] === 'group') {
       name = 'group';
@@ -141,7 +129,11 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
     return newDecorators;
   }
 
-  function throwCodeFragmentIfIdNotFound(path: any, id: string) {
+  function throwCodeFragmentIfInvalidId(path: any, id: string, decorators: string[]) {
+    if (decorators[0] === 'theme' && id in (config.themes || {})) {
+      return;
+    }
+
     if (!classes[id]) {
       throw path.buildCodeFrameError(`Could not find class ${id}`);
     }
@@ -174,9 +166,12 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
 
       if (t.isStringLiteral(node)) {
         const id = node.value;
-        throwCodeFragmentIfIdNotFound(argPath, id);
+        throwCodeFragmentIfInvalidId(argPath, id, decorators);
         const classObj = createClassObject(node.value, decorators);
-        collect[classObj.uid] = classObj;
+
+        if (!classObj.name.startsWith('themes-')) {
+          collect[classObj.uid] = classObj;
+        }
         return aggr.concat([t.stringLiteral(classObj.name)]);
       } else if (t.isIdentifier(node)) {
         return aggr.concat([node]);
@@ -199,9 +194,12 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
       } else if (t.isObjectExpression(node)) {
         return argPath.get('properties').map((propPath: any) => {
           const id = getIdOrThrow(propPath.get('key'));
-          throwCodeFragmentIfIdNotFound(propPath, id);
+          throwCodeFragmentIfInvalidId(propPath, id, decorators);
           const classObj = createClassObject(id, decorators);
-          collect[classObj.uid] = classObj;
+
+          if (!classObj.name.startsWith('themes-')) {
+            collect[classObj.uid] = classObj;
+          }
           return aggr.concat(
             t.conditionalExpression(propPath.node.value, t.stringLiteral(classObj.name), t.stringLiteral('')),
           );
