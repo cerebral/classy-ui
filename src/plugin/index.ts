@@ -5,7 +5,7 @@ import { config as baseConfig } from '../config/base.config';
 import { transform as transformClassesToTypes } from '../config/transform-classes-to-types';
 import { transform as transformConfigToClasses } from '../config/transform-config-to-classes';
 import { IExtractedClass, IExtractedClasses } from '../types';
-import { camelToDash, flat, getUserConfig, injectDevelopment, injectProduction, mergeConfigs } from '../utils';
+import { flat, getUserConfig, injectDevelopment, injectProduction, mergeConfigs } from '../utils';
 
 const typesPath = join(process.cwd(), 'node_modules', 'classy-ui', 'lib', 'classy-ui.d.ts');
 const cssPath = join(process.cwd(), 'node_modules', 'classy-ui', 'styles.css');
@@ -137,7 +137,7 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
 
   function updateContext(decorators: string[], value: string) {
     const newDecorators = decorators.slice();
-    newDecorators.push(camelToDash(value));
+    newDecorators.push(value);
     return newDecorators;
   }
 

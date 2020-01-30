@@ -104,14 +104,24 @@ export const mergeConfigs = (
         return typeof value === 'function' ? value(defaults, utils) : value;
       };
 
+      const configAValues = createThemeValues(
+        key,
+        typeof configA.defaults[key] === 'function'
+          ? (configA.defaults[key] as any)(defaults, utils)
+          : configA.defaults[key],
+        configB.themes,
+      );
+
       if (configB.defaults && configB.defaults[key]) {
+        const configBValues =
+          typeof configB.defaults[key] === 'function'
+            ? (configB.defaults[key] as any)(configAValues)
+            : configB.defaults[key];
         return {
           ...aggr,
           [key]: createThemeValues(
             key,
-            typeof configB.defaults[key] === 'function'
-              ? (configB.defaults[key] as any)(defaults, utils)
-              : configB.defaults[key],
+            typeof configBValues === 'function' ? (configBValues as any)(defaults, utils) : configBValues,
             configB.themes,
           ),
         };
@@ -119,13 +129,7 @@ export const mergeConfigs = (
 
       return {
         ...aggr,
-        [key]: createThemeValues(
-          key,
-          typeof configA.defaults[key] === 'function'
-            ? (configA.defaults[key] as any)(defaults, utils)
-            : configA.defaults[key],
-          configB.themes,
-        ),
+        [key]: configAValues,
       };
     }, {} as IConfigDefaults),
     themes: configB.themes,
@@ -189,7 +193,7 @@ export const camelToDash = (string: string) => {
 export const createClassEntry = (name: string, decorators: string[], css: string) => {
   const groupDecorators = decorators
     .filter(decorator => decorator.startsWith('group') && decorator !== 'group')
-    .map(decorator => camelToDash(decorator.substr(6)));
+    .map(decorator => camelToDash(decorator.substr(5)));
   const pseudoDecorators = decorators
     .filter(decorator => allowedPseudoDecorators.includes(decorator))
     .map(decorator => camelToDash(decorator));
