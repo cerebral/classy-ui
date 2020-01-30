@@ -147,7 +147,7 @@ const submitButton = classnames(button, {
 
 ## Decorators
 
-**classy-ui** also ships with a set of **decorators**. They are functions that adds functionality to hour classnames. The decorators can be composed, so:
+**classy-ui** also ships with a set of **decorators**. They are functions that adds functionality to your classnames. The decorators can be composed, so:
 
 ```js
 import { hover, firstChild } from 'classy-ui';
@@ -230,11 +230,13 @@ The **theme** decorator allows you to activate one of your defined themes. It is
 import React from 'react';
 import { classnames, theme } from 'classy-ui';
 
+const dark = theme('dark')
+
 export const App = () => {
   const [currentTheme, setTheme] = React.useState(null);
 
   return (
-    <div className={theme({ dark: currentTheme === 'dark' })}>
+    <div className={classnames(({ [dark]: currentTheme === 'dark' })}>
       <h1 className={classnames('color-gray-800')}>Hello world</h1>
       <button onClick={() => setTheme('dark')}>Set dark theme</button>
     </div>
