@@ -101,17 +101,19 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
   }
 
   function createClassObject(id: string | undefined, decorators: IExtractedClass['decorators']): IExtractedClass {
-    const uid = [decorators.sort().join(':'), id]
+    const withoutWrappingDecorators = decorators.filter(i => !['classnames', 'group'].includes(i!));
+
+    const uid = [withoutWrappingDecorators.sort().join(':'), id]
       .filter(Boolean)
       .filter(i => i!.length > 0)
       .join(':');
     let name = '';
 
-    if (decorators.length === 1 && decorators[0] === 'theme') {
+    if (withoutWrappingDecorators.length === 1 && withoutWrappingDecorators[0] === 'theme') {
       name = `themes-${id}`;
     } else if (id) {
       name = uid;
-    } else if (decorators.length === 1 && decorators[0] === 'group') {
+    } else if (withoutWrappingDecorators.length === 1 && withoutWrappingDecorators[0] === 'group') {
       name = 'group';
     }
 
@@ -119,7 +121,7 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
       id,
       uid,
       name,
-      decorators: decorators.slice() as IExtractedClass['decorators'],
+      decorators: withoutWrappingDecorators.slice() as IExtractedClass['decorators'],
     };
   }
 
