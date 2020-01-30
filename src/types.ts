@@ -135,7 +135,7 @@ export interface IClassesByType {
 
 export interface IExtractedClass {
   id?: string;
-  uid: string;
+  uid?: string;
   name: string;
   decorators: string[];
 }

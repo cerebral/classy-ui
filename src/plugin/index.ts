@@ -132,10 +132,6 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
         const id = node.value;
         throwCodeFragmentIfInvalidId(argPath, id, decorators);
         const classObj = createClassObject(node.value, decorators);
-
-        if (!classObj.name.startsWith('themes-')) {
-          collect[classObj.uid] = classObj;
-        }
         return aggr.concat([t.stringLiteral(classObj.name)]);
       } else if (t.isIdentifier(node)) {
         return aggr.concat([node]);
@@ -161,9 +157,6 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
           throwCodeFragmentIfInvalidId(propPath, id, decorators);
           const classObj = createClassObject(id, decorators);
 
-          if (!classObj.name.startsWith('themes-')) {
-            collect[classObj.uid] = classObj;
-          }
           return aggr.concat(
             t.conditionalExpression(propPath.node.value, t.stringLiteral(classObj.name), t.stringLiteral('')),
           );

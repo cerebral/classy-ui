@@ -319,20 +319,33 @@ export const createClassObject = (
     .filter(Boolean)
     .filter(i => i!.length > 0)
     .join(':');
-  let name = '';
+
+  const returnedDecorators = withoutWrappingDecorators.slice() as IExtractedClass['decorators'];
 
   if (decorators[decorators.length - 1] === 'theme') {
-    name = `themes-${id} `;
+    return {
+      id,
+      name: `themes-${id} `,
+      decorators: returnedDecorators,
+    };
   } else if (!id && decorators[decorators.length - 1] === 'group') {
-    name = 'group ';
-  } else {
-    name = uid;
+    return {
+      id,
+      name: `group `,
+      decorators: returnedDecorators,
+    };
+  } else if (uid.startsWith('themes-')) {
+    return {
+      id,
+      name: uid,
+      decorators: returnedDecorators,
+    };
   }
 
   return {
     id,
     uid,
-    name,
-    decorators: withoutWrappingDecorators.slice() as IExtractedClass['decorators'],
+    name: uid,
+    decorators: returnedDecorators,
   };
 };
