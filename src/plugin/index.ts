@@ -4,7 +4,7 @@ import { join } from 'path';
 import { config as baseConfig } from '../config/base.config';
 import { transform as transformClassesToTypes } from '../config/transform-classes-to-types';
 import { transform as transformConfigToClasses } from '../config/transform-config-to-classes';
-import { IExtractedClass, IExtractedClasses } from '../types';
+import { IExtractedClasses, IExtractedClass } from '../types';
 import { createClassObject, flat, getUserConfig, injectDevelopment, injectProduction, mergeConfigs } from '../utils';
 
 const typesPath = join(process.cwd(), 'node_modules', 'classy-ui', 'lib', 'classy-ui.d.ts');
@@ -50,13 +50,22 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
 
   const isProduction = babel.getEnv() === 'production';
 
+  const classCollection: IExtractedClasses = {};
+
+  function collectAndRewrite(classObj: IExtractedClass, transformer: (name: string) => any) {
+    if (classObj.uid && classObj.id) {
+      classCollection[classObj.uid] = classObj;
+    }
+    return classObj.name ? [transformer(classObj.name)] : [];
+  }
+
   function convertToExpression(arr: any[]) {
-    if (arr.length == 1) {
+    if (arr.length === 1) {
       return arr[0];
     } else {
       const strings = [];
       const others = [];
-      for (let item of arr) {
+      for (const item of arr) {
         if (t.isStringLiteral(item)) {
           strings.push(item.value);
         } else {
@@ -69,7 +78,7 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
         return t.stringLiteral(strings.join(' '));
       }
 
-      let max = others.length - 1;
+      const max = others.length - 1;
       let start = others[max];
       for (let i = max - 1; i >= 0; i--) {
         start = t.binaryExpression('+', others[i], start);
@@ -118,11 +127,11 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
     }
   }
 
-  function rewriteAndCollectArguments(decorators: any, argumentPaths: any, collect: IExtractedClasses) {
+  function rewriteAndCollectArguments(decorators: any, argumentPaths: any) {
     // if root call has no arguments
     if (argumentPaths.length === 0) {
       const classObj = createClassObject(undefined, decorators);
-      return [t.stringLiteral(classObj.name)];
+      return collectAndRewrite(classObj, t.stringLiteral);
     }
     // process arguments
     return argumentPaths.reduce((aggr: any[], argPath: any) => {
@@ -132,8 +141,13 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
         const id = node.value;
         throwCodeFragmentIfInvalidId(argPath, id, decorators);
         const classObj = createClassObject(node.value, decorators);
-        return aggr.concat([t.stringLiteral(classObj.name)]);
+        return aggr.concat(collectAndRewrite(classObj, t.stringLiteral));
       } else if (t.isIdentifier(node)) {
+        // This is the only knowlage the plugin has
+        // about the imports from classy-ui
+        if (decorators[0] !== 'classnames') {
+          throw argPath.buildCodeFrameError(`Composing variabels is only allowed with classnames()`);
+        }
         return aggr.concat([node]);
       } else if (t.isCallExpression(node) && t.isIdentifier(node.callee)) {
         // To support import { hover as ho }...
@@ -144,21 +158,24 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
           const newDecorators = updateContext(decorators, name);
           const childArguments = argPath.get('arguments');
           if (Boolean(childArguments.length)) {
-            return aggr.concat(rewriteAndCollectArguments(newDecorators, childArguments, collect));
+            return aggr.concat(rewriteAndCollectArguments(newDecorators, childArguments));
           } else {
             // if subsequent calls have no arguments
             const classObj = createClassObject(undefined, newDecorators);
-            return aggr.concat([t.stringLiteral(classObj.name)]);
+            return aggr.concat(collectAndRewrite(classObj, t.stringLiteral));
           }
+        } else {
+          throw argPath.buildCodeFrameError(`Composing variabels is only allowed with classnames()`);
         }
       } else if (t.isObjectExpression(node)) {
         return argPath.get('properties').map((propPath: any) => {
           const id = getIdOrThrow(propPath.get('key'));
           throwCodeFragmentIfInvalidId(propPath, id, decorators);
           const classObj = createClassObject(id, decorators);
-
           return aggr.concat(
-            t.conditionalExpression(propPath.node.value, t.stringLiteral(classObj.name), t.stringLiteral('')),
+            collectAndRewrite(classObj, name =>
+              t.conditionalExpression(propPath.node.value, t.stringLiteral(name), t.stringLiteral('')),
+            ),
           );
         });
       }
@@ -166,8 +183,6 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
       return aggr.concat(node);
     }, []);
   }
-
-  const classCollection: IExtractedClasses = {};
 
   classnamesRefs
     // Only use top-most class
@@ -186,7 +201,6 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
       const rewrite = rewriteAndCollectArguments(
         [getImportName(path.node.name, path.scope)],
         statementPath.get('arguments'),
-        classCollection,
       );
       const newExpression = convertToExpression(flat(rewrite));
       if (newExpression) {

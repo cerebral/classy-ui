@@ -130,23 +130,6 @@ _addClasses([]);
 
 `;
 
-exports[`classy-ui should not throw if group was renamed: should not throw if group was renamed 1`] = `
-
-import { classnames, group as g } from 'classy-ui'
-
-classnames(group())
-
-      ↓ ↓ ↓ ↓ ↓ ↓
-
-import { addClasses as _addClasses } from 'classy-ui/runtime';
-import { classnames, group as g } from 'classy-ui';
-group();
-
-_addClasses([]);
-
-
-`;
-
 exports[`classy-ui should not throw when using group inside classnames call: should not throw when using group inside classnames call 1`] = `
 
 import { classnames, group } from 'classy-ui'
@@ -161,6 +144,22 @@ import { classnames, group } from 'classy-ui';
 
 _addClasses([]);
 
+
+`;
+
+exports[`classy-ui should throw if group was renamed: should throw if group was renamed 1`] = `
+
+import { classnames, group as g } from 'classy-ui'
+
+classnames(group())
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+SyntaxError: unknown: Composing variabels is only allowed with classnames()
+[0m [90m 1 | [39m[36mimport[39m { classnames[33m,[39m group as g } from [32m'classy-ui'[39m[0m
+[0m [90m 2 | [39m[0m
+[0m[31m[1m>[22m[39m[90m 3 | [39mclassnames(group())[0m
+[0m [90m   | [39m           [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[0m
 
 `;
 

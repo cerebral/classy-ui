@@ -59,8 +59,8 @@ import { classnames, group } from 'classy-ui'
 classnames(group())`,
     },
     {
-      error: false,
-      title: 'should not throw if group was renamed',
+      error: true,
+      title: 'should throw if group was renamed',
       code: `
 import { classnames, group as g } from 'classy-ui'
 
