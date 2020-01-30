@@ -322,16 +322,10 @@ export const createClassObject = (
 
   const returnedDecorators = withoutWrappingDecorators.slice() as IExtractedClass['decorators'];
 
-  if (decorators[decorators.length - 1] === 'theme') {
+  if (decorators[decorators.length - 1] === 'group') {
     return {
       id,
-      name: `themes-${id} `,
-      decorators: returnedDecorators,
-    };
-  } else if (!id && decorators[decorators.length - 1] === 'group') {
-    return {
-      id,
-      name: `group `,
+      name: `group ${id || ''}`,
       decorators: returnedDecorators,
     };
   } else if (uid.startsWith('themes-')) {

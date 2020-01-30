@@ -1,5 +1,22 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`classy-ui should allow arguments to group: should allow arguments to group 1`] = `
+
+import { group } from 'classy-ui'
+
+group('background-color-red-600', 'background-color-red-500')
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { addClasses as _addClasses } from 'classy-ui/runtime';
+import { group } from 'classy-ui';
+('group background-color-red-600 group background-color-red-500');
+
+_addClasses([]);
+
+
+`;
+
 exports[`classy-ui should allow pseudo decorators as base: should allow pseudo decorators as base 1`] = `
 
 import { classnames, hover } from 'classy-ui'

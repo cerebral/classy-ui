@@ -59,6 +59,14 @@ import { classnames, group } from 'classy-ui'
 classnames(group())`,
     },
     {
+      error: false,
+      title: 'should allow arguments to group',
+      code: `
+import { group } from 'classy-ui'
+
+group('background-color-red-600', 'background-color-red-500')`,
+    },
+    {
       error: true,
       title: 'should throw if group was renamed',
       code: `
