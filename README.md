@@ -103,7 +103,7 @@ export class AppComponent {
 
 ## Classnames
 
-The **classnames** function used in the examples above is what you use to create your composed classnames. By default you use it to combine classnames:
+The **classnames** function used in the examples above is what you use to create your composed classnames:
 
 ```ts
 import { classnames } from 'classy-ui';
