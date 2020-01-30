@@ -189,7 +189,7 @@ export const camelToDash = (string: string) => {
 export const createClassEntry = (name: string, decorators: string[], css: string) => {
   const groupDecorators = decorators
     .filter(decorator => decorator.startsWith('group') && decorator !== 'group')
-    .map(decorator => camelToDash(decorator.substr(5)));
+    .map(decorator => camelToDash(decorator.substr(6)));
   const pseudoDecorators = decorators
     .filter(decorator => allowedPseudoDecorators.includes(decorator))
     .map(decorator => camelToDash(decorator));
@@ -211,7 +211,7 @@ export const injectProduction = (classCollection: IExtractedClasses, classes: IC
 
   Object.keys(classCollection).forEach(uid => {
     const extractedClass = classCollection[uid];
-    const configClass = classes[extractedClass.id];
+    const configClass = classes[extractedClass.id as string];
     const screenDecorators = extractedClass.decorators.filter(decorator => decorator in config.defaults.screens);
     const otherDecorators = extractedClass.decorators.filter(decorator => !(decorator in config.defaults.screens));
     const classEntry = createClassEntry(extractedClass.name, otherDecorators, configClass.css);
@@ -242,7 +242,8 @@ export const injectProduction = (classCollection: IExtractedClasses, classes: IC
 export const injectDevelopment = (classCollection: IExtractedClasses, classes: IClasses, config: IEvaluatedConfig) => {
   return Object.keys(classCollection).reduce((aggr, uid) => {
     const extractedClass = classCollection[uid];
-    const configClass = classes[extractedClass.id];
+
+    const configClass = classes[extractedClass.id as string];
     const screenDecorators = extractedClass.decorators.filter(decorator => decorator in config.defaults.screens);
     const otherDecorators = extractedClass.decorators.filter(decorator => !(decorator in config.defaults.screens));
     const classEntry = createClassEntry(extractedClass.name, otherDecorators, configClass.css);

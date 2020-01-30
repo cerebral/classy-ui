@@ -10,9 +10,9 @@ hover('background-color-red-500')
 
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 import { classnames, hover } from 'classy-ui';
-('background-color-red-500');
+('hover:background-color-red-500');
 
-_addClasses(['background-color-red-500', '.background-color-red-500{background-color:#f56565;}\\n']);
+_addClasses(['hover:background-color-red-500', '.hover\\\\:background-color-red-500:hover{background-color:#f56565;}\\n']);
 
 
 `;
@@ -27,11 +27,11 @@ classnames(md(hover('background-color-red-500')))
 
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 import { classnames, hover, md } from 'classy-ui';
-('hover:md:background-color-red-500');
+('classnames:hover:md:background-color-red-500');
 
 _addClasses([
-  'hover:md:background-color-red-500',
-  '@media(max-width:768px){.hover\\\\:md\\\\:background-color-red-500:hover{background-color:#f56565;}}\\n\\n',
+  'classnames:hover:md:background-color-red-500',
+  '@media(max-width:768px){.classnames\\\\:hover\\\\:md\\\\:background-color-red-500:hover{background-color:#f56565;}}\\n\\n',
 ]);
 
 
@@ -47,11 +47,11 @@ classnames(md('background-color-red-500'))
 
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 import { classnames, md } from 'classy-ui';
-('md:background-color-red-500');
+('classnames:md:background-color-red-500');
 
 _addClasses([
-  'md:background-color-red-500',
-  '@media(max-width:768px){.md\\\\:background-color-red-500{background-color:#f56565;}}\\n\\n',
+  'classnames:md:background-color-red-500',
+  '@media(max-width:768px){.classnames\\\\:md\\\\:background-color-red-500{background-color:#f56565;}}\\n\\n',
 ]);
 
 
@@ -67,13 +67,13 @@ classnames('background-color-red-600', md(lg(hover('background-color-red-500')))
 
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 import { classnames, hover, md, lg } from 'classy-ui';
-('background-color-red-600 hover:lg:md:background-color-red-500');
+('classnames:background-color-red-600 classnames:hover:lg:md:background-color-red-500');
 
 _addClasses([
-  'background-color-red-600',
-  '.background-color-red-600{background-color:#e53e3e;}\\n',
-  'hover:lg:md:background-color-red-500',
-  '@media(max-width:1024px){.hover\\\\:lg\\\\:md\\\\:background-color-red-500:hover{background-color:#f56565;}}\\n@media(max-width:768px){.hover\\\\:lg\\\\:md\\\\:background-color-red-500:hover{background-color:#f56565;}}\\n\\n',
+  'classnames:background-color-red-600',
+  '.classnames\\\\:background-color-red-600{background-color:#e53e3e;}\\n',
+  'classnames:hover:lg:md:background-color-red-500',
+  '@media(max-width:1024px){.classnames\\\\:hover\\\\:lg\\\\:md\\\\:background-color-red-500:hover{background-color:#f56565;}}\\n@media(max-width:768px){.classnames\\\\:hover\\\\:lg\\\\:md\\\\:background-color-red-500:hover{background-color:#f56565;}}\\n\\n',
 ]);
 
 
@@ -89,9 +89,12 @@ classnames(hover('background-color-red-500'))
 
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 import { classnames, hover } from 'classy-ui';
-('hover:background-color-red-500');
+('classnames:hover:background-color-red-500');
 
-_addClasses(['hover:background-color-red-500', '.hover\\\\:background-color-red-500:hover{background-color:#f56565;}\\n']);
+_addClasses([
+  'classnames:hover:background-color-red-500',
+  '.classnames\\\\:hover\\\\:background-color-red-500:hover{background-color:#f56565;}\\n',
+]);
 
 
 `;
@@ -106,9 +109,29 @@ classnames('background-color-red-500')
 
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 import { classnames } from 'classy-ui';
-('background-color-red-500');
+('classnames:background-color-red-500');
 
-_addClasses(['background-color-red-500', '.background-color-red-500{background-color:#f56565;}\\n']);
+_addClasses([
+  'classnames:background-color-red-500',
+  '.classnames\\\\:background-color-red-500{background-color:#f56565;}\\n',
+]);
+
+
+`;
+
+exports[`classy-ui should give group a classname: should give group a classname 1`] = `
+
+import { classnames, group } from 'classy-ui'
+
+group()
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { addClasses as _addClasses } from 'classy-ui/runtime';
+import { classnames, group } from 'classy-ui';
+('group');
+
+_addClasses([]);
 
 
 `;

@@ -114,18 +114,23 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
     return null;
   }
 
-  function createClassObject(id: IExtractedClass['id'], decorators: IExtractedClass['decorators']): IExtractedClass {
+  function createClassObject(id: string | undefined, decorators: IExtractedClass['decorators']): IExtractedClass {
     const uid = [decorators.sort().join(':'), id]
       .filter(Boolean)
       .filter(i => i!.length > 0)
       .join(':');
+    let name = '';
+
+    if (id) {
+      name = uid;
+    } else if (decorators.length === 1 && decorators[0] === 'group') {
+      name = 'group';
+    }
+
     return {
       id,
       uid,
-      // THIS IS NOT WORKING, we need to build a valid classname with all supported features e.g. group hover stuff
-      // this name might even be null if adding this classname won't make sens
-      // having no name needs to be supported in rewriteAndCollectArguments
-      name: uid,
+      name,
       decorators: decorators.slice() as IExtractedClass['decorators'],
     };
   }
@@ -161,7 +166,6 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
     // if root call has no arguments
     if (argumentPaths.length === 0) {
       const classObj = createClassObject(undefined, decorators);
-      collect[classObj.uid] = classObj;
       return [t.stringLiteral(classObj.name)];
     }
     // process arguments
@@ -189,7 +193,6 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
           } else {
             // if subsequent calls have no arguments
             const classObj = createClassObject(undefined, newDecorators);
-            collect[classObj.uid] = classObj;
             return aggr.concat([t.stringLiteral(classObj.name)]);
           }
         }

@@ -67,6 +67,13 @@ import { classnames, group as g } from 'classy-ui'
 classnames(group())`,
     },
     {
+      title: 'should give group a classname',
+      code: `
+import { classnames, group } from 'classy-ui'
+
+group()`,
+    },
+    {
       title: 'should allow pseudo selectors as base',
       code: `
 import { classnames, hover } from 'classy-ui'

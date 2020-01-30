@@ -18,6 +18,6 @@ exports[`INJECT PRODUCTION should inject with breakpoint 1`] = `"@media(max-widt
 
 exports[`INJECT PRODUCTION should inject with multiple breakpoints 1`] = `"@media(max-width: 640px){.background-color-red-500{background-color:#f56565;}}@media(max-width: 1280px){.background-color-red-500{background-color:#f56565;}}"`;
 
-exports[`INJECT PRODUCTION should inject with multiple pseudo selectors 1`] = `".background-color-red-500:hover:first-child{background-color:#f56565;}"`;
+exports[`INJECT PRODUCTION should inject with multiple pseudo selectors 1`] = `".background-color-red-500:hover{background-color:#f56565;}"`;
 
 exports[`INJECT PRODUCTION should inject with pseudo selector 1`] = `".background-color-red-500:hover{background-color:#f56565;}"`;
