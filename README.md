@@ -103,7 +103,7 @@ export class AppComponent {
 
 ## Decorators
 
-The **classnames** function used in the examples above is what we call a **decorator**. There are several decorators and they have different purposes. All of them takes an optional set of classnames and/or dynamic classnames.
+The **classnames** function used in the examples above is what we call a **decorator**. The **classnames** is the core decorator that lets you combine different classnames. There are several other decorators and they have different purposes. All of them takes an optional set of classnames and/or dynamic classnames.
 
 ### Pseudo decorators
 
@@ -136,7 +136,7 @@ import { hover, firstChild } from 'classy-ui';
 const myClass = hover(firstChild('color-red-500'));
 ```
 
-## Screen decorators
+### Screen decorators
 
 **screens** is one of the properties of the configuration. This property holds the configuration of different breakpoints used in combination with media queries. By default these are **sm**, **md**, **lg** and **xl**. These are used to enable classnames within the respective breakpoints:
 
@@ -154,7 +154,7 @@ import { tablet } from 'classy-ui';
 const myClass = tablet('color-red-500');
 ```
 
-## Group decorators
+### Group decorators
 
 You can also define a set off classnames with the **group** decorator. This allows any nested group decorator to trigger based on this parent. For example:
 
@@ -177,6 +177,42 @@ Now any **myChild** of **myParent** will be red when **myParent** is being hover
 - **groupOddChild**
 - **groupEvenChild**
 - **groupFocusWithin**
+
+### Theme decorator
+
+The **theme** decorator allows you to activate one of your defined themes. It is typically used with dynamic insertion in a component, for example here with React:
+
+```js
+import React from 'react';
+import { classnames, theme } from 'classy-ui';
+
+export const App = () => {
+  const [currentTheme, setTheme] = React.useState(null);
+
+  return (
+    <div className={theme({ dark: currentTheme === 'dark' })}>
+      <h1 className={classnames('color-gray-800')}>Hello world</h1>
+      <button onClick={() => setTheme('dark')}>Set dark theme</button>
+    </div>
+  );
+};
+```
+
+If now **dark** theme was configured as:
+
+```js
+{
+  themes: {
+    dark: {
+      colors: {
+        ['gray-800']: 'green'
+      }
+    }
+  }
+}
+```
+
+It would change to **green** when the theme is active.
 
 ## Composing
 
