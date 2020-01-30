@@ -15,7 +15,6 @@ export const transform = (transformedConfig: IClasses, config: IEvaluatedConfig)
   export const classnames: TClassnames;
   export const group: TDecorator;
   export const groupHover: TDecorator;
-  export const theme: (theme: TThemes) => TDecoratorsString;
   ${allowedPseudoDecorators.map(decorator => `export const ${decorator}: TDecorator;\n`)}
   ${Object.keys(config.defaults.screens)
     .map(screen => `export const ${screen}: TDecorator;`)

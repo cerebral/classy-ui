@@ -222,44 +222,6 @@ Now any **myChild** of **myParent** will be red when **myParent** is being hover
 - **groupEvenChild**
 - **groupFocusWithin**
 
-### Theme decorator
-
-The **theme** decorator allows you to activate one of your defined themes. It is typically used with dynamic insertion in a component, for example here with React:
-
-```js
-import React from 'react';
-import { classnames, theme } from 'classy-ui';
-
-const dark = theme('dark')
-
-export const App = () => {
-  const [currentTheme, setTheme] = React.useState(null);
-
-  return (
-    <div className={classnames(({ [dark]: currentTheme === 'dark' })}>
-      <h1 className={classnames('color-gray-800')}>Hello world</h1>
-      <button onClick={() => setTheme('dark')}>Set dark theme</button>
-    </div>
-  );
-};
-```
-
-If now **dark** theme was configured as:
-
-```js
-{
-  themes: {
-    dark: {
-      colors: {
-        ['gray-800']: 'green'
-      }
-    }
-  }
-}
-```
-
-It would change to **green** when the theme is active.
-
 ## Factories
 
 A powerful concept brought with a Javascript API is factories. Instead of having static classnames, you can rather build them dynamically behind a function. This function can take any options you define.
@@ -474,23 +436,39 @@ module.exports = {
 
 ## Themes
 
-There is also a configuration property called **themes**. It allows you to define multiple themes for your application. Each theme is allowed to override existing config. Automatically under the hood **classy-ui** will makes these values CSS variables. That means you simply need to add a class of **themes-myTheme** on the body and it optimally flips to your theme.
+All the themes defined in the config is exposed as classnames of **themes-{THEME}**. They are typically used with dynamic insertion in a component, for example here with React:
 
 ```js
-module.exports = {
-  defaults: {...},
-  themes: {
-    dark: {
-      colors: {
-        white: 'black',
-        black: 'white',
-      },
-    },
-  },
+import React from 'react';
+import { classnames } from 'classy-ui';
+
+export const App = () => {
+  const [currentTheme, setTheme] = React.useState(null);
+
+  return (
+    <div className={classnames(({ 'themes-dark': currentTheme === 'dark' })}>
+      <h1 className={classnames('color-gray-800')}>Hello world</h1>
+      <button onClick={() => setTheme('dark')}>Set dark theme</button>
+    </div>
+  );
 };
 ```
 
-In this example adding the classname **themes-dark** to any element, typically body, in your app will now flip the colors of any classname using these colors.
+If now **dark** theme was configured as:
+
+```js
+{
+  themes: {
+    dark: {
+      colors: {
+        ['gray-800']: 'green'
+      }
+    }
+  }
+}
+```
+
+It would change to **green** when the theme is active.
 
 ## How does it work?
 
