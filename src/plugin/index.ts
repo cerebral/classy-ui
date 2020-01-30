@@ -131,7 +131,7 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
 
       if (t.isStringLiteral(node)) {
         const id = node.value;
-        throwCodeFragmentIfInvalidId(argPath, id, decorators);
+        throwCodeFragmentIfInvalidId(argPath, id);
         const classObj = createClassObject(node.value, decorators);
         collectAndRewrite(classObj).forEach(aggr.add, aggr);
         return aggr;
@@ -166,7 +166,7 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
         return argPath.get('properties').map((propPath: any) => {
           const id = getIdOrThrow(propPath.get('key'));
           const classObj = createClassObject(id, decorators);
-          throwCodeFragmentIfInvalidId(propPath, id, decorators);
+          throwCodeFragmentIfInvalidId(propPath, id);
           return aggr.add(
             collectAndRewrite(classObj, name =>
               t.conditionalExpression(propPath.node.value, t.stringLiteral(name), t.stringLiteral('')),
