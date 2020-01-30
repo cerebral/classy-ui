@@ -16,7 +16,7 @@ The benefits:
 - The runtime **completely** disappears in production, meaning it does not affect your bundle size
 - Supports themes by automatically converting themed configuration to CSS variables
 
-The design system is based on [tailwindcss](https://tailwindcss.com/), the configuration is actually exactly the same.
+The design system is based on [tailwindcss](https://tailwindcss.com/), the configuration is actually exactly the same. Also thanks to [classnames](https://www.npmjs.com/package/classnames) for inspiring the composition tool. All projects stands on the shoulders of others, so big digital hug and love to the maintainers of these project!
 
 > The name **classy-ui** enforces the idea that your UI becomes an elegant, optimized and concise set of classnames based on a design system
 
@@ -101,13 +101,65 @@ export class AppComponent {
 }
 ```
 
+## Classnames
+
+The **classnames** function used in the examples above is what you use to create your composed classnames. By default you use it to combine classnames:
+
+```ts
+import { classnames } from 'classy-ui';
+
+const myClassName = classnames('color-red-500', 'background-color-gray-200');
+```
+
+You can also conditionally add classnames using an object:
+
+```ts
+import { classnames } from 'classy-ui';
+
+const myClassName = classnames('color-red-500', {
+  'background-color-gray-200': false,
+});
+```
+
+You can use an existing composition with **classnames**:
+
+```ts
+import { classnames } from 'classy-ui';
+
+const button = classnames('background-color-gray-200', 'color-gray-800');
+
+const alertButton = classnames(button, 'background-color-red-600');
+```
+
+You can even dynamically compose an existing classname:
+
+```ts
+import { classnames } from 'classy-ui';
+
+const button = classnames('background-color-gray-200', 'color-gray-800');
+
+const alert = classnames('background-color-red-600', 'border-color-red-800');
+
+const submitButton = classnames(button, {
+  [alert]: true,
+});
+```
+
 ## Decorators
 
-The **classnames** function used in the examples above is what we call a **decorator**. The **classnames** is the core decorator that lets you combine different classnames. There are several other decorators and they have different purposes. All of them takes an optional set of classnames and/or dynamic classnames.
+**classy-ui** also ships with a set of **decorators**. They are functions that adds functionality to hour classnames. The decorators can be composed, so:
+
+```js
+import { hover, firstChild } from 'classy-ui';
+
+const myClass = hover(firstChild('color-red-500'));
+```
+
+Would now make **myClass** red when hovered as the first child of a container.
 
 ### Pseudo decorators
 
-Pseudo decorators basically adds things like **:hover**, **:disabled** etc. to your classnames. You can compose multiple pseudo selectors on a single classname.
+Pseudo decorators basically adds things like **:hover**, **:disabled** etc. to your classnames.
 
 ```js
 import { hover } from 'classy-ui';
@@ -128,14 +180,6 @@ The following pseudo decorators are available:
 - **evenChild**
 - **focusWithin**
 
-These can be composed together:
-
-```js
-import { hover, firstChild } from 'classy-ui';
-
-const myClass = hover(firstChild('color-red-500'));
-```
-
 ### Screen decorators
 
 **screens** is one of the properties of the configuration. This property holds the configuration of different breakpoints used in combination with media queries. By default these are **sm**, **md**, **lg** and **xl**. These are used to enable classnames within the respective breakpoints:
@@ -146,7 +190,7 @@ import { md } from 'classy-ui';
 const myClass = md('color-red-500');
 ```
 
-**myClass** text is now red only up to the **md** breakpoint defined in the config, which by default is **768px**. If you were to change these **screens** properties, their respectve imports would be used. For example **tablet**:
+**myClass** text is now red only up to the **md** breakpoint defined in the config, which by default is **768px**. If you were to change out these **screens** properties in the configuration, their respective imports would be used. They will be correctly typed. For example **tablet**:
 
 ```js
 import { tablet } from 'classy-ui';
@@ -213,36 +257,6 @@ If now **dark** theme was configured as:
 ```
 
 It would change to **green** when the theme is active.
-
-## Composing
-
-The Javascript API allows you to compose together classnames and also decorators.
-
-### Composing classnames
-
-```js
-import { classnames } from 'classy-ui';
-
-const myClass = classnames('background-color-red-500', 'color-white');
-```
-
-### Composing decorators
-
-```js
-import { classnames, md, xl, hover } from 'classy-ui';
-
-const myClass = classnames(md(hover('color-white')), xl(hover('color-black')));
-```
-
-### Composing compositions
-
-```js
-import { classnames } from 'classy-ui';
-
-const button = classnames('border-none', 'background-color-gray-500');
-
-const alertButton = classnames(button, 'background-color-red-500');
-```
 
 ## Factories
 
@@ -415,16 +429,16 @@ The way the classnames are evaluated is by looking at the CSS property itself, f
 ```js
 {
   borderWidth: {
-  default: '1px',
-  '0': '0',
-  '2': '2px',
-  '4': '4px',
-  '8': '8px',
-},
+    default: '1px',
+    '0': '0',
+    '2': '2px',
+    '4': '4px',
+    '8': '8px',
+  },
 }
 ```
 
-That means you have the following classes for **border-top-width**:
+That means you have the following classes available for **border-top-width**:
 
 - **border-top-width-default**
 - **border-top-width-0**

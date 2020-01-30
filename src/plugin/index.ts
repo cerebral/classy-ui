@@ -109,12 +109,12 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
       .join(':');
     let name = '';
 
-    if (withoutWrappingDecorators.length === 1 && withoutWrappingDecorators[0] === 'theme') {
-      name = `themes-${id}`;
-    } else if (id) {
+    if (decorators[decorators.length - 1] === 'theme') {
+      name = `themes-${id} `;
+    } else if (!id && decorators[decorators.length - 1] === 'group') {
+      name = 'group ';
+    } else {
       name = uid;
-    } else if (withoutWrappingDecorators.length === 1 && withoutWrappingDecorators[0] === 'group') {
-      name = 'group';
     }
 
     return {
@@ -132,7 +132,7 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
   }
 
   function throwCodeFragmentIfInvalidId(path: any, id: string, decorators: string[]) {
-    if (decorators[0] === 'theme' && id in (config.themes || {})) {
+    if (decorators[decorators.length - 1] === 'theme' && id in (config.themes || {})) {
       return;
     }
 

@@ -27,11 +27,11 @@ classnames(md(hover('background-color-red-500')))
 
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 import { classnames, hover, md } from 'classy-ui';
-('classnames:hover:md:background-color-red-500');
+('hover:md:background-color-red-500');
 
 _addClasses([
-  'classnames:hover:md:background-color-red-500',
-  '@media(max-width:768px){.classnames\\\\:hover\\\\:md\\\\:background-color-red-500:hover{background-color:#f56565;}}\\n\\n',
+  'hover:md:background-color-red-500',
+  '@media(max-width:768px){.hover\\\\:md\\\\:background-color-red-500:hover{background-color:#f56565;}}\\n\\n',
 ]);
 
 
@@ -47,11 +47,11 @@ classnames(md('background-color-red-500'))
 
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 import { classnames, md } from 'classy-ui';
-('classnames:md:background-color-red-500');
+('md:background-color-red-500');
 
 _addClasses([
-  'classnames:md:background-color-red-500',
-  '@media(max-width:768px){.classnames\\\\:md\\\\:background-color-red-500{background-color:#f56565;}}\\n\\n',
+  'md:background-color-red-500',
+  '@media(max-width:768px){.md\\\\:background-color-red-500{background-color:#f56565;}}\\n\\n',
 ]);
 
 
@@ -67,13 +67,13 @@ classnames('background-color-red-600', md(lg(hover('background-color-red-500')))
 
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 import { classnames, hover, md, lg } from 'classy-ui';
-('classnames:background-color-red-600 classnames:hover:lg:md:background-color-red-500');
+('background-color-red-600 hover:lg:md:background-color-red-500');
 
 _addClasses([
-  'classnames:background-color-red-600',
-  '.classnames\\\\:background-color-red-600{background-color:#e53e3e;}\\n',
-  'classnames:hover:lg:md:background-color-red-500',
-  '@media(max-width:1024px){.classnames\\\\:hover\\\\:lg\\\\:md\\\\:background-color-red-500:hover{background-color:#f56565;}}\\n@media(max-width:768px){.classnames\\\\:hover\\\\:lg\\\\:md\\\\:background-color-red-500:hover{background-color:#f56565;}}\\n\\n',
+  'background-color-red-600',
+  '.background-color-red-600{background-color:#e53e3e;}\\n',
+  'hover:lg:md:background-color-red-500',
+  '@media(max-width:1024px){.hover\\\\:lg\\\\:md\\\\:background-color-red-500:hover{background-color:#f56565;}}\\n@media(max-width:768px){.hover\\\\:lg\\\\:md\\\\:background-color-red-500:hover{background-color:#f56565;}}\\n\\n',
 ]);
 
 
@@ -89,12 +89,9 @@ classnames(hover('background-color-red-500'))
 
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 import { classnames, hover } from 'classy-ui';
-('classnames:hover:background-color-red-500');
+('hover:background-color-red-500');
 
-_addClasses([
-  'classnames:hover:background-color-red-500',
-  '.classnames\\\\:hover\\\\:background-color-red-500:hover{background-color:#f56565;}\\n',
-]);
+_addClasses(['hover:background-color-red-500', '.hover\\\\:background-color-red-500:hover{background-color:#f56565;}\\n']);
 
 
 `;
@@ -109,12 +106,9 @@ classnames('background-color-red-500')
 
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 import { classnames } from 'classy-ui';
-('classnames:background-color-red-500');
+('background-color-red-500');
 
-_addClasses([
-  'classnames:background-color-red-500',
-  '.classnames\\\\:background-color-red-500{background-color:#f56565;}\\n',
-]);
+_addClasses(['background-color-red-500', '.background-color-red-500{background-color:#f56565;}\\n']);
 
 
 `;
@@ -147,6 +141,23 @@ classnames(group())
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 import { classnames, group as g } from 'classy-ui';
 group();
+
+_addClasses([]);
+
+
+`;
+
+exports[`classy-ui should not throw when using group inside classnames call: should not throw when using group inside classnames call 1`] = `
+
+import { classnames, group } from 'classy-ui'
+
+classnames(group())
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { addClasses as _addClasses } from 'classy-ui/runtime';
+import { classnames, group } from 'classy-ui';
+('group');
 
 _addClasses([]);
 

@@ -1,7 +1,8 @@
 import { mergeConfigs } from '../utils';
 
 describe('MERGE CONFIGS', () => {
-  /*test('should override with plain objects', () => {
+  /*
+  test('should override with plain objects', () => {
     expect(
       mergeConfigs(
         {

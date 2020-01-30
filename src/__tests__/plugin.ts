@@ -51,8 +51,8 @@ import { classnames } from 'classy-ui'
 classnames(classnames('background-color-red-600'))`,
     },
     {
-      error: true,
-      title: 'should throw when using group inside classnames call',
+      error: false,
+      title: 'should not throw when using group inside classnames call',
       code: `
 import { classnames, group } from 'classy-ui'
 
