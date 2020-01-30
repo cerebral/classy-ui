@@ -308,3 +308,37 @@ export const negateValue = (value: string) => {
     return value;
   }
 };
+
+export const createClassObject = (
+  id: string | undefined,
+  decorators: IExtractedClass['decorators'],
+): IExtractedClass => {
+  const withoutWrappingDecorators = decorators.filter(i => !['classnames', 'group'].includes(i!));
+
+  const uid = [withoutWrappingDecorators.sort().join(':'), id]
+    .filter(Boolean)
+    .filter(i => i!.length > 0)
+    .join(':');
+  let name = '';
+
+  if (decorators[decorators.length - 1] === 'theme') {
+    name = `themes-${id} `;
+  } else if (!id && decorators[decorators.length - 1] === 'group') {
+    name = 'group ';
+  } else {
+    name = uid;
+  }
+
+  return {
+    id,
+    uid,
+    name,
+    decorators: withoutWrappingDecorators.slice() as IExtractedClass['decorators'],
+  };
+};
+
+function updateContext(decorators: string[], value: string) {
+  const newDecorators = decorators.slice();
+  newDecorators.push(value);
+  return newDecorators;
+}

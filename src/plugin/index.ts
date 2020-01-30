@@ -5,7 +5,7 @@ import { config as baseConfig } from '../config/base.config';
 import { transform as transformClassesToTypes } from '../config/transform-classes-to-types';
 import { transform as transformConfigToClasses } from '../config/transform-config-to-classes';
 import { IExtractedClass, IExtractedClasses } from '../types';
-import { flat, getUserConfig, injectDevelopment, injectProduction, mergeConfigs } from '../utils';
+import { createClassObject, flat, getUserConfig, injectDevelopment, injectProduction, mergeConfigs } from '../utils';
 
 const typesPath = join(process.cwd(), 'node_modules', 'classy-ui', 'lib', 'classy-ui.d.ts');
 const cssPath = join(process.cwd(), 'node_modules', 'classy-ui', 'styles.css');
@@ -85,37 +85,6 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
       return binding.path.node.imported.name;
     }
     return null;
-  }
-
-  function createClassObject(id: string | undefined, decorators: IExtractedClass['decorators']): IExtractedClass {
-    const withoutWrappingDecorators = decorators.filter(i => !['classnames', 'group'].includes(i!));
-
-    const uid = [withoutWrappingDecorators.sort().join(':'), id]
-      .filter(Boolean)
-      .filter(i => i!.length > 0)
-      .join(':');
-    let name = '';
-
-    if (decorators[decorators.length - 1] === 'theme') {
-      name = `themes-${id} `;
-    } else if (!id && decorators[decorators.length - 1] === 'group') {
-      name = 'group ';
-    } else {
-      name = uid;
-    }
-
-    return {
-      id,
-      uid,
-      name,
-      decorators: withoutWrappingDecorators.slice() as IExtractedClass['decorators'],
-    };
-  }
-
-  function updateContext(decorators: string[], value: string) {
-    const newDecorators = decorators.slice();
-    newDecorators.push(value);
-    return newDecorators;
   }
 
   function throwCodeFragmentIfInvalidId(path: any, id: string, decorators: string[]) {
