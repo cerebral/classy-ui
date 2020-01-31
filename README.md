@@ -50,6 +50,10 @@ If you are using **babel-plugin-macros** you can go straight ahead and just use 
 import { c } from 'classy-ui/macro';
 ```
 
+### Notes
+
+[parcel](https://parceljs.org/) ignores `@babel/preset-typescript`. That means this package does not work with Parcel out of the box. You need to use **parcel 2** or configure parcel to use babel typescript transpilation instead, which **parcel 2** will.
+
 ## Consume your first classnames
 
 **classy-ui** is consumed through a Javascript API. Simply import the default **c** function and start building. Think of **c** as **classy**, **classnames**, or **compose**. It is the core tool to compose your design system.
