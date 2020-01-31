@@ -88,5 +88,19 @@ import { classnames, hover } from 'classy-ui'
 
 hover('background-color-red-500')`,
     },
+    {
+      title: 'should allow group with conditional after it',
+      code: `
+import { classnames, group } from 'classy-ui'
+
+classnames(group(), { 'background-color-red-500': true })`,
+    },
+    {
+      title: 'should handle complex dynamic composition',
+      code: `
+import { classnames, group } from 'classy-ui'
+
+classnames(group(), { 'background-color-red-500': true }, 'color-white', { 'background-color-blue-500': true }, 'border-radius-sm')`,
+    },
   ],
 });

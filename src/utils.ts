@@ -50,7 +50,7 @@ export const getClassesFromConfig = (
           category,
           label,
           themeValue,
-          css: `{${cssProperty}:${themeValue.themes.length ? `var(--${id})` : values[label].value};}`,
+          css: `{${cssProperty}:${themeValue.themes.length ? `var(--${id})` : values[label].value};}\n`,
         };
 
         return valuesAggr;
@@ -274,7 +274,7 @@ export const injectDevelopment = (classCollection: IExtractedClasses, classes: I
       };}`;
     });
 
-    return aggr.concat([extractedClass.name, `${css}\n`]);
+    return aggr.concat([extractedClass.name, `${css}`]);
   }, [] as any[]);
 };
 

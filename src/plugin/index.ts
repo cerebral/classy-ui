@@ -71,11 +71,14 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
         others.push(item);
       }
     }
+
     if (strings.length > 0 && others.length > 0) {
-      others.unshift(t.stringLiteral(strings.join(' ')));
+      others.unshift(t.stringLiteral(`${strings.join(' ')} `));
     } else if (strings.length > 0) {
       return t.stringLiteral(strings.join(' '));
-    } else if (others.length > 0) {
+    }
+
+    if (others.length > 0) {
       const max = others.length - 1;
       let start = others[max];
       for (let i = max - 1; i >= 0; i--) {
@@ -83,8 +86,9 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
       }
       return start;
     }
+
     // We can't safely remove the whole expression
-    // becasue in JSX you need to have a actual argument
+    // becasue in JSX you need to have an actual argument
     return t.stringLiteral('');
   }
 
@@ -173,9 +177,9 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
           const classObj = createClassObject(id, decorators);
           throwCodeFragmentIfInvalidId(propPath, id);
 
-          collectAndRewrite(classObj, name =>
-            t.conditionalExpression(propPath.node.value, t.stringLiteral(name), t.stringLiteral('')),
-          ).forEach(classArgs.add, classArgs);
+          collectAndRewrite(classObj, name => {
+            return t.conditionalExpression(propPath.node.value, t.stringLiteral(name), t.stringLiteral(''));
+          }).forEach(classArgs.add, classArgs);
         });
         return;
       }
