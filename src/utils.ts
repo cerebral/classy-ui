@@ -313,7 +313,7 @@ export const createClassObject = (
   id: string | undefined,
   decorators: IExtractedClass['decorators'],
 ): IExtractedClass => {
-  const withoutWrappingDecorators = decorators.filter(i => !['classnames', 'group'].includes(i!));
+  const withoutWrappingDecorators = decorators.filter(i => !['c', 'group'].includes(i!));
 
   const uid = [withoutWrappingDecorators.sort().join(':'), id]
     .filter(Boolean)

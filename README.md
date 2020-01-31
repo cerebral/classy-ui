@@ -39,7 +39,7 @@ Add **classy-ui/plugin** to your babel configuration:
 Start using it:
 
 ```ts
-import { classnames } from 'classy-ui';
+import { c } from 'classy-ui';
 ```
 
 ### Macro support
@@ -47,20 +47,20 @@ import { classnames } from 'classy-ui';
 If you are using **babel-plugin-macros** you can go straight ahead and just use the api:
 
 ```ts
-import { classnames } from 'classy-ui/macro';
+import { c } from 'classy-ui/macro';
 ```
 
 ## Consume your first classnames
 
-**classy-ui** is consumed through a Javascript API. Simply import the default **classnames** function and start building.
+**classy-ui** is consumed through a Javascript API. Simply import the default **c** function and start building. Think of **c** as **classy**, **classnames**, or **compose**. It is the core tool to compose your design system.
 
 ### React
 
 ```js
 import React from 'react';
-import { classnames, hover } from 'classy-ui';
+import { c, hover } from 'classy-ui';
 
-const header = classnames('background-color-gray-400', hover('background-color-gray-200'));
+const header = c('background-color-gray-400', hover('background-color-gray-200'));
 
 export const App = () => {
   <h1 className={header}>Hello world</h1>;
@@ -74,11 +74,11 @@ export const App = () => {
   <h1 :class="header">Hello world</h1>
 </template>
 <script>
-  import { classnames, hover } from 'classy-ui';
+  import { c, hover } from 'classy-ui';
 
   export default {
     data: {
-      header: classnames('background-color-gray-400', hover('background-color-gray-200')),
+      header: c('background-color-gray-400', hover('background-color-gray-200')),
     },
   };
 </script>
@@ -87,7 +87,7 @@ export const App = () => {
 ### Angular
 
 ```ts
-import { classnames, hover } from 'classy-ui';
+import { c, hover } from 'classy-ui';
 import { Component } from '@angular/core';
 
 @Component({
@@ -97,50 +97,50 @@ import { Component } from '@angular/core';
   `,
 })
 export class AppComponent {
-  header = classnames('background-color-gray-400', hover('background-color-gray-200'));
+  header = c('background-color-gray-400', hover('background-color-gray-200'));
 }
 ```
 
-## Classnames
+## C
 
-The **classnames** function used in the examples above is what you use to create your composed classnames:
+The **c** function used in the examples above is what you use to create your composed classnames:
 
 ```ts
-import { classnames } from 'classy-ui';
+import { c } from 'classy-ui';
 
-const myClassName = classnames('color-red-500', 'background-color-gray-200');
+const myClassName = c('color-red-500', 'background-color-gray-200');
 ```
 
 You can also conditionally add classnames using an object:
 
 ```ts
-import { classnames } from 'classy-ui';
+import { c } from 'classy-ui';
 
-const myClassName = classnames('color-red-500', {
+const myClassName = c('color-red-500', {
   'background-color-gray-200': false,
 });
 ```
 
-You can use an existing composition with **classnames**:
+You can use an existing composition with **c**:
 
 ```ts
-import { classnames } from 'classy-ui';
+import { c } from 'classy-ui';
 
-const button = classnames('background-color-gray-200', 'color-gray-800');
+const button = c('background-color-gray-200', 'color-gray-800');
 
-const alertButton = classnames(button, 'background-color-red-600');
+const alertButton = c(button, 'background-color-red-600');
 ```
 
 You can even dynamically compose an existing classname:
 
 ```ts
-import { classnames } from 'classy-ui';
+import { c } from 'classy-ui';
 
-const button = classnames('background-color-gray-200', 'color-gray-800');
+const button = c('background-color-gray-200', 'color-gray-800');
 
-const alert = classnames('background-color-red-600', 'border-color-red-800');
+const alert = c('background-color-red-600', 'border-color-red-800');
 
-const submitButton = classnames(button, {
+const submitButton = c(button, {
   [alert]: true,
 });
 ```
@@ -203,7 +203,7 @@ const myClass = tablet('color-red-500');
 You can also define a set off classnames with the **group** decorator. This allows any nested group decorator to trigger based on this parent. For example:
 
 ```js
-import { classnames, groupHover, group } from 'classy-ui';
+import { groupHover, group } from 'classy-ui';
 
 const myParent = group();
 
@@ -227,10 +227,10 @@ Now any **myChild** of **myParent** will be red when **myParent** is being hover
 A powerful concept brought with a Javascript API is factories. Instead of having static classnames, you can rather build them dynamically behind a function. This function can take any options you define.
 
 ```js
-import { classnames } from 'classy-ui';
+import { c } from 'classy-ui';
 
 export const button = isDisabled =>
-  classnames('border-none', 'background-color-gray-500', 'color-black', {
+  c('border-none', 'background-color-gray-500', 'color-black', {
     'background-color-gray-100': isDisabled,
     'color-gray-500': isDisabled,
   });
@@ -440,14 +440,14 @@ All the themes defined in the config is exposed as classnames of **themes-{THEME
 
 ```js
 import React from 'react';
-import { classnames } from 'classy-ui';
+import { c } from 'classy-ui';
 
 export const App = () => {
   const [currentTheme, setTheme] = React.useState(null);
 
   return (
-    <div className={classnames(({ 'themes-dark': currentTheme === 'dark' })}>
-      <h1 className={classnames('color-gray-800')}>Hello world</h1>
+    <div className={c(({ 'themes-dark': currentTheme === 'dark' })}>
+      <h1 className={c('color-gray-800')}>Hello world</h1>
       <button onClick={() => setTheme('dark')}>Set dark theme</button>
     </div>
   );
@@ -474,6 +474,6 @@ It would change to **green** when the theme is active.
 
 At its core **classy-ui** is a babel plugin. When added it will look at your code and fin imports from the **classy-ui** package. It will now analyze the usage of these imports and replace their meaning.
 
-**In development** it replaces **classnames**, **hover** etc. with a call to the runtime of **classy-ui**, holding the actual CSS to be injected into a style element that is already inserted in the head of the document. If the classname is already added, the code is just removed.
+**In development** it replaces **c**, **hover** etc. with a call to the runtime of **classy-ui**, holding the actual CSS to be injected into a style element that is already inserted in the head of the document. If the classname is already added, the code is just removed.
 
 **In production** it does the same analysis, but instead of inserting the CSS to be added, it just removes the code. The CSS to be added is rather added to a **styles.css** file and your initial code is replaced with an import of this file. That means many files will have this import, but your build tool will handle this correctly.

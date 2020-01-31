@@ -3,8 +3,8 @@
 exports[`INJECT DEVELOPMENT should inject both pseudo selector and breakpoint 1`] = `
 Array [
   "background-color-red-500",
-  "@media(max-width:768px){.background-color-red-500:hover{background-color:#f56565;}}
-
+  "@media(max-width:768px){.background-color-red-500:hover{background-color:#f56565;}
+}
 ",
 ]
 `;
@@ -12,21 +12,21 @@ Array [
 exports[`INJECT DEVELOPMENT should inject group decorators 1`] = `
 Array [
   "background-color-red-700",
-  ".group:hover .background-color-red-700{background-color:var(--background-color-red-700);}:root{--background-color-red-700:#c53030;}
-.themes-dark{--background-color-red-700:green;}
-",
+  ".group:hover .background-color-red-700{background-color:var(--background-color-red-700);}
+:root{--background-color-red-700:#c53030;}
+.themes-dark{--background-color-red-700:green;}",
 ]
 `;
 
 exports[`INJECT DEVELOPMENT should inject multiple 1`] = `
 Array [
   "background-color-red-500",
-  "@media(max-width:768px){.background-color-red-500{background-color:#f56565;}}
-
+  "@media(max-width:768px){.background-color-red-500{background-color:#f56565;}
+}
 ",
   "background-color-red-600",
-  "@media(max-width:768px){.background-color-red-600:hover{background-color:#e53e3e;}}
-
+  "@media(max-width:768px){.background-color-red-600:hover{background-color:#e53e3e;}
+}
 ",
 ]
 `;
@@ -42,18 +42,18 @@ Array [
 exports[`INJECT DEVELOPMENT should inject themes 1`] = `
 Array [
   "background-color-red-700",
-  "@media(max-width:768px){.background-color-red-700{background-color:var(--background-color-red-700);}}
+  "@media(max-width:768px){.background-color-red-700{background-color:var(--background-color-red-700);}
+}
 :root{--background-color-red-700:#c53030;}
-.themes-dark{--background-color-red-700:green;}
-",
+.themes-dark{--background-color-red-700:green;}",
 ]
 `;
 
 exports[`INJECT DEVELOPMENT should inject with breakpoint 1`] = `
 Array [
   "background-color-red-500",
-  "@media(max-width:768px){.background-color-red-500{background-color:#f56565;}}
-
+  "@media(max-width:768px){.background-color-red-500{background-color:#f56565;}
+}
 ",
 ]
 `;
@@ -61,9 +61,10 @@ Array [
 exports[`INJECT DEVELOPMENT should inject with multiple breakpoints 1`] = `
 Array [
   "background-color-red-500",
-  "@media(max-width:640px){.background-color-red-500{background-color:#f56565;}}
-@media(max-width:1280px){.background-color-red-500{background-color:#f56565;}}
-
+  "@media(max-width:640px){.background-color-red-500{background-color:#f56565;}
+}
+@media(max-width:1280px){.background-color-red-500{background-color:#f56565;}
+}
 ",
 ]
 `;

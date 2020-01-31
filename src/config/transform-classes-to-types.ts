@@ -9,7 +9,7 @@ export const transform = (transformedConfig: IClasses, config: IEvaluatedConfig)
   export type TClassnamesArg = TClasses | { [key in TClasses | TClassnamesString]?: boolean } | TClassnamesString | TDecoratorsString;
   export type TClassnames = (...args: TClassnamesArg[]) => TClassnamesString;
   export type TDecorator = (...args: TDecoratorsArg[]) => TDecoratorsString;
-  export const classnames: TClassnames;
+  export const c: TClassnames;
   export const group: TDecorator;
   export const groupHover: TDecorator;
   ${allowedPseudoDecorators.map(decorator => `export const ${decorator}: TDecorator;`).join('\n')}

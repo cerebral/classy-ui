@@ -10,53 +10,53 @@ pluginTester({
     {
       title: 'should convert simple',
       code: `
-import { classnames } from 'classy-ui'
+import { c } from 'classy-ui'
 
-classnames('background-color-red-500')`,
+c('background-color-red-500')`,
     },
     {
       title: 'should convert pseudos',
       code: `
-import { classnames, hover } from 'classy-ui'
+import { c, hover } from 'classy-ui'
 
-classnames(hover('background-color-red-500'))`,
+c(hover('background-color-red-500'))`,
     },
     {
       title: 'should convert breakpoints',
       code: `
-import { classnames, md } from 'classy-ui'
+import { c, md } from 'classy-ui'
 
-classnames(md('background-color-red-500'))`,
+c(md('background-color-red-500'))`,
     },
     {
       title: 'should convert both breakpoints and pseudos',
       code: `
-import { classnames, hover, md } from 'classy-ui'
+import { c, hover, md } from 'classy-ui'
 
-classnames(md(hover('background-color-red-500')))`,
+c(md(hover('background-color-red-500')))`,
     },
     {
       title: 'should convert complex compositions',
       code: `
-import { classnames, hover, md, lg } from 'classy-ui'
+import { c, hover, md, lg } from 'classy-ui'
 
-classnames('background-color-red-600', md(lg(hover('background-color-red-500'))))`,
+c('background-color-red-600', md(lg(hover('background-color-red-500'))))`,
     },
     {
       error: true,
-      title: 'should throw when nesting classnames call',
+      title: 'should throw when nesting c call',
       code: `
-import { classnames } from 'classy-ui'
+import { c } from 'classy-ui'
 
-classnames(classnames('background-color-red-600'))`,
+c(c('background-color-red-600'))`,
     },
     {
       error: false,
-      title: 'should not throw when using group inside classnames call',
+      title: 'should not throw when using group inside c call',
       code: `
-import { classnames, group } from 'classy-ui'
+import { c, group } from 'classy-ui'
 
-classnames(group())`,
+c(group())`,
     },
     {
       error: false,
@@ -70,37 +70,37 @@ group('background-color-red-600', 'background-color-red-500')`,
       error: true,
       title: 'should throw if group was renamed',
       code: `
-import { classnames, group as g } from 'classy-ui'
+import { c, group as g } from 'classy-ui'
 
-classnames(group())`,
+c(group())`,
     },
     {
       title: 'should give group a classname',
       code: `
-import { classnames, group } from 'classy-ui'
+import { c, group } from 'classy-ui'
 
 group()`,
     },
     {
       title: 'should allow pseudo decorators as base',
       code: `
-import { classnames, hover } from 'classy-ui'
+import { c, hover } from 'classy-ui'
 
 hover('background-color-red-500')`,
     },
     {
       title: 'should allow group with conditional after it',
       code: `
-import { classnames, group } from 'classy-ui'
+import { c, group } from 'classy-ui'
 
-classnames(group(), { 'background-color-red-500': true })`,
+c(group(), { 'background-color-red-500': true })`,
     },
     {
       title: 'should handle complex dynamic composition',
       code: `
-import { classnames, group } from 'classy-ui'
+import { c, group } from 'classy-ui'
 
-classnames(group(), { 'background-color-red-500': true }, 'color-white', { 'background-color-blue-500': true }, 'border-radius-sm')`,
+c(group(), { 'background-color-red-500': true }, 'color-white', { 'background-color-blue-500': true }, 'border-radius-sm')`,
     },
   ],
 });

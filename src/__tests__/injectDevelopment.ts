@@ -34,61 +34,57 @@ describe('INJECT DEVELOPMENT', () => {
 
   test('should inject with pseudo selector', () => {
     const classCollection: IExtractedClasses = {
-      ['background-color-red-500']: createExtractedClass('background-color-red-500', ['classnames', 'hover']),
+      ['background-color-red-500']: createExtractedClass('background-color-red-500', ['c', 'hover']),
     };
 
     expect(injectDevelopment(classCollection, classes.defaults, config)).toMatchSnapshot();
   });
   test('should inject with breakpoint', () => {
     const classCollection: IExtractedClasses = {
-      ['background-color-red-500']: createExtractedClass('background-color-red-500', ['classnames', 'md']),
+      ['background-color-red-500']: createExtractedClass('background-color-red-500', ['c', 'md']),
     };
 
     expect(injectDevelopment(classCollection, classes.defaults, config)).toMatchSnapshot();
   });
   test('should inject both pseudo selector and breakpoint', () => {
     const classCollection: IExtractedClasses = {
-      ['background-color-red-500']: createExtractedClass('background-color-red-500', ['classnames', 'md', 'hover']),
+      ['background-color-red-500']: createExtractedClass('background-color-red-500', ['c', 'md', 'hover']),
     };
 
     expect(injectDevelopment(classCollection, classes.defaults, config)).toMatchSnapshot();
   });
   test('should inject with multiple pseudo selectors', () => {
     const classCollection: IExtractedClasses = {
-      ['background-color-red-500']: createExtractedClass('background-color-red-500', [
-        'classnames',
-        'hover',
-        'firstChild',
-      ]),
+      ['background-color-red-500']: createExtractedClass('background-color-red-500', ['c', 'hover', 'firstChild']),
     };
 
     expect(injectDevelopment(classCollection, classes.defaults, config)).toMatchSnapshot();
   });
   test('should inject with multiple breakpoints', () => {
     const classCollection: IExtractedClasses = {
-      ['background-color-red-500']: createExtractedClass('background-color-red-500', ['classnames', 'sm', 'xl']),
+      ['background-color-red-500']: createExtractedClass('background-color-red-500', ['c', 'sm', 'xl']),
     };
 
     expect(injectDevelopment(classCollection, classes.defaults, config)).toMatchSnapshot();
   });
   test('should inject multiple', () => {
     const classCollection: IExtractedClasses = {
-      ['background-color-red-500']: createExtractedClass('background-color-red-500', ['classnames', 'md']),
-      ['background-color-red-600']: createExtractedClass('background-color-red-600', ['classnames', 'hover', 'md']),
+      ['background-color-red-500']: createExtractedClass('background-color-red-500', ['c', 'md']),
+      ['background-color-red-600']: createExtractedClass('background-color-red-600', ['c', 'hover', 'md']),
     };
 
     expect(injectDevelopment(classCollection, classes.defaults, config)).toMatchSnapshot();
   });
   test('should inject themes', () => {
     const classCollection: IExtractedClasses = {
-      ['background-color-red-700']: createExtractedClass('background-color-red-700', ['classnames', 'md']),
+      ['background-color-red-700']: createExtractedClass('background-color-red-700', ['c', 'md']),
     };
 
     expect(injectDevelopment(classCollection, classes.defaults, config)).toMatchSnapshot();
   });
   test('should inject group decorators', () => {
     const classCollection: IExtractedClasses = {
-      ['background-color-red-700']: createExtractedClass('background-color-red-700', ['classnames', 'groupHover']),
+      ['background-color-red-700']: createExtractedClass('background-color-red-700', ['c', 'groupHover']),
     };
 
     expect(injectDevelopment(classCollection, classes.defaults, config)).toMatchSnapshot();

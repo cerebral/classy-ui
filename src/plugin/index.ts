@@ -146,8 +146,8 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
       } else if (t.isIdentifier(node)) {
         // This is the only knowlage the plugin has
         // about the imports from classy-ui
-        if (decorators[0] !== 'classnames') {
-          throw argPath.buildCodeFrameError(`Composing variabels is only allowed with classnames()`);
+        if (decorators[0] !== 'c') {
+          throw argPath.buildCodeFrameError(`Composing variabels is only allowed with c()`);
         }
         classArgs.add(node);
         return;
