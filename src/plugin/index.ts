@@ -5,15 +5,19 @@ import { config as baseConfig } from '../config/base.config';
 import { transform as transformClassesToTypes } from '../config/transform-classes-to-types';
 import { transform as transformConfigToClasses } from '../config/transform-config-to-classes';
 import { IExtractedClass, IExtractedClasses } from '../types';
-import { createClassObject, flat, getUserConfig, injectDevelopment, injectProduction, mergeConfigs } from '../utils';
+import { createClassObject, getUserConfig, injectDevelopment, injectProduction, mergeConfigs } from '../utils';
 
-const typesPath = join(process.cwd(), 'node_modules', 'classy-ui', 'lib', 'classy-ui.d.ts');
 const cssPath = join(process.cwd(), 'node_modules', 'classy-ui', 'styles.css');
 const config = mergeConfigs(baseConfig, getUserConfig());
 const classes = transformConfigToClasses(config);
 
 if (process.env.NODE_ENV !== 'test') {
-  writeFileSync(typesPath, transformClassesToTypes(classes.defaults, config));
+  const esTypesPath = join(process.cwd(), 'node_modules', 'classy-ui', 'es', 'classy-ui.d.ts');
+  const libTypesPath = join(process.cwd(), 'node_modules', 'classy-ui', 'lib', 'classy-ui.d.ts');
+  const types = transformClassesToTypes(classes.defaults, config);
+
+  writeFileSync(esTypesPath, types);
+  writeFileSync(libTypesPath, types);
 }
 
 export default (babel: any) => {
