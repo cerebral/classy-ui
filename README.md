@@ -4,17 +4,40 @@ A typed, configurable design system with no runtime
 
 ## What is it?
 
-With great inspiration from [tailwindcss](https://tailwindcss.com/) we wanted to take it a step further. **classy-ui**, like tailwindcss, lets you express your styling with CSS classes based on a design system that you can customize. Where **classy-ui** takes it further is that it automatically creates the output CSS based on your actual application consumption of these css classes... and yeah, it is typed, meaning you can search for the classes directly in your code even if you are **NOT** using Typescript.
+**classy-ui** is not just a styling library, it is a full fledged design system that automatically configures itself based on your application code. Worrying about your bundle including too much or too litle? What about pesky specificity issues? Those days are long gone. Just use the API and **classy-ui** takes care of the rest.
 
-The benefits:
+```ts
+import { c } from 'classy-ui';
 
-- Typed usage of classnames from the design system which also gives you discoverability, traversing and searching for classnames
-- Lazily creates classnames and pseudo selector CSS based on consumption in app
-- Compose classnames together into variables or use them inline in components
-- Use dynamic assignment of classnames with conveniant `{ 'my-class': isActive }`
-- In production it automatically optimizes css class names and dynamic assignment. The created css file is automatically imported in your code, making it part of your existing CSS optimization tool chain
-- The runtime **completely** disappears in production, meaning it does not affect your bundle size
-- Supports themes by automatically converting themed configuration to CSS variables
+export const button = c('color-gray-800', 'border-none', 'border-radius-sm', 'padding-2');
+```
+
+When the **classy-ui** babel plugin runs it will do two things:
+
+1. Evaluate this code to:
+
+```ts
+export const button = 'color-gray-800 border-none border-radius-sm padding-2';
+```
+
+2. Using the configured design system it will create the classnames and their accompanying CSS and expose it to your application automatically
+
+You can continue wrapping pseudo selectors:
+
+```ts
+import { c, hover } from 'classy-ui';
+
+export const button = c('color-gray-800', 'border-none', 'border-radius-sm', 'padding-2', hover('color-gray-900'));
+```
+
+And again **classy-ui** will create the accompanying classname and CSS.
+
+### The benefits
+
+- You start without a single line of CSS. Based on the API usage **classy-ui** automatically generates classnames and CSS for you
+- As everything is based on classnames you get concise language for your styling and with high reusability, meaning your bundle size is kept at a minimum
+- **classy-ui** is very smart about your intentions and completely gets rid of specificity issues
+- When you write classnames you can search them right in the code. The types are generated based on your configured design system
 
 The design system is based on [tailwindcss](https://tailwindcss.com/), the configuration is actually exactly the same. Also thanks to [classnames](https://www.npmjs.com/package/classnames) for inspiring the composition tool. All projects stands on the shoulders of others, so big digital hug and love to the maintainers of these project!
 
