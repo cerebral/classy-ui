@@ -50,9 +50,15 @@ If you are using **babel-plugin-macros** you can go straight ahead and just use 
 import { c } from 'classy-ui/macro';
 ```
 
-### Notes
+## FAQ
 
-[parcel](https://parceljs.org/) ignores `@babel/preset-typescript`. That means this package does not work with Parcel out of the box. You need to use **parcel 2** or configure parcel to use babel typescript transpilation instead, which **parcel 2** will.
+### It is not working with Parcel
+
+[parcel](https://parceljs.org/) ignores `@babel/preset-typescript`. That means this package does not work with Parcel out of the box. You need to use **parcel 2** or configure parcel to use babel typescript transpilation instead, which **parcel 2** will do out of the box
+
+### The types are not showing up
+
+We are dynamically writing the types to the language server in **VSCode** might not pick it up the first time. Do **CMD + SHIFT + P** and search for "restart". **TypeScript: Restart TS server** should pop up. Run it :-)
 
 ## Consume your first classnames
 
