@@ -86,11 +86,11 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
    * classnames against a array of classnames.
    */
   function generateRuntimeRegex(classnames: string[]) {
-    return `(?:^|\\s)(?:${classnames.map(getClassnameType).join('|')})[^\\s]+\\s?`;
+    return `(?:^|\\s)(?:${classnames.map(getClassnameType).join('|')})[^\\s]+`;
   }
   function convertToExpression(classAttribs: Set<any>) {
     if (classAttribs.size === 0) {
-      return t.stringLiteral('');
+      return t.stringLiteral(' ');
     }
 
     const strings: string[] = [];
@@ -115,7 +115,7 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
 
     // if there are only string literals just return them. This is a _short path_
     if (strings.length > 0 && others.length === 0) {
-      return t.stringLiteral(strings.join(' '));
+      return t.stringLiteral(strings.join(' ') + ' ');
     }
 
     // Build up a binary expression with all other values
@@ -140,7 +140,7 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
         t.regExpLiteral(generateRuntimeRegex(strings), 'g'),
         t.stringLiteral(''),
       ]),
-      t.stringLiteral(' ' + strings.join(' ')),
+      t.stringLiteral(strings.join(' ') + ' '),
     );
   }
 
@@ -229,8 +229,9 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
           const classObj = createClassObject(id, decorators);
           throwCodeFragmentIfInvalidId(propPath, id);
 
+          // TODO: move this to convertToExpression
           collectAndRewrite(classObj, name => {
-            return t.conditionalExpression(propPath.node.value, t.stringLiteral(name), t.stringLiteral(''));
+            return t.conditionalExpression(propPath.node.value, t.stringLiteral(name + ' '), t.stringLiteral(' '));
           }).forEach(classArgs.add, classArgs);
         });
         return;
