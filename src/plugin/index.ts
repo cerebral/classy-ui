@@ -12,12 +12,16 @@ const config = mergeConfigs(baseConfig, getUserConfig());
 const classes = transformConfigToClasses(config);
 
 if (process.env.NODE_ENV !== 'test') {
-  const esTypesPath = join(process.cwd(), 'node_modules', 'classy-ui', 'es', 'classy-ui.d.ts');
-  const libTypesPath = join(process.cwd(), 'node_modules', 'classy-ui', 'lib', 'classy-ui.d.ts');
-  const types = transformClassesToTypes(classes.defaults, config);
+  try {
+    const esTypesPath = join(process.cwd(), 'node_modules', 'classy-ui', 'es', 'classy-ui.d.ts');
+    const libTypesPath = join(process.cwd(), 'node_modules', 'classy-ui', 'lib', 'classy-ui.d.ts');
+    const types = transformClassesToTypes(classes.defaults, config);
 
-  writeFileSync(esTypesPath, types);
-  writeFileSync(libTypesPath, types);
+    writeFileSync(esTypesPath, types);
+    writeFileSync(libTypesPath, types);
+  } catch {
+    // Codesandbox or some other unwritable environment
+  }
 }
 
 export default (babel: any) => {

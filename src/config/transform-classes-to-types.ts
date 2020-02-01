@@ -12,6 +12,13 @@ export const transform = (transformedConfig: IClasses, config: IEvaluatedConfig)
   export const c: TClassnames;
   export const group: TDecorator;
   export const groupHover: TDecorator;
+  export const groupFocus: TDecorator;
+  export const groupActive: TDecorator;
+  export const groupFirstChild: TDecorator;
+  export const groupLastChild: TDecorator;
+  export const groupOddChild: TDecorator;
+  export const groupEvenChild: TDecorator;
+  export const groupFocusWithin: TDecorator;
   ${allowedPseudoDecorators.map(decorator => `export const ${decorator}: TDecorator;`).join('\n')}
   ${Object.keys(config.defaults.screens)
     .map(screen => `export const ${screen}: TDecorator;`)
