@@ -35,13 +35,14 @@ export const getClassesFromConfig = (
   category: keyof TCssClasses,
   config: IEvaluatedConfig,
   cssProperties: CSSProperty[],
+  getShortName: (labelIndex: number) => string,
 ) => {
   const values = config.defaults[category];
 
   return cssProperties.reduce((cssPropertiesAggr, cssProperty) => {
     return {
       ...cssPropertiesAggr,
-      ...Object.keys(values).reduce((valuesAggr, label) => {
+      ...Object.keys(values).reduce((valuesAggr, label, labelIndex) => {
         const themeValue = values[label];
         const id = `${cssProperty}-${label}`;
 
@@ -49,6 +50,7 @@ export const getClassesFromConfig = (
           id,
           category,
           label,
+          shortName: getShortName(labelIndex),
           themeValue,
           css: `{${cssProperty}:${themeValue.themes.length ? `var(--${id})` : values[label].value};}\n`,
         };
@@ -222,7 +224,12 @@ export const injectProduction = (classCollection: IExtractedClasses, classes: IC
     const configClass = classes[extractedClass.id as string];
     const screenDecorators = extractedClass.decorators.filter(decorator => decorator in config.defaults.screens);
     const otherDecorators = extractedClass.decorators.filter(decorator => !(decorator in config.defaults.screens));
-    const classEntry = createClassEntry(extractedClass.name, otherDecorators, configClass.css);
+    let classEntry: any;
+    try {
+      classEntry = createClassEntry(extractedClass.name, otherDecorators, configClass.css);
+    } catch (error) {
+      throw new Error(uid + JSON.stringify(extractedClass, null, 2));
+    }
 
     if (screenDecorators.length) {
       screenDecorators.forEach(screen => {
@@ -342,4 +349,17 @@ export const createClassObject = (
     name: uid,
     decorators: returnedDecorators,
   };
+};
+
+export const generateShortName = (num: number) => {
+  const baseChar = 'A'.charCodeAt(0);
+  let letters = '';
+
+  do {
+    num -= 1;
+    letters = String.fromCharCode(baseChar + (num % 26)) + letters;
+    num = (num / 26) >> 0;
+  } while (num > 0);
+
+  return letters;
 };

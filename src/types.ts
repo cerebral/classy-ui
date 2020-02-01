@@ -67,6 +67,7 @@ export interface IClass {
   id: string;
   category: keyof IConfigDefaults;
   label: string;
+  shortName: string;
   themeValue: ThemeValue;
   css: string;
 }

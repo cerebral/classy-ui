@@ -1,5 +1,5 @@
 import { IClasses, IConfig, IEvaluatedConfig, TCssClasses } from '../types';
-import { getClassesFromConfig } from '../utils';
+import { generateShortName, getClassesFromConfig } from '../utils';
 
 const cssClasses: TCssClasses = {
   padding: ['padding', 'padding-top', 'padding-right', 'padding-bottom', 'padding-left'],
@@ -65,18 +65,30 @@ const cssClasses: TCssClasses = {
   color: ['color'],
 };
 
-export const transform = (config: IEvaluatedConfig): { defaults: IClasses; themes: { [name: string]: boolean } } => {
+export const transform = (
+  config: IEvaluatedConfig,
+): { defaults: IClasses; defaultsByShortname: IClasses; themes: { [name: string]: boolean } } => {
   const keys = Object.keys(cssClasses) as Array<keyof TCssClasses>;
-
+  let cssPropertyCount = 0;
   const defaults = keys.reduce((aggr, key) => {
     return {
       ...aggr,
-      ...getClassesFromConfig(key, config, cssClasses[key]),
+      ...getClassesFromConfig(
+        key,
+        config,
+        cssClasses[key],
+        (labelIndex: number) => `${generateShortName(cssPropertyCount++)}-${generateShortName(labelIndex)}`,
+      ),
     };
-  }, {});
+  }, {} as IClasses);
 
   return {
     defaults,
+    defaultsByShortname: Object.keys(defaults).reduce((aggr, key) => {
+      aggr[defaults[key].shortName] = defaults[key];
+
+      return aggr;
+    }, {} as IClasses),
     themes: Object.keys(config.themes || {}).reduce((aggr, theme) => {
       aggr[`themes-${theme}`] = true;
 

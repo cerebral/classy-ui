@@ -192,7 +192,10 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
       if (t.isStringLiteral(node)) {
         const id = node.value;
         throwCodeFragmentIfInvalidId(argPath, id);
-        const classObj = createClassObject(node.value, decorators);
+        const classObj = createClassObject(
+          isProduction && node.value in classes.defaults ? classes.defaults[node.value].shortName : node.value,
+          decorators,
+        );
         collectAndRewrite(classObj).forEach(classArgs.add, classArgs);
         return;
       } else if (t.isIdentifier(node)) {
@@ -226,7 +229,10 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
       } else if (t.isObjectExpression(node)) {
         argPath.get('properties').forEach((propPath: any) => {
           const id = getIdOrThrow(propPath.get('key'));
-          const classObj = createClassObject(id, decorators);
+          const classObj = createClassObject(
+            isProduction && id in classes.defaults ? classes.defaults[id].shortName : id,
+            decorators,
+          );
           throwCodeFragmentIfInvalidId(propPath, id);
 
           // TODO: move this to convertToExpression
@@ -265,7 +271,7 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
     });
 
   if (isProduction) {
-    writeFileSync(cssPath, injectProduction(classCollection, classes.defaults, config));
+    writeFileSync(cssPath, injectProduction(classCollection, classes.defaultsByShortname, config));
     state.file.ast.program.body.unshift(t.importDeclaration([], t.stringLiteral('classy-ui/styles.css')));
   } else {
     const localAddClassUid = state.file.scope.generateUidIdentifier('addClasses');

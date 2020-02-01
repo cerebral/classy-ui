@@ -10,7 +10,7 @@
   "module": "es/index.js",
   "types": "lib/classy-ui.d.ts",
   "scripts": {
-    "build": "npm run build:lib & npm run build:es",
+    "build": "npm run build:lib & npm run build:es && node lib/config/create-types-script",
     "build:lib": "tsc --outDir lib --module commonjs",
     "build:es": "tsc --outDir es --module es2015",
     "clean": "rimraf es lib coverage",
@@ -19,7 +19,7 @@
     "format": "prettier '**/*.{md,js,jsx,json,ts,tsx}' --write",
     "test": "jest --env=jsdom --coverage",
     "test:watch": "jest --env=jsdom --watch --updateSnapshot",
-    "prepublishOnly": "npm run build && node lib/config/create-types-script",
+    "prepublishOnly": "npm run build",
     "prebuild": "npm run clean",
     "postbuild": "rimraf {lib,es}/**/__tests__ {lib,es}/**/*.{spec,test}.{js,d.ts,js.map}",
     "posttest": "npm run typecheck && npm run lint",
