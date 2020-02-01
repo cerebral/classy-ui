@@ -29,3 +29,22 @@ const throwError = () => {
 };
 
 export const c = throwError;
+export const hover = throwError;
+export const group = throwError;
+export const active = throwError;
+export const disabled = throwError;
+export const visited = throwError;
+export const firstChild = throwError;
+export const lastChild = throwError;
+export const oddChild = throwError;
+export const evenChild = throwError;
+export const focusWithin = throwError;
+export const groupHover = throwError;
+export const groupActive = throwError;
+export const groupDisabled = throwError;
+export const groupVisited = throwError;
+export const groupFirstChild = throwError;
+export const groupLastChild = throwError;
+export const groupOddChild = throwError;
+export const groupEvenChild = throwError;
+export const groupFocusWithin = throwError;
