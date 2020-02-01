@@ -75,6 +75,10 @@ import { c } from 'classy-ui/macro';
 
 ## FAQ
 
+### It is not working with Codesandbox
+
+classy-ui is not yet compatible with [codesandbox](https://codesandbox.io/) since Codesandbox does not find the library entry points. This issue is [actively worked on](https://github.com/cerebral/classy-ui/issues/6).
+
 ### It is not working with Parcel
 
 [parcel](https://parceljs.org/) ignores `@babel/preset-typescript`. That means this package does not work with Parcel out of the box. You need to use **parcel 2** or configure parcel to use babel typescript transpilation instead, which **parcel 2** will do out of the box
