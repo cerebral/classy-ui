@@ -65,9 +65,7 @@ const cssClasses: TCssClasses = {
   color: ['color'],
 };
 
-export const transform = (
-  config: IEvaluatedConfig,
-): { defaults: IClasses; defaultsByShortname: IClasses; themes: { [name: string]: boolean } } => {
+export const transform = (config: IEvaluatedConfig): { defaults: IClasses; themes: { [name: string]: boolean } } => {
   const keys = Object.keys(cssClasses) as Array<keyof TCssClasses>;
   let cssPropertyCount = 0;
   const defaults = keys.reduce((aggr, key) => {
@@ -84,11 +82,6 @@ export const transform = (
 
   return {
     defaults,
-    defaultsByShortname: Object.keys(defaults).reduce((aggr, key) => {
-      aggr[defaults[key].shortName] = defaults[key];
-
-      return aggr;
-    }, {} as IClasses),
     themes: Object.keys(config.themes || {}).reduce((aggr, theme) => {
       aggr[`themes-${theme}`] = true;
 

@@ -319,6 +319,8 @@ export const negateValue = (value: string) => {
 export const createClassObject = (
   id: string | undefined,
   decorators: IExtractedClass['decorators'],
+  classes: IClasses,
+  isProduction: boolean,
 ): IExtractedClass => {
   const withoutWrappingDecorators = decorators.filter(i => !['c', 'group'].includes(i!));
 
@@ -332,13 +334,13 @@ export const createClassObject = (
   if (decorators[decorators.length - 1] === 'group') {
     return {
       id,
-      name: `group ${id || ''}`,
+      name: `group ${(id && isProduction ? classes[id].shortName : id) || ''}`,
       decorators: returnedDecorators,
     };
   } else if (uid.startsWith('themes-')) {
     return {
       id,
-      name: uid,
+      name: isProduction ? classes[uid].shortName : uid,
       decorators: returnedDecorators,
     };
   }
@@ -346,7 +348,7 @@ export const createClassObject = (
   return {
     id,
     uid,
-    name: uid,
+    name: isProduction ? classes[uid].shortName : uid,
     decorators: returnedDecorators,
   };
 };
