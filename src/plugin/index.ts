@@ -5,7 +5,15 @@ import { config as baseConfig } from '../config/base.config';
 import { transform as transformClassesToTypes } from '../config/transform-classes-to-types';
 import { transform as transformConfigToClasses } from '../config/transform-config-to-classes';
 import { IExtractedClass, IExtractedClasses } from '../types';
-import { createClassObject, getUserConfig, injectDevelopment, injectProduction, mergeConfigs } from '../utils';
+import {
+  camelToDash,
+  createClassObject,
+  getUserConfig,
+  hyphenToCamelCase,
+  injectDevelopment,
+  injectProduction,
+  mergeConfigs,
+} from '../utils';
 
 const cssPath = join(process.cwd(), 'node_modules', 'classy-ui', 'styles.css');
 const config = mergeConfigs(baseConfig, getUserConfig());
@@ -72,13 +80,15 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
    * we considere the type signature of an classname to be all the stuff before the
    * last "-" (including the "-") so "background-red-500" would have a type of "background-red-"
    */
-  function getClassnameType(classname: string) {
-    const lastDashPos = classname.lastIndexOf('-');
-    if (lastDashPos > -1) {
-      return classname.substring(0, lastDashPos + 1);
+  function getClassnameCategory(classname: string) {
+    const parts = classname.split('-');
+    while (parts.length) {
+      parts.pop();
+      const category = hyphenToCamelCase(parts.join('-'));
+      if (category in config.defaults) {
+        return `${camelToDash(category)}-`;
+      }
     }
-    // A plain type signature
-    return classname;
   }
 
   /**
@@ -86,7 +96,7 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
    * classnames against a array of classnames.
    */
   function generateRuntimeRegex(classnames: string[]) {
-    return `(?:^|\\s)(?:${classnames.map(getClassnameType).join('|')})[^\\s]+`;
+    return `(?:^|\\s)(?:${classnames.map(getClassnameCategory).join('|')})[^\\s]+`;
   }
   function convertToExpression(classAttribs: Set<any>) {
     if (classAttribs.size === 0) {

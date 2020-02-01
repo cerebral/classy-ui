@@ -340,7 +340,7 @@ export const createClassObject = (
   } else if (uid.startsWith('themes-')) {
     return {
       id,
-      name: isProduction ? classes[uid].shortName : uid,
+      name: uid,
       decorators: returnedDecorators,
     };
   }
@@ -348,7 +348,7 @@ export const createClassObject = (
   return {
     id,
     uid,
-    name: isProduction ? classes[uid].shortName : uid,
+    name: id && isProduction ? classes[id].shortName : uid,
     decorators: returnedDecorators,
   };
 };
@@ -365,3 +365,8 @@ export const generateShortName = (num: number) => {
 
   return letters;
 };
+
+export const hyphenToCamelCase = (str: string) =>
+  str.replace(/-([a-z])/g, function(g) {
+    return g[1].toUpperCase();
+  });
