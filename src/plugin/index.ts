@@ -116,7 +116,7 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
 
   function throwCodeFragmentIfInvalidId(path: any, id: string) {
     if (!classes.defaults[id] && !classes.themes[id]) {
-      throw path.buildCodeFrameError(`Could not find class ${id}`);
+      throw path.buildCodeFrameError(`CLASSY-UI: Could not find classname ${id}`);
     }
   }
   function throwIfForbiddenName(path: any, decorators: string[], name: string) {

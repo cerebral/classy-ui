@@ -12,7 +12,6 @@ export const config: IConfig = {
       transparent: 'transparent',
       black: '#000',
       white: '#fff',
-
       'gray-100': '#f7fafc',
       'gray-200': '#edf2f7',
       'gray-300': '#e2e8f0',
