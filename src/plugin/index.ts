@@ -67,9 +67,34 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
     return classObj.name ? (transformer ? [transformer(classObj.name)] : classObj.name.split(' ')) : [];
   }
 
+  /**
+   * Generate a type signature for a given classname
+   * we considere the type signature of an classname to be all the stuff before the
+   * last "-" (including the "-") so "background-red-500" would have a type of "background-red-"
+   */
+  function getClassnameType(classname: string) {
+    const lastDashPos = classname.lastIndexOf('-');
+    if (lastDashPos > -1) {
+      return classname.substring(0, lastDashPos + 1);
+    }
+    // A plain type signature
+    return classname;
+  }
+
+  /**
+   * Generate a regex that matches all type signatures in
+   * classnames against a array of classnames.
+   */
+  function generateRuntimeRegex(classnames: string[]) {
+    return `(?:^|\\s)(?:${classnames.map(getClassnameType).join('|')})[^\\s]+\\s?`;
+  }
   function convertToExpression(classAttribs: Set<any>) {
-    const strings = [];
-    const others = [];
+    if (classAttribs.size === 0) {
+      return t.stringLiteral('');
+    }
+
+    const strings: string[] = [];
+    const others: any[] = [];
     for (const item of classAttribs.values()) {
       if (typeof item === 'string') {
         if (item.length !== 0) {
@@ -80,24 +105,43 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
       }
     }
 
-    if (strings.length > 0 && others.length > 0) {
-      others.unshift(t.stringLiteral(`${strings.join(' ')} `));
-    } else if (strings.length > 0) {
+    // TODO: We could do better here:
+    // currently we just split into strings and "others"
+    // 1) the collect function converts objectExpression into ternary expression
+    //    this convertion should be moved to here.
+    // 2) After 1) is done we could only do this special runtime processing
+    //    sort into strings, identifiers/callExpr and others and only do the runtime
+    //    processing for identifiers but not for others.
+
+    // if there are only string literals just return them. This is a _short path_
+    if (strings.length > 0 && others.length === 0) {
       return t.stringLiteral(strings.join(' '));
     }
 
-    if (others.length > 0) {
-      const max = others.length - 1;
-      let start = others[max];
-      for (let i = max - 1; i >= 0; i--) {
-        start = t.binaryExpression('+', others[i], start);
-      }
+    // Build up a binary expression with all other values
+    const max = others.length - 1;
+    let start = others[max];
+    for (let i = max - 1; i >= 0; i--) {
+      start = t.binaryExpression('+', others[i], start);
+    }
+
+    // We are done if there are no strings here
+    if (strings.length === 0) {
       return start;
     }
 
-    // We can't safely remove the whole expression
-    // becasue in JSX you need to have an actual argument
-    return t.stringLiteral('');
+    // Some runtime processing is needed to "fix" css specificity.
+    // Remove all occurences of the same class type from all literals and just
+    // add ours here
+    // rewrite to (id + id + ...).replace(/regex/g) + ' strings...'
+    return t.binaryExpression(
+      '+',
+      t.callExpression(t.memberExpression(start, t.identifier('replace')), [
+        t.regExpLiteral(generateRuntimeRegex(strings), 'g'),
+        t.stringLiteral(''),
+      ]),
+      t.stringLiteral(' ' + strings.join(' ')),
+    );
   }
 
   function updateContext(decorators: string[], value: string) {

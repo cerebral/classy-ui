@@ -27,7 +27,7 @@ c(group(), { 'background-color-red-500': true })
 
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 import { c, group } from 'classy-ui';
-'group ' + (true ? 'background-color-red-500' : '');
+(true ? 'background-color-red-500' : '').replace(/(?:^|\\s)(?:group)[^\\s]+/g, '') + ' group';
 
 _addClasses(['background-color-red-500', '.background-color-red-500{background-color:#f56565;}\\n']);
 
@@ -147,6 +147,28 @@ _addClasses(['background-color-red-500', '.background-color-red-500{background-c
 
 `;
 
+exports[`classy-ui should fix specifiy issue in dynamic composition: should fix specifiy issue in dynamic composition 1`] = `
+
+import { c} from 'classy-ui'
+
+c(compose, moreCompose, 'color-red-500', 'border-radius-sm')
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { addClasses as _addClasses } from 'classy-ui/runtime';
+import { c } from 'classy-ui';
+(compose + moreCompose).replace(/(?:^|\\s)(?:color-red-|border-radius-)[^\\s]+/g, '') + ' color-red-500 border-radius-sm';
+
+_addClasses([
+  'color-red-500',
+  '.color-red-500{color:#f56565;}\\n',
+  'border-radius-sm',
+  '.border-radius-sm{border-radius:0.125rem;}\\n',
+]);
+
+
+`;
+
 exports[`classy-ui should give group a classname: should give group a classname 1`] = `
 
 import { c, group } from 'classy-ui'
@@ -174,8 +196,10 @@ c(group(), { 'background-color-red-500': true }, 'color-white', { 'background-co
 
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 import { c, group } from 'classy-ui';
-'group color-white border-radius-sm ' +
-  ((true ? 'background-color-red-500' : '') + (true ? 'background-color-blue-500' : ''));
+((true ? 'background-color-red-500' : '') + (true ? 'background-color-blue-500' : '')).replace(
+  /(?:^|\\s)(?:group|color-|border-radius-)[^\\s]+/g,
+  '',
+) + ' group color-white border-radius-sm';
 
 _addClasses([
   'background-color-red-500',

@@ -102,5 +102,12 @@ import { c, group } from 'classy-ui'
 
 c(group(), { 'background-color-red-500': true }, 'color-white', { 'background-color-blue-500': true }, 'border-radius-sm')`,
     },
+    {
+      title: 'should fix specifiy issue in dynamic composition',
+      code: `
+import { c} from 'classy-ui'
+
+c(compose, moreCompose, 'color-red-500', 'border-radius-sm')`,
+    },
   ],
 });
