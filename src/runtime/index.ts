@@ -6,7 +6,7 @@ head?.appendChild(style);
 
 export const addClasses = (classes: string[]) => {
   let css = '';
-  for (let x = 0; x < classes.length; x++) {
+  for (let x = 0; x < classes.length; x += 2) {
     const className = classes[x];
 
     if (classCache.has(className)) {
@@ -16,7 +16,6 @@ export const addClasses = (classes: string[]) => {
     const cssString = classes[x + 1];
 
     css += `${cssString}\n`;
-    x++;
   }
 
   style.appendChild(document.createTextNode(css));
