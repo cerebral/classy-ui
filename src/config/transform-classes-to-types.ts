@@ -20,7 +20,7 @@ export const transform = (transformedConfig: IClasses, config: IEvaluatedConfig)
   export const groupEvenChild: TDecorator;
   export const groupFocusWithin: TDecorator;
   ${allowedPseudoDecorators.map(decorator => `export const ${decorator}: TDecorator;`).join('\n')}
-  ${Object.keys(config.defaults.screens)
+  ${Object.keys(config.screens)
     .map(screen => `export const ${screen}: TDecorator;`)
     .join('\n')}
   export type TClasses = ${Object.keys(transformedConfig)

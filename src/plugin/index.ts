@@ -1,29 +1,29 @@
 import { writeFileSync } from 'fs';
 import { join } from 'path';
 
-import { config as baseConfig } from '../config/base.config';
 import { transform as transformClassesToTypes } from '../config/transform-classes-to-types';
 import { transform as transformConfigToClasses } from '../config/transform-config-to-classes';
+import tailwindcss from '../configs/tailwindcss';
 import { IExtractedClass, IExtractedClasses } from '../types';
 import {
   camelToDash,
   createClassObject,
+  evaluateConfig,
   getUserConfig,
   hyphenToCamelCase,
   injectDevelopment,
   injectProduction,
-  mergeConfigs,
 } from '../utils';
 
 const cssPath = join(process.cwd(), 'node_modules', 'classy-ui', 'styles.css');
-const config = mergeConfigs(baseConfig, getUserConfig());
+const config = evaluateConfig(getUserConfig() || tailwindcss);
 const classes = transformConfigToClasses(config);
 
 if (process.env.NODE_ENV !== 'test') {
   try {
     const esTypesPath = join(process.cwd(), 'node_modules', 'classy-ui', 'es', 'classy-ui.d.ts');
     const libTypesPath = join(process.cwd(), 'node_modules', 'classy-ui', 'lib', 'classy-ui.d.ts');
-    const types = transformClassesToTypes(classes.defaults, config);
+    const types = transformClassesToTypes(classes, config);
 
     writeFileSync(esTypesPath, types);
     writeFileSync(libTypesPath, types);
@@ -85,7 +85,7 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
     while (parts.length) {
       parts.pop();
       const category = hyphenToCamelCase(parts.join('-'));
-      if (category in config.defaults) {
+      if (category in config.classnames) {
         return `${camelToDash(category)}-`;
       }
     }
@@ -169,7 +169,7 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
   }
 
   function throwCodeFragmentIfInvalidId(path: any, id: string) {
-    if (!classes.defaults[id] && !classes.themes[id]) {
+    if (!classes[id]) {
       throw path.buildCodeFrameError(`CLASSY-UI: Could not find classname ${id}`);
     }
   }
@@ -192,7 +192,7 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
   function rewriteAndCollectArguments(decorators: any, argumentPaths: any, classArgs: Set<any>) {
     // if root call has no arguments
     if (argumentPaths.length === 0) {
-      const classObj = createClassObject(undefined, decorators, classes.defaults, isProduction);
+      const classObj = createClassObject(undefined, decorators, classes, isProduction);
       collectAndRewrite(classObj).forEach(classArgs.add, classArgs);
     }
     // process arguments
@@ -202,7 +202,7 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
       if (t.isStringLiteral(node)) {
         const id = node.value;
         throwCodeFragmentIfInvalidId(argPath, id);
-        const classObj = createClassObject(node.value, decorators, classes.defaults, isProduction);
+        const classObj = createClassObject(node.value, decorators, classes, isProduction);
         collectAndRewrite(classObj).forEach(classArgs.add, classArgs);
         return;
       } else if (t.isIdentifier(node)) {
@@ -226,7 +226,7 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
             return;
           } else {
             // if subsequent calls have no arguments
-            const classObj = createClassObject(undefined, newDecorators, classes.defaults, isProduction);
+            const classObj = createClassObject(undefined, newDecorators, classes, isProduction);
             collectAndRewrite(classObj).forEach(classArgs.add, classArgs);
             return;
           }
@@ -236,7 +236,7 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
       } else if (t.isObjectExpression(node)) {
         argPath.get('properties').forEach((propPath: any) => {
           const id = getIdOrThrow(propPath.get('key'));
-          const classObj = createClassObject(id, decorators, classes.defaults, isProduction);
+          const classObj = createClassObject(id, decorators, classes, isProduction);
           throwCodeFragmentIfInvalidId(propPath, id);
 
           // TODO: move this to convertToExpression
@@ -275,16 +275,14 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
     });
 
   if (isProduction) {
-    writeFileSync(cssPath, injectProduction(classCollection, classes.defaults, config));
+    writeFileSync(cssPath, injectProduction(classCollection, classes, config));
     state.file.ast.program.body.unshift(t.importDeclaration([], t.stringLiteral('classy-ui/styles.css')));
   } else {
     const localAddClassUid = state.file.scope.generateUidIdentifier('addClasses');
 
     const runtimeCall = t.expressionStatement(
       t.callExpression(localAddClassUid, [
-        t.arrayExpression(
-          injectDevelopment(classCollection, classes.defaults, config).map(value => t.stringLiteral(value)),
-        ),
+        t.arrayExpression(injectDevelopment(classCollection, classes, config).map(value => t.stringLiteral(value))),
       ]),
     );
 

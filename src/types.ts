@@ -1,88 +1,18 @@
-import * as CSS from 'csstype';
-
-import { ThemeValue } from './config/ThemeValue';
-
-export interface IConfigDefaults<T = IEvaluatedConfigValue> {
-  screens: T;
-  colors: T;
-  spacing: T;
-  backgroundColor: T;
-  backgroundPosition: T;
-  backgroundSize: T;
-  borderColor: T;
-  borderRadius: T;
-  borderWidth: T;
-  boxShadow: T;
-  container: T;
-  cursor: T;
-  fill: T;
-  flex: T;
-  flexGrow: T;
-  flexShrink: T;
-  fontFamily: T;
-  fontSize: T;
-  fontWeight: T;
-  height: T;
-  inset: T;
-  letterSpacing: T;
-  lineHeight: T;
-  listStyleType: T;
-  margin: T;
-  maxHeight: T;
-  maxWidth: T;
-  minHeight: T;
-  minWidth: T;
-  objectPosition: T;
-  opacity: T;
-  order: T;
-  padding: T;
-  placeholderColor: T;
-  stroke: T;
-  strokeWidth: T;
-  color: T;
-  width: T;
-  zIndex: T;
-  gap: T;
-  rowGap: T;
-  columnGap: T;
-  gridTemplateColumns: T;
-  gridColumn: T;
-  gridColumnStart: T;
-  gridColumnEnd: T;
-  gridTemplateRows: T;
-  gridRow: T;
-  gridRowStart: T;
-  gridRowEnd: T;
-  transformOrigin: T;
-  scale: T;
-  rotate: T;
-  translate: T;
-  skew: T;
-  transitionProperty: T;
-  transitionTimingFunction: T;
-  transitionDuration: T;
-}
-
 export interface IClass {
   id: string;
-  category: keyof IConfigDefaults;
-  label: string;
+  classname: string;
+  variant: string | null;
   shortName: string;
-  themeValue: ThemeValue;
   css: string;
+  variable: {
+    value: string;
+    originalValue: string;
+  } | null;
 }
 
 export interface IClasses {
   [name: string]: IClass;
 }
-
-export type CSSProperty =
-  | keyof CSS.StandardShorthandProperties
-  | keyof CSS.StandardPropertiesHyphen
-  | 'fill'
-  | 'stroke'
-  | 'stroke-width'
-  | 'skew';
 
 export type TConfigDefaults = (path: string, fallback?: string) => any;
 
@@ -91,30 +21,63 @@ export interface IGetConfigUtils {
   screens: (screens: any) => any;
 }
 
-export type TConfigValue =
-  | ((defaults: TConfigDefaults, utils: IGetConfigUtils) => ThemeValue)
-  | { [key: string]: string };
-
-export interface IEvaluatedConfigValue {
-  [key: string]: ThemeValue;
+export interface IClassnames<T extends string> {
+  [name: string]:
+    | (() => string)
+    | {
+        variants?:
+          | { [name: string]: string }
+          | ((
+              variables: IVariables<T>,
+              utils: { negative: (value: { [key: string]: string }) => { [key: string]: string } },
+            ) => { [name: string]: string });
+        css: (value: string) => string;
+      };
 }
 
-export type TCssClasses = {
-  [key in keyof Omit<IConfigDefaults, 'screens' | 'spacing' | 'colors'>]: CSSProperty[];
+export interface IEvaluatedClassnames {
+  [name: string]:
+    | (() => string)
+    | {
+        variants: { [name: string]: string };
+        variantsWithoutVariables: { [name: string]: string };
+        css: (value: string) => string;
+      };
+}
+
+export type IVariables<T extends string> = {
+  [key in T]: { [variant: string]: string };
 };
 
-export interface IConfig {
-  defaults: IConfigDefaults<TConfigValue>;
-  themes?: IThemes;
+export interface IConfig<T extends string, U = IVariables<T>> {
+  variables: IVariables<T>;
+  screens: {
+    [name: string]: (css: string, variables: IVariables<T>) => string;
+  };
+  classnames: IClassnames<T>;
+  themes?: {
+    [name: string]: {
+      [key in keyof U]: U[key];
+    };
+  };
+  extends?: IConfig<any>;
 }
 
-export interface IThemes {
-  [theme: string]: Partial<IConfigDefaults<{ [label: string]: string }>>;
+export interface IEvaluatedThemes {
+  [variable: string]: {
+    [key: string]: {
+      [theme: string]: string;
+    };
+  };
 }
 
 export interface IEvaluatedConfig {
-  defaults: IConfigDefaults;
-  themes?: IThemes;
+  variables: IVariables<any>;
+  screens: {
+    [name: string]: (css: string, variables: IVariables<any>) => string;
+  };
+  classnames: IEvaluatedClassnames;
+  themes?: IEvaluatedThemes;
 }
 
 export interface IClassesByType {
@@ -124,13 +87,13 @@ export interface IClassesByType {
   common: {
     [id: string]: string;
   };
-  themes: {
+  themeVariables: {
     [theme: string]: {
-      [id: string]: string;
+      [variable: string]: string;
     };
   };
-  variables: {
-    [id: string]: string;
+  rootVariables: {
+    [variable: string]: string;
   };
 }
 

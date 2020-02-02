@@ -3,19 +3,16 @@ import { join } from 'path';
 // @ts-ignore
 import reduceCalc from 'reduce-css-calc';
 
-import { ThemeValue } from './config/ThemeValue';
 import {
-  CSSProperty,
   IClasses,
   IClassesByType,
   IConfig,
-  IConfigDefaults,
+  IEvaluatedClassnames,
   IEvaluatedConfig,
-  IEvaluatedConfigValue,
+  IEvaluatedThemes,
   IExtractedClass,
   IExtractedClasses,
-  IThemes,
-  TCssClasses,
+  IVariables,
 } from './types';
 
 export const allowedPseudoDecorators = [
@@ -32,113 +29,137 @@ export const allowedPseudoDecorators = [
 ];
 
 export const getClassesFromConfig = (
-  category: keyof TCssClasses,
+  classnameKey: string,
   config: IEvaluatedConfig,
-  cssProperties: CSSProperty[],
   getShortName: (labelIndex: number) => string,
 ) => {
-  const values = config.defaults[category];
+  const classname = config.classnames[classnameKey];
 
-  return cssProperties.reduce((cssPropertiesAggr, cssProperty) => {
+  if (typeof classname === 'function') {
+    const id = `${camelToDash(classnameKey)}`;
+
     return {
-      ...cssPropertiesAggr,
-      ...Object.keys(values).reduce((valuesAggr, label, labelIndex) => {
-        const themeValue = values[label];
-        const id = `${cssProperty}-${label}`;
+      [id]: {
+        id,
+        classname: classnameKey,
+        variant: null,
+        css: classname(),
+        variable: null,
+        shortName: getShortName(0),
+      },
+    };
+  }
 
-        valuesAggr[id] = {
-          id,
-          category,
-          label,
-          shortName: getShortName(labelIndex),
-          themeValue,
-          css: `{${cssProperty}:${themeValue.themes.length ? `var(--${id})` : values[label].value};}\n`,
-        };
-
-        return valuesAggr;
-      }, {} as IClasses),
+  return Object.keys(classname.variants).reduce((aggr, variantKey, variantIndex) => {
+    const id = `${camelToDash(classnameKey)}-${variantKey}`;
+    return {
+      ...aggr,
+      [id]: {
+        id,
+        classname: classnameKey,
+        variant: variantKey,
+        css: classname.css(classname.variants[variantKey]),
+        variable:
+          classname.variants[variantKey] !== classname.variantsWithoutVariables[variantKey]
+            ? {
+                value: classname.variants[variantKey],
+                originalValue: classname.variantsWithoutVariables[variantKey],
+              }
+            : null,
+        shortName: getShortName(variantIndex),
+      },
     };
   }, {} as IClasses);
 };
 
-export const getThemesFromConfig = (category: keyof IConfigDefaults, label: string, themes: IThemes) => {
-  return Object.keys(themes).reduce((aggr, themeKey) => {
-    const values = themes[themeKey][category];
+export const evaluateConfig = (config: IConfig<any>): IEvaluatedConfig => {
+  const baseConfig: IConfig<any> = config.extends
+    ? config.extends
+    : {
+        variables: {},
+        classnames: {},
+        screens: {},
+      };
 
-    if (values && values[label]) {
-      return aggr.concat(themeKey);
-    }
+  if (!config.variables) {
+    config.variables = baseConfig.variables;
+  }
+
+  if (!config.classnames) {
+    config.classnames = baseConfig.classnames;
+  }
+
+  if (!config.screens) {
+    config.screens = baseConfig.screens;
+  }
+
+  // Merge variables
+  const originalVariables = Object.keys(config.variables).reduce((aggr, key) => {
+    aggr[key] = {
+      ...baseConfig.variables[key],
+      ...config.variables[key],
+    };
 
     return aggr;
-  }, [] as string[]);
-};
+  }, {} as IVariables<any>);
 
-export const createThemeValues = (
-  category: keyof IConfigDefaults,
-  value: { [key: string]: string | ThemeValue },
-  themes: IThemes = {},
-): IEvaluatedConfigValue => {
-  return Object.keys(value).reduce((aggr, key) => {
-    if (value[key] instanceof ThemeValue) {
-      aggr[key] = value[key] as ThemeValue;
+  // Reverse themes lookup to variable instead
+  const configThemes = config.themes || {};
+  const themesByVariable = Object.keys(configThemes).reduce((aggr, themeKey) => {
+    Object.keys(configThemes[themeKey]).forEach(variableKey => {
+      if (!aggr[variableKey]) {
+        aggr[variableKey] = {};
+      }
+      Object.keys(configThemes[themeKey][variableKey]).forEach(valueKey => {
+        if (!aggr[variableKey][valueKey]) {
+          aggr[variableKey][valueKey] = {};
+        }
+        aggr[variableKey][valueKey][themeKey] = configThemes[themeKey][variableKey][valueKey];
+      });
+    });
+
+    return aggr;
+  }, {} as IEvaluatedThemes);
+
+  // Evaluated variables where values are replaced by CSS variable
+  const variables = Object.keys(originalVariables).reduce((aggr, key) => {
+    aggr[key] = Object.keys(originalVariables[key]).reduce((subAggr, subKey) => {
+      subAggr[subKey] =
+        themesByVariable[key] && themesByVariable[key][subKey] ? `--${key}-${subKey}` : originalVariables[key][subKey];
+
+      return subAggr;
+    }, {} as { [variant: string]: string });
+
+    return aggr;
+  }, {} as IVariables<any>);
+
+  // Call any dynamic classname variants with both the original variables and
+  // the ones who have been evaluated with CSS variables
+  const classnames = Object.keys(config.classnames).reduce((aggr, key) => {
+    if (typeof config.classnames[key] === 'function') {
+      aggr[key] = config.classnames[key] as any;
     } else {
-      aggr[key] = new ThemeValue(category, key, value[key] as string, getThemesFromConfig(category, key, themes));
+      aggr[key] = {
+        ...config.classnames[key],
+        variantsWithoutVariables:
+          typeof (config.classnames[key] as any).variants === 'function'
+            ? (config.classnames[key] as any).variants(originalVariables, { negative })
+            : (config.classnames[key] as any).variants,
+        variants:
+          typeof (config.classnames[key] as any).variants === 'function'
+            ? (config.classnames[key] as any).variants(variables, { negative })
+            : (config.classnames[key] as any).variants,
+      } as any;
     }
 
     return aggr;
-  }, {} as IEvaluatedConfigValue);
-};
-
-export const mergeConfigs = (
-  configA: IConfig,
-  configB: { themes?: IConfig['themes']; defaults?: Partial<IConfig['defaults']> },
-): IEvaluatedConfig => {
-  const defaultKeys = Object.keys(configA.defaults) as Array<keyof IConfigDefaults>;
-  const utils = {
-    negative,
-    screens,
-  };
+  }, {} as IEvaluatedClassnames);
 
   return {
-    defaults: defaultKeys.reduce((aggr, key) => {
-      const defaults = (path: string) => {
-        const value = path.split('.').reduce((current: any, item) => current[item], aggr);
-
-        return typeof value === 'function' ? value(defaults, utils) : value;
-      };
-
-      const configAValues = createThemeValues(
-        key,
-        typeof configA.defaults[key] === 'function'
-          ? (configA.defaults[key] as any)(defaults, utils)
-          : configA.defaults[key],
-        configB.themes,
-      );
-
-      aggr = {
-        ...aggr,
-        [key]: configAValues,
-      };
-
-      if (configB.defaults && configB.defaults[key]) {
-        const configBValues =
-          typeof configB.defaults[key] === 'function'
-            ? (configB.defaults[key] as any)(configAValues)
-            : configB.defaults[key];
-
-        return {
-          ...aggr,
-          [key]: createThemeValues(
-            key,
-            typeof configBValues === 'function' ? (configBValues as any)(defaults, utils) : configBValues,
-            configB.themes,
-          ),
-        };
-      }
-
-      return aggr;
-    }, {} as IConfigDefaults),
-    themes: configB.themes,
+    variables,
+    screens: config.screens,
+    classnames,
+    themes: themesByVariable,
   };
 };
 
@@ -146,7 +167,7 @@ export const getUserConfig = () => {
   try {
     return require(join(process.cwd(), 'classy-ui.config.js'));
   } catch (error) {
-    return {};
+    return null;
   }
 };
 
@@ -159,27 +180,26 @@ export const createProductionCss = (productionClassesByType: IClassesByType, con
   const screenKeys = Object.keys(productionClassesByType.screens);
   screenKeys.forEach(screen => {
     if (productionClassesByType.screens[screen].length) {
-      css += `@media(max-width: ${config.defaults.screens[screen].value}){`;
-      productionClassesByType.screens[screen].forEach(classCss => {
-        css += classCss;
-      });
-      css += '}';
+      const screenCss = productionClassesByType.screens[screen].reduce((aggr, classCss) => {
+        return aggr + classCss;
+      }, '');
+      css += config.screens[screen](screenCss, config.variables);
     }
   });
 
-  const variableKeys = Object.keys(productionClassesByType.variables);
+  const variableKeys = Object.keys(productionClassesByType.rootVariables);
 
   if (variableKeys.length) {
     css += ':root{';
     variableKeys.forEach(key => {
-      css += `--${key}:${productionClassesByType.variables[key]};`;
+      css += `${key}:${productionClassesByType.rootVariables[key]};`;
     });
     css += '}';
   }
 
-  Object.keys(productionClassesByType.themes).forEach(theme => {
-    const variables = Object.keys(productionClassesByType.themes[theme]).reduce(
-      (aggr, variableKey) => `${aggr}${productionClassesByType.themes[theme][variableKey]}`,
+  Object.keys(productionClassesByType.themeVariables).forEach(theme => {
+    const variables = Object.keys(productionClassesByType.themeVariables[theme]).reduce(
+      (aggr, variableKey) => `${aggr}${productionClassesByType.themeVariables[theme][variableKey]}`,
       '',
     );
     css += `.themes-${theme}{${variables}}`;
@@ -215,15 +235,15 @@ export const injectProduction = (classCollection: IExtractedClasses, classes: IC
   const productionClassesByType: IClassesByType = {
     screens: {},
     common: {},
-    themes: {},
-    variables: {},
+    themeVariables: {},
+    rootVariables: {},
   };
 
   Object.keys(classCollection).forEach(uid => {
     const extractedClass = classCollection[uid];
     const configClass = classes[extractedClass.id as string];
-    const screenDecorators = extractedClass.decorators.filter(decorator => decorator in config.defaults.screens);
-    const otherDecorators = extractedClass.decorators.filter(decorator => !(decorator in config.defaults.screens));
+    const screenDecorators = extractedClass.decorators.filter(decorator => decorator in config.screens);
+    const otherDecorators = extractedClass.decorators.filter(decorator => !(decorator in config.screens));
     let classEntry: any;
     try {
       classEntry = createClassEntry(extractedClass.name, otherDecorators, configClass.css);
@@ -240,15 +260,22 @@ export const injectProduction = (classCollection: IExtractedClasses, classes: IC
       productionClassesByType.common[configClass.id] = classEntry;
     }
 
-    configClass.themeValue.themes.forEach(theme => {
-      productionClassesByType.themes[theme] = productionClassesByType.themes[theme] || {};
-      productionClassesByType.themes[theme][configClass.id] = `--${configClass.id}:${
-        config.themes![theme]![configClass.themeValue.category]![configClass.themeValue.label]
-      };`;
-      productionClassesByType.variables[configClass.id] = config.defaults![configClass.themeValue.category]![
-        configClass.themeValue.label
-      ].value;
-    });
+    if (configClass.variable) {
+      const themes = config.themes || {};
+      const variable = configClass.variable.value;
+      const originalValue = configClass.variable.originalValue;
+      const variableParts = variable.substr(2).split('-');
+      const variableKey = variableParts.shift() as string;
+      const variableValueKey = variableParts.join('-');
+
+      Object.keys(themes).forEach(theme => {
+        productionClassesByType.themeVariables[theme] = productionClassesByType.themeVariables[theme] || {};
+        productionClassesByType.themeVariables[theme][
+          variable
+        ] = `${variable}:${themes[variableKey][variableValueKey][theme]};`;
+        productionClassesByType.rootVariables[variable] = originalValue;
+      });
+    }
   });
 
   return createProductionCss(productionClassesByType, config);
@@ -257,52 +284,45 @@ export const injectProduction = (classCollection: IExtractedClasses, classes: IC
 export const injectDevelopment = (classCollection: IExtractedClasses, classes: IClasses, config: IEvaluatedConfig) => {
   return Object.keys(classCollection).reduce((aggr, uid) => {
     const extractedClass = classCollection[uid];
-
     const configClass = classes[extractedClass.id as string];
-    const screenDecorators = extractedClass.decorators.filter(decorator => decorator in config.defaults.screens);
-    const otherDecorators = extractedClass.decorators.filter(decorator => !(decorator in config.defaults.screens));
+    const screenDecorators = extractedClass.decorators.filter(decorator => decorator in config.screens);
+    const otherDecorators = extractedClass.decorators.filter(decorator => !(decorator in config.screens));
     const classEntry = createClassEntry(extractedClass.name, otherDecorators, configClass.css);
 
     let css = '';
 
     if (screenDecorators.length) {
       screenDecorators.forEach(screen => {
-        css += `@media(max-width:${config.defaults.screens[screen].value}){${classEntry}}\n`;
+        css += config.screens[screen](classEntry, config.variables);
       });
     } else {
       css = classEntry;
     }
 
-    configClass.themeValue.themes.forEach(theme => {
-      css += `:root{--${configClass.id}:${
-        config.defaults[configClass.category][configClass.label].value
-      };}\n.themes-${theme}{--${configClass.id}:${
-        config.themes![theme]![configClass.themeValue.category]![configClass.themeValue.label]
-      };}`;
-    });
+    if (configClass.variable) {
+      const themes = config.themes || {};
+      const variable = configClass.variable.value;
+      const originalValue = configClass.variable.originalValue;
+      const variableParts = variable.substr(2).split('-');
+      const variableKey = variableParts.shift() as string;
+      const variableValueKey = variableParts.join('-');
+
+      Object.keys(themes).forEach(theme => {
+        css += `:root{${variable}:${originalValue};}\n.themes-${theme}{${variable}:${themes[variableKey][variableValueKey][theme]};}`;
+      });
+    }
 
     return aggr.concat([extractedClass.name, `${css}`]);
   }, [] as any[]);
 };
 
-export const negative = (scale: { [key: string]: ThemeValue }) => {
+export const negative = (scale: { [key: string]: string }) => {
   return Object.keys(scale)
-    .filter(key => scale[key].value !== '0')
+    .filter(key => scale[key] !== '0')
     .reduce(
       (negativeScale, key) => ({
         ...negativeScale,
-        [`-${key}`]: scale[key].copy(negateValue(scale[key].value)),
-      }),
-      {},
-    );
-};
-export const screens = (value: { [key: string]: ThemeValue }) => {
-  return Object.keys(value)
-    .filter(key => typeof value[key] === 'string')
-    .reduce(
-      (breakpoints, key) => ({
-        ...breakpoints,
-        [`screen-${key}`]: value[key],
+        [`-${key}`]: negateValue(scale[key]),
       }),
       {},
     );

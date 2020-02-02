@@ -38,12 +38,12 @@
     "dist",
     "macro",
     "plugin",
-    "runtime"
+    "runtime",
+    "configs"
   ],
   "dependencies": {
     "@types/node": "^8.0.0",
     "classnames": "^2.2.6",
-    "csstype": "^2.6.8",
     "reduce-css-calc": "^2.1.7",
     "tslib": "^1.9.3"
   },

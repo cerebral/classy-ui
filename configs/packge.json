@@ -1,0 +1,7 @@
+{
+  "name": "classy-ui/configs",
+  "private": true,
+  "main": "../lib/configs",
+  "module": "../es/configs",
+  "jsnext:main": "../es/configs"
+}

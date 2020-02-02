@@ -1,61 +1,23 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`INJECT PRODUCTION should group breakpoints 1`] = `
-"@media(max-width: 768px){.background-color-red-500{background-color:#f56565;}
-.background-color-red-600{background-color:#e53e3e;}
-}"
-`;
+exports[`INJECT PRODUCTION should group breakpoints 1`] = `"@media (max-width: 768px) {.background-color-red-500{background-color:#f56565;}.background-color-red-600{background-color:#e53e3e;}}"`;
 
-exports[`INJECT PRODUCTION should group themes 1`] = `
-".background-color-red-700{background-color:var(--background-color-red-700);}
-.background-color-red-800{background-color:var(--background-color-red-800);}
-:root{--background-color-red-700:#c53030;--background-color-red-800:#9b2c2c;}.themes-dark{--background-color-red-700:green;--background-color-red-800:blue;}"
-`;
+exports[`INJECT PRODUCTION should group themes 1`] = `".background-color-red-700{background-color:--colors-red-700;}.background-color-red-800{background-color:--colors-red-800;}:root{--colors-red-700:#c53030;--colors-red-800:#9b2c2c;}.themes-colors{--colors-red-700:undefined;--colors-red-800:undefined;}"`;
 
-exports[`INJECT PRODUCTION should group themes and breakpoints 1`] = `
-"@media(max-width: 768px){.background-color-red-700{background-color:var(--background-color-red-700);}
-.background-color-red-800{background-color:var(--background-color-red-800);}
-}:root{--background-color-red-700:#c53030;--background-color-red-800:#9b2c2c;}.themes-dark{--background-color-red-700:green;--background-color-red-800:blue;}"
-`;
+exports[`INJECT PRODUCTION should group themes and breakpoints 1`] = `"@media (max-width: 768px) {.background-color-red-700{background-color:--colors-red-700;}.background-color-red-800{background-color:--colors-red-800;}}:root{--colors-red-700:#c53030;--colors-red-800:#9b2c2c;}.themes-colors{--colors-red-700:undefined;--colors-red-800:undefined;}"`;
 
-exports[`INJECT PRODUCTION should inject both pseudo selector and breakpoint 1`] = `
-"@media(max-width: 768px){.background-color-red-500:hover{background-color:#f56565;}
-}"
-`;
+exports[`INJECT PRODUCTION should inject both pseudo selector and breakpoint 1`] = `"@media (max-width: 768px) {.background-color-red-500:hover{background-color:#f56565;}}"`;
 
-exports[`INJECT PRODUCTION should inject multiple 1`] = `
-"@media(max-width: 768px){.background-color-red-500{background-color:#f56565;}
-.background-color-red-600:hover{background-color:#e53e3e;}
-}"
-`;
+exports[`INJECT PRODUCTION should inject multiple 1`] = `"@media (max-width: 768px) {.background-color-red-500{background-color:#f56565;}.background-color-red-600:hover{background-color:#e53e3e;}}"`;
 
-exports[`INJECT PRODUCTION should inject simple 1`] = `
-".background-color-red-500{background-color:#f56565;}
-"
-`;
+exports[`INJECT PRODUCTION should inject simple 1`] = `".background-color-red-500{background-color:#f56565;}"`;
 
-exports[`INJECT PRODUCTION should inject themes 1`] = `
-"@media(max-width: 768px){.background-color-red-700{background-color:var(--background-color-red-700);}
-}:root{--background-color-red-700:#c53030;}.themes-dark{--background-color-red-700:green;}"
-`;
+exports[`INJECT PRODUCTION should inject themes 1`] = `"@media (max-width: 768px) {.background-color-red-700{background-color:--colors-red-700;}}:root{--colors-red-700:#c53030;}.themes-colors{--colors-red-700:undefined;}"`;
 
-exports[`INJECT PRODUCTION should inject with breakpoint 1`] = `
-"@media(max-width: 768px){.background-color-red-500{background-color:#f56565;}
-}"
-`;
+exports[`INJECT PRODUCTION should inject with breakpoint 1`] = `"@media (max-width: 768px) {.background-color-red-500{background-color:#f56565;}}"`;
 
-exports[`INJECT PRODUCTION should inject with multiple breakpoints 1`] = `
-"@media(max-width: 640px){.background-color-red-500{background-color:#f56565;}
-}@media(max-width: 1280px){.background-color-red-500{background-color:#f56565;}
-}"
-`;
+exports[`INJECT PRODUCTION should inject with multiple breakpoints 1`] = `"@media (max-width: 640px) {.background-color-red-500{background-color:#f56565;}}@media (max-width: 1280px) {.background-color-red-500{background-color:#f56565;}}"`;
 
-exports[`INJECT PRODUCTION should inject with multiple pseudo selectors 1`] = `
-".background-color-red-500:hover{background-color:#f56565;}
-"
-`;
+exports[`INJECT PRODUCTION should inject with multiple pseudo selectors 1`] = `".background-color-red-500:hover{background-color:#f56565;}"`;
 
-exports[`INJECT PRODUCTION should inject with pseudo selector 1`] = `
-".background-color-red-500:hover{background-color:#f56565;}
-"
-`;
+exports[`INJECT PRODUCTION should inject with pseudo selector 1`] = `".background-color-red-500:hover{background-color:#f56565;}"`;

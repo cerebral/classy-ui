@@ -29,7 +29,7 @@ import { addClasses as _addClasses } from 'classy-ui/runtime';
 import { c, group } from 'classy-ui';
 (true ? 'background-color-red-500 ' : ' ').replace(/(?:^|\\s)(?:)[^\\s]+/g, '') + 'group ';
 
-_addClasses(['background-color-red-500', '.background-color-red-500{background-color:#f56565;}\\n']);
+_addClasses(['background-color-red-500', '.background-color-red-500{background-color:#f56565;}']);
 
 
 `;
@@ -46,7 +46,7 @@ import { addClasses as _addClasses } from 'classy-ui/runtime';
 import { c, hover } from 'classy-ui';
 ('hover:background-color-red-500 ');
 
-_addClasses(['hover:background-color-red-500', '.hover\\\\:background-color-red-500:hover{background-color:#f56565;}\\n']);
+_addClasses(['hover:background-color-red-500', '.hover\\\\:background-color-red-500:hover{background-color:#f56565;}']);
 
 
 `;
@@ -65,7 +65,7 @@ import { c, hover, md } from 'classy-ui';
 
 _addClasses([
   'hover:md:background-color-red-500',
-  '@media(max-width:768px){.hover\\\\:md\\\\:background-color-red-500:hover{background-color:#f56565;}\\n}\\n',
+  '@media (max-width: 768px) {.hover\\\\:md\\\\:background-color-red-500:hover{background-color:#f56565;}}',
 ]);
 
 
@@ -85,7 +85,7 @@ import { c, md } from 'classy-ui';
 
 _addClasses([
   'md:background-color-red-500',
-  '@media(max-width:768px){.md\\\\:background-color-red-500{background-color:#f56565;}\\n}\\n',
+  '@media (max-width: 768px) {.md\\\\:background-color-red-500{background-color:#f56565;}}',
 ]);
 
 
@@ -105,9 +105,9 @@ import { c, hover, md, lg } from 'classy-ui';
 
 _addClasses([
   'background-color-red-600',
-  '.background-color-red-600{background-color:#e53e3e;}\\n',
+  '.background-color-red-600{background-color:#e53e3e;}',
   'hover:lg:md:background-color-red-500',
-  '@media(max-width:1024px){.hover\\\\:lg\\\\:md\\\\:background-color-red-500:hover{background-color:#f56565;}\\n}\\n@media(max-width:768px){.hover\\\\:lg\\\\:md\\\\:background-color-red-500:hover{background-color:#f56565;}\\n}\\n',
+  '@media (max-width: 1024px) {.hover\\\\:lg\\\\:md\\\\:background-color-red-500:hover{background-color:#f56565;}}@media (max-width: 768px) {.hover\\\\:lg\\\\:md\\\\:background-color-red-500:hover{background-color:#f56565;}}',
 ]);
 
 
@@ -125,7 +125,7 @@ import { addClasses as _addClasses } from 'classy-ui/runtime';
 import { c, hover } from 'classy-ui';
 ('hover:background-color-red-500 ');
 
-_addClasses(['hover:background-color-red-500', '.hover\\\\:background-color-red-500:hover{background-color:#f56565;}\\n']);
+_addClasses(['hover:background-color-red-500', '.hover\\\\:background-color-red-500:hover{background-color:#f56565;}']);
 
 
 `;
@@ -142,7 +142,7 @@ import { addClasses as _addClasses } from 'classy-ui/runtime';
 import { c } from 'classy-ui';
 ('background-color-red-500 ');
 
-_addClasses(['background-color-red-500', '.background-color-red-500{background-color:#f56565;}\\n']);
+_addClasses(['background-color-red-500', '.background-color-red-500{background-color:#f56565;}']);
 
 
 `;
@@ -161,9 +161,9 @@ import { c } from 'classy-ui';
 
 _addClasses([
   'color-red-500',
-  '.color-red-500{color:#f56565;}\\n',
+  '.color-red-500{color:#f56565;}',
   'border-radius-sm',
-  '.border-radius-sm{border-radius:0.125rem;}\\n',
+  '.border-radius-sm{border-radius:0.125rem;}',
 ]);
 
 
@@ -203,13 +203,13 @@ import { c, group } from 'classy-ui';
 
 _addClasses([
   'background-color-red-500',
-  '.background-color-red-500{background-color:#f56565;}\\n',
+  '.background-color-red-500{background-color:#f56565;}',
   'color-white',
-  '.color-white{color:#fff;}\\n',
+  '.color-white{color:#fff;}',
   'background-color-blue-500',
-  '.background-color-blue-500{background-color:#4299e1;}\\n',
+  '.background-color-blue-500{background-color:#4299e1;}',
   'border-radius-sm',
-  '.border-radius-sm{border-radius:0.125rem;}\\n',
+  '.border-radius-sm{border-radius:0.125rem;}',
 ]);
 
 
