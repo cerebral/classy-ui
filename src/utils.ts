@@ -51,7 +51,7 @@ export const getClassesFromConfig = (
   }
 
   return Object.keys(classname.variants).reduce((aggr, variantKey, variantIndex) => {
-    const id = `${camelToDash(classnameKey)}-${variantKey}`;
+    const id = `${camelToDash(classnameKey)}${variantKey ? `-${variantKey}` : ''}`;
     return {
       ...aggr,
       [id]: {

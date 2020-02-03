@@ -14,13 +14,6 @@ export interface IClasses {
   [name: string]: IClass;
 }
 
-export type TConfigDefaults = (path: string, fallback?: string) => any;
-
-export interface IGetConfigUtils {
-  negative: (scale: any) => any;
-  screens: (screens: any) => any;
-}
-
 export interface IClassnames<T extends string> {
   [name: string]:
     | (() => string)

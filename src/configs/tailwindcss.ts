@@ -135,8 +135,28 @@ export default {
     block: () => '{display:block;}',
     'inline-block': () => '{display:inline-block;}',
     inline: () => '{display:inline;}',
-    flex: () => '{display:flex;}',
     'inline-flex': () => '{display:inline-flex;}',
+    flex: {
+      variants: {
+        '': 'display:flex',
+        '1': 'flex:1 1 0%',
+        auto: 'flex:1 1 auto',
+        initial: 'flex:0 1 auto',
+        none: 'flex:none',
+        row: 'flex-direction:row',
+        'row-reverse': 'flex-direction:row-reverse',
+        col: 'flex-direction:column',
+        'col-reverse': 'flex-direction:column-reverse',
+        'no-wrap': 'flex-wrap:nowrap',
+        wrap: 'flex-wrap:wrap',
+        'wrap-reverse': 'flex-wrap:wrap-reverse',
+        grow: 'flex-grow:1',
+        'grow-0': 'flex-grow:0',
+        shrink: 'flex-shrink:1',
+        'shrink-0': 'flex-shrink:0',
+      },
+      css: value => `{${value};}`,
+    },
     table: () => '{display:table;}',
     'table-row': () => '{display:table-row;}',
     'table-cell': () => '{display:table-cell;}',
@@ -146,9 +166,36 @@ export default {
     absolute: () => '{position:absolute;}',
     relative: () => '{position:relative;}',
     sticky: () => '{position:sticky;}',
-    backgroundColor: {
-      variants: ({ colors }) => colors,
-      css: value => `{background-color:${value};}`,
+    bg: {
+      variants: ({ colors }) => ({
+        fixed: 'background-attachment:fixed',
+        local: 'background-attachment:local',
+        scroll: 'background-attachment:scroll',
+        bottom: 'background-position:bottom',
+        center: 'background-position:center',
+        left: 'background-position:left',
+        'left-bottom': 'background-position:left bottom',
+        'left-top': 'background-position:left top',
+        right: 'background-position:right',
+        'right-bottom': 'background-position:right bottom',
+        'right-top': 'background-position:right top',
+        top: 'background-position:top',
+        repeat: 'background-repeat:repeat',
+        'no-repeat': 'background-repeat:no-repeat',
+        'repeat-x': 'background-repeat:repeat-x',
+        'repeat-y': 'background-repeat:repeat-y',
+        'repeat-round': 'background-repeat:repeat-round',
+        'repeat-space': 'background-repeat:repeat-space',
+        auto: 'background-size:auto',
+        cover: 'background-size:cover',
+        contain: 'background-size:container',
+        ...Object.keys(colors).reduce<{ [key: string]: string }>((aggr, key) => {
+          aggr[key] = `background-color:${colors[key]};`;
+
+          return aggr;
+        }, {}),
+      }),
+      css: value => `{${value};}`,
     },
     color: {
       variants: ({ colors }) => colors,
@@ -165,34 +212,45 @@ export default {
       },
       css: value => `{border-radius:${value};}`,
     },
-    backgroundPosition: {
-      variants: {
-        bottom: 'bottom',
-        center: 'center',
-        left: 'left',
-        'left-bottom': 'left bottom',
-        'left-top': 'left top',
-        right: 'right',
-        'right-bottom': 'right bottom',
-        'right-top': 'right top',
-        top: 'top',
-      },
-      css: value => `{background-position:${value};}`,
-    },
-    backgroundSize: {
-      variants: {
-        auto: 'auto',
-        cover: 'cover',
-        contain: 'contain',
-      },
-      css: value => `{background-size:${value};}`,
-    },
-    borderColor: {
+    border: {
       variants: ({ colors }) => ({
-        ...colors,
-        default: colors['gray-300'],
+        '': 'border-width:1px',
+        '0': 'border-width:0',
+        '2': 'border-width:2px',
+        '4': 'border-width:4px',
+        '8': 'border-width:8px',
+        t: 'border-top-width:1px',
+        't-0': 'border-top-width:0',
+        't-2': 'border-top-width:2px',
+        't-4': 'border-top-width:4px',
+        't-8': 'border-top-width:8px',
+        r: 'border-right-width:1px',
+        'r-0': 'border-right-width:0',
+        'r-2': 'border-right-width:2px',
+        'r-4': 'border-right-width:4px',
+        'r-8': 'border-right-width:8px',
+        b: 'border-bottom-width:1px',
+        'b-0': 'border-bottom-width:0',
+        'b-2': 'border-bottom-width:2px',
+        'b-4': 'border-bottom-width:4px',
+        'b-8': 'border-bottom-width:8px',
+        l: 'border-left-width:1px',
+        'l-0': 'border-left-width:0',
+        'l-2': 'border-left-width:2px',
+        'l-4': 'border-left-width:4px',
+        'l-8': 'border-left-width:8px',
+        solid: 'border-style:solid',
+        dashed: 'border-style:dashed',
+        dotted: 'border-style:dotted',
+        double: 'border-style:double',
+        none: 'border-style:none',
+        ...Object.keys(colors).reduce<{ [key: string]: string }>((aggr, key) => {
+          aggr[key] = `border-color:${colors[key]}`;
+
+          return aggr;
+        }, {}),
       }),
-      css: value => `{border-color:${value};}`,
+      css: value => `{${value};}`,
     },
     overflow: {
       variants: {
@@ -220,15 +278,15 @@ export default {
       },
       css: value => `{-webkit-overflow-scrolling:${value};}`,
     },
-    borderWidth: {
+    items: {
       variants: {
-        default: '1px',
-        '0': '0',
-        '2': '2px',
-        '4': '4px',
-        '8': '8px',
+        stretch: 'stretch',
+        start: 'flex-start',
+        center: 'center',
+        end: 'flex-end',
+        baseline: 'baseline',
       },
-      css: value => `{border-width:${value};}`,
+      css: value => `{align-items:${value};}`,
     },
     boxShadow: {
       variants: {
@@ -275,27 +333,18 @@ export default {
       },
       css: value => `{fill:${value};}`,
     },
-    'flex-1': () => '{flex:1 1 0%;}',
-    'flex-auto': () => '{flex:1 1 auto;}',
-    'flex-initial': () => '{flex:0 1 auto;}',
-    'flex-none': () => '{flex:none;}',
-    flexGrow: {
+    font: {
       variants: {
-        '0': '0',
-        default: '1',
-      },
-      css: value => `{flex-grow:${value};}`,
-    },
-    flexShrink: {
-      variants: {
-        '0': '0',
-        default: '1',
-      },
-      css: value => `{flex-shrink:${value};}`,
-    },
-    fontFamily: {
-      variants: {
-        sans: [
+        hairline: 'font-weight:100',
+        thin: 'font-weight:200',
+        light: 'font-weight:300',
+        normal: 'font-weight:400',
+        medium: 'font-weight:500',
+        semibold: 'font-weight:600',
+        bold: 'font-weight:700',
+        extrabold: 'font-weight:800',
+        black: 'font-weight:900',
+        sans: `font-family:${[
           'Inter',
           '-apple-system',
           'BlinkMacSystemFont',
@@ -309,40 +358,59 @@ export default {
           '"Segoe UI Emoji"',
           '"Segoe UI Symbol"',
           '"Noto Color Emoji"',
-        ].join(', '),
-        serif: ['Georgia', 'Cambria', '"Times New Roman"', 'Times', 'serif'].join(','),
-        mono: ['Menlo', 'Monaco', 'Consolas', '"Liberation Mono"', '"Courier New"', 'monospace'].join(','),
+        ].join(', ')}`,
+        serif: `font-family:${['Georgia', 'Cambria', '"Times New Roman"', 'Times', 'serif'].join(',')}`,
+        mono: `font-family:${['Menlo', 'Monaco', 'Consolas', '"Liberation Mono"', '"Courier New"', 'monospace'].join(
+          ',',
+        )}`,
       },
-      css: value => `{font-family:${value};}`,
+      css: value => `{${value};}`,
     },
-    fontSize: {
-      variants: {
-        xs: '0.75rem',
-        sm: '0.875rem',
-        base: '1rem',
-        lg: '1.125rem',
-        xl: '1.25rem',
-        '2xl': '1.5rem',
-        '3xl': '1.875rem',
-        '4xl': '2.25rem',
-        '5xl': '3rem',
-        '6xl': '4rem',
-      },
-      css: value => `{font-size:${value};}`,
+    text: {
+      variants: ({ colors }) => ({
+        xs: 'font-size:0.75rem',
+        sm: 'font-size:0.875rem',
+        base: 'font-size:1rem',
+        lg: 'font-size:1.125rem',
+        xl: 'font-size:1.25rem',
+        '2xl': 'font-size:1.5rem',
+        '3xl': 'font-size:1.875rem',
+        '4xl': 'font-size:2.25rem',
+        '5xl': 'font-size:3rem',
+        '6xl': 'font-size:4rem',
+        left: 'text-align:left',
+        center: 'text-align:center',
+        right: 'text-align:right',
+        justify: 'text-align:justify',
+        ...Object.keys(colors).reduce<{ [key: string]: string }>((aggr, key) => {
+          aggr[key] = `color:${colors[key]}`;
+
+          return aggr;
+        }, {}),
+      }),
+      css: value => `{${value};}`,
     },
-    fontWeight: {
+    underline: () => '{text-decoration:underline;}',
+    'line-through': () => '{text-decoration:line-through;}',
+    'no-underline': () => '{text-decoration:none;}',
+    antialiased: () => '{-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;}',
+    'subpixel-antialiased': () => '{-webkit-font-smoothing: auto;-moz-osx-font-smoothing: auto;}',
+    italic: () => '{font-style:italic;}',
+    'non-italic': () => '{font-style:normal;}',
+    uppercase: () => '{text-transform:uppercase;}',
+    lowercase: () => '{text-transform:lowercase;}',
+    capitalize: () => '{text-transform:capitalize;}',
+    'normal-case': () => '{text-transform:none;}',
+    align: {
       variants: {
-        hairline: '100',
-        thin: '200',
-        light: '300',
-        normal: '400',
-        medium: '500',
-        semibold: '600',
-        bold: '700',
-        extrabold: '800',
-        black: '900',
+        baseline: 'baseline',
+        top: 'top',
+        middle: 'middle',
+        bottom: 'bottom',
+        'text-top': 'text-top',
+        'text-bottom': 'text-bottom',
       },
-      css: value => `{font-weight:${value};}`,
+      css: value => `{vertical-align:${value};}`,
     },
     height: {
       variants: ({ spacing }) => ({
@@ -364,6 +432,16 @@ export default {
       },
       css: value => `{${value}}`,
     },
+    whitespace: {
+      variants: {
+        normal: 'normal',
+        'no-wrap': 'nowrap',
+        pre: 'pre',
+        'pre-line': 'pre-line',
+        'pre-wrap': 'pre-wrap',
+      },
+      css: value => `{white-space:${value};}`,
+    },
     top: {
       variants: {
         '0': '0',
@@ -371,6 +449,15 @@ export default {
       },
       css: value => `{top:${value};}`,
     },
+    break: {
+      variants: {
+        normal: 'word-brea:normal;overflow-wrap:normal;',
+        words: 'overflow-wrap:break-word;',
+        all: 'word-break:break-all;',
+      },
+      css: value => `{${value}}`,
+    },
+    truncate: () => '{overflow: hidden;text-overflow: ellipsis;white-space: nowrap}',
     right: {
       variants: {
         '0': '0',
@@ -392,7 +479,7 @@ export default {
       },
       css: value => `{bottom:${value};}`,
     },
-    letterSpacing: {
+    tracking: {
       variants: {
         tighter: '-0.05em',
         tight: '-0.025em',
@@ -403,7 +490,7 @@ export default {
       },
       css: value => `{letter-spacing:${value};}`,
     },
-    lineHeight: {
+    leading: {
       variants: {
         none: '1',
         tight: '1.25',
@@ -414,13 +501,15 @@ export default {
       },
       css: value => `{line-height:${value};}`,
     },
-    listStyleType: {
+    list: {
       variants: {
-        none: 'none',
-        disc: 'disc',
-        decimal: 'decimal',
+        none: 'list-style-type:none',
+        disc: 'list-style-type:disc',
+        decimal: 'list-style-type:decimal',
+        inside: 'list-style-position:inside',
+        outside: 'list-style-position:outside',
       },
-      css: value => `{list-style-type:${value};}`,
+      css: value => `{${value};}`,
     },
     float: {
       variants: {
@@ -429,6 +518,36 @@ export default {
         none: 'none',
       },
       css: value => `{float:${value};}`,
+    },
+    content: {
+      variants: {
+        start: 'flex-start',
+        center: 'center',
+        end: 'flex-end',
+        between: 'space-between',
+        around: 'space-around',
+      },
+      css: value => `{align-content:${value};}`,
+    },
+    self: {
+      variants: {
+        auto: 'auto',
+        start: 'flex-start',
+        center: 'center',
+        end: 'flex-end',
+        stretch: 'stretch',
+      },
+      css: value => `{align-self:${value};}`,
+    },
+    justify: {
+      variants: {
+        start: 'flex-start',
+        center: 'center',
+        end: 'flex-end',
+        between: 'space-between',
+        around: 'space-around',
+      },
+      css: value => `{justify-content:${value};}`,
     },
     clearfix: () => '::after{content: "";display: table;clear: both;}',
     margin: {
@@ -532,7 +651,7 @@ export default {
       variants: ({ spacing }) => spacing,
       css: value => `{padding:${value};}`,
     },
-    placeholderColor: {
+    placeholder: {
       variants: ({ colors }) => colors,
       css: value => `::placeholder{color:${value};}`,
     },
@@ -751,9 +870,56 @@ export default {
       }),
       css: value => `{translate:${value};}`,
     },
-    skew: {
-      variants: {},
-      css: () => '',
+    skew: () => '',
+    rounded: {
+      variants: {
+        '': 'border-radius:.25rem;',
+        none: 'border-radius:0;',
+        sm: 'border-radius:.125rem;',
+        lg: 'border-radius:.5rem;',
+        full: 'border-radius:9999px',
+        't-none': 'border-radius-top-left:0;border-radius-top-right:0;',
+        'r-none': 'border-radius-top-right:0;border-radius-bottom-right:0;',
+        'b-none': 'border-radius-bottom-left:0;border-radius-bottom-right:0;',
+        'l-none': 'border-radius-bottom-left:0;border-radius-top-left:0;',
+        't-sm': 'border-top-left-radius:.125rem;border-top-right-radius:.125rem;',
+        'r-sm': 'border-top-right-radius:.125rem;border-bottom-right-radius:.125rem;',
+        'b-sm': 'border-bottom-right-radius: .125rem;border-bottom-left-radius:.125rem;',
+        'l-sm': 'border-top-left-radius:.125rem;border-bottom-left-radius:.125rem;',
+        t: 'border-top-left-radius:.25rem;border-top-right-radius:.25rem;',
+        r: 'border-top-right-radius:.25rem;border-bottom-right-radius:.25rem;',
+        b: 'border-bottom-right-radius:.25rem;border-bottom-left-radius:.25rem;',
+        l: 'border-top-left-radius:.25rem;border-bottom-left-radius:.25rem;',
+        't-lg': 'border-top-left-radius:.5rem;border-top-right-radius:.5rem;',
+        'r-lg': 'border-top-right-radius:.5rem;border-bottom-right-radius:.5rem;',
+        'b-lg': 'border-bottom-right-radius:.5rem;border-bottom-left-radius:.5rem;',
+        'l-lg': 'border-top-left-radius:.5rem;border-bottom-left-radius:.5rem;',
+        't-full': 'border-top-left-radius:9999px;border-top-right-radius:9999px;',
+        'r-full': 'border-top-right-radius:9999px;border-bottom-right-radius:9999px;',
+        'b-full': 'border-bottom-right-radius:9999px;border-bottom-left-radius:9999px;',
+        'l-full': 'border-top-left-radius:9999px;border-bottom-left-radius:9999px;',
+        'tl-none': 'border-top-left-radius:0;',
+        'tr-none': 'border-top-right-radius:0;',
+        'br-none': 'border-bottom-right-radius:0;',
+        'bl-none': 'border-bottom-left-radius:0;',
+        'tl-sm': 'border-top-left-radius:.125rem;',
+        'tr-sm': 'border-top-right-radius:.125rem;',
+        'br-sm': 'border-bottom-right-radius:.125rem;',
+        'bl-sm': 'border-bottom-left-radius:.125rem;',
+        tl: 'border-top-left-radius:.25rem;',
+        tr: 'border-top-right-radius:.25rem;',
+        br: 'border-bottom-right-radius:.25rem;',
+        bl: 'border-bottom-left-radius:.25rem;',
+        'tl-lg': 'border-top-left-radius:.5rem;',
+        'tr-lg': 'border-top-right-radius:.5rem;',
+        'br-lg': 'border-bottom-right-radius:.5rem;',
+        'bl-lg': 'border-bottom-left-radius:.5rem;',
+        'tl-full': 'border-top-left-radius:9999px;',
+        'tr-full': 'border-top-right-radius:9999px;',
+        'br-full': 'border-bottom-right-radius:9999px;',
+        'bl-full': 'border-bottom-left-radius:9999px;',
+      },
+      css: value => `{${value}}`,
     },
     transitionProperty: {
       variants: {
