@@ -1,12 +1,15 @@
 import { writeFileSync } from 'fs';
 import { join } from 'path';
 
-import tailwindcss from '../configs/tailwindcss';
 import { evaluateConfig, getUserConfig } from '../utils';
 import { transform as transformClassesToTypes } from './transform-classes-to-types';
 import { transform as transformConfigToClasses } from './transform-config-to-classes';
 
-const config = evaluateConfig(getUserConfig() || tailwindcss);
+const config = evaluateConfig({
+  variables: {},
+  classnames: {},
+  screens: {},
+});
 const classes = transformConfigToClasses(config);
 
 if (process.env.NODE_ENV !== 'test') {

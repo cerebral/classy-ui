@@ -3,7 +3,6 @@ import { join } from 'path';
 
 import { transform as transformClassesToTypes } from '../config/transform-classes-to-types';
 import { transform as transformConfigToClasses } from '../config/transform-config-to-classes';
-import tailwindcss from '../configs/tailwindcss';
 import { IExtractedClass, IExtractedClasses } from '../types';
 import {
   camelToDash,
@@ -16,7 +15,7 @@ import {
 } from '../utils';
 
 const cssPath = join(process.cwd(), 'node_modules', 'classy-ui', 'styles.css');
-const config = evaluateConfig(getUserConfig() || tailwindcss);
+const config = evaluateConfig(getUserConfig());
 const classes = transformConfigToClasses(config);
 
 if (process.env.NODE_ENV !== 'test') {
@@ -169,7 +168,7 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
   }
 
   function throwCodeFragmentIfInvalidId(path: any, id: string) {
-    if (!classes[id]) {
+    if (!classes[id] && !id.startsWith('themes-')) {
       throw path.buildCodeFrameError(`CLASSY-UI: Could not find classname ${id}`);
     }
   }

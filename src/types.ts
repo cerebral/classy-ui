@@ -70,6 +70,7 @@ export interface IEvaluatedConfig {
     [name: string]: (css: string, variables: IVariables<any>) => string;
   };
   classnames: IEvaluatedClassnames;
+  themeNames: string[];
   themes?: IEvaluatedThemes;
 }
 

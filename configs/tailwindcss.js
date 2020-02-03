@@ -1,6 +1,4 @@
-import { IConfig } from '../types';
-
-export default {
+module.exports = {
   variables: {
     breakpoints: {
       sm: '640px',
@@ -196,7 +194,7 @@ export default {
         auto: 'background-size:auto',
         cover: 'background-size:cover',
         contain: 'background-size:container',
-        ...Object.keys(colors).reduce<{ [key: string]: string }>((aggr, key) => {
+        ...Object.keys(colors).reduce((aggr, key) => {
           aggr[key] = `background-color:${colors[key]};`;
 
           return aggr;
@@ -253,7 +251,7 @@ export default {
         none: 'border-style:none',
         collapse: 'border-collapse:collapse',
         separate: 'border-collapse:separate',
-        ...Object.keys(colors).reduce<{ [key: string]: string }>((aggr, key) => {
+        ...Object.keys(colors).reduce((aggr, key) => {
           aggr[key] = `border-color:${colors[key]}`;
 
           return aggr;
@@ -350,7 +348,7 @@ export default {
           aggr[key] = `max-width:${breakpoints[key]};`;
 
           return aggr;
-        }, {} as { [key: string]: string }),
+        }, {}),
       }),
       css: value => `{${value};}`,
     },
@@ -427,7 +425,7 @@ export default {
         center: 'text-align:center',
         right: 'text-align:right',
         justify: 'text-align:justify',
-        ...Object.keys(colors).reduce<{ [key: string]: string }>((aggr, key) => {
+        ...Object.keys(colors).reduce((aggr, key) => {
           aggr[key] = `color:${colors[key]}`;
 
           return aggr;
@@ -694,7 +692,7 @@ export default {
     },
     p: {
       variants: ({ spacing }) =>
-        Object.keys(spacing).reduce<{ [key: string]: string }>((aggr, key) => {
+        Object.keys(spacing).reduce((aggr, key) => {
           aggr[key] = `padding:${spacing[key]};`;
 
           return aggr;
@@ -703,7 +701,7 @@ export default {
     },
     py: {
       variants: ({ spacing }) =>
-        Object.keys(spacing).reduce<{ [key: string]: string }>((aggr, key) => {
+        Object.keys(spacing).reduce((aggr, key) => {
           aggr[key] = `padding-top:${spacing[key]};padding-bottom:${spacing[key]};`;
 
           return aggr;
@@ -713,7 +711,7 @@ export default {
     },
     px: {
       variants: ({ spacing }) =>
-        Object.keys(spacing).reduce<{ [key: string]: string }>((aggr, key) => {
+        Object.keys(spacing).reduce((aggr, key) => {
           aggr[key] = `padding-left:${spacing[key]};padding-right:${spacing[key]};`;
 
           return aggr;
@@ -723,7 +721,7 @@ export default {
     },
     pt: {
       variants: ({ spacing }) =>
-        Object.keys(spacing).reduce<{ [key: string]: string }>((aggr, key) => {
+        Object.keys(spacing).reduce((aggr, key) => {
           aggr[key] = `padding-top:${spacing[key]};`;
 
           return aggr;
@@ -733,7 +731,7 @@ export default {
     },
     pr: {
       variants: ({ spacing }) =>
-        Object.keys(spacing).reduce<{ [key: string]: string }>((aggr, key) => {
+        Object.keys(spacing).reduce((aggr, key) => {
           aggr[key] = `padding-right:${spacing[key]};`;
 
           return aggr;
@@ -743,7 +741,7 @@ export default {
     },
     pb: {
       variants: ({ spacing }) =>
-        Object.keys(spacing).reduce<{ [key: string]: string }>((aggr, key) => {
+        Object.keys(spacing).reduce((aggr, key) => {
           aggr[key] = `padding-bottom:${spacing[key]};`;
 
           return aggr;
@@ -753,7 +751,7 @@ export default {
     },
     pl: {
       variants: ({ spacing }) =>
-        Object.keys(spacing).reduce<{ [key: string]: string }>((aggr, key) => {
+        Object.keys(spacing).reduce((aggr, key) => {
           aggr[key] = `padding-left:${spacing[key]};`;
 
           return aggr;
@@ -763,7 +761,7 @@ export default {
     },
     m: {
       variants: ({ spacing }) =>
-        Object.keys(spacing).reduce<{ [key: string]: string }>((aggr, key) => {
+        Object.keys(spacing).reduce((aggr, key) => {
           aggr[key] = `margin:${spacing[key]};`;
 
           return aggr;
@@ -772,7 +770,7 @@ export default {
     },
     my: {
       variants: ({ spacing }) =>
-        Object.keys(spacing).reduce<{ [key: string]: string }>((aggr, key) => {
+        Object.keys(spacing).reduce((aggr, key) => {
           aggr[key] = `margin-top:${spacing[key]};margin-bottom:${spacing[key]};`;
 
           return aggr;
@@ -782,7 +780,7 @@ export default {
     },
     mx: {
       variants: ({ spacing }) =>
-        Object.keys(spacing).reduce<{ [key: string]: string }>((aggr, key) => {
+        Object.keys(spacing).reduce((aggr, key) => {
           aggr[key] = `margin-left:${spacing[key]};margin-right:${spacing[key]};`;
 
           return aggr;
@@ -792,7 +790,7 @@ export default {
     },
     mt: {
       variants: ({ spacing }) =>
-        Object.keys(spacing).reduce<{ [key: string]: string }>((aggr, key) => {
+        Object.keys(spacing).reduce((aggr, key) => {
           aggr[key] = `margin-top:${spacing[key]};`;
 
           return aggr;
@@ -802,7 +800,7 @@ export default {
     },
     mr: {
       variants: ({ spacing }) =>
-        Object.keys(spacing).reduce<{ [key: string]: string }>((aggr, key) => {
+        Object.keys(spacing).reduce((aggr, key) => {
           aggr[key] = `margin-right:${spacing[key]};`;
 
           return aggr;
@@ -812,7 +810,7 @@ export default {
     },
     mb: {
       variants: ({ spacing }) =>
-        Object.keys(spacing).reduce<{ [key: string]: string }>((aggr, key) => {
+        Object.keys(spacing).reduce((aggr, key) => {
           aggr[key] = `margin-bottom:${spacing[key]};`;
 
           return aggr;
@@ -822,7 +820,7 @@ export default {
     },
     ml: {
       variants: ({ spacing }) =>
-        Object.keys(spacing).reduce<{ [key: string]: string }>((aggr, key) => {
+        Object.keys(spacing).reduce((aggr, key) => {
           aggr[key] = `margin-left:${spacing[key]};`;
 
           return aggr;
@@ -1112,4 +1110,4 @@ export default {
     notSrOnly: () =>
       'position:static;width:auto;height:auto;padding:0;margin:0;overflow:visible;clip:auto;white-space:normal;',
   },
-} as IConfig<'colors' | 'spacing' | 'breakpoints'>;
+};

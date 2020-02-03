@@ -72,6 +72,22 @@ export const getClassesFromConfig = (
   }, {} as IClasses);
 };
 
+export const deepAssign = (
+  a: { [key: string]: { [key: string]: string } },
+  b: { [key: string]: { [key: string]: string } },
+) => {
+  Object.keys(b).forEach(key => {
+    if (!a[key]) {
+      a[key] = {};
+    }
+    Object.keys(b[key]).forEach(subKey => {
+      a[key][subKey] = b[key][subKey];
+    });
+  });
+
+  return a;
+};
+
 export const evaluateConfig = (config: IConfig<any>): IEvaluatedConfig => {
   const baseConfig: IConfig<any> = config.extends
     ? config.extends
@@ -93,15 +109,7 @@ export const evaluateConfig = (config: IConfig<any>): IEvaluatedConfig => {
     config.screens = baseConfig.screens;
   }
 
-  // Merge variables
-  const originalVariables = Object.keys(config.variables).reduce((aggr, key) => {
-    aggr[key] = {
-      ...baseConfig.variables[key],
-      ...config.variables[key],
-    };
-
-    return aggr;
-  }, {} as IVariables<any>);
+  const originalVariables = deepAssign(baseConfig.variables, config.variables || {});
 
   // Reverse themes lookup to variable instead
   const configThemes = config.themes || {};
@@ -135,20 +143,21 @@ export const evaluateConfig = (config: IConfig<any>): IEvaluatedConfig => {
 
   // Call any dynamic classname variants with both the original variables and
   // the ones who have been evaluated with CSS variables
-  const classnames = Object.keys(config.classnames).reduce((aggr, key) => {
-    if (typeof config.classnames[key] === 'function') {
-      aggr[key] = config.classnames[key] as any;
+  const allClassnames = Object.assign(baseConfig.classnames, config.classnames || {});
+  const classnames = Object.keys(allClassnames).reduce((aggr, key) => {
+    if (typeof allClassnames[key] === 'function') {
+      aggr[key] = allClassnames[key] as any;
     } else {
       aggr[key] = {
-        ...config.classnames[key],
+        ...allClassnames[key],
         variantsWithoutVariables:
-          typeof (config.classnames[key] as any).variants === 'function'
-            ? (config.classnames[key] as any).variants(originalVariables, { negative })
-            : (config.classnames[key] as any).variants,
+          typeof (allClassnames[key] as any).variants === 'function'
+            ? (allClassnames[key] as any).variants(originalVariables, { negative })
+            : (allClassnames[key] as any).variants,
         variants:
-          typeof (config.classnames[key] as any).variants === 'function'
-            ? (config.classnames[key] as any).variants(variables, { negative })
-            : (config.classnames[key] as any).variants,
+          typeof (allClassnames[key] as any).variants === 'function'
+            ? (allClassnames[key] as any).variants(variables, { negative })
+            : (allClassnames[key] as any).variants,
       } as any;
     }
 
@@ -160,6 +169,7 @@ export const evaluateConfig = (config: IConfig<any>): IEvaluatedConfig => {
     screens: config.screens,
     classnames,
     themes: themesByVariable,
+    themeNames: Object.keys(config.themes || {}),
   };
 };
 

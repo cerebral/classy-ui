@@ -25,7 +25,7 @@ export const transform = (transformedConfig: IClasses, config: IEvaluatedConfig)
     .join('\n')}
   export type TClasses = ${Object.keys(transformedConfig)
     .map(className => `"${className}"`)
-    .join(' | ')}${Object.keys(config.themes || {}).length ? '|' : ''}${Object.keys(config.themes || {})
+    .join(' | ')}${config.themeNames.length ? '|' : ''}${config.themeNames
     .map(theme => `"themes-${theme}"`)
     .join(' | ')};
 `;

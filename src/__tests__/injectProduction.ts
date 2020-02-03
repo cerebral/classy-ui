@@ -1,10 +1,8 @@
 import { transform } from '../config/transform-config-to-classes';
-import tailwindcss from '../configs/tailwindcss';
 import { IExtractedClasses } from '../types';
 import { evaluateConfig, injectProduction } from '../utils';
 
 const config = evaluateConfig({
-  extends: tailwindcss,
   themes: {
     dark: {
       colors: {

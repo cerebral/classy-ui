@@ -1,4 +1,4 @@
-import { IClasses, IConfig, IEvaluatedConfig } from '../types';
+import { IClasses, IEvaluatedConfig } from '../types';
 import { generateShortName, getClassesFromConfig } from '../utils';
 
 export const transform = (config: IEvaluatedConfig): IClasses => {
