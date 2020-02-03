@@ -157,7 +157,14 @@ export default {
       },
       css: value => `{${value};}`,
     },
-    table: () => '{display:table;}',
+    table: {
+      variants: {
+        '': 'display:table',
+        auto: 'table-layout:auto',
+        fixed: 'table-layout:fixed',
+      },
+      css: value => `{${value};}`,
+    },
     'table-row': () => '{display:table-row;}',
     'table-cell': () => '{display:table-cell;}',
     hidden: () => '{display:hidden;}',
@@ -244,6 +251,8 @@ export default {
         dotted: 'border-style:dotted',
         double: 'border-style:double',
         none: 'border-style:none',
+        collapse: 'border-collapse:collapse',
+        separate: 'border-collapse:separate',
         ...Object.keys(colors).reduce<{ [key: string]: string }>((aggr, key) => {
           aggr[key] = `border-color:${colors[key]}`;
 
@@ -288,7 +297,7 @@ export default {
       },
       css: value => `{align-items:${value};}`,
     },
-    boxShadow: {
+    shadow: {
       variants: {
         xs: '0 0 0 1px rgba(0, 0, 0, 0.05)',
         sm: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
@@ -303,6 +312,37 @@ export default {
       },
       css: value => `{box-shadow:${value};}`,
     },
+    outline: {
+      variants: {
+        none: '0',
+      },
+      css: value => `{outline:${value};}`,
+    },
+    pointerEvents: {
+      variants: {
+        none: 'none',
+        auto: 'auto',
+      },
+      css: value => `{pointer-events:${value}}`,
+    },
+    resize: {
+      variants: {
+        '': 'both',
+        none: 'none',
+        y: 'vertical',
+        x: 'horizontal',
+      },
+      css: value => `{resize:${value};}`,
+    },
+    select: {
+      variants: {
+        none: 'none',
+        text: 'text',
+        all: 'all',
+        auto: 'auto',
+      },
+      css: value => `{user-select:${value};}`,
+    },
     container: {
       variants: ({ breakpoints }) => ({
         none: 'width:100%',
@@ -314,7 +354,6 @@ export default {
       }),
       css: value => `{${value};}`,
     },
-
     cursor: {
       variants: {
         auto: 'auto',
@@ -332,6 +371,12 @@ export default {
         current: 'currentColor',
       },
       css: value => `{fill:${value};}`,
+    },
+    appearance: {
+      variants: {
+        none: 'none',
+      },
+      css: value => `{appearance:${value};}`,
     },
     font: {
       variants: {
@@ -412,7 +457,7 @@ export default {
       },
       css: value => `{vertical-align:${value};}`,
     },
-    height: {
+    h: {
       variants: ({ spacing }) => ({
         auto: 'auto',
         ...spacing,
@@ -558,14 +603,14 @@ export default {
       }),
       css: value => `{margin:${value}};`,
     },
-    maxHeight: {
+    maxH: {
       variants: {
         full: '100%',
         screen: '100vh',
       },
       css: value => `{max-height:${value};}`,
     },
-    maxWidth: {
+    maxW: {
       variants: {
         none: 'none',
         xs: '20rem',
@@ -582,7 +627,7 @@ export default {
       },
       css: value => `{max-width:${value};}`,
     },
-    minHeight: {
+    minH: {
       variants: {
         '0': '0',
         full: '100%',
@@ -590,7 +635,7 @@ export default {
       },
       css: value => `{min-height:${value};}`,
     },
-    minWidth: {
+    minW: {
       variants: {
         '0': '0',
         full: '100%',
@@ -647,9 +692,143 @@ export default {
       },
       css: value => `{order:${value};}`,
     },
-    padding: {
-      variants: ({ spacing }) => spacing,
-      css: value => `{padding:${value};}`,
+    p: {
+      variants: ({ spacing }) =>
+        Object.keys(spacing).reduce<{ [key: string]: string }>((aggr, key) => {
+          aggr[key] = `padding:${spacing[key]};`;
+
+          return aggr;
+        }, {}),
+      css: value => `{${value}}`,
+    },
+    py: {
+      variants: ({ spacing }) =>
+        Object.keys(spacing).reduce<{ [key: string]: string }>((aggr, key) => {
+          aggr[key] = `padding-top:${spacing[key]};padding-bottom:${spacing[key]};`;
+
+          return aggr;
+        }, {}),
+
+      css: value => `{${value}}`,
+    },
+    px: {
+      variants: ({ spacing }) =>
+        Object.keys(spacing).reduce<{ [key: string]: string }>((aggr, key) => {
+          aggr[key] = `padding-left:${spacing[key]};padding-right:${spacing[key]};`;
+
+          return aggr;
+        }, {}),
+
+      css: value => `{${value}}`,
+    },
+    pt: {
+      variants: ({ spacing }) =>
+        Object.keys(spacing).reduce<{ [key: string]: string }>((aggr, key) => {
+          aggr[key] = `padding-top:${spacing[key]};`;
+
+          return aggr;
+        }, {}),
+
+      css: value => `{${value}}`,
+    },
+    pr: {
+      variants: ({ spacing }) =>
+        Object.keys(spacing).reduce<{ [key: string]: string }>((aggr, key) => {
+          aggr[key] = `padding-right:${spacing[key]};`;
+
+          return aggr;
+        }, {}),
+
+      css: value => `{${value}}`,
+    },
+    pb: {
+      variants: ({ spacing }) =>
+        Object.keys(spacing).reduce<{ [key: string]: string }>((aggr, key) => {
+          aggr[key] = `padding-bottom:${spacing[key]};`;
+
+          return aggr;
+        }, {}),
+
+      css: value => `{${value}}`,
+    },
+    pl: {
+      variants: ({ spacing }) =>
+        Object.keys(spacing).reduce<{ [key: string]: string }>((aggr, key) => {
+          aggr[key] = `padding-left:${spacing[key]};`;
+
+          return aggr;
+        }, {}),
+
+      css: value => `{${value}}`,
+    },
+    m: {
+      variants: ({ spacing }) =>
+        Object.keys(spacing).reduce<{ [key: string]: string }>((aggr, key) => {
+          aggr[key] = `margin:${spacing[key]};`;
+
+          return aggr;
+        }, {}),
+      css: value => `{${value}}`,
+    },
+    my: {
+      variants: ({ spacing }) =>
+        Object.keys(spacing).reduce<{ [key: string]: string }>((aggr, key) => {
+          aggr[key] = `margin-top:${spacing[key]};margin-bottom:${spacing[key]};`;
+
+          return aggr;
+        }, {}),
+
+      css: value => `{${value}}`,
+    },
+    mx: {
+      variants: ({ spacing }) =>
+        Object.keys(spacing).reduce<{ [key: string]: string }>((aggr, key) => {
+          aggr[key] = `margin-left:${spacing[key]};margin-right:${spacing[key]};`;
+
+          return aggr;
+        }, {}),
+
+      css: value => `{${value}}`,
+    },
+    mt: {
+      variants: ({ spacing }) =>
+        Object.keys(spacing).reduce<{ [key: string]: string }>((aggr, key) => {
+          aggr[key] = `margin-top:${spacing[key]};`;
+
+          return aggr;
+        }, {}),
+
+      css: value => `{${value}}`,
+    },
+    mr: {
+      variants: ({ spacing }) =>
+        Object.keys(spacing).reduce<{ [key: string]: string }>((aggr, key) => {
+          aggr[key] = `margin-right:${spacing[key]};`;
+
+          return aggr;
+        }, {}),
+
+      css: value => `{${value}}`,
+    },
+    mb: {
+      variants: ({ spacing }) =>
+        Object.keys(spacing).reduce<{ [key: string]: string }>((aggr, key) => {
+          aggr[key] = `margin-bottom:${spacing[key]};`;
+
+          return aggr;
+        }, {}),
+
+      css: value => `{${value}}`,
+    },
+    ml: {
+      variants: ({ spacing }) =>
+        Object.keys(spacing).reduce<{ [key: string]: string }>((aggr, key) => {
+          aggr[key] = `margin-left:${spacing[key]};`;
+
+          return aggr;
+        }, {}),
+
+      css: value => `{${value}}`,
     },
     placeholder: {
       variants: ({ colors }) => colors,
@@ -661,15 +840,7 @@ export default {
       },
       css: value => `{stroke:${value};}`,
     },
-    strokeWidth: {
-      variants: {
-        '0': '0',
-        '1': '1',
-        '2': '2',
-      },
-      css: value => `{stroke-width:${value};}`,
-    },
-    width: {
+    w: {
       variants: ({ spacing }) => ({
         auto: 'auto',
         ...spacing,
@@ -720,14 +891,8 @@ export default {
       variants: ({ spacing }) => spacing,
       css: value => `{gap:${value};}`,
     },
-    rowGap: {
-      variants: {},
-      css: () => '',
-    },
-    columnGap: {
-      variants: {},
-      css: () => '',
-    },
+    rowGap: () => '',
+    columnGap: () => '',
     gridTemplateColumns: {
       variants: {
         none: 'none',
@@ -802,22 +967,10 @@ export default {
       },
       css: value => `{grid-column-end:${value};}`,
     },
-    gridTemplateRows: {
-      variants: {},
-      css: () => '',
-    },
-    gridRow: {
-      variants: {},
-      css: () => '',
-    },
-    gridRowStart: {
-      variants: {},
-      css: () => '',
-    },
-    gridRowEnd: {
-      variants: {},
-      css: () => '',
-    },
+    gridTemplateRows: () => '',
+    gridRow: () => '',
+    gridRowStart: () => '',
+    gridRowEnd: () => '',
     transformOrigin: {
       variants: {
         center: 'center',
@@ -845,7 +998,7 @@ export default {
         '125': '1.25',
         '150': '1.5',
       },
-      css: value => `{scale:${value};}`,
+      css: value => `{transform:scale(${value});}`,
     },
     rotate: {
       variants: {
@@ -857,7 +1010,7 @@ export default {
         '90': '90deg',
         '180': '180deg',
       },
-      css: value => `{rotate:${value};}`,
+      css: value => `{transform:rotate(${value});}`,
     },
     translate: {
       variants: ({ spacing }, { negative }) => ({
@@ -868,7 +1021,7 @@ export default {
         '1/2': '50%',
         full: '100%',
       }),
-      css: value => `{translate:${value};}`,
+      css: value => `{transform:translate(${value});}`,
     },
     skew: () => '',
     rounded: {
@@ -954,5 +1107,9 @@ export default {
       },
       css: value => `{transition-duration:${value};}`,
     },
+    srOnly: () =>
+      `position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border-width:0;`,
+    notSrOnly: () =>
+      'position:static;width:auto;height:auto;padding:0;margin:0;overflow:visible;clip:auto;white-space:normal;',
   },
 } as IConfig<'colors' | 'spacing' | 'breakpoints'>;
