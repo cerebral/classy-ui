@@ -124,10 +124,10 @@ module.exports = {
     },
   },
   screens: {
-    sm: css => `@media (max-width: 640px) {${css}}`,
-    md: css => `@media (max-width: 768px) {${css}}`,
-    lg: css => `@media (max-width: 1024px) {${css}}`,
-    xl: css => `@media (max-width: 1280px) {${css}}`,
+    sm: (css, { breakpoints }) => `@media (max-width:${breakpoints.sm}) {${css}}`,
+    md: (css, { breakpoints }) => `@media (max-width:${breakpoints.md}) {${css}}`,
+    lg: (css, { breakpoints }) => `@media (max-width:${breakpoints.lg}) {${css}}`,
+    xl: (css, { breakpoints }) => `@media (max-width:${breakpoints.xl}) {${css}}`,
   },
   classnames: {
     block: () => '{display:block;}',
