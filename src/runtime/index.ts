@@ -1,8 +1,13 @@
-const style = document.createElement('style');
-const head = document.querySelector('head');
+const isBrowser = typeof document !== 'undefined';
+
 const classCache = new Set<string>();
 
-head?.appendChild(style);
+let style: HTMLStyleElement;
+if (isBrowser) {
+  style = document.createElement('style');
+  const head = document.querySelector('head');
+  head?.appendChild(style);
+}
 
 export const addClasses = (classes: string[]) => {
   let css = '';
@@ -18,7 +23,9 @@ export const addClasses = (classes: string[]) => {
     css += `${cssString}\n`;
   }
 
-  style.appendChild(document.createTextNode(css));
+  if (isBrowser) {
+    style.appendChild(document.createTextNode(css));
+  }
 };
 
 const throwError = () => {

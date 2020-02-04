@@ -177,7 +177,7 @@ export const getUserConfig = () => {
   try {
     return require(join(process.cwd(), 'classy-ui.config.js'));
   } catch (error) {
-    return null;
+    return {};
   }
 };
 

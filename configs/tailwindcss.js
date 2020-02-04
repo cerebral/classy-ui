@@ -195,7 +195,7 @@ module.exports = {
         cover: 'background-size:cover',
         contain: 'background-size:container',
         ...Object.keys(colors).reduce((aggr, key) => {
-          aggr[key] = `background-color:${colors[key]};`;
+          aggr[key] = `background-color:${colors[key]}`;
 
           return aggr;
         }, {}),

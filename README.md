@@ -1,6 +1,6 @@
 # classy-ui
 
-A typed, configurable design system with no runtime
+A framework for building and consuming design systems
 
 ## What is it?
 
