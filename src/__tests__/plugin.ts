@@ -12,35 +12,35 @@ pluginTester({
       code: `
 import { c } from 'classy-ui'
 
-c('background-color-red-500')`,
+c('color-red')`,
     },
     {
       title: 'should convert pseudos',
       code: `
 import { c, hover } from 'classy-ui'
 
-c(hover('background-color-red-500'))`,
+c(hover('color-red'))`,
     },
     {
       title: 'should convert breakpoints',
       code: `
 import { c, md } from 'classy-ui'
 
-c(md('background-color-red-500'))`,
+c(md('color-red'))`,
     },
     {
       title: 'should convert both breakpoints and pseudos',
       code: `
 import { c, hover, md } from 'classy-ui'
 
-c(md(hover('background-color-red-500')))`,
+c(md(hover('color-red')))`,
     },
     {
       title: 'should convert complex compositions',
       code: `
 import { c, hover, md, lg } from 'classy-ui'
 
-c('background-color-red-600', md(lg(hover('background-color-red-500'))))`,
+c('color-blue', md(lg(hover('color-red'))))`,
     },
     {
       error: true,
@@ -48,7 +48,7 @@ c('background-color-red-600', md(lg(hover('background-color-red-500'))))`,
       code: `
 import { c } from 'classy-ui'
 
-c(c('background-color-red-600'))`,
+c(c('color-blue'))`,
     },
     {
       error: false,
@@ -64,7 +64,7 @@ c(group())`,
       code: `
 import { group } from 'classy-ui'
 
-group('background-color-red-600', 'background-color-red-500')`,
+group('color-blue', 'color-red')`,
     },
     {
       error: true,
@@ -86,28 +86,30 @@ group()`,
       code: `
 import { c, hover } from 'classy-ui'
 
-hover('background-color-red-500')`,
+hover('color-red')`,
     },
     {
       title: 'should allow group with conditional after it',
       code: `
 import { c, group } from 'classy-ui'
 
-c(group(), { 'background-color-red-500': true })`,
+c(group(), { 'color-red': true })`,
     },
     {
       title: 'should handle complex dynamic composition',
       code: `
 import { c, group } from 'classy-ui'
 
-c(group(), { 'background-color-red-500': true }, 'color-white', { 'background-color-blue-500': true }, 'border-radius-sm')`,
+c(group(), { 'color-red': true }, 'bg-red', { 'block': true }, 'inline-block')`,
     },
     {
       title: 'should fix specifiy issue in dynamic composition',
       code: `
 import { c} from 'classy-ui'
+const compose = c('color-blue', 'bg-blue')
+const moreCompose = c('color-green', 'bg-green')
 
-c(compose, moreCompose, 'color-red-500', 'border-radius-sm')`,
+c(compose, moreCompose, 'color-red', 'bg-red')`,
     },
   ],
 });

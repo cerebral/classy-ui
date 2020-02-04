@@ -1,5 +1,180 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`classy-ui should allow arguments to group: should allow arguments to group 1`] = `
+
+import { group } from 'classy-ui'
+
+group('color-blue', 'color-red')
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { addClasses as _addClasses } from 'classy-ui/runtime';
+import { group } from 'classy-ui';
+('group color-blue color-red ');
+
+_addClasses([]);
+
+
+`;
+
+exports[`classy-ui should allow group with conditional after it: should allow group with conditional after it 1`] = `
+
+import { c, group } from 'classy-ui'
+
+c(group(), { 'color-red': true })
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { addClasses as _addClasses } from 'classy-ui/runtime';
+import { c, group } from 'classy-ui';
+(true ? 'color-red ' : ' ').replace(/(?:^|\\s)(?:)[^\\s]+/g, '') + 'group ';
+
+_addClasses(['color-red', '.color-red{color:red;}']);
+
+
+`;
+
+exports[`classy-ui should allow pseudo decorators as base: should allow pseudo decorators as base 1`] = `
+
+import { c, hover } from 'classy-ui'
+
+hover('color-red')
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { addClasses as _addClasses } from 'classy-ui/runtime';
+import { c, hover } from 'classy-ui';
+('hover:color-red ');
+
+_addClasses(['hover:color-red', '.hover\\\\:color-red:hover{color:red;}']);
+
+
+`;
+
+exports[`classy-ui should convert both breakpoints and pseudos: should convert both breakpoints and pseudos 1`] = `
+
+import { c, hover, md } from 'classy-ui'
+
+c(md(hover('color-red')))
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { addClasses as _addClasses } from 'classy-ui/runtime';
+import { c, hover, md } from 'classy-ui';
+('hover:md:color-red ');
+
+_addClasses(['hover:md:color-red', '.hover\\\\:md\\\\:color-red:hover{color:red;}']);
+
+
+`;
+
+exports[`classy-ui should convert breakpoints: should convert breakpoints 1`] = `
+
+import { c, md } from 'classy-ui'
+
+c(md('color-red'))
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { addClasses as _addClasses } from 'classy-ui/runtime';
+import { c, md } from 'classy-ui';
+('md:color-red ');
+
+_addClasses(['md:color-red', '.md\\\\:color-red{color:red;}']);
+
+
+`;
+
+exports[`classy-ui should convert complex compositions: should convert complex compositions 1`] = `
+
+import { c, hover, md, lg } from 'classy-ui'
+
+c('color-blue', md(lg(hover('color-red'))))
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { addClasses as _addClasses } from 'classy-ui/runtime';
+import { c, hover, md, lg } from 'classy-ui';
+('color-blue hover:lg:md:color-red ');
+
+_addClasses([
+  'color-blue',
+  '.color-blue{color:blue;}',
+  'hover:lg:md:color-red',
+  '.hover\\\\:lg\\\\:md\\\\:color-red:hover{color:red;}',
+]);
+
+
+`;
+
+exports[`classy-ui should convert pseudos: should convert pseudos 1`] = `
+
+import { c, hover } from 'classy-ui'
+
+c(hover('color-red'))
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { addClasses as _addClasses } from 'classy-ui/runtime';
+import { c, hover } from 'classy-ui';
+('hover:color-red ');
+
+_addClasses(['hover:color-red', '.hover\\\\:color-red:hover{color:red;}']);
+
+
+`;
+
+exports[`classy-ui should convert simple: should convert simple 1`] = `
+
+import { c } from 'classy-ui'
+
+c('color-red')
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { addClasses as _addClasses } from 'classy-ui/runtime';
+import { c } from 'classy-ui';
+('color-red ');
+
+_addClasses(['color-red', '.color-red{color:red;}']);
+
+
+`;
+
+exports[`classy-ui should fix specifiy issue in dynamic composition: should fix specifiy issue in dynamic composition 1`] = `
+
+import { c} from 'classy-ui'
+const compose = c('color-blue', 'bg-blue')
+const moreCompose = c('color-green', 'bg-green')
+
+c(compose, moreCompose, 'color-red', 'bg-red')
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { addClasses as _addClasses } from 'classy-ui/runtime';
+import { c } from 'classy-ui';
+const compose = 'color-blue bg-blue ';
+const moreCompose = 'color-green bg-green ';
+(compose + moreCompose).replace(/(?:^|\\s)(?:color-|bg-)[^\\s]+/g, '') + 'color-red bg-red ';
+
+_addClasses([
+  'color-blue',
+  '.color-blue{color:blue;}',
+  'bg-blue',
+  '.bg-blue{background-color:blue;}',
+  'color-green',
+  '.color-green{color:green;}',
+  'bg-green',
+  '.bg-green{background-color:green;}',
+  'color-red',
+  '.color-red{color:red;}',
+  'bg-red',
+  '.bg-red{background-color:red;}',
+]);
+
+
+`;
+
 exports[`classy-ui should give group a classname: should give group a classname 1`] = `
 
 import { c, group } from 'classy-ui'
@@ -13,6 +188,33 @@ import { c, group } from 'classy-ui';
 ('group ');
 
 _addClasses([]);
+
+
+`;
+
+exports[`classy-ui should handle complex dynamic composition: should handle complex dynamic composition 1`] = `
+
+import { c, group } from 'classy-ui'
+
+c(group(), { 'color-red': true }, 'bg-red', { 'block': true }, 'inline-block')
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { addClasses as _addClasses } from 'classy-ui/runtime';
+import { c, group } from 'classy-ui';
+((true ? 'color-red ' : ' ') + (true ? 'block ' : ' ')).replace(/(?:^|\\s)(?:|bg-|)[^\\s]+/g, '') +
+  'group bg-red inline-block ';
+
+_addClasses([
+  'color-red',
+  '.color-red{color:red;}',
+  'bg-red',
+  '.bg-red{background-color:red;}',
+  'block',
+  '.block{display:block;}',
+  'inline-block',
+  '.inline-block{display:inline-block;}',
+]);
 
 
 `;
@@ -54,14 +256,14 @@ exports[`classy-ui should throw when nesting c call: should throw when nesting c
 
 import { c } from 'classy-ui'
 
-c(c('background-color-red-600'))
+c(c('color-blue'))
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
 SyntaxError: unknown: Duplicating c is not allowed.
 [0m [90m 1 | [39m[36mimport[39m { c } from [32m'classy-ui'[39m[0m
 [0m [90m 2 | [39m[0m
-[0m[31m[1m>[22m[39m[90m 3 | [39mc(c([32m'background-color-red-600'[39m))[0m
-[0m [90m   | [39m  [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[0m
+[0m[31m[1m>[22m[39m[90m 3 | [39mc(c([32m'color-blue'[39m))[0m
+[0m [90m   | [39m  [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[0m
 
 `;

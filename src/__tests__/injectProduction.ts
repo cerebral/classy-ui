@@ -1,10 +1,9 @@
 import { transform } from '../config/transform-config-to-classes';
-import { testConfig } from '../testConfig';
 import { IExtractedClasses } from '../types';
 import { createClassObject, evaluateConfig, injectProduction } from '../utils';
 
 const config = evaluateConfig({
-  extends: testConfig,
+  extends: require('../../classy-ui.config.js'),
   themes: {
     dark: {
       colors: {

@@ -1,6 +1,5 @@
-import { IConfig } from './types';
-
-export const testConfig: IConfig<'colors'> = {
+// Used for testing
+module.exports = {
   variables: {
     colors: {
       red: 'red',
@@ -12,9 +11,14 @@ export const testConfig: IConfig<'colors'> = {
   screens: {},
   classnames: {
     block: () => '{display:block;}',
+    'inline-block': () => '{display:inline-block;}',
     color: {
       variants: ({ colors }) => colors,
-      css: (value: string) => `{color:${value};}`,
+      css: value => `{color:${value};}`,
+    },
+    bg: {
+      variants: ({ colors }) => colors,
+      css: value => `{background-color:${value};}`,
     },
   },
 };
