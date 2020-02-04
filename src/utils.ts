@@ -278,7 +278,7 @@ export const injectProduction = (classCollection: IExtractedClasses, classes: IC
       const variableKey = variableParts.shift() as string;
       const variableValueKey = variableParts.join('-');
 
-      Object.keys(themes).forEach(theme => {
+      config.themeNames.forEach(theme => {
         productionClassesByType.themeVariables[theme] = productionClassesByType.themeVariables[theme] || {};
         productionClassesByType.themeVariables[theme][
           variable
@@ -317,7 +317,7 @@ export const injectDevelopment = (classCollection: IExtractedClasses, classes: I
       const variableKey = variableParts.shift() as string;
       const variableValueKey = variableParts.join('-');
 
-      Object.keys(themes).forEach(theme => {
+      config.themeNames.forEach(theme => {
         css += `:root{${variable}:${originalValue};}\n.themes-${theme}{${variable}:${themes[variableKey][variableValueKey][theme]};}`;
       });
     }

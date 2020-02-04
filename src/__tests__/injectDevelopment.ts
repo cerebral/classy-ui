@@ -1,32 +1,24 @@
 import { transform } from '../config/transform-config-to-classes';
+import { testConfig } from '../testConfig';
 import { IExtractedClasses } from '../types';
-import { evaluateConfig, injectDevelopment } from '../utils';
+import { createClassObject, evaluateConfig, injectDevelopment } from '../utils';
 
 const config = evaluateConfig({
-  extends: require('../configs/tailwindcss'),
+  extends: testConfig,
   themes: {
     dark: {
       colors: {
-        'red-700': 'green',
+        green: 'yellow',
       },
     },
   },
 } as any);
 const classes = transform(config);
 
-function createExtractedClass(id: string, decorators: string[] = []) {
-  return {
-    id,
-    uid: id,
-    name: id,
-    decorators,
-  };
-}
-
 describe('INJECT DEVELOPMENT', () => {
   test('should inject simple', () => {
     const classCollection: IExtractedClasses = {
-      ['background-color-red-500']: createExtractedClass('background-color-red-500'),
+      ['color-red']: createClassObject('color-red', [], classes, false),
     };
 
     expect(injectDevelopment(classCollection, classes, config)).toMatchSnapshot();
@@ -34,57 +26,57 @@ describe('INJECT DEVELOPMENT', () => {
 
   test('should inject with pseudo selector', () => {
     const classCollection: IExtractedClasses = {
-      ['background-color-red-500']: createExtractedClass('background-color-red-500', ['c', 'hover']),
+      ['color-red']: createClassObject('color-red', ['c', 'hover'], classes, false),
     };
 
     expect(injectDevelopment(classCollection, classes, config)).toMatchSnapshot();
   });
   test('should inject with breakpoint', () => {
     const classCollection: IExtractedClasses = {
-      ['background-color-red-500']: createExtractedClass('background-color-red-500', ['c', 'md']),
+      ['color-red']: createClassObject('color-red', ['c', 'md'], classes, false),
     };
 
     expect(injectDevelopment(classCollection, classes, config)).toMatchSnapshot();
   });
   test('should inject both pseudo selector and breakpoint', () => {
     const classCollection: IExtractedClasses = {
-      ['background-color-red-500']: createExtractedClass('background-color-red-500', ['c', 'md', 'hover']),
+      ['color-red']: createClassObject('color-red', ['c', 'md', 'hover'], classes, false),
     };
 
     expect(injectDevelopment(classCollection, classes, config)).toMatchSnapshot();
   });
   test('should inject with multiple pseudo selectors', () => {
     const classCollection: IExtractedClasses = {
-      ['background-color-red-500']: createExtractedClass('background-color-red-500', ['c', 'hover', 'firstChild']),
+      ['color-red']: createClassObject('color-red', ['c', 'hover', 'firstChild'], classes, false),
     };
 
     expect(injectDevelopment(classCollection, classes, config)).toMatchSnapshot();
   });
   test('should inject with multiple breakpoints', () => {
     const classCollection: IExtractedClasses = {
-      ['background-color-red-500']: createExtractedClass('background-color-red-500', ['c', 'sm', 'xl']),
+      ['color-red']: createClassObject('color-red', ['c', 'sm', 'xl'], classes, false),
     };
 
     expect(injectDevelopment(classCollection, classes, config)).toMatchSnapshot();
   });
   test('should inject multiple', () => {
     const classCollection: IExtractedClasses = {
-      ['background-color-red-500']: createExtractedClass('background-color-red-500', ['c', 'md']),
-      ['background-color-red-600']: createExtractedClass('background-color-red-600', ['c', 'hover', 'md']),
+      ['color-red']: createClassObject('color-red', ['c', 'md'], classes, false),
+      ['color-blue']: createClassObject('color-blue', ['c', 'hover', 'md'], classes, false),
     };
 
     expect(injectDevelopment(classCollection, classes, config)).toMatchSnapshot();
   });
   test('should inject themes', () => {
     const classCollection: IExtractedClasses = {
-      ['background-color-red-700']: createExtractedClass('background-color-red-700', ['c', 'md']),
+      ['color-green']: createClassObject('color-green', ['c', 'md'], classes, false),
     };
 
     expect(injectDevelopment(classCollection, classes, config)).toMatchSnapshot();
   });
   test('should inject group decorators', () => {
     const classCollection: IExtractedClasses = {
-      ['background-color-red-700']: createExtractedClass('background-color-red-700', ['c', 'groupHover']),
+      ['color-green']: createClassObject('color-green', ['c', 'groupHover'], classes, false),
     };
 
     expect(injectDevelopment(classCollection, classes, config)).toMatchSnapshot();
