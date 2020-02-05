@@ -3,7 +3,7 @@ export interface IClass {
   classname: string;
   variant: string | null;
   shortName: string;
-  css: string;
+  css: (name: string) => string;
   variable: {
     value: string;
     originalValue: string;
@@ -30,11 +30,11 @@ export interface IClassnames<T extends string> {
 
 export interface IEvaluatedClassnames {
   [name: string]:
-    | (() => string)
+    | ((name: string) => string)
     | {
         variants: { [name: string]: string };
         variantsWithoutVariables: { [name: string]: string };
-        css: (value: string) => string;
+        css: (name: string, value: string) => string;
       };
 }
 

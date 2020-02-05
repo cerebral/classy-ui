@@ -43,7 +43,7 @@ export const getClassesFromConfig = (
         id,
         classname: classnameKey,
         variant: null,
-        css: classname(),
+        css: classname,
         variable: null,
         shortName: getShortName(0),
       },
@@ -58,7 +58,7 @@ export const getClassesFromConfig = (
         id,
         classname: classnameKey,
         variant: variantKey,
-        css: classname.css(classname.variants[variantKey]),
+        css: (name: string) => classname.css(name, classname.variants[variantKey]),
         variable:
           classname.variants[variantKey] !== classname.variantsWithoutVariables[variantKey]
             ? {
@@ -226,17 +226,18 @@ export const camelToDash = (string: string) => {
     .toLowerCase();
 };
 
-export const createClassEntry = (name: string, decorators: string[], css: string) => {
+export const createClassEntry = (name: string, decorators: string[], css: (name: string) => string) => {
   const groupDecorators = decorators
     .filter(decorator => decorator.startsWith('group') && decorator !== 'group')
     .map(decorator => camelToDash(decorator.substr(5)));
   const pseudoDecorators = decorators
     .filter(decorator => allowedPseudoDecorators.includes(decorator))
     .map(decorator => camelToDash(decorator));
-
-  return `${groupDecorators.length ? `.group:${groupDecorators.join(':')} ` : ''}.${name.replace(/\:/g, '\\:')}${
+  const evaluatedName = `.${name.replace(/\:/g, '\\:')}${
     pseudoDecorators.length ? `:${pseudoDecorators.join(':')}` : ''
-  }${css}`;
+  }`;
+
+  return `${groupDecorators.length ? `.group:${groupDecorators.join(':')} ` : ''}${css(evaluatedName)}`;
 };
 
 export const flat = (array: any[]) => array.reduce((aggr, item) => aggr.concat(item), []);

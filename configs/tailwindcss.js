@@ -130,10 +130,10 @@ module.exports = {
     xl: (css, { breakpoints }) => `@media (max-width:${breakpoints.xl}) {${css}}`,
   },
   classnames: {
-    block: () => '{display:block;}',
-    'inline-block': () => '{display:inline-block;}',
-    inline: () => '{display:inline;}',
-    'inline-flex': () => '{display:inline-flex;}',
+    block: name => `${name}{display:block;}`,
+    'inline-block': name => `${name}{display:inline-block;}`,
+    inline: name => `${name}{display:inline;}`,
+    'inline-flex': name => `${name}{display:inline-flex;}`,
     flex: {
       variants: {
         '': 'display:flex',
@@ -153,7 +153,7 @@ module.exports = {
         shrink: 'flex-shrink:1',
         'shrink-0': 'flex-shrink:0',
       },
-      css: value => `{${value};}`,
+      css: (name, value) => `${name}{${value};}`,
     },
     table: {
       variants: {
@@ -161,16 +161,16 @@ module.exports = {
         auto: 'table-layout:auto',
         fixed: 'table-layout:fixed',
       },
-      css: value => `{${value};}`,
+      css: (name, value) => `${name}{${value};}`,
     },
-    'table-row': () => '{display:table-row;}',
-    'table-cell': () => '{display:table-cell;}',
-    hidden: () => '{display:hidden;}',
-    static: () => '{position:static;}',
-    fixed: () => '{position:fixed;}',
-    absolute: () => '{position:absolute;}',
-    relative: () => '{position:relative;}',
-    sticky: () => '{position:sticky;}',
+    'table-row': name => `${name}{display:table-row;}`,
+    'table-cell': name => `${name}{display:table-cell;}`,
+    hidden: name => `${name}{display:hidden;}`,
+    static: name => `${name}{position:static;}`,
+    fixed: name => `${name}{position:fixed;}`,
+    absolute: name => `${name}{position:absolute;}`,
+    relative: name => `${name}{position:relative;}`,
+    sticky: name => `${name}{position:sticky;}`,
     bg: {
       variants: ({ colors }) => ({
         fixed: 'background-attachment:fixed',
@@ -200,11 +200,11 @@ module.exports = {
           return aggr;
         }, {}),
       }),
-      css: value => `{${value};}`,
+      css: (name, value) => `${name}{${value};}`,
     },
     color: {
       variants: ({ colors }) => colors,
-      css: value => `{color:${value};}`,
+      css: (name, value) => `${name}{color:${value};}`,
     },
     borderRadius: {
       variants: {
@@ -215,7 +215,7 @@ module.exports = {
         lg: '0.5rem',
         full: '9999px',
       },
-      css: value => `{border-radius:${value};}`,
+      css: (name, value) => `${name}{border-radius:${value};}`,
     },
     border: {
       variants: ({ colors }) => ({
@@ -257,7 +257,7 @@ module.exports = {
           return aggr;
         }, {}),
       }),
-      css: value => `{${value};}`,
+      css: (name, value) => `${name}{${value};}`,
     },
     overflow: {
       variants: {
@@ -274,16 +274,16 @@ module.exports = {
         'x-scroll': 'overflow-x:scroll',
         'y-scroll': 'overflow-y:scroll',
       },
-      css: value => `{${value};}`,
+      css: (name, value) => `${name}{${value};}`,
     },
-    visible: () => '{visibility:visible;}',
-    invisible: () => '{visibility:hidden;}',
+    visible: name => `${name}{visibility:visible;}`,
+    invisible: name => `${name}{visibility:hidden;}`,
     scrolling: {
       variants: {
         touch: 'touch',
         auto: 'auto',
       },
-      css: value => `{-webkit-overflow-scrolling:${value};}`,
+      css: (name, value) => `${name}{-webkit-overflow-scrolling:${value};}`,
     },
     items: {
       variants: {
@@ -293,7 +293,7 @@ module.exports = {
         end: 'flex-end',
         baseline: 'baseline',
       },
-      css: value => `{align-items:${value};}`,
+      css: (name, value) => `${name}{align-items:${value};}`,
     },
     shadow: {
       variants: {
@@ -308,20 +308,20 @@ module.exports = {
         outline: '0 0 0 3px rgba(66, 153, 225, 0.5)',
         none: 'none',
       },
-      css: value => `{box-shadow:${value};}`,
+      css: (name, value) => `${name}{box-shadow:${value};}`,
     },
     outline: {
       variants: {
         none: '0',
       },
-      css: value => `{outline:${value};}`,
+      css: (name, value) => `${name}{outline:${value};}`,
     },
     pointerEvents: {
       variants: {
         none: 'none',
         auto: 'auto',
       },
-      css: value => `{pointer-events:${value}}`,
+      css: (name, value) => `${name}{pointer-events:${value}}`,
     },
     resize: {
       variants: {
@@ -330,7 +330,7 @@ module.exports = {
         y: 'vertical',
         x: 'horizontal',
       },
-      css: value => `{resize:${value};}`,
+      css: (name, value) => `${name}{resize:${value};}`,
     },
     select: {
       variants: {
@@ -339,7 +339,7 @@ module.exports = {
         all: 'all',
         auto: 'auto',
       },
-      css: value => `{user-select:${value};}`,
+      css: (name, value) => `${name}{user-select:${value};}`,
     },
     container: {
       variants: ({ breakpoints }) => ({
@@ -350,7 +350,7 @@ module.exports = {
           return aggr;
         }, {}),
       }),
-      css: value => `{${value};}`,
+      css: (name, value) => `${name}{${value};}`,
     },
     cursor: {
       variants: {
@@ -362,19 +362,19 @@ module.exports = {
         move: 'move',
         'not-allowed': 'not-allowed',
       },
-      css: value => `{cursor:${value};}`,
+      css: (name, value) => `${name}{cursor:${value};}`,
     },
     fill: {
       variants: {
         current: 'currentColor',
       },
-      css: value => `{fill:${value};}`,
+      css: (name, value) => `${name}{fill:${value};}`,
     },
     appearance: {
       variants: {
         none: 'none',
       },
-      css: value => `{appearance:${value};}`,
+      css: (name, value) => `${name}{appearance:${value};}`,
     },
     font: {
       variants: {
@@ -407,7 +407,7 @@ module.exports = {
           ',',
         )}`,
       },
-      css: value => `{${value};}`,
+      css: (name, value) => `${name}{${value};}`,
     },
     text: {
       variants: ({ colors }) => ({
@@ -431,19 +431,19 @@ module.exports = {
           return aggr;
         }, {}),
       }),
-      css: value => `{${value};}`,
+      css: (name, value) => `${name}{${value};}`,
     },
-    underline: () => '{text-decoration:underline;}',
-    'line-through': () => '{text-decoration:line-through;}',
-    'no-underline': () => '{text-decoration:none;}',
-    antialiased: () => '{-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;}',
-    'subpixel-antialiased': () => '{-webkit-font-smoothing: auto;-moz-osx-font-smoothing: auto;}',
-    italic: () => '{font-style:italic;}',
-    'non-italic': () => '{font-style:normal;}',
-    uppercase: () => '{text-transform:uppercase;}',
-    lowercase: () => '{text-transform:lowercase;}',
-    capitalize: () => '{text-transform:capitalize;}',
-    'normal-case': () => '{text-transform:none;}',
+    underline: name => `${name}{text-decoration:underline;}`,
+    'line-through': name => `${name}{text-decoration:line-through;}`,
+    'no-underline': name => `${name}{text-decoration:none;}`,
+    antialiased: name => `${name}{-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;}`,
+    'subpixel-antialiased': name => `${name}{-webkit-font-smoothing: auto;-moz-osx-font-smoothing: auto;}`,
+    italic: name => `${name}{font-style:italic;}`,
+    'non-italic': name => `${name}{font-style:normal;}`,
+    uppercase: name => `${name}{text-transform:uppercase;}`,
+    lowercase: name => `${name}{text-transform:lowercase;}`,
+    capitalize: name => `${name}{text-transform:capitalize;}`,
+    'normal-case': name => `${name}{text-transform:none;}`,
     align: {
       variants: {
         baseline: 'baseline',
@@ -453,7 +453,7 @@ module.exports = {
         'text-top': 'text-top',
         'text-bottom': 'text-bottom',
       },
-      css: value => `{vertical-align:${value};}`,
+      css: (name, value) => `${name}{vertical-align:${value};}`,
     },
     h: {
       variants: ({ spacing }) => ({
@@ -462,7 +462,7 @@ module.exports = {
         full: '100%',
         screen: '100vh',
       }),
-      css: value => `{height:${value};}`,
+      css: (name, value) => `${name}{height:${value};}`,
     },
     inset: {
       variants: {
@@ -473,7 +473,7 @@ module.exports = {
         'x-auto': 'right:auto;left:auto;',
         auto: 'top:auto;right:auto;bottom:auto;left:auto;',
       },
-      css: value => `{${value}}`,
+      css: (name, value) => `${name}{${value}}`,
     },
     whitespace: {
       variants: {
@@ -483,14 +483,14 @@ module.exports = {
         'pre-line': 'pre-line',
         'pre-wrap': 'pre-wrap',
       },
-      css: value => `{white-space:${value};}`,
+      css: (name, value) => `${name}{white-space:${value};}`,
     },
     top: {
       variants: {
         '0': '0',
         auto: 'auto',
       },
-      css: value => `{top:${value};}`,
+      css: (name, value) => `${name}{top:${value};}`,
     },
     break: {
       variants: {
@@ -498,7 +498,7 @@ module.exports = {
         words: 'overflow-wrap:break-word;',
         all: 'word-break:break-all;',
       },
-      css: value => `{${value}}`,
+      css: (name, value) => `${name}{${value}}`,
     },
     truncate: () => '{overflow: hidden;text-overflow: ellipsis;white-space: nowrap}',
     right: {
@@ -506,21 +506,21 @@ module.exports = {
         '0': '0',
         auto: 'auto',
       },
-      css: value => `{right:${value};}`,
+      css: (name, value) => `${name}{right:${value};}`,
     },
     left: {
       variants: {
         '0': '0',
         auto: 'auto',
       },
-      css: value => `{left:${value};}`,
+      css: (name, value) => `${name}{left:${value};}`,
     },
     bottom: {
       variants: {
         '0': '0',
         auto: 'auto',
       },
-      css: value => `{bottom:${value};}`,
+      css: (name, value) => `${name}{bottom:${value};}`,
     },
     tracking: {
       variants: {
@@ -531,7 +531,7 @@ module.exports = {
         wider: '0.05em',
         widest: '0.1em',
       },
-      css: value => `{letter-spacing:${value};}`,
+      css: (name, value) => `${name}{letter-spacing:${value};}`,
     },
     leading: {
       variants: {
@@ -542,7 +542,7 @@ module.exports = {
         relaxed: '1.625',
         loose: '2',
       },
-      css: value => `{line-height:${value};}`,
+      css: (name, value) => `${name}{line-height:${value};}`,
     },
     list: {
       variants: {
@@ -552,7 +552,7 @@ module.exports = {
         inside: 'list-style-position:inside',
         outside: 'list-style-position:outside',
       },
-      css: value => `{${value};}`,
+      css: (name, value) => `${name}{${value};}`,
     },
     float: {
       variants: {
@@ -560,7 +560,7 @@ module.exports = {
         left: 'left',
         none: 'none',
       },
-      css: value => `{float:${value};}`,
+      css: (name, value) => `${name}{float:${value};}`,
     },
     content: {
       variants: {
@@ -570,7 +570,7 @@ module.exports = {
         between: 'space-between',
         around: 'space-around',
       },
-      css: value => `{align-content:${value};}`,
+      css: (name, value) => `${name}{align-content:${value};}`,
     },
     self: {
       variants: {
@@ -580,7 +580,7 @@ module.exports = {
         end: 'flex-end',
         stretch: 'stretch',
       },
-      css: value => `{align-self:${value};}`,
+      css: (name, value) => `${name}{align-self:${value};}`,
     },
     justify: {
       variants: {
@@ -590,7 +590,7 @@ module.exports = {
         between: 'space-between',
         around: 'space-around',
       },
-      css: value => `{justify-content:${value};}`,
+      css: (name, value) => `${name}{justify-content:${value};}`,
     },
     clearfix: () => '::after{content: "";display: table;clear: both;}',
     margin: {
@@ -599,14 +599,14 @@ module.exports = {
         ...spacing,
         ...negative(spacing),
       }),
-      css: value => `{margin:${value}};`,
+      css: (name, value) => `${name}{margin:${value}};`,
     },
     maxH: {
       variants: {
         full: '100%',
         screen: '100vh',
       },
-      css: value => `{max-height:${value};}`,
+      css: (name, value) => `${name}{max-height:${value};}`,
     },
     maxW: {
       variants: {
@@ -623,7 +623,7 @@ module.exports = {
         '6xl': '72rem',
         full: '100%',
       },
-      css: value => `{max-width:${value};}`,
+      css: (name, value) => `${name}{max-width:${value};}`,
     },
     minH: {
       variants: {
@@ -631,14 +631,14 @@ module.exports = {
         full: '100%',
         screen: '100vh',
       },
-      css: value => `{min-height:${value};}`,
+      css: (name, value) => `${name}{min-height:${value};}`,
     },
     minW: {
       variants: {
         '0': '0',
         full: '100%',
       },
-      css: value => `{min-width:${value};}`,
+      css: (name, value) => `${name}{min-width:${value};}`,
     },
     object: {
       variants: {
@@ -657,7 +657,7 @@ module.exports = {
         'right-top': 'object-position:right top',
         top: 'object-position:top',
       },
-      css: value => `{${value};}`,
+      css: (name, value) => `${name}{${value};}`,
     },
 
     opacity: {
@@ -668,7 +668,7 @@ module.exports = {
         '75': '0.75',
         '100': '1',
       },
-      css: value => `{opacity:${value};}`,
+      css: (name, value) => `${name}{opacity:${value};}`,
     },
     order: {
       variants: {
@@ -688,7 +688,7 @@ module.exports = {
         '11': '11',
         '12': '12',
       },
-      css: value => `{order:${value};}`,
+      css: (name, value) => `${name}{order:${value};}`,
     },
     p: {
       variants: ({ spacing }) =>
@@ -697,7 +697,7 @@ module.exports = {
 
           return aggr;
         }, {}),
-      css: value => `{${value}}`,
+      css: (name, value) => `${name}{${value}}`,
     },
     py: {
       variants: ({ spacing }) =>
@@ -707,7 +707,7 @@ module.exports = {
           return aggr;
         }, {}),
 
-      css: value => `{${value}}`,
+      css: (name, value) => `${name}{${value}}`,
     },
     px: {
       variants: ({ spacing }) =>
@@ -717,7 +717,7 @@ module.exports = {
           return aggr;
         }, {}),
 
-      css: value => `{${value}}`,
+      css: (name, value) => `${name}{${value}}`,
     },
     pt: {
       variants: ({ spacing }) =>
@@ -727,7 +727,7 @@ module.exports = {
           return aggr;
         }, {}),
 
-      css: value => `{${value}}`,
+      css: (name, value) => `${name}{${value}}`,
     },
     pr: {
       variants: ({ spacing }) =>
@@ -737,7 +737,7 @@ module.exports = {
           return aggr;
         }, {}),
 
-      css: value => `{${value}}`,
+      css: (name, value) => `${name}{${value}}`,
     },
     pb: {
       variants: ({ spacing }) =>
@@ -747,7 +747,7 @@ module.exports = {
           return aggr;
         }, {}),
 
-      css: value => `{${value}}`,
+      css: (name, value) => `${name}{${value}}`,
     },
     pl: {
       variants: ({ spacing }) =>
@@ -757,7 +757,7 @@ module.exports = {
           return aggr;
         }, {}),
 
-      css: value => `{${value}}`,
+      css: (name, value) => `${name}{${value}}`,
     },
     m: {
       variants: ({ spacing }) =>
@@ -766,7 +766,7 @@ module.exports = {
 
           return aggr;
         }, {}),
-      css: value => `{${value}}`,
+      css: (name, value) => `${name}{${value}}`,
     },
     my: {
       variants: ({ spacing }) =>
@@ -776,7 +776,7 @@ module.exports = {
           return aggr;
         }, {}),
 
-      css: value => `{${value}}`,
+      css: (name, value) => `${name}{${value}}`,
     },
     mx: {
       variants: ({ spacing }) =>
@@ -786,7 +786,7 @@ module.exports = {
           return aggr;
         }, {}),
 
-      css: value => `{${value}}`,
+      css: (name, value) => `${name}{${value}}`,
     },
     mt: {
       variants: ({ spacing }) =>
@@ -796,7 +796,7 @@ module.exports = {
           return aggr;
         }, {}),
 
-      css: value => `{${value}}`,
+      css: (name, value) => `${name}{${value}}`,
     },
     mr: {
       variants: ({ spacing }) =>
@@ -806,7 +806,7 @@ module.exports = {
           return aggr;
         }, {}),
 
-      css: value => `{${value}}`,
+      css: (name, value) => `${name}{${value}}`,
     },
     mb: {
       variants: ({ spacing }) =>
@@ -816,7 +816,7 @@ module.exports = {
           return aggr;
         }, {}),
 
-      css: value => `{${value}}`,
+      css: (name, value) => `${name}{${value}}`,
     },
     ml: {
       variants: ({ spacing }) =>
@@ -826,17 +826,17 @@ module.exports = {
           return aggr;
         }, {}),
 
-      css: value => `{${value}}`,
+      css: (name, value) => `${name}{${value}}`,
     },
     placeholder: {
       variants: ({ colors }) => colors,
-      css: value => `::placeholder{color:${value};}`,
+      css: (name, value) => `${name}::placeholder{color:${value};}`,
     },
     stroke: {
       variants: {
         current: 'currentColor',
       },
-      css: value => `{stroke:${value};}`,
+      css: (name, value) => `${name}{stroke:${value};}`,
     },
     w: {
       variants: ({ spacing }) => ({
@@ -871,7 +871,7 @@ module.exports = {
         full: '100%',
         screen: '100vw',
       }),
-      css: value => `{width:${value};}`,
+      css: (name, value) => `${name}{width:${value};}`,
     },
     z: {
       variants: {
@@ -883,14 +883,14 @@ module.exports = {
         '40': '40',
         '50': '50',
       },
-      css: value => `{z-index:${value};}`,
+      css: (name, value) => `${name}{z-index:${value};}`,
     },
     gap: {
       variants: ({ spacing }) => spacing,
-      css: value => `{gap:${value};}`,
+      css: (name, value) => `${name}{gap:${value};}`,
     },
-    rowGap: () => '',
-    columnGap: () => '',
+    rowGap: name => `${name}{}`,
+    columnGap: name => `${name}{}`,
     gridTemplateColumns: {
       variants: {
         none: 'none',
@@ -907,7 +907,7 @@ module.exports = {
         '11': 'repeat(11, minmax(0, 1fr))',
         '12': 'repeat(12, minmax(0, 1fr))',
       },
-      css: value => `{grid-template-columns:${value};}`,
+      css: (name, value) => `${name}{grid-template-columns:${value};}`,
     },
     gridColumn: {
       variants: {
@@ -925,7 +925,7 @@ module.exports = {
         'span-11': 'span 11 / span 11',
         'span-12': 'span 12 / span 12',
       },
-      css: value => `{grid-column:${value};}`,
+      css: (name, value) => `${name}{grid-column:${value};}`,
     },
     gridColumnStart: {
       variants: {
@@ -944,7 +944,7 @@ module.exports = {
         '12': '12',
         '13': '13',
       },
-      css: value => `{grid-column-start:${value};}`,
+      css: (name, value) => `${name}{grid-column-start:${value};}`,
     },
     gridColumnEnd: {
       variants: {
@@ -963,12 +963,12 @@ module.exports = {
         '12': '12',
         '13': '13',
       },
-      css: value => `{grid-column-end:${value};}`,
+      css: (name, value) => `${name}{grid-column-end:${value};}`,
     },
-    gridTemplateRows: () => '',
-    gridRow: () => '',
-    gridRowStart: () => '',
-    gridRowEnd: () => '',
+    gridTemplateRows: () => `${name}{}`,
+    gridRow: () => `${name}{}`,
+    gridRowStart: () => `${name}{}`,
+    gridRowEnd: () => `${name}{}`,
     transformOrigin: {
       variants: {
         center: 'center',
@@ -981,7 +981,7 @@ module.exports = {
         left: 'left',
         'top-left': 'top left',
       },
-      css: value => `{transform-origin:${value};}`,
+      css: (name, value) => `${name}{transform-origin:${value};}`,
     },
     scale: {
       variants: {
@@ -996,7 +996,7 @@ module.exports = {
         '125': '1.25',
         '150': '1.5',
       },
-      css: value => `{transform:scale(${value});}`,
+      css: (name, value) => `${name}{transform:scale(${value});}`,
     },
     rotate: {
       variants: {
@@ -1008,7 +1008,7 @@ module.exports = {
         '90': '90deg',
         '180': '180deg',
       },
-      css: value => `{transform:rotate(${value});}`,
+      css: (name, value) => `${name}{transform:rotate(${value});}`,
     },
     translate: {
       variants: ({ spacing }, { negative }) => ({
@@ -1019,7 +1019,7 @@ module.exports = {
         '1/2': '50%',
         full: '100%',
       }),
-      css: value => `{transform:translate(${value});}`,
+      css: (name, value) => `${name}{transform:translate(${value});}`,
     },
     skew: () => '',
     rounded: {
@@ -1070,7 +1070,7 @@ module.exports = {
         'br-full': 'border-bottom-right-radius:9999px;',
         'bl-full': 'border-bottom-left-radius:9999px;',
       },
-      css: value => `{${value}}`,
+      css: (name, value) => `${name}{${value}}`,
     },
     transitionProperty: {
       variants: {
@@ -1081,7 +1081,7 @@ module.exports = {
         opacity: 'opacity',
         transform: 'transform',
       },
-      css: value => `{transition-property:${value};}`,
+      css: (name, value) => `${name}{transition-property:${value};}`,
     },
     transitionTimingFunction: {
       variants: {
@@ -1090,7 +1090,7 @@ module.exports = {
         out: 'cubic-bezier(0, 0, 0.2, 1)',
         'in-out': 'cubic-bezier(0.4, 0, 0.2, 1)',
       },
-      css: value => `{transition-timing-function:${value};}`,
+      css: (name, value) => `${name}{transition-timing-function:${value};}`,
     },
     transitionDuration: {
       variants: {
@@ -1103,11 +1103,11 @@ module.exports = {
         '700': '700ms',
         '1000': '1000ms',
       },
-      css: value => `{transition-duration:${value};}`,
+      css: (name, value) => `${name}{transition-duration:${value};}`,
     },
-    srOnly: () =>
-      `position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border-width:0;`,
+    srOnly: name =>
+      `${name}{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border-width:0;}`,
     notSrOnly: () =>
-      'position:static;width:auto;height:auto;padding:0;margin:0;overflow:visible;clip:auto;white-space:normal;',
+      `${name}{position:static;width:auto;height:auto;padding:0;margin:0;overflow:visible;clip:auto;white-space:normal;}`,
   },
 };

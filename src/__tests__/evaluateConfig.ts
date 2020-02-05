@@ -30,6 +30,7 @@ describe('EVALUATE CONFIGS', () => {
           red: 'red',
         },
       },
+      themeNames: [],
       screens: {},
       classnames: {
         color: {
@@ -84,6 +85,7 @@ describe('EVALUATE CONFIGS', () => {
         },
       },
       screens: {},
+      themeNames: ['dark'],
       classnames: {
         color: {
           variants: {

@@ -10,15 +10,15 @@ module.exports = {
   },
   screens: {},
   classnames: {
-    block: () => '{display:block;}',
-    'inline-block': () => '{display:inline-block;}',
+    block: name => `${name}{display:block;}`,
+    'inline-block': name => `${name}{display:inline-block;}`,
     color: {
       variants: ({ colors }) => colors,
-      css: value => `{color:${value};}`,
+      css: (name, value) => `${name}{color:${value};}`,
     },
     bg: {
       variants: ({ colors }) => colors,
-      css: value => `{background-color:${value};}`,
+      css: (name, value) => `${name}{background-color:${value};}`,
     },
   },
 };
