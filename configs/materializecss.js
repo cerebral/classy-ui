@@ -278,6 +278,30 @@ module.exports = {
       white: '#FFF',
       transparent: 'transparent',
     },
+    spacing: {
+      '1': '8.3333333333%',
+      '2': '16.6666666667%',
+      '3': '25%',
+      '4': '33.3333333333%',
+      '5': '41.6666666667%',
+      '6': '50%',
+      '7': '58.3333333333%',
+      '8': '66.6666666667%',
+      '9': '75%',
+      '10': '83.3333333333%',
+      '11': '91.6666666667%',
+      '12': '100%',
+    },
+    breakpoints: {
+      sm: '601px',
+      md: '993px',
+      lg: '1201px',
+    },
+  },
+  screens: {
+    sm: (css, { breakpoints }) => `@media (min-width:${breakpoints.sm}){${css}}`,
+    md: (css, { breakpoints }) => `@media (min-width:${breakpoints.md}){${css}}`,
+    lg: (css, { breakpoints }) => `@media (min-width:${breakpoints.lg}){${css}}`,
   },
   classnames: {
     bg: {
@@ -288,5 +312,41 @@ module.exports = {
       variants: ({ colors }) => colors,
       css: value => `{color:${value};}`,
     },
+    row: name =>
+      `${name}{margin-left: auto;margin-right: auto;margin-bottom: 20px;}${name}:after{content: "";display: table;clear: both;}`,
+    col: {
+      variants: ({ spacing }) => ({
+        '': 'float: left;-webkit-box-sizing: border-box;box-sizing: border-box;padding: 0 0.75rem;min-height: 1px;',
+        ...Object.keys(spacing).reduce((aggr, key) => {
+          aggr[key] = `width: ${spacing[key]};margin-left: auto;left: auto;right: auto;`;
+          aggr[`offset-${key}`] = `margin-left: ${spacing[key]};`;
+          aggr[`pull-${key}`] = `right: ${spacing[key]};`;
+          aggr[`push-${key}`] = `position: relative;left: ${spacing[key]};`;
+
+          return aggr;
+        }, {}),
+      }),
+      css: (name, value) => `${name}{${value}}`,
+    },
+    clearfix: name => `${name}{clear:both};`,
+    'z-depth': {
+      variants: {
+        '0': 'none',
+        '1': '0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.12), 0 1px 5px 0 rgba(0, 0, 0, 0.2)',
+        '1-half': '0 3px 3px 0 rgba(0, 0, 0, 0.14), 0 1px 7px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -1px rgba(0, 0, 0, 0.2)',
+        '2': '0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.3)',
+        '3':
+          '0 8px 17px 2px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.2)',
+        '4':
+          '0 16px 24px 2px rgba(0, 0, 0, 0.14), 0 6px 30px 5px rgba(0, 0, 0, 0.12), 0 8px 10px -7px rgba(0, 0, 0, 0.2)',
+        '5':
+          '0 24px 38px 3px rgba(0, 0, 0, 0.14), 0 9px 46px 8px rgba(0, 0, 0, 0.12), 0 11px 15px -7px rgba(0, 0, 0, 0.2)',
+      },
+      css: (name, value) => `${name}{box-shadow:${value};}`,
+    },
+    hoverable: name =>
+      `${name}{transition: -webkit-box-shadow .25s;transition: box-shadow .25s;transition: box-shadow .25s, -webkit-box-shadow .25s;}${name}:hover{box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);}`,
+    divider: name => `${name}{height: 1px;overflow: hidden;background-color: #e0e0e0;}`,
+    blockquote: name => `${name}{margin: 20px 0;padding-left: 1.5rem;border-left: 5px solid #ee6e73;}`,
   },
 };
