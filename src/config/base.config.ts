@@ -763,72 +763,80 @@ export const config: IBaseConfig<'breakpoints' | 'spacing' | 'colors'> = {
       css: (name, value) => `${name}{${value}}`,
     },
     m: {
-      variants: ({ spacing }) =>
-        Object.keys(spacing).reduce<IVariants>((aggr, key) => {
+      variants: ({ spacing }) => ({
+        ...Object.keys(spacing).reduce<IVariants>((aggr, key) => {
           aggr[key] = `margin:${spacing[key]};`;
 
           return aggr;
         }, {}),
+        auto: 'margin:auto;',
+      }),
       css: (name, value) => `${name}{${value}}`,
     },
     my: {
-      variants: ({ spacing }) =>
-        Object.keys(spacing).reduce<IVariants>((aggr, key) => {
+      variants: ({ spacing }) => ({
+        ...Object.keys(spacing).reduce<IVariants>((aggr, key) => {
           aggr[key] = `margin-top:${spacing[key]};margin-bottom:${spacing[key]};`;
 
           return aggr;
         }, {}),
-
+        auto: 'margin-top:auto;margin-bottom:auto;',
+      }),
       css: (name, value) => `${name}{${value}}`,
     },
     mx: {
-      variants: ({ spacing }) =>
-        Object.keys(spacing).reduce<IVariants>((aggr, key) => {
+      variants: ({ spacing }) => ({
+        ...Object.keys(spacing).reduce<IVariants>((aggr, key) => {
           aggr[key] = `margin-left:${spacing[key]};margin-right:${spacing[key]};`;
 
           return aggr;
         }, {}),
-
+        auto: 'margin-left:auto;margin-right:auto;',
+      }),
       css: (name, value) => `${name}{${value}}`,
     },
     mt: {
-      variants: ({ spacing }) =>
-        Object.keys(spacing).reduce<IVariants>((aggr, key) => {
+      variants: ({ spacing }) => ({
+        ...Object.keys(spacing).reduce<IVariants>((aggr, key) => {
           aggr[key] = `margin-top:${spacing[key]};`;
 
           return aggr;
         }, {}),
-
+        auto: 'margin-top:auto;',
+      }),
       css: (name, value) => `${name}{${value}}`,
     },
     mr: {
-      variants: ({ spacing }) =>
-        Object.keys(spacing).reduce<IVariants>((aggr, key) => {
+      variants: ({ spacing }) => ({
+        ...Object.keys(spacing).reduce<IVariants>((aggr, key) => {
           aggr[key] = `margin-right:${spacing[key]};`;
 
           return aggr;
         }, {}),
-
+        auto: 'margin-right:auto;',
+      }),
       css: (name, value) => `${name}{${value}}`,
     },
     mb: {
-      variants: ({ spacing }) =>
-        Object.keys(spacing).reduce<IVariants>((aggr, key) => {
+      variants: ({ spacing }) => ({
+        ...Object.keys(spacing).reduce<IVariants>((aggr, key) => {
           aggr[key] = `margin-bottom:${spacing[key]};`;
 
           return aggr;
         }, {}),
-
+        auto: 'margin-bottom:auto;',
+      }),
       css: (name, value) => `${name}{${value}}`,
     },
     ml: {
-      variants: ({ spacing }) =>
-        Object.keys(spacing).reduce<IVariants>((aggr, key) => {
+      variants: ({ spacing }) => ({
+        ...Object.keys(spacing).reduce<IVariants>((aggr, key) => {
           aggr[key] = `margin-left:${spacing[key]};`;
 
           return aggr;
         }, {}),
-
+        auto: 'margin-left:auto;',
+      }),
       css: (name, value) => `${name}{${value}}`,
     },
     placeholder: {
