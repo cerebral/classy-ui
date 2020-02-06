@@ -1,7 +1,7 @@
 import { writeFileSync } from 'fs';
 import { join } from 'path';
 
-import { evaluateConfig, getUserConfig } from '../utils';
+import { evaluateConfig } from '../utils';
 import { transform as transformClassesToTypes } from './transform-classes-to-types';
 import { transform as transformConfigToClasses } from './transform-config-to-classes';
 
