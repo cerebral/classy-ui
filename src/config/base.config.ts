@@ -167,6 +167,7 @@ export const config: IBaseConfig<'breakpoints' | 'spacing' | 'colors'> = {
     },
     'table-row': name => `${name}{display:table-row;}`,
     'table-cell': name => `${name}{display:table-cell;}`,
+    grid: name => `${name}{display:grid;}`,
     hidden: name => `${name}{display:hidden;}`,
     static: name => `${name}{position:static;}`,
     fixed: name => `${name}{position:fixed;}`,
