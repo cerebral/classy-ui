@@ -3,9 +3,11 @@ import { join } from 'path';
 // @ts-ignore
 import reduceCalc from 'reduce-css-calc';
 
+import { config as baseConfig } from './config/base.config';
 import {
   IClasses,
   IClassesByType,
+  IClassnames,
   IConfig,
   IEvaluatedClassnames,
   IEvaluatedConfig,
@@ -89,27 +91,18 @@ export const deepAssign = (
 };
 
 export const evaluateConfig = (config: IConfig<any>): IEvaluatedConfig => {
-  const baseConfig: IConfig<any> = config.extends
-    ? config.extends
-    : {
-        variables: {},
-        classnames: {},
-        screens: {},
-      };
-
-  if (!config.variables) {
-    config.variables = baseConfig.variables;
-  }
-
-  if (!config.classnames) {
-    config.classnames = baseConfig.classnames;
-  }
-
-  if (!config.screens) {
-    config.screens = baseConfig.screens;
-  }
-
-  const originalVariables = deepAssign(baseConfig.variables, config.variables || {});
+  const configVariables = config.variables || {};
+  const originalVariables: IVariables<any> = {
+    ...baseConfig.variables,
+    ...Object.keys(configVariables).reduce<IVariables<any>>((aggr, key) => {
+      if (typeof configVariables[key] === 'function') {
+        aggr[key] = (configVariables[key] as any)(baseConfig.variables);
+      } else {
+        aggr[key] = configVariables[key] as { [key: string]: string };
+      }
+      return aggr;
+    }, {}),
+  };
 
   // Reverse themes lookup to variable instead
   const configThemes = config.themes || {};
@@ -130,20 +123,22 @@ export const evaluateConfig = (config: IConfig<any>): IEvaluatedConfig => {
   }, {} as IEvaluatedThemes);
 
   // Evaluated variables where values are replaced by CSS variable
-  const variables = Object.keys(originalVariables).reduce((aggr, key) => {
-    aggr[key] = Object.keys(originalVariables[key]).reduce((subAggr, subKey) => {
+  const variables = Object.keys(originalVariables).reduce<IVariables<any>>((aggr, key) => {
+    aggr[key] = Object.keys(originalVariables[key]).reduce<{ [variant: string]: string }>((subAggr, subKey) => {
       subAggr[subKey] =
-        themesByVariable[key] && themesByVariable[key][subKey] ? `--${key}-${subKey}` : originalVariables[key][subKey];
+        themesByVariable[key] && themesByVariable[key][subKey]
+          ? `var(--${key}-${subKey})`
+          : originalVariables[key][subKey];
 
       return subAggr;
-    }, {} as { [variant: string]: string });
+    }, {});
 
     return aggr;
-  }, {} as IVariables<any>);
+  }, {});
 
   // Call any dynamic classname variants with both the original variables and
   // the ones who have been evaluated with CSS variables
-  const allClassnames = Object.assign(baseConfig.classnames, config.classnames || {});
+  const allClassnames: IClassnames<any> = { ...baseConfig.classnames, ...config.classnames };
   const classnames = Object.keys(allClassnames).reduce((aggr, key) => {
     if (typeof allClassnames[key] === 'function') {
       aggr[key] = allClassnames[key] as any;
@@ -166,7 +161,7 @@ export const evaluateConfig = (config: IConfig<any>): IEvaluatedConfig => {
 
   return {
     variables,
-    screens: config.screens,
+    screens: config.screens || baseConfig.screens,
     classnames,
     themes: themesByVariable,
     themeNames: Object.keys(config.themes || {}),
@@ -273,18 +268,22 @@ export const injectProduction = (classCollection: IExtractedClasses, classes: IC
 
     if (configClass.variable) {
       const themes = config.themes || {};
-      const variable = configClass.variable.value;
+      const variableValue = configClass.variable.value;
       const originalValue = configClass.variable.originalValue;
-      const variableParts = variable.substr(2).split('-');
-      const variableKey = variableParts.shift() as string;
-      const variableValueKey = variableParts.join('-');
+      const variables = (variableValue.match(/var\(.*\)/) || []).map(varString => varString.replace(/var\(|\)/g, ''));
 
       config.themeNames.forEach(theme => {
         productionClassesByType.themeVariables[theme] = productionClassesByType.themeVariables[theme] || {};
-        productionClassesByType.themeVariables[theme][
-          variable
-        ] = `${variable}:${themes[variableKey][variableValueKey][theme]};`;
-        productionClassesByType.rootVariables[variable] = originalValue;
+        variables.forEach(variable => {
+          const variableParts = variable.substr(2).split('-');
+          const variableKey = variableParts.shift() as string;
+          const variableValueKey = variableParts.join('-');
+
+          productionClassesByType.themeVariables[theme][
+            variable
+          ] = `${variable}:${themes[variableKey][variableValueKey][theme]};`;
+          productionClassesByType.rootVariables[variable] = originalValue;
+        });
       });
     }
   });
@@ -312,14 +311,18 @@ export const injectDevelopment = (classCollection: IExtractedClasses, classes: I
 
     if (configClass.variable) {
       const themes = config.themes || {};
-      const variable = configClass.variable.value;
+      const variableValue = configClass.variable.value;
       const originalValue = configClass.variable.originalValue;
-      const variableParts = variable.substr(2).split('-');
-      const variableKey = variableParts.shift() as string;
-      const variableValueKey = variableParts.join('-');
+      const variables = (variableValue.match(/var\(.*\)/) || []).map(varString => varString.replace(/var\(|\)/g, ''));
 
-      config.themeNames.forEach(theme => {
-        css += `:root{${variable}:${originalValue};}\n.themes-${theme}{${variable}:${themes[variableKey][variableValueKey][theme]};}`;
+      variables.forEach(variable => {
+        const variableParts = variable.substr(2).split('-');
+        const variableKey = variableParts.shift() as string;
+        const variableValueKey = variableParts.join('-');
+
+        config.themeNames.forEach(theme => {
+          css += `:root{${variable}:${originalValue};}\n.themes-${theme}{${variable}:${themes[variableKey][variableValueKey][theme]};}`;
+        });
       });
     }
 

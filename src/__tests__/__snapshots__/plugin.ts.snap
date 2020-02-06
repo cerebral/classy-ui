@@ -63,7 +63,7 @@ import { addClasses as _addClasses } from 'classy-ui/runtime';
 import { c, hover, md } from 'classy-ui';
 ('hover:md:color-red ');
 
-_addClasses(['hover:md:color-red', '.hover\\\\:md\\\\:color-red:hover{color:red;}']);
+_addClasses(['hover:md:color-red', '@media (max-width:768px) {.hover\\\\:md\\\\:color-red:hover{color:red;}}']);
 
 
 `;
@@ -80,7 +80,7 @@ import { addClasses as _addClasses } from 'classy-ui/runtime';
 import { c, md } from 'classy-ui';
 ('md:color-red ');
 
-_addClasses(['md:color-red', '.md\\\\:color-red{color:red;}']);
+_addClasses(['md:color-red', '@media (max-width:768px) {.md\\\\:color-red{color:red;}}']);
 
 
 `;
@@ -101,7 +101,7 @@ _addClasses([
   'color-blue',
   '.color-blue{color:blue;}',
   'hover:lg:md:color-red',
-  '.hover\\\\:lg\\\\:md\\\\:color-red:hover{color:red;}',
+  '@media (max-width:1024px) {.hover\\\\:lg\\\\:md\\\\:color-red:hover{color:red;}}@media (max-width:768px) {.hover\\\\:lg\\\\:md\\\\:color-red:hover{color:red;}}',
 ]);
 
 
@@ -163,9 +163,9 @@ _addClasses([
   'bg-blue',
   '.bg-blue{background-color:blue;}',
   'color-green',
-  '.color-green{color:green;}',
+  '.color-green{color:var(--colors-green);}:root{--colors-green:green;}\\n.themes-dark{--colors-green:yellow;}',
   'bg-green',
-  '.bg-green{background-color:green;}',
+  '.bg-green{background-color:var(--colors-green);}:root{--colors-green:background-color:green;}\\n.themes-dark{--colors-green:yellow;}',
   'color-red',
   '.color-red{color:red;}',
   'bg-red',
@@ -202,7 +202,7 @@ c(group(), { 'color-red': true }, 'bg-red', { 'block': true }, 'inline-block')
 
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 import { c, group } from 'classy-ui';
-((true ? 'color-red ' : ' ') + (true ? 'block ' : ' ')).replace(/(?:^|\\s)(?:|bg-|)[^\\s]+/g, '') +
+((true ? 'color-red ' : ' ') + (true ? 'block ' : ' ')).replace(/(?:^|\\s)(?:|bg-|inline-)[^\\s]+/g, '') +
   'group bg-red inline-block ';
 
 _addClasses([

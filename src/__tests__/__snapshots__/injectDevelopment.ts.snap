@@ -3,14 +3,14 @@
 exports[`INJECT DEVELOPMENT should inject both pseudo selector and breakpoint 1`] = `
 Array [
   "hover:md:color-red",
-  ".hover\\\\:md\\\\:color-red:hover{color:red;}",
+  "@media (max-width:768px) {.hover\\\\:md\\\\:color-red:hover{color:red;}}",
 ]
 `;
 
 exports[`INJECT DEVELOPMENT should inject group decorators 1`] = `
 Array [
   "groupHover:color-green",
-  ".group:hover .groupHover\\\\:color-green{color:--colors-green;}:root{--colors-green:green;}
+  ".group:hover .groupHover\\\\:color-green{color:var(--colors-green);}:root{--colors-green:green;}
 .themes-dark{--colors-green:yellow;}",
 ]
 `;
@@ -18,9 +18,9 @@ Array [
 exports[`INJECT DEVELOPMENT should inject multiple 1`] = `
 Array [
   "md:color-red",
-  ".md\\\\:color-red{color:red;}",
+  "@media (max-width:768px) {.md\\\\:color-red{color:red;}}",
   "hover:md:color-blue",
-  ".hover\\\\:md\\\\:color-blue:hover{color:blue;}",
+  "@media (max-width:768px) {.hover\\\\:md\\\\:color-blue:hover{color:blue;}}",
 ]
 `;
 
@@ -34,7 +34,7 @@ Array [
 exports[`INJECT DEVELOPMENT should inject themes 1`] = `
 Array [
   "md:color-green",
-  ".md\\\\:color-green{color:--colors-green;}:root{--colors-green:green;}
+  "@media (max-width:768px) {.md\\\\:color-green{color:var(--colors-green);}}:root{--colors-green:green;}
 .themes-dark{--colors-green:yellow;}",
 ]
 `;
@@ -42,14 +42,14 @@ Array [
 exports[`INJECT DEVELOPMENT should inject with breakpoint 1`] = `
 Array [
   "md:color-red",
-  ".md\\\\:color-red{color:red;}",
+  "@media (max-width:768px) {.md\\\\:color-red{color:red;}}",
 ]
 `;
 
 exports[`INJECT DEVELOPMENT should inject with multiple breakpoints 1`] = `
 Array [
   "sm:xl:color-red",
-  ".sm\\\\:xl\\\\:color-red{color:red;}",
+  "@media (max-width:640px) {.sm\\\\:xl\\\\:color-red{color:red;}}@media (max-width:1280px) {.sm\\\\:xl\\\\:color-red{color:red;}}",
 ]
 `;
 

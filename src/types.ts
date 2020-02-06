@@ -14,17 +14,21 @@ export interface IClasses {
   [name: string]: IClass;
 }
 
+export interface IVariants {
+  [name: string]: string;
+}
+
 export interface IClassnames<T extends string> {
   [name: string]:
-    | (() => string)
+    | ((name: string) => string)
     | {
         variants?:
           | { [name: string]: string }
           | ((
               variables: IVariables<T>,
               utils: { negative: (value: { [key: string]: string }) => { [key: string]: string } },
-            ) => { [name: string]: string });
-        css: (value: string) => string;
+            ) => IVariants);
+        css: (name: string, value: string) => string;
       };
 }
 
@@ -42,7 +46,7 @@ export type IVariables<T extends string> = {
   [key in T]: { [variant: string]: string };
 };
 
-export interface IConfig<T extends string, U = IVariables<T>> {
+export interface IBaseConfig<T extends string, U = IVariables<T>> {
   variables: IVariables<T>;
   screens: {
     [name: string]: (css: string, variables: IVariables<T>) => string;
@@ -53,7 +57,21 @@ export interface IConfig<T extends string, U = IVariables<T>> {
       [key in keyof U]: U[key];
     };
   };
-  extends?: IConfig<any>;
+}
+
+export interface IConfig<T extends string, U = IVariables<T>> {
+  variables?: {
+    [key in T]: ((variables: IVariables<T>) => { [variant: string]: string }) | { [variant: string]: string };
+  };
+  screens?: {
+    [name: string]: (css: string, variables: IVariables<T>) => string;
+  };
+  classnames?: IClassnames<T>;
+  themes?: {
+    [name: string]: {
+      [key in keyof U]: U[key];
+    };
+  };
 }
 
 export interface IEvaluatedThemes {

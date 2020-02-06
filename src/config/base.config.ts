@@ -1,4 +1,6 @@
-module.exports = {
+import { IBaseConfig, IVariants } from '../types';
+
+export const config: IBaseConfig<'breakpoints' | 'spacing' | 'colors'> = {
   variables: {
     breakpoints: {
       sm: '640px',
@@ -194,7 +196,7 @@ module.exports = {
         auto: 'background-size:auto',
         cover: 'background-size:cover',
         contain: 'background-size:container',
-        ...Object.keys(colors).reduce((aggr, key) => {
+        ...Object.keys(colors).reduce<IVariants>((aggr, key) => {
           aggr[key] = `background-color:${colors[key]}`;
 
           return aggr;
@@ -251,7 +253,7 @@ module.exports = {
         none: 'border-style:none',
         collapse: 'border-collapse:collapse',
         separate: 'border-collapse:separate',
-        ...Object.keys(colors).reduce((aggr, key) => {
+        ...Object.keys(colors).reduce<IVariants>((aggr, key) => {
           aggr[key] = `border-color:${colors[key]}`;
 
           return aggr;
@@ -344,7 +346,7 @@ module.exports = {
     container: {
       variants: ({ breakpoints }) => ({
         none: 'width:100%',
-        ...Object.keys(breakpoints).reduce((aggr, key) => {
+        ...Object.keys(breakpoints).reduce<IVariants>((aggr, key) => {
           aggr[key] = `max-width:${breakpoints[key]};`;
 
           return aggr;
@@ -425,7 +427,7 @@ module.exports = {
         center: 'text-align:center',
         right: 'text-align:right',
         justify: 'text-align:justify',
-        ...Object.keys(colors).reduce((aggr, key) => {
+        ...Object.keys(colors).reduce<IVariants>((aggr, key) => {
           aggr[key] = `color:${colors[key]}`;
 
           return aggr;
@@ -692,7 +694,7 @@ module.exports = {
     },
     p: {
       variants: ({ spacing }) =>
-        Object.keys(spacing).reduce((aggr, key) => {
+        Object.keys(spacing).reduce<IVariants>((aggr, key) => {
           aggr[key] = `padding:${spacing[key]};`;
 
           return aggr;
@@ -701,7 +703,7 @@ module.exports = {
     },
     py: {
       variants: ({ spacing }) =>
-        Object.keys(spacing).reduce((aggr, key) => {
+        Object.keys(spacing).reduce<IVariants>((aggr, key) => {
           aggr[key] = `padding-top:${spacing[key]};padding-bottom:${spacing[key]};`;
 
           return aggr;
@@ -711,7 +713,7 @@ module.exports = {
     },
     px: {
       variants: ({ spacing }) =>
-        Object.keys(spacing).reduce((aggr, key) => {
+        Object.keys(spacing).reduce<IVariants>((aggr, key) => {
           aggr[key] = `padding-left:${spacing[key]};padding-right:${spacing[key]};`;
 
           return aggr;
@@ -721,7 +723,7 @@ module.exports = {
     },
     pt: {
       variants: ({ spacing }) =>
-        Object.keys(spacing).reduce((aggr, key) => {
+        Object.keys(spacing).reduce<IVariants>((aggr, key) => {
           aggr[key] = `padding-top:${spacing[key]};`;
 
           return aggr;
@@ -731,7 +733,7 @@ module.exports = {
     },
     pr: {
       variants: ({ spacing }) =>
-        Object.keys(spacing).reduce((aggr, key) => {
+        Object.keys(spacing).reduce<IVariants>((aggr, key) => {
           aggr[key] = `padding-right:${spacing[key]};`;
 
           return aggr;
@@ -741,7 +743,7 @@ module.exports = {
     },
     pb: {
       variants: ({ spacing }) =>
-        Object.keys(spacing).reduce((aggr, key) => {
+        Object.keys(spacing).reduce<IVariants>((aggr, key) => {
           aggr[key] = `padding-bottom:${spacing[key]};`;
 
           return aggr;
@@ -751,7 +753,7 @@ module.exports = {
     },
     pl: {
       variants: ({ spacing }) =>
-        Object.keys(spacing).reduce((aggr, key) => {
+        Object.keys(spacing).reduce<IVariants>((aggr, key) => {
           aggr[key] = `padding-left:${spacing[key]};`;
 
           return aggr;
@@ -761,7 +763,7 @@ module.exports = {
     },
     m: {
       variants: ({ spacing }) =>
-        Object.keys(spacing).reduce((aggr, key) => {
+        Object.keys(spacing).reduce<IVariants>((aggr, key) => {
           aggr[key] = `margin:${spacing[key]};`;
 
           return aggr;
@@ -770,7 +772,7 @@ module.exports = {
     },
     my: {
       variants: ({ spacing }) =>
-        Object.keys(spacing).reduce((aggr, key) => {
+        Object.keys(spacing).reduce<IVariants>((aggr, key) => {
           aggr[key] = `margin-top:${spacing[key]};margin-bottom:${spacing[key]};`;
 
           return aggr;
@@ -780,7 +782,7 @@ module.exports = {
     },
     mx: {
       variants: ({ spacing }) =>
-        Object.keys(spacing).reduce((aggr, key) => {
+        Object.keys(spacing).reduce<IVariants>((aggr, key) => {
           aggr[key] = `margin-left:${spacing[key]};margin-right:${spacing[key]};`;
 
           return aggr;
@@ -790,7 +792,7 @@ module.exports = {
     },
     mt: {
       variants: ({ spacing }) =>
-        Object.keys(spacing).reduce((aggr, key) => {
+        Object.keys(spacing).reduce<IVariants>((aggr, key) => {
           aggr[key] = `margin-top:${spacing[key]};`;
 
           return aggr;
@@ -800,7 +802,7 @@ module.exports = {
     },
     mr: {
       variants: ({ spacing }) =>
-        Object.keys(spacing).reduce((aggr, key) => {
+        Object.keys(spacing).reduce<IVariants>((aggr, key) => {
           aggr[key] = `margin-right:${spacing[key]};`;
 
           return aggr;
@@ -810,7 +812,7 @@ module.exports = {
     },
     mb: {
       variants: ({ spacing }) =>
-        Object.keys(spacing).reduce((aggr, key) => {
+        Object.keys(spacing).reduce<IVariants>((aggr, key) => {
           aggr[key] = `margin-bottom:${spacing[key]};`;
 
           return aggr;
@@ -820,7 +822,7 @@ module.exports = {
     },
     ml: {
       variants: ({ spacing }) =>
-        Object.keys(spacing).reduce((aggr, key) => {
+        Object.keys(spacing).reduce<IVariants>((aggr, key) => {
           aggr[key] = `margin-left:${spacing[key]};`;
 
           return aggr;
