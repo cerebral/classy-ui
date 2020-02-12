@@ -357,8 +357,11 @@ export const createClassObject = (
   isProduction: boolean,
 ): IExtractedClass => {
   const withoutWrappingDecorators = decorators.filter(i => !['c', 'group'].includes(i!));
+  const baseName = id ? classes[id].classname : '';
+  const variantName = id && classes[id].variant ? classes[id].variant : '';
+  const className = baseName + (variantName ? `_${variantName}` : '');
 
-  const uid = [withoutWrappingDecorators.sort().join(':'), id]
+  const uid = [withoutWrappingDecorators.sort().join(':'), className]
     .filter(Boolean)
     .filter(i => i!.length > 0)
     .join(':');

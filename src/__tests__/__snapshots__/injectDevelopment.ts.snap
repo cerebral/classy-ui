@@ -2,67 +2,67 @@
 
 exports[`INJECT DEVELOPMENT should inject both pseudo selector and breakpoint 1`] = `
 Array [
-  "hover:md:color-red",
-  "@media (max-width:768px) {.hover\\\\:md\\\\:color-red:hover{color:red;}}",
+  "hover:md:color_red",
+  "@media (max-width:768px) {.hover\\\\:md\\\\:color_red:hover{color:red;}}",
 ]
 `;
 
 exports[`INJECT DEVELOPMENT should inject group decorators 1`] = `
 Array [
-  "groupHover:color-green",
-  ".group:hover .groupHover\\\\:color-green{color:var(--colors-green);}:root{--colors-green:green;}
+  "groupHover:color_green",
+  ".group:hover .groupHover\\\\:color_green{color:var(--colors-green);}:root{--colors-green:green;}
 .themes-dark{--colors-green:yellow;}",
 ]
 `;
 
 exports[`INJECT DEVELOPMENT should inject multiple 1`] = `
 Array [
-  "md:color-red",
-  "@media (max-width:768px) {.md\\\\:color-red{color:red;}}",
-  "hover:md:color-blue",
-  "@media (max-width:768px) {.hover\\\\:md\\\\:color-blue:hover{color:blue;}}",
+  "md:color_red",
+  "@media (max-width:768px) {.md\\\\:color_red{color:red;}}",
+  "hover:md:color_blue",
+  "@media (max-width:768px) {.hover\\\\:md\\\\:color_blue:hover{color:blue;}}",
 ]
 `;
 
 exports[`INJECT DEVELOPMENT should inject simple 1`] = `
 Array [
-  "color-red",
-  ".color-red{color:red;}",
+  "color_red",
+  ".color_red{color:red;}",
 ]
 `;
 
 exports[`INJECT DEVELOPMENT should inject themes 1`] = `
 Array [
-  "md:color-green",
-  "@media (max-width:768px) {.md\\\\:color-green{color:var(--colors-green);}}:root{--colors-green:green;}
+  "md:color_green",
+  "@media (max-width:768px) {.md\\\\:color_green{color:var(--colors-green);}}:root{--colors-green:green;}
 .themes-dark{--colors-green:yellow;}",
 ]
 `;
 
 exports[`INJECT DEVELOPMENT should inject with breakpoint 1`] = `
 Array [
-  "md:color-red",
-  "@media (max-width:768px) {.md\\\\:color-red{color:red;}}",
+  "md:color_red",
+  "@media (max-width:768px) {.md\\\\:color_red{color:red;}}",
 ]
 `;
 
 exports[`INJECT DEVELOPMENT should inject with multiple breakpoints 1`] = `
 Array [
-  "sm:xl:color-red",
-  "@media (max-width:640px) {.sm\\\\:xl\\\\:color-red{color:red;}}@media (max-width:1280px) {.sm\\\\:xl\\\\:color-red{color:red;}}",
+  "sm:xl:color_red",
+  "@media (max-width:640px) {.sm\\\\:xl\\\\:color_red{color:red;}}@media (max-width:1280px) {.sm\\\\:xl\\\\:color_red{color:red;}}",
 ]
 `;
 
 exports[`INJECT DEVELOPMENT should inject with multiple pseudo selectors 1`] = `
 Array [
-  "firstChild:hover:color-red",
-  ".firstChild\\\\:hover\\\\:color-red:first-child:hover{color:red;}",
+  "firstChild:hover:color_red",
+  ".firstChild\\\\:hover\\\\:color_red:first-child:hover{color:red;}",
 ]
 `;
 
 exports[`INJECT DEVELOPMENT should inject with pseudo selector 1`] = `
 Array [
-  "hover:color-red",
-  ".hover\\\\:color-red:hover{color:red;}",
+  "hover:color_red",
+  ".hover\\\\:color_red:hover{color:red;}",
 ]
 `;
