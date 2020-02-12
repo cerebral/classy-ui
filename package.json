@@ -39,7 +39,8 @@
     "macro",
     "plugin",
     "runtime",
-    "configs"
+    "configs",
+    "preflight.css"
   ],
   "dependencies": {
     "@types/node": "^8.0.0",
