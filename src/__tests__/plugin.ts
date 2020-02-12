@@ -110,5 +110,20 @@ import { c, group } from 'classy-ui'
 
 c(group(), someFunction())`,
     },
+    {
+      title: 'should fix specificity inside object',
+      code: `
+import { c, hover } from 'classy-ui'
+
+const buttonBlue = c('color-blue');
+const buttonGreen = c('color-green');
+
+const buttonRed = c(buttonBlue, buttonGreen, 'color-red');
+
+{className: c(buttonRed, hover('color-green'))}
+
+
+`,
+    },
   ],
 });

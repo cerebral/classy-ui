@@ -133,6 +133,45 @@ _addClasses(['color_red', '.color_red{color:red;}']);
 
 `;
 
+exports[`classy-ui should fix specificity inside object: should fix specificity inside object 1`] = `
+
+import { c, hover } from 'classy-ui'
+
+const buttonBlue = c('color-blue');
+const buttonGreen = c('color-green');
+
+const buttonRed = c(buttonBlue, buttonGreen, 'color-red');
+
+{className: c(buttonRed, hover('color-green'))}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { addClasses as _addClasses } from 'classy-ui/runtime';
+import { fixSpecificity as _fixSpecificity2 } from 'classy-ui/runtime';
+import { fixSpecificity as _fixSpecificity } from 'classy-ui/runtime';
+const buttonBlue = 'color_blue ';
+const buttonGreen = 'color_green ';
+
+const buttonRed = _fixSpecificity(buttonBlue + buttonGreen + 'color_red ');
+
+{
+  className: _fixSpecificity2(buttonRed + 'hover:color_green ');
+}
+
+_addClasses([
+  'color_blue',
+  '.color_blue{color:blue;}',
+  'color_green',
+  '.color_green{color:var(--colors-green);}:root{--colors-green:green;}\\n.themes-dark{--colors-green:yellow;}',
+  'color_red',
+  '.color_red{color:red;}',
+  'hover:color_green',
+  '.hover\\\\:color_green:hover{color:var(--colors-green);}:root{--colors-green:green;}\\n.themes-dark{--colors-green:yellow;}',
+]);
+
+
+`;
+
 exports[`classy-ui should fix specifiy issue in dynamic composition: should fix specifiy issue in dynamic composition 1`] = `
 
 import { c} from 'classy-ui'

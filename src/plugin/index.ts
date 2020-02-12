@@ -1,3 +1,5 @@
+import { addNamed, addSideEffect } from '@babel/helper-module-imports';
+
 import { writeFileSync } from 'fs';
 import { join } from 'path';
 
@@ -67,7 +69,7 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
     return classObj.name.trim().split(' ');
   }
 
-  function convertToExpression(classAttribs: Set<any>, getRuntimeFunction: () => any) {
+  function convertToExpression(classAttribs: Set<any>) {
     if (classAttribs.size === 0) {
       return t.stringLiteral(' ');
     }
@@ -104,7 +106,7 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
     start = t.binaryExpression('+', start, t.stringLiteral(strings.join(' ') + ' '));
 
     if (needsRuntime) {
-      return t.callExpression(getRuntimeFunction(), [start]);
+      return t.callExpression(addNamed(state.file.path, 'fixSpecificity', 'classy-ui/runtime'), [start]);
     }
 
     return start;
@@ -208,20 +210,6 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
       }
     }
   }
-
-  let fixSpecificityUid: any = null;
-  function getFixSpecificityFunction() {
-    if (fixSpecificityUid) return fixSpecificityUid;
-    fixSpecificityUid = state.file.scope.generateUidIdentifier('fixSpecificity');
-    state.file.ast.program.body.unshift(
-      t.importDeclaration(
-        [t.importSpecifier(fixSpecificityUid, t.identifier('fixSpecificity'))],
-        t.stringLiteral('classy-ui/runtime'),
-      ),
-    );
-    return fixSpecificityUid;
-  }
-
   classnamesRefs
     // Only use top-most class
     .filter((path: any) => {
@@ -244,28 +232,19 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
         extractedClasnames,
       );
 
-      const expressions = convertToExpression(extractedClasnames, getFixSpecificityFunction);
-      statementPath.replaceWith(expressions);
+      statementPath.replaceWith(convertToExpression(extractedClasnames));
     });
 
   if (isProduction) {
     writeFileSync(cssPath, injectProduction(classCollection, classes, config));
-    state.file.ast.program.body.unshift(t.importDeclaration([], t.stringLiteral('classy-ui/styles.css')));
+    addSideEffect(state.file.path, 'classy-ui/styles.css');
   } else {
-    const localAddClassUid = state.file.scope.generateUidIdentifier('addClasses');
-
     const runtimeCall = t.expressionStatement(
-      t.callExpression(localAddClassUid, [
+      t.callExpression(addNamed(state.file.path, 'addClasses', 'classy-ui/runtime'), [
         t.arrayExpression(injectDevelopment(classCollection, classes, config).map(value => t.stringLiteral(value))),
       ]),
     );
 
     state.file.ast.program.body.push(runtimeCall);
-    state.file.ast.program.body.unshift(
-      t.importDeclaration(
-        [t.importSpecifier(localAddClassUid, t.identifier('addClasses'))],
-        t.stringLiteral('classy-ui/runtime'),
-      ),
-    );
   }
 }
