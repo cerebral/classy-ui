@@ -205,10 +205,6 @@ export const config: IBaseConfig<'breakpoints' | 'spacing' | 'colors'> = {
       }),
       css: (name, value) => `${name}{${value};}`,
     },
-    color: {
-      variants: ({ colors }) => colors,
-      css: (name, value) => `${name}{color:${value};}`,
-    },
     borderRadius: {
       variants: {
         none: '0',
