@@ -4,15 +4,7 @@ import { join } from 'path';
 import { transform as transformClassesToTypes } from '../config/transform-classes-to-types';
 import { transform as transformConfigToClasses } from '../config/transform-config-to-classes';
 import { IExtractedClass, IExtractedClasses } from '../types';
-import {
-  camelToDash,
-  createClassObject,
-  evaluateConfig,
-  getUserConfig,
-  hyphenToCamelCase,
-  injectDevelopment,
-  injectProduction,
-} from '../utils';
+import { createClassObject, evaluateConfig, getUserConfig, injectDevelopment, injectProduction } from '../utils';
 
 const cssPath = join(process.cwd(), 'node_modules', 'classy-ui', 'styles.css');
 const config = evaluateConfig(getUserConfig());
@@ -51,6 +43,7 @@ export default (babel: any) => {
 
               if (Boolean(referencePaths.length)) {
                 processReferences(babel, state, referencePaths);
+                path.remove();
               }
             }
           },
@@ -67,96 +60,54 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
 
   const classCollection: IExtractedClasses = {};
 
-  function collectAndRewrite(classObj: IExtractedClass, transformer?: (name: string) => any): any[] {
-    if (classObj.uid && classObj.id) {
+  function collectGlobally(classObj: IExtractedClass): string[] {
+    if (classObj.id && classObj.uid) {
       classCollection[classObj.uid] = classObj;
     }
-    return classObj.name ? (transformer ? [transformer(classObj.name)] : classObj.name.split(' ')) : [];
+    return classObj.name.trim().split(' ');
   }
 
-  /**
-   * Generate a type signature for a given classname
-   * we considere the type signature of an classname to be all the stuff before the
-   * last "-" (including the "-") so "background-red-500" would have a type of "background-red-"
-   */
-  function getClassnameCategory(classname: string) {
-    const parts = classname.split('-');
-    while (parts.length) {
-      parts.pop();
-      const category = hyphenToCamelCase(parts.join('-'));
-      if (category in config.classnames) {
-        return `${camelToDash(category)}-`;
-      }
-    }
-  }
-
-  /**
-   * Generate a regex that matches all type signatures in
-   * classnames against a array of classnames.
-   */
-  function generateRuntimeRegex(classnames: string[]) {
-    return `(?:^|\\s)(?:${classnames.map(getClassnameCategory).join('|')})[^\\s]+`;
-  }
-  function convertToExpression(classAttribs: Set<any>) {
+  function convertToExpression(classAttribs: Set<any>, getRuntimeFunction: () => any) {
     if (classAttribs.size === 0) {
       return t.stringLiteral(' ');
     }
 
+    let needsRuntime: boolean = false;
     const strings: string[] = [];
     const others: any[] = [];
     for (const item of classAttribs.values()) {
       if (typeof item === 'string') {
-        if (item.length !== 0) {
-          strings.push(item);
-        }
+        strings.push(item);
       } else {
+        if (t.isIdentifier(item)) {
+          needsRuntime = true;
+        }
         others.push(item);
       }
     }
-
-    // TODO: We could do better here:
-    // currently we just split into strings and "others"
-    // 1) the collect function converts objectExpression into ternary expression
-    //    this convertion should be moved to here.
-    // 2) After 1) is done we could only do this special runtime processing
-    //    sort into strings, identifiers/callExpr and others and only do the runtime
-    //    processing for identifiers but not for others.
 
     // if there are only string literals just return them. This is a _short path_
     if (strings.length > 0 && others.length === 0) {
       return t.stringLiteral(strings.join(' ') + ' ');
     }
 
-    // Build up a binary expression with all other values
     const max = others.length - 1;
     let start = others[max];
     for (let i = max - 1; i >= 0; i--) {
       start = t.binaryExpression('+', others[i], start);
     }
 
-    // We are done if there are no strings here
     if (strings.length === 0) {
       return start;
     }
 
-    // Some runtime processing is needed to "fix" css specificity.
-    // Remove all occurences of the same class type from all literals and just
-    // add ours here
-    // rewrite to (id + id + ...).replace(/regex/g) + ' strings...'
-    return t.binaryExpression(
-      '+',
-      t.callExpression(t.memberExpression(start, t.identifier('replace')), [
-        t.regExpLiteral(generateRuntimeRegex(strings), 'g'),
-        t.stringLiteral(''),
-      ]),
-      t.stringLiteral(strings.join(' ') + ' '),
-    );
-  }
+    start = t.binaryExpression('+', start, t.stringLiteral(strings.join(' ') + ' '));
 
-  function updateContext(decorators: string[], value: string) {
-    const newDecorators = decorators.slice();
-    newDecorators.push(value);
-    return newDecorators;
+    if (needsRuntime) {
+      return t.callExpression(getRuntimeFunction(), [start]);
+    }
+
+    return start;
   }
 
   function getImportName(name: string, scope: any) {
@@ -167,18 +118,24 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
     return null;
   }
 
-  function throwCodeFragmentIfInvalidId(path: any, id: string) {
+  function throwIfInvalidId(path: any, id: string) {
     if (!classes[id] && !id.startsWith('themes-')) {
       throw path.buildCodeFrameError(`CLASSY-UI: Could not find classname ${id}`);
     }
   }
-  function throwIfForbiddenName(path: any, decorators: string[], name: string) {
+  function throwIfForbiddenDecorator(path: any, decorators: string[], name: string) {
     if (decorators.includes(name)) {
       throw path.buildCodeFrameError(`Duplicating ${name} is not allowed.`);
     }
   }
 
-  function getIdOrThrow(path: any) {
+  function throwIfNotStartedByC(path: any, decorators: string[]) {
+    if (decorators[0] !== 'c') {
+      throw path.buildCodeFrameError(`Composing variabels is only allowed with c()`);
+    }
+  }
+
+  function getId(path: any) {
     if (t.isStringLiteral(path.node)) {
       return path.node.value;
     } else if (t.isIdentifier(path.node)) {
@@ -188,66 +145,81 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
     }
   }
 
-  function rewriteAndCollectArguments(decorators: any, argumentPaths: any, classArgs: Set<any>) {
+  function collectClassnames(decorators: string[], argumentPaths: any[], classArgs: Set<any>) {
     // if root call has no arguments
     if (argumentPaths.length === 0) {
-      const classObj = createClassObject(undefined, decorators, classes, isProduction);
-      collectAndRewrite(classObj).forEach(classArgs.add, classArgs);
+      collectGlobally(createClassObject(undefined, decorators, classes, isProduction)).forEach(
+        classArgs.add,
+        classArgs,
+      );
     }
+
     // process arguments
-    argumentPaths.forEach((argPath: any) => {
+    for (let argPath of argumentPaths) {
       const node = argPath.node;
 
       if (t.isStringLiteral(node)) {
-        const id = node.value;
-        throwCodeFragmentIfInvalidId(argPath, id);
-        const classObj = createClassObject(node.value, decorators, classes, isProduction);
-        collectAndRewrite(classObj).forEach(classArgs.add, classArgs);
-        return;
+        throwIfInvalidId(argPath, node.value);
+
+        collectGlobally(createClassObject(node.value, decorators, classes, isProduction)).forEach(
+          classArgs.add,
+          classArgs,
+        );
       } else if (t.isIdentifier(node)) {
-        // This is the only knowlage the plugin has
-        // about the imports from classy-ui
-        if (decorators[0] !== 'c') {
-          throw argPath.buildCodeFrameError(`Composing variabels is only allowed with c()`);
-        }
+        throwIfNotStartedByC(argPath, decorators);
         classArgs.add(node);
-        return;
       } else if (t.isCallExpression(node) && t.isIdentifier(node.callee)) {
         // To support import { hover as ho }...
-        const name = getImportName(node.callee.name, argPath.scope);
-        // When not found it is not part of classy ui
-        if (name != null) {
-          throwIfForbiddenName(argPath, decorators, name);
-          const newDecorators = updateContext(decorators, name);
+        const importedName = getImportName(node.callee.name, argPath.scope);
+
+        if (importedName) {
+          throwIfForbiddenDecorator(argPath, decorators, importedName);
+
+          // Create new decorators including current one
+          const newDecorators = decorators.slice();
+          newDecorators.push(importedName);
+
           const childArguments = argPath.get('arguments');
           if (Boolean(childArguments.length)) {
-            rewriteAndCollectArguments(newDecorators, childArguments, classArgs);
-            return;
+            collectClassnames(newDecorators, childArguments, classArgs);
           } else {
             // if subsequent calls have no arguments
-            const classObj = createClassObject(undefined, newDecorators, classes, isProduction);
-            collectAndRewrite(classObj).forEach(classArgs.add, classArgs);
-            return;
+            collectGlobally(createClassObject(undefined, newDecorators, classes, isProduction)).forEach(
+              classArgs.add,
+              classArgs,
+            );
           }
         } else {
-          throw argPath.buildCodeFrameError(`Composing variabels is only allowed with classnames()`);
+          // This is an unknown call to some function
+          classArgs.add(node);
         }
       } else if (t.isObjectExpression(node)) {
-        argPath.get('properties').forEach((propPath: any) => {
-          const id = getIdOrThrow(propPath.get('key'));
-          const classObj = createClassObject(id, decorators, classes, isProduction);
-          throwCodeFragmentIfInvalidId(propPath, id);
-
-          // TODO: move this to convertToExpression
-          collectAndRewrite(classObj, name => {
-            return t.conditionalExpression(propPath.node.value, t.stringLiteral(name + ' '), t.stringLiteral(' '));
-          }).forEach(classArgs.add, classArgs);
-        });
-        return;
+        for (let propPath of argPath.get('properties')) {
+          const id = getId(propPath.get('key'));
+          throwIfInvalidId(propPath, id);
+          collectGlobally(createClassObject(id, decorators, classes, isProduction))
+            .map(name => {
+              return t.conditionalExpression(propPath.node.value, t.stringLiteral(name + ' '), t.stringLiteral(''));
+            })
+            .forEach(classArgs.add, classArgs);
+        }
+      } else {
+        classArgs.add(node);
       }
-      classArgs.add(node);
-      return classArgs;
-    }, new Set());
+    }
+  }
+
+  let fixSpecificityUid: any = null;
+  function getFixSpecificityFunction() {
+    if (fixSpecificityUid) return fixSpecificityUid;
+    fixSpecificityUid = state.file.scope.generateUidIdentifier('fixSpecificity');
+    state.file.ast.program.body.unshift(
+      t.importDeclaration(
+        [t.importSpecifier(fixSpecificityUid, t.identifier('fixSpecificity'))],
+        t.stringLiteral('classy-ui/runtime'),
+      ),
+    );
+    return fixSpecificityUid;
   }
 
   classnamesRefs
@@ -264,13 +236,16 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
     })
     .forEach((path: any) => {
       const statementPath = path.parentPath;
-      const extractedClassAttributes = new Set();
-      rewriteAndCollectArguments(
+      const extractedClasnames = new Set();
+
+      collectClassnames(
         [getImportName(path.node.name, path.scope)],
         statementPath.get('arguments'),
-        extractedClassAttributes,
+        extractedClasnames,
       );
-      statementPath.replaceWith(convertToExpression(extractedClassAttributes));
+
+      const expressions = convertToExpression(extractedClasnames, getFixSpecificityFunction);
+      statementPath.replaceWith(expressions);
     });
 
   if (isProduction) {

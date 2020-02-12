@@ -67,14 +67,6 @@ import { group } from 'classy-ui'
 group('color-blue', 'color-red')`,
     },
     {
-      error: true,
-      title: 'should throw if group was renamed',
-      code: `
-import { c, group as g } from 'classy-ui'
-
-c(group())`,
-    },
-    {
       title: 'should give group a classname',
       code: `
 import { c, group } from 'classy-ui'
@@ -110,6 +102,13 @@ const compose = c('color-blue', 'bg-blue')
 const moreCompose = c('color-green', 'bg-green')
 
 c(compose, moreCompose, 'color-red', 'bg-red')`,
+    },
+    {
+      title: 'should handle dynamic calls to some function',
+      code: `
+import { c, group } from 'classy-ui'
+
+c(group(), someFunction())`,
     },
   ],
 });

@@ -9,7 +9,6 @@ group('color-blue', 'color-red')
       ↓ ↓ ↓ ↓ ↓ ↓
 
 import { addClasses as _addClasses } from 'classy-ui/runtime';
-import { group } from 'classy-ui';
 ('group color-blue color-red ');
 
 _addClasses([]);
@@ -26,8 +25,7 @@ c(group(), { 'color-red': true })
       ↓ ↓ ↓ ↓ ↓ ↓
 
 import { addClasses as _addClasses } from 'classy-ui/runtime';
-import { c, group } from 'classy-ui';
-(true ? 'color-red ' : ' ').replace(/(?:^|\\s)(?:)[^\\s]+/g, '') + 'group ';
+(true ? 'color-red ' : '') + 'group ';
 
 _addClasses(['color-red', '.color-red{color:red;}']);
 
@@ -43,7 +41,6 @@ hover('color-red')
       ↓ ↓ ↓ ↓ ↓ ↓
 
 import { addClasses as _addClasses } from 'classy-ui/runtime';
-import { c, hover } from 'classy-ui';
 ('hover:color-red ');
 
 _addClasses(['hover:color-red', '.hover\\\\:color-red:hover{color:red;}']);
@@ -60,7 +57,6 @@ c(md(hover('color-red')))
       ↓ ↓ ↓ ↓ ↓ ↓
 
 import { addClasses as _addClasses } from 'classy-ui/runtime';
-import { c, hover, md } from 'classy-ui';
 ('hover:md:color-red ');
 
 _addClasses(['hover:md:color-red', '@media (max-width:768px) {.hover\\\\:md\\\\:color-red:hover{color:red;}}']);
@@ -77,7 +73,6 @@ c(md('color-red'))
       ↓ ↓ ↓ ↓ ↓ ↓
 
 import { addClasses as _addClasses } from 'classy-ui/runtime';
-import { c, md } from 'classy-ui';
 ('md:color-red ');
 
 _addClasses(['md:color-red', '@media (max-width:768px) {.md\\\\:color-red{color:red;}}']);
@@ -94,7 +89,6 @@ c('color-blue', md(lg(hover('color-red'))))
       ↓ ↓ ↓ ↓ ↓ ↓
 
 import { addClasses as _addClasses } from 'classy-ui/runtime';
-import { c, hover, md, lg } from 'classy-ui';
 ('color-blue hover:lg:md:color-red ');
 
 _addClasses([
@@ -116,7 +110,6 @@ c(hover('color-red'))
       ↓ ↓ ↓ ↓ ↓ ↓
 
 import { addClasses as _addClasses } from 'classy-ui/runtime';
-import { c, hover } from 'classy-ui';
 ('hover:color-red ');
 
 _addClasses(['hover:color-red', '.hover\\\\:color-red:hover{color:red;}']);
@@ -133,7 +126,6 @@ c('color-red')
       ↓ ↓ ↓ ↓ ↓ ↓
 
 import { addClasses as _addClasses } from 'classy-ui/runtime';
-import { c } from 'classy-ui';
 ('color-red ');
 
 _addClasses(['color-red', '.color-red{color:red;}']);
@@ -152,10 +144,11 @@ c(compose, moreCompose, 'color-red', 'bg-red')
       ↓ ↓ ↓ ↓ ↓ ↓
 
 import { addClasses as _addClasses } from 'classy-ui/runtime';
-import { c } from 'classy-ui';
+import { fixSpecificity as _fixSpecificity } from 'classy-ui/runtime';
 const compose = 'color-blue bg-blue ';
 const moreCompose = 'color-green bg-green ';
-(compose + moreCompose).replace(/(?:^|\\s)(?:color-|bg-)[^\\s]+/g, '') + 'color-red bg-red ';
+
+_fixSpecificity(compose + moreCompose + 'color-red bg-red ');
 
 _addClasses([
   'color-blue',
@@ -184,7 +177,6 @@ group()
       ↓ ↓ ↓ ↓ ↓ ↓
 
 import { addClasses as _addClasses } from 'classy-ui/runtime';
-import { c, group } from 'classy-ui';
 ('group ');
 
 _addClasses([]);
@@ -201,9 +193,7 @@ c(group(), { 'color-red': true }, 'bg-red', { 'block': true }, 'inline-block')
       ↓ ↓ ↓ ↓ ↓ ↓
 
 import { addClasses as _addClasses } from 'classy-ui/runtime';
-import { c, group } from 'classy-ui';
-((true ? 'color-red ' : ' ') + (true ? 'block ' : ' ')).replace(/(?:^|\\s)(?:|bg-|inline-)[^\\s]+/g, '') +
-  'group bg-red inline-block ';
+(true ? 'color-red ' : '') + (true ? 'block ' : '') + 'group bg-red inline-block ';
 
 _addClasses([
   'color-red',
@@ -219,6 +209,22 @@ _addClasses([
 
 `;
 
+exports[`classy-ui should handle dynamic calls to some function: should handle dynamic calls to some function 1`] = `
+
+import { c, group } from 'classy-ui'
+
+c(group(), someFunction())
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { addClasses as _addClasses } from 'classy-ui/runtime';
+someFunction() + 'group ';
+
+_addClasses([]);
+
+
+`;
+
 exports[`classy-ui should not throw when using group inside c call: should not throw when using group inside c call 1`] = `
 
 import { c, group } from 'classy-ui'
@@ -228,27 +234,10 @@ c(group())
       ↓ ↓ ↓ ↓ ↓ ↓
 
 import { addClasses as _addClasses } from 'classy-ui/runtime';
-import { c, group } from 'classy-ui';
 ('group ');
 
 _addClasses([]);
 
-
-`;
-
-exports[`classy-ui should throw if group was renamed: should throw if group was renamed 1`] = `
-
-import { c, group as g } from 'classy-ui'
-
-c(group())
-
-      ↓ ↓ ↓ ↓ ↓ ↓
-
-SyntaxError: unknown: Composing variabels is only allowed with classnames()
-[0m [90m 1 | [39m[36mimport[39m { c[33m,[39m group as g } from [32m'classy-ui'[39m[0m
-[0m [90m 2 | [39m[0m
-[0m[31m[1m>[22m[39m[90m 3 | [39mc(group())[0m
-[0m [90m   | [39m  [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[0m
 
 `;
 
