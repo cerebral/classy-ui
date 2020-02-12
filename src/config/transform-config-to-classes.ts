@@ -8,7 +8,7 @@ export const transform = (config: IEvaluatedConfig): IClasses => {
       ...getClassesFromConfig(
         key,
         config,
-        (labelIndex: number) => `${generateShortName(index)}_${generateShortName(labelIndex)}`,
+        (labelIndex: number) => `${generateShortName(1 + index)}_${generateShortName(1 + labelIndex)}`,
       ),
     };
   }, {} as IClasses);
