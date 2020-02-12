@@ -247,4 +247,6 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
 
     state.file.ast.program.body.push(runtimeCall);
   }
+
+  addSideEffect(state.file.path, 'classy-ui/preflight.css');
 }

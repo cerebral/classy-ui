@@ -8,6 +8,7 @@ group('color-blue', 'color-red')
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
+import 'classy-ui/preflight.css';
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 ('group color-blue color-red ');
 
@@ -24,6 +25,7 @@ c(group(), { 'color-red': true })
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
+import 'classy-ui/preflight.css';
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 (true ? 'color_red ' : '') + 'group ';
 
@@ -40,6 +42,7 @@ hover('color-red')
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
+import 'classy-ui/preflight.css';
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 ('hover:color_red ');
 
@@ -56,6 +59,7 @@ c(md(hover('color-red')))
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
+import 'classy-ui/preflight.css';
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 ('hover:md:color_red ');
 
@@ -72,6 +76,7 @@ c(md('color-red'))
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
+import 'classy-ui/preflight.css';
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 ('md:color_red ');
 
@@ -88,6 +93,7 @@ c('color-blue', md(lg(hover('color-red'))))
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
+import 'classy-ui/preflight.css';
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 ('color_blue hover:lg:md:color_red ');
 
@@ -109,6 +115,7 @@ c(hover('color-red'))
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
+import 'classy-ui/preflight.css';
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 ('hover:color_red ');
 
@@ -125,6 +132,7 @@ c('color-red')
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
+import 'classy-ui/preflight.css';
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 ('color_red ');
 
@@ -146,6 +154,7 @@ const buttonRed = c(buttonBlue, buttonGreen, 'color-red');
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
+import 'classy-ui/preflight.css';
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 import { fixSpecificity as _fixSpecificity2 } from 'classy-ui/runtime';
 import { fixSpecificity as _fixSpecificity } from 'classy-ui/runtime';
@@ -182,6 +191,7 @@ c(compose, moreCompose, 'color-red', 'bg-red')
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
+import 'classy-ui/preflight.css';
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 import { fixSpecificity as _fixSpecificity } from 'classy-ui/runtime';
 const compose = 'color_blue bg_blue ';
@@ -215,6 +225,7 @@ group()
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
+import 'classy-ui/preflight.css';
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 ('group ');
 
@@ -231,6 +242,7 @@ c(group(), { 'color-red': true }, 'bg-red', { 'block': true }, 'inline-block')
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
+import 'classy-ui/preflight.css';
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 (true ? 'color_red ' : '') + (true ? 'block ' : '') + 'group bg_red inline-block ';
 
@@ -256,6 +268,7 @@ c(group(), someFunction())
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
+import 'classy-ui/preflight.css';
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 someFunction() + 'group ';
 
@@ -272,6 +285,7 @@ c(group())
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
+import 'classy-ui/preflight.css';
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 ('group ');
 
