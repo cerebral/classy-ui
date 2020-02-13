@@ -1,7 +1,7 @@
-import { addNamed, addSideEffect } from '@babel/helper-module-imports';
-
 import { writeFileSync } from 'fs';
 import { join } from 'path';
+
+import { addNamed, addSideEffect } from '@babel/helper-module-imports';
 
 import { transform as transformClassesToTypes } from '../config/transform-classes-to-types';
 import { transform as transformConfigToClasses } from '../config/transform-config-to-classes';
@@ -248,5 +248,5 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
     state.file.ast.program.body.push(runtimeCall);
   }
 
-  addSideEffect(state.file.path, 'classy-ui/preflight.css');
+  addSideEffect(state.file.path, 'classy-ui/normalize.css');
 }
