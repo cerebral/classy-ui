@@ -356,6 +356,14 @@ export const createClassObject = (
   classes: IClasses,
   isProduction: boolean,
 ): IExtractedClass => {
+  if (id && id.startsWith('themes-')) {
+    return {
+      id,
+      name: id,
+      decorators: [],
+    };
+  }
+
   const withoutWrappingDecorators = decorators.filter(i => !['c', 'group'].includes(i!));
   const baseName = id ? classes[id].classname : '';
   const variantName = id && classes[id].variant ? classes[id].variant : '';
@@ -372,12 +380,6 @@ export const createClassObject = (
     return {
       id,
       name: `group ${(id && isProduction ? classes[id].shortName : id) || ''}`,
-      decorators: returnedDecorators,
-    };
-  } else if (uid.startsWith('themes-')) {
-    return {
-      id,
-      name: uid,
       decorators: returnedDecorators,
     };
   }
