@@ -221,6 +221,7 @@ export const config: IBaseConfig<
         'table-row': 'table-row',
         'table-cell': 'table-cell',
         grid: 'grid',
+        flex: 'flex',
         hidden: 'hidden',
       },
       css: (name, value) => `${name}{display:${value};}`,
