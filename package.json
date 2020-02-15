@@ -1,6 +1,6 @@
 {
   "name": "classy-ui",
-  "version": "3.0.0",
+  "version": "3.0.2",
   "description": "A framework for building and consuming atomic design systems",
   "author": "Christian Alfoni <christianalfoni@gmail.com>",
   "license": "MIT",
@@ -39,7 +39,6 @@
     "macro",
     "plugin",
     "runtime",
-    "configs",
     "normalize.css"
   ],
   "dependencies": {

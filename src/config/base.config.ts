@@ -420,6 +420,15 @@ export const config: IBaseConfig<
       },
       css: (name, value) => `${name}{align-items:${value};}`,
     },
+    flexDirection: {
+      variants: {
+        row: 'row',
+        'row-reverse': 'row-reverse',
+        column: 'column',
+        'column-reverse': 'column-reverse',
+      },
+      css: (name, value) => `${name}{flex-direction:${value};}`,
+    },
     boxShadow: {
       variants: ({ boxShadows }) => boxShadows,
       css: (name, value) => `${name}{box-shadow:${value};}`,
