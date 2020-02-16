@@ -333,6 +333,22 @@ export const config: IBaseConfig<
       variants: ({ colors }) => colors,
       css: (name, value) => `${name}{border-color:${value};}`,
     },
+    borderTopColor: {
+      variants: ({ colors }) => colors,
+      css: (name, value) => `${name}{border-top-color:${value};}`,
+    },
+    borderRightColor: {
+      variants: ({ colors }) => colors,
+      css: (name, value) => `${name}{border-right-color:${value};}`,
+    },
+    borderBottomColor: {
+      variants: ({ colors }) => colors,
+      css: (name, value) => `${name}{border-bottom-color:${value};}`,
+    },
+    borderLeftColor: {
+      variants: ({ colors }) => colors,
+      css: (name, value) => `${name}{border-left-color:${value};}`,
+    },
     borderWidth: {
       variants: ({ borderWidths }) => borderWidths,
       css: (name, value) => `${name}{border-width:${value};}`,

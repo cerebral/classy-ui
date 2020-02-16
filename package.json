@@ -1,7 +1,7 @@
 {
   "name": "classy-ui",
-  "version": "3.0.3",
-  "description": "A framework for building and consuming atomic design systems",
+  "version": "3.0.4",
+  "description": "An atomic design system inspired by the wonderful Tailwindcss",
   "author": "Christian Alfoni <christianalfoni@gmail.com>",
   "license": "MIT",
   "repository": "git+https://github.com/cerebral/classy-ui.git",
