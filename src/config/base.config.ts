@@ -211,6 +211,13 @@ export const config: IBaseConfig<
     xl: (css, { breakpoints }) => `@media (max-width:${breakpoints.xl}) {${css}}`,
   },
   classnames: {
+    boxSizing: {
+      variants: {
+        'content-box': 'content-box',
+        'border-box': 'border-box',
+      },
+      css: (name, value) => `${name}{box-sizing:${value};}`,
+    },
     display: {
       variants: {
         block: 'block',
