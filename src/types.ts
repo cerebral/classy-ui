@@ -3,6 +3,7 @@ export interface IClass {
   classname: string;
   variant: string;
   shortName: string;
+  derived: string[] | null;
   variable: {
     value: string;
     originalValue: string;

@@ -736,6 +736,22 @@ export const config: IBaseConfig<
       }),
       css: ['marginTop', 'marginRight', 'marginBottom', 'marginLeft'],
     },
+    marginVertical: {
+      variants: ({ spacing }, { negative }) => ({
+        ...spacing,
+        ...negative(spacing),
+        auto: 'auto',
+      }),
+      css: ['marginTop', 'marginBottom'],
+    },
+    marginHorizontal: {
+      variants: ({ spacing }, { negative }) => ({
+        ...spacing,
+        ...negative(spacing),
+        auto: 'auto',
+      }),
+      css: ['marginLeft', 'marginRight'],
+    },
     maxHeight: {
       variants: {
         full: '100%',
@@ -826,6 +842,14 @@ export const config: IBaseConfig<
     padding: {
       variants: ({ spacing }) => spacing,
       css: ['paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft'],
+    },
+    paddingVertical: {
+      variants: ({ spacing }) => spacing,
+      css: ['paddingTop', 'paddingBottom'],
+    },
+    paddingHorizontal: {
+      variants: ({ spacing }) => spacing,
+      css: ['paddingLeft', 'paddingRight'],
     },
     paddingTop: {
       variants: ({ spacing }) => spacing,

@@ -43,7 +43,7 @@ hover('color-red')
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 ('hover:color_red ');
 
-_addClasses(['hover:color_red', '.hover\\\\:color_red:hover{color:red;}']);
+_addClasses(['color_red', '.hover\\\\:color_red:hover{color:red;}']);
 
 
 `;
@@ -59,7 +59,7 @@ c(md(hover('color-red')))
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 ('hover:md:color_red ');
 
-_addClasses(['hover:md:color_red', '@media (max-width:768px) {.hover\\\\:md\\\\:color_red:hover{color:red;}}']);
+_addClasses(['color_red', '@media (max-width:768px) {.hover\\\\:md\\\\:color_red:hover{color:red;}}']);
 
 
 `;
@@ -75,7 +75,7 @@ c(md('color-red'))
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 ('md:color_red ');
 
-_addClasses(['md:color_red', '@media (max-width:768px) {.md\\\\:color_red{color:red;}}']);
+_addClasses(['color_red', '@media (max-width:768px) {.md\\\\:color_red{color:red;}}']);
 
 
 `;
@@ -94,7 +94,7 @@ import { addClasses as _addClasses } from 'classy-ui/runtime';
 _addClasses([
   'color_blue',
   '.color_blue{color:blue;}',
-  'hover:lg:md:color_red',
+  'color_red',
   '@media (max-width:1024px) {.hover\\\\:lg\\\\:md\\\\:color_red:hover{color:red;}}@media (max-width:768px) {.hover\\\\:lg\\\\:md\\\\:color_red:hover{color:red;}}',
 ]);
 
@@ -112,7 +112,7 @@ c(hover('color-red'))
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 ('hover:color_red ');
 
-_addClasses(['hover:color_red', '.hover\\\\:color_red:hover{color:red;}']);
+_addClasses(['color_red', '.hover\\\\:color_red:hover{color:red;}']);
 
 
 `;
@@ -165,7 +165,7 @@ _addClasses([
   '.color_green{color:var(--colors-green);}:root{--colors-green:green;}\\n.themes-dark{--colors-green:yellow;}',
   'color_red',
   '.color_red{color:red;}',
-  'hover:color_green',
+  'color_green',
   '.hover\\\\:color_green:hover{color:var(--colors-green);}:root{--colors-green:green;}\\n.themes-dark{--colors-green:yellow;}',
 ]);
 
@@ -192,16 +192,16 @@ _fixSpecificity(compose + moreCompose + 'color_red backgroundColor_red ');
 _addClasses([
   'color_blue',
   '.color_blue{color:blue;}',
-  'backgroundColor_blue',
-  '.backgroundColor_blue{background-color:blue;}',
+  'background-color_blue',
+  '.background-color_blue{background-color:blue;}',
   'color_green',
   '.color_green{color:var(--colors-green);}:root{--colors-green:green;}\\n.themes-dark{--colors-green:yellow;}',
-  'backgroundColor_green',
-  '.backgroundColor_green{background-color:var(--colors-green);}:root{--colors-green:green;}\\n.themes-dark{--colors-green:yellow;}',
+  'background-color_green',
+  '.background-color_green{background-color:var(--colors-green);}:root{--colors-green:green;}\\n.themes-dark{--colors-green:yellow;}',
   'color_red',
   '.color_red{color:red;}',
-  'backgroundColor_red',
-  '.backgroundColor_red{background-color:red;}',
+  'background-color_red',
+  '.background-color_red{background-color:red;}',
 ]);
 
 
@@ -237,12 +237,39 @@ import { addClasses as _addClasses } from 'classy-ui/runtime';
 _addClasses([
   'color_red',
   '.color_red{color:red;}',
-  'backgroundColor_red',
-  '.backgroundColor_red{background-color:red;}',
+  'background-color_red',
+  '.background-color_red{background-color:red;}',
   'display_block',
   '.display_block{display:block;}',
   'display_inline-block',
   '.display_inline-block{display:inline-block;}',
+]);
+
+
+`;
+
+exports[`classy-ui should handle derived classnames: should handle derived classnames 1`] = `
+
+import { c } from 'classy-ui'
+
+{className: c('padding-2')}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { addClasses as _addClasses } from 'classy-ui/runtime';
+{
+  className: 'padding-top_2 padding-right_2 padding-bottom_2 padding-left_2 ';
+}
+
+_addClasses([
+  'padding-top_2',
+  '.padding-top_2{padding-top:0.5rem;}',
+  'padding-right_2',
+  '.padding-right_2{padding-right:0.5rem;}',
+  'padding-bottom_2',
+  '.padding-bottom_2{padding-bottom:0.5rem;}',
+  'padding-left_2',
+  '.padding-left_2{padding-left:0.5rem;}',
 ]);
 
 

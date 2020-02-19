@@ -39,12 +39,14 @@ export const getClassesFromConfig = (
 
   return Object.keys(classname.variants).reduce((aggr, variantKey, variantIndex) => {
     const id = `${camelToDash(classnameKey)}-${variantKey}`;
+    const cssDeriver = config.classnames[classnameKey].css;
     return {
       ...aggr,
       [id]: {
         id,
         classname: classnameKey,
         variant: variantKey,
+        derived: Array.isArray(cssDeriver) ? cssDeriver : null,
         variable:
           classname.variants[variantKey] !== classname.variantsWithoutVariables[variantKey]
             ? {
@@ -386,7 +388,7 @@ export const createClassObject = (
   const variantName = id && classes[id].variant ? classes[id].variant : '';
   const className = baseName + (variantName ? `_${variantName}` : '');
 
-  const uid = [withoutWrappingDecorators.sort().join(':'), className]
+  const uid = [withoutWrappingDecorators.sort().join(':'), camelToDash(className)]
     .filter(Boolean)
     .filter(i => i!.length > 0)
     .join(':');
@@ -401,10 +403,29 @@ export const createClassObject = (
     };
   }
 
+  let name: string;
+  if (id && isProduction && classes[id].derived) {
+    name = classes[id]
+      .derived!.reduce((aggr, key) => {
+        return aggr.concat(classes[`${camelToDash(key)}-${variantName}`].shortName);
+      }, [] as string[])
+      .join(' ');
+  } else if (id && isProduction) {
+    name = classes[id].shortName;
+  } else if (id && classes[id].derived) {
+    name = classes[id]
+      .derived!.reduce((aggr, key) => {
+        return aggr.concat(`${camelToDash(key)}_${variantName}`);
+      }, [] as string[])
+      .join(' ');
+  } else {
+    name = uid;
+  }
+
   return {
     id,
     uid,
-    name: id && isProduction ? classes[id].shortName : uid,
+    name,
     decorators: returnedDecorators,
   };
 };

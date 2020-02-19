@@ -125,5 +125,15 @@ const buttonRed = c(buttonBlue, buttonGreen, 'color-red');
 
 `,
     },
+    {
+      title: 'should handle derived classnames',
+      code: `
+import { c } from 'classy-ui'
+
+{className: c('padding-2')}
+
+
+`,
+    },
   ],
 });
