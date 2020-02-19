@@ -1,7 +1,7 @@
 import { writeFileSync } from 'fs';
 import { join } from 'path';
 
-import { addNamed, addSideEffect } from '@babel/helper-module-imports';
+import { addNamed } from '@babel/helper-module-imports';
 
 import { transform as transformClassesToTypes } from '../config/transform-classes-to-types';
 import { transform as transformConfigToClasses } from '../config/transform-config-to-classes';
@@ -237,7 +237,6 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
 
   if (isProduction) {
     writeFileSync(cssPath, injectProduction(classCollection, classes, config));
-    addSideEffect(state.file.path, 'classy-ui/styles.css');
   } else {
     const runtimeCall = t.expressionStatement(
       t.callExpression(addNamed(state.file.path, 'addClasses', 'classy-ui/runtime'), [
