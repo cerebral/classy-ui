@@ -37,23 +37,8 @@ export const getClassesFromConfig = (
 ) => {
   const classname = config.classnames[classnameKey];
 
-  if (typeof classname === 'function') {
-    const id = `${camelToDash(classnameKey)}`;
-
-    return {
-      [id]: {
-        id,
-        classname: classnameKey,
-        variant: null,
-        css: classname,
-        variable: null,
-        shortName: getShortName(0),
-      },
-    };
-  }
-
   return Object.keys(classname.variants).reduce((aggr, variantKey, variantIndex) => {
-    const id = `${camelToDash(classnameKey)}${variantKey ? `-${variantKey}` : ''}`;
+    const id = `${camelToDash(classnameKey)}-${variantKey}`;
     return {
       ...aggr,
       [id]: {

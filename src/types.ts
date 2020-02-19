@@ -10,36 +10,31 @@ export interface IClass {
   } | null;
 }
 
-export type IClasses = Record<string, IClass>
+export type IClasses = Record<string, IClass>;
 
-export type IVariants = Record<string, string>
+export type IVariants = Record<string, string>;
 
 export type IClassnames<T extends string> = Record<
   string,
-  | ((name: string) => string)
-  | {
-      variants?:
-        | { [name: string]: string }
-        | ((
-            variables: IVariables<T>,
-            utils: {
-              negative: (value: {
-                [key: string]: string;
-              }) => { [key: string]: string };
-            }
-          ) => IVariants);
-      css: (name: string, value: string) => string;
-    }
+  {
+    variants?:
+      | { [name: string]: string }
+      | ((
+          variables: IVariables<T>,
+          utils: {
+            negative: (value: { [key: string]: string }) => { [key: string]: string };
+          },
+        ) => IVariants);
+    css: (name: string, value: string) => string;
+  }
 >;
 
 export interface IEvaluatedClassnames {
-  [name: string]:
-    | ((name: string) => string)
-    | {
-        variants: { [name: string]: string };
-        variantsWithoutVariables: { [name: string]: string };
-        css: (name: string, value: string) => string;
-      };
+  [name: string]: {
+    variants: { [name: string]: string };
+    variantsWithoutVariables: { [name: string]: string };
+    css: (name: string, value: string) => string;
+  };
 }
 
 export type IVariables<T extends string> = {

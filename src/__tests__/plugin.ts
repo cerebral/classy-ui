@@ -92,16 +92,16 @@ c(group(), { 'color-red': true })`,
       code: `
 import { c, group } from 'classy-ui'
 
-c(group(), { 'color-red': true }, 'bg-red', { 'block': true }, 'inline-block')`,
+c(group(), { 'color-red': true }, 'background-color-red', { 'display-block': true }, 'display-inline-block')`,
     },
     {
       title: 'should fix specifiy issue in dynamic composition',
       code: `
 import { c} from 'classy-ui'
-const compose = c('color-blue', 'bg-blue')
-const moreCompose = c('color-green', 'bg-green')
+const compose = c('color-blue', 'background-color-blue')
+const moreCompose = c('color-green', 'background-color-green')
 
-c(compose, moreCompose, 'color-red', 'bg-red')`,
+c(compose, moreCompose, 'color-red', 'background-color-red')`,
     },
     {
       title: 'should handle dynamic calls to some function',

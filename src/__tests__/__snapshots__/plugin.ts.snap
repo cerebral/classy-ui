@@ -8,7 +8,6 @@ group('color-blue', 'color-red')
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import 'classy-ui/preflight.css';
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 ('group color-blue color-red ');
 
@@ -25,7 +24,6 @@ c(group(), { 'color-red': true })
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import 'classy-ui/preflight.css';
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 (true ? 'color_red ' : '') + 'group ';
 
@@ -42,7 +40,6 @@ hover('color-red')
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import 'classy-ui/preflight.css';
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 ('hover:color_red ');
 
@@ -59,7 +56,6 @@ c(md(hover('color-red')))
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import 'classy-ui/preflight.css';
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 ('hover:md:color_red ');
 
@@ -76,7 +72,6 @@ c(md('color-red'))
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import 'classy-ui/preflight.css';
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 ('md:color_red ');
 
@@ -93,7 +88,6 @@ c('color-blue', md(lg(hover('color-red'))))
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import 'classy-ui/preflight.css';
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 ('color_blue hover:lg:md:color_red ');
 
@@ -115,7 +109,6 @@ c(hover('color-red'))
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import 'classy-ui/preflight.css';
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 ('hover:color_red ');
 
@@ -132,7 +125,6 @@ c('color-red')
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import 'classy-ui/preflight.css';
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 ('color_red ');
 
@@ -154,7 +146,6 @@ const buttonRed = c(buttonBlue, buttonGreen, 'color-red');
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import 'classy-ui/preflight.css';
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 import { fixSpecificity as _fixSpecificity2 } from 'classy-ui/runtime';
 import { fixSpecificity as _fixSpecificity } from 'classy-ui/runtime';
@@ -184,34 +175,33 @@ _addClasses([
 exports[`classy-ui should fix specifiy issue in dynamic composition: should fix specifiy issue in dynamic composition 1`] = `
 
 import { c} from 'classy-ui'
-const compose = c('color-blue', 'bg-blue')
-const moreCompose = c('color-green', 'bg-green')
+const compose = c('color-blue', 'background-color-blue')
+const moreCompose = c('color-green', 'background-color-green')
 
-c(compose, moreCompose, 'color-red', 'bg-red')
+c(compose, moreCompose, 'color-red', 'background-color-red')
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import 'classy-ui/preflight.css';
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 import { fixSpecificity as _fixSpecificity } from 'classy-ui/runtime';
-const compose = 'color_blue bg_blue ';
-const moreCompose = 'color_green bg_green ';
+const compose = 'color_blue backgroundColor_blue ';
+const moreCompose = 'color_green backgroundColor_green ';
 
-_fixSpecificity(compose + moreCompose + 'color_red bg_red ');
+_fixSpecificity(compose + moreCompose + 'color_red backgroundColor_red ');
 
 _addClasses([
   'color_blue',
   '.color_blue{color:blue;}',
-  'bg_blue',
-  '.bg_blue{background-color:blue;}',
+  'backgroundColor_blue',
+  '.backgroundColor_blue{background-color:blue;}',
   'color_green',
   '.color_green{color:var(--colors-green);}:root{--colors-green:green;}\\n.themes-dark{--colors-green:yellow;}',
-  'bg_green',
-  '.bg_green{background-color:var(--colors-green);}:root{--colors-green:background-color:green;}\\n.themes-dark{--colors-green:yellow;}',
+  'backgroundColor_green',
+  '.backgroundColor_green{background-color:var(--colors-green);}:root{--colors-green:green;}\\n.themes-dark{--colors-green:yellow;}',
   'color_red',
   '.color_red{color:red;}',
-  'bg_red',
-  '.bg_red{background-color:red;}',
+  'backgroundColor_red',
+  '.backgroundColor_red{background-color:red;}',
 ]);
 
 
@@ -225,7 +215,6 @@ group()
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import 'classy-ui/preflight.css';
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 ('group ');
 
@@ -238,23 +227,22 @@ exports[`classy-ui should handle complex dynamic composition: should handle comp
 
 import { c, group } from 'classy-ui'
 
-c(group(), { 'color-red': true }, 'bg-red', { 'block': true }, 'inline-block')
+c(group(), { 'color-red': true }, 'background-color-red', { 'display-block': true }, 'display-inline-block')
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import 'classy-ui/preflight.css';
 import { addClasses as _addClasses } from 'classy-ui/runtime';
-(true ? 'color_red ' : '') + (true ? 'block ' : '') + 'group bg_red inline-block ';
+(true ? 'color_red ' : '') + (true ? 'display_block ' : '') + 'group backgroundColor_red display_inline-block ';
 
 _addClasses([
   'color_red',
   '.color_red{color:red;}',
-  'bg_red',
-  '.bg_red{background-color:red;}',
-  'block',
-  '.block{display:block;}',
-  'inline-block',
-  '.inline-block{display:inline-block;}',
+  'backgroundColor_red',
+  '.backgroundColor_red{background-color:red;}',
+  'display_block',
+  '.display_block{display:block;}',
+  'display_inline-block',
+  '.display_inline-block{display:inline-block;}',
 ]);
 
 
@@ -268,7 +256,6 @@ c(group(), someFunction())
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import 'classy-ui/preflight.css';
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 someFunction() + 'group ';
 
@@ -285,7 +272,6 @@ c(group())
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import 'classy-ui/preflight.css';
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 ('group ');
 

@@ -11,6 +11,8 @@ export const config: IBaseConfig<
   | 'fontFamily'
   | 'boxShadows'
   | 'opacity'
+  | 'durations'
+  | 'timingFunctions'
 > = {
   variables: {
     breakpoints: {
@@ -155,8 +157,8 @@ export const config: IBaseConfig<
       mono: `${['Menlo', 'Monaco', 'Consolas', '"Liberation Mono"', '"Courier New"', 'monospace'].join(',')}`,
     },
     borderWidths: {
-      '': '1px',
       '0': '0',
+      '1': '1px',
       '2': '2px',
       '4': '4px',
       '8': '8px',
@@ -170,10 +172,10 @@ export const config: IBaseConfig<
       widest: '0.1em',
     },
     borderRadius: {
-      '': '.25rem;',
-      none: '0;',
-      sm: '.125rem;',
-      lg: '.5rem;',
+      none: '0',
+      sm: '.125rem',
+      md: '.25rem',
+      lg: '.5rem',
       full: '9999px',
     },
     lineHeight: {
@@ -185,13 +187,13 @@ export const config: IBaseConfig<
       loose: '2',
     },
     boxShadows: {
-      '': '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
       xs: '0 0 0 1px rgba(0, 0, 0, 0.05)',
       sm: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-      md: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-      lg: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-      xl: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
-      '2xl': '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+      md: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
+      lg: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+      xl: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+      '2xl': '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+      '3xl': '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
       inner: 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)',
       outline: '0 0 0 3px rgba(66, 153, 225, 0.5)',
       none: 'none',
@@ -202,6 +204,22 @@ export const config: IBaseConfig<
       '50': '0.5',
       '75': '0.75',
       '100': '1',
+    },
+    durations: {
+      '75': '75ms',
+      '100': '100ms',
+      '150': '150ms',
+      '200': '200ms',
+      '300': '300ms',
+      '500': '500ms',
+      '700': '700ms',
+      '1000': '1000ms',
+    },
+    timingFunctions: {
+      linear: 'linear',
+      in: 'cubic-bezier(0.4, 0, 1, 1)',
+      out: 'cubic-bezier(0, 0, 0.2, 1)',
+      'in-out': 'cubic-bezier(0.4, 0, 0.2, 1)',
     },
   },
   screens: {
@@ -367,7 +385,7 @@ export const config: IBaseConfig<
     },
     borderCollapse: {
       variants: {
-        '': 'collapse',
+        collapse: 'collapse',
         separate: 'separate',
       },
       css: (name, value) => `${name}{border-collapse:${value};}`,
@@ -451,7 +469,7 @@ export const config: IBaseConfig<
     },
     resize: {
       variants: {
-        '': 'both',
+        both: 'both',
         none: 'none',
         y: 'vertical',
         x: 'horizontal',
@@ -708,7 +726,6 @@ export const config: IBaseConfig<
       },
       css: (name, value) => `${name}{justify-content:${value};}`,
     },
-    clearfix: () => '::after{content: "";display: table;clear: both;}',
     margin: {
       variants: ({ spacing }, { negative }) => ({
         auto: 'auto',
@@ -942,8 +959,6 @@ export const config: IBaseConfig<
       variants: ({ spacing }) => spacing,
       css: (name, value) => `${name}{gap:${value};}`,
     },
-    rowGap: name => `${name}{}`,
-    columnGap: name => `${name}{}`,
     gridTemplateColumns: {
       variants: {
         none: 'none',
@@ -1018,10 +1033,6 @@ export const config: IBaseConfig<
       },
       css: (name, value) => `${name}{grid-column-end:${value};}`,
     },
-    gridTemplateRows: () => `${name}{}`,
-    gridRow: () => `${name}{}`,
-    gridRowStart: () => `${name}{}`,
-    gridRowEnd: () => `${name}{}`,
     transformOrigin: {
       variants: {
         center: 'center',
@@ -1074,7 +1085,6 @@ export const config: IBaseConfig<
       }),
       css: (name, value) => `${name}{transform:translate(${value});}`,
     },
-    skew: () => '',
     transitionProperty: {
       variants: {
         none: 'none',
@@ -1087,30 +1097,22 @@ export const config: IBaseConfig<
       css: (name, value) => `${name}{transition-property:${value};}`,
     },
     transitionTimingFunction: {
-      variants: {
-        linear: 'linear',
-        in: 'cubic-bezier(0.4, 0, 1, 1)',
-        out: 'cubic-bezier(0, 0, 0.2, 1)',
-        'in-out': 'cubic-bezier(0.4, 0, 0.2, 1)',
-      },
+      variants: ({ timingFunctions }) => timingFunctions,
       css: (name, value) => `${name}{transition-timing-function:${value};}`,
     },
     transitionDuration: {
-      variants: {
-        '75': '75ms',
-        '100': '100ms',
-        '150': '150ms',
-        '200': '200ms',
-        '300': '300ms',
-        '500': '500ms',
-        '700': '700ms',
-        '1000': '1000ms',
-      },
+      variants: ({ durations }) => durations,
       css: (name, value) => `${name}{transition-duration:${value};}`,
     },
-    screenReaderOnly: name =>
-      `${name}{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border-width:0;}`,
-    notScreenReaderOnly: () =>
-      `${name}{position:static;width:auto;height:auto;padding:0;margin:0;overflow:visible;clip:auto;white-space:normal;}`,
+    utils: {
+      variants: {
+        clearfix: '::after{content: "";display: table;clear: both;}',
+        'screen-reader':
+          '{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border-width:0;}',
+        'not-screen-reader':
+          '{position:static;width:auto;height:auto;padding:0;margin:0;overflow:visible;clip:auto;white-space:normal;}',
+      },
+      css: (name, value) => `${name}${value}`,
+    },
   },
 };
