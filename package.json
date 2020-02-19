@@ -38,8 +38,7 @@
     "dist",
     "macro",
     "plugin",
-    "runtime",
-    "normalize.css"
+    "runtime"
   ],
   "dependencies": {
     "@types/node": "^8.0.0",

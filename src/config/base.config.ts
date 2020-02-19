@@ -233,27 +233,6 @@ export const config: IBaseConfig<
       },
       css: (name, value) => `${name}{display:${value};}`,
     },
-    flex: {
-      variants: {
-        '': 'display:flex',
-        '1': 'flex:1 1 0%',
-        auto: 'flex:1 1 auto',
-        initial: 'flex:0 1 auto',
-        none: 'flex:none',
-        row: 'flex-direction:row',
-        'row-reverse': 'flex-direction:row-reverse',
-        col: 'flex-direction:column',
-        'col-reverse': 'flex-direction:column-reverse',
-        'no-wrap': 'flex-wrap:nowrap',
-        wrap: 'flex-wrap:wrap',
-        'wrap-reverse': 'flex-wrap:wrap-reverse',
-        grow: 'flex-grow:1',
-        'grow-0': 'flex-grow:0',
-        shrink: 'flex-shrink:1',
-        'shrink-0': 'flex-shrink:0',
-      },
-      css: (name, value) => `${name}{${value};}`,
-    },
     tableLayout: {
       variants: {
         auto: 'auto',
