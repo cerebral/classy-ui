@@ -229,7 +229,7 @@ export const config: IBaseConfig<
         'table-cell': 'table-cell',
         grid: 'grid',
         flex: 'flex',
-        hidden: 'hidden',
+        hidden: 'none',
       },
       css: (name, value) => `${name}{display:${value};}`,
     },
