@@ -45,7 +45,6 @@ export const getClassesFromConfig = (
         id,
         classname: classnameKey,
         variant: variantKey,
-        css: (name: string) => classname.css(name, classname.variants[variantKey]),
         variable:
           classname.variants[variantKey] !== classname.variantsWithoutVariables[variantKey]
             ? {
@@ -237,39 +236,55 @@ export const injectProduction = (classCollection: IExtractedClasses, classes: IC
     const otherDecorators = extractedClass.decorators.filter(decorator => !(decorator in config.screens));
     let classEntry: any;
     try {
-      classEntry = createClassEntry(extractedClass.name, otherDecorators, configClass.css);
+      const prefix = extractedClass.name.substr(0, extractedClass.name.lastIndexOf(':') + 1);
+      const cssProcessor = config.classnames[configClass.classname].css;
+      // The classname definition might references other CSS processors, we extract the base classname for lookups
+      const classnameKeys = Array.isArray(cssProcessor) ? cssProcessor : [configClass.classname];
+
+      classnameKeys.forEach(classnameKey => {
+        const classConfig = config.classnames[classnameKey];
+        const id = `${camelToDash(classnameKey)}-${configClass.variant}`;
+        const name = classes[id].shortName;
+        const classname = prefix + name;
+
+        classEntry = createClassEntry(classname, otherDecorators, evaluatedName =>
+          (classConfig.css as any)(evaluatedName, classConfig.variants[configClass.variant]),
+        );
+
+        if (screenDecorators.length) {
+          screenDecorators.forEach(screen => {
+            productionClassesByType.screens[screen] = productionClassesByType.screens[screen] || [];
+            productionClassesByType.screens[screen].push(classEntry);
+          });
+        } else {
+          productionClassesByType.common[id] = classEntry;
+        }
+
+        if (configClass.variable) {
+          const themes = config.themes || {};
+          const variableValue = configClass.variable.value;
+          const originalValue = configClass.variable.originalValue;
+          const variables = (variableValue.match(/var\(.*\)/) || []).map(varString =>
+            varString.replace(/var\(|\)/g, ''),
+          );
+
+          config.themeNames.forEach(theme => {
+            productionClassesByType.themeVariables[theme] = productionClassesByType.themeVariables[theme] || {};
+            variables.forEach(variable => {
+              const variableParts = variable.substr(2).split('-');
+              const variableKey = variableParts.shift() as string;
+              const variableValueKey = variableParts.join('-');
+
+              productionClassesByType.themeVariables[theme][
+                variable
+              ] = `${variable}:${themes[variableKey][variableValueKey][theme]};`;
+              productionClassesByType.rootVariables[variable] = originalValue;
+            });
+          });
+        }
+      });
     } catch (error) {
       throw new Error(uid + JSON.stringify(extractedClass, null, 2));
-    }
-
-    if (screenDecorators.length) {
-      screenDecorators.forEach(screen => {
-        productionClassesByType.screens[screen] = productionClassesByType.screens[screen] || [];
-        productionClassesByType.screens[screen].push(classEntry);
-      });
-    } else {
-      productionClassesByType.common[configClass.id] = classEntry;
-    }
-
-    if (configClass.variable) {
-      const themes = config.themes || {};
-      const variableValue = configClass.variable.value;
-      const originalValue = configClass.variable.originalValue;
-      const variables = (variableValue.match(/var\(.*\)/) || []).map(varString => varString.replace(/var\(|\)/g, ''));
-
-      config.themeNames.forEach(theme => {
-        productionClassesByType.themeVariables[theme] = productionClassesByType.themeVariables[theme] || {};
-        variables.forEach(variable => {
-          const variableParts = variable.substr(2).split('-');
-          const variableKey = variableParts.shift() as string;
-          const variableValueKey = variableParts.join('-');
-
-          productionClassesByType.themeVariables[theme][
-            variable
-          ] = `${variable}:${themes[variableKey][variableValueKey][theme]};`;
-          productionClassesByType.rootVariables[variable] = originalValue;
-        });
-      });
     }
   });
 
@@ -279,40 +294,57 @@ export const injectProduction = (classCollection: IExtractedClasses, classes: IC
 export const injectDevelopment = (classCollection: IExtractedClasses, classes: IClasses, config: IEvaluatedConfig) => {
   return Object.keys(classCollection).reduce((aggr, uid) => {
     const extractedClass = classCollection[uid];
-    const configClass = classes[extractedClass.id as string];
+    const mainId = extractedClass.id as string;
     const screenDecorators = extractedClass.decorators.filter(decorator => decorator in config.screens);
     const otherDecorators = extractedClass.decorators.filter(decorator => !(decorator in config.screens));
-    const classEntry = createClassEntry(extractedClass.name, otherDecorators, configClass.css);
+    const prefix = extractedClass.name.substr(0, extractedClass.name.lastIndexOf(':') + 1);
+    const configClass = classes[mainId];
+    const cssProcessor = config.classnames[configClass.classname].css;
+    // The classname definition might references other CSS processors, we extract the base classname for lookups
+    const classnameKeys = Array.isArray(cssProcessor) ? cssProcessor : [configClass.classname];
 
-    let css = '';
+    return aggr.concat(
+      classnameKeys.reduce((injections, classnameKey) => {
+        const classConfig = config.classnames[classnameKey];
+        const name = `${camelToDash(classnameKey)}_${configClass.variant}`;
+        const classname = prefix + name;
+        const classEntry = createClassEntry(classname, otherDecorators, evaluatedName =>
+          (classConfig.css as any)(evaluatedName, classConfig.variants[configClass.variant]),
+        );
 
-    if (screenDecorators.length) {
-      screenDecorators.forEach(screen => {
-        css += config.screens[screen](classEntry, config.variables);
-      });
-    } else {
-      css = classEntry;
-    }
+        let css = '';
 
-    if (configClass.variable) {
-      const themes = config.themes || {};
-      const variableValue = configClass.variable.value;
-      const originalValue = configClass.variable.originalValue;
-      const variables = (variableValue.match(/var\(.*\)/) || []).map(varString => varString.replace(/var\(|\)/g, ''));
+        if (screenDecorators.length) {
+          screenDecorators.forEach(screen => {
+            css += config.screens[screen](classEntry, config.variables);
+          });
+        } else {
+          css = classEntry;
+        }
 
-      variables.forEach(variable => {
-        const variableParts = variable.substr(2).split('-');
-        const variableKey = variableParts.shift() as string;
-        const variableValueKey = variableParts.join('-');
+        if (configClass.variable) {
+          const themes = config.themes || {};
+          const variableValue = configClass.variable.value;
+          const originalValue = configClass.variable.originalValue;
+          const variables = (variableValue.match(/var\(.*\)/) || []).map(varString =>
+            varString.replace(/var\(|\)/g, ''),
+          );
 
-        config.themeNames.forEach(theme => {
-          css += `:root{${variable}:${originalValue};}\n.themes-${theme}{${variable}:${themes[variableKey][variableValueKey][theme]};}`;
-        });
-      });
-    }
+          variables.forEach(variable => {
+            const variableParts = variable.substr(2).split('-');
+            const variableKey = variableParts.shift() as string;
+            const variableValueKey = variableParts.join('-');
 
-    return aggr.concat([extractedClass.name, `${css}`]);
-  }, [] as any[]);
+            config.themeNames.forEach(theme => {
+              css += `:root{${variable}:${originalValue};}\n.themes-${theme}{${variable}:${themes[variableKey][variableValueKey][theme]};}`;
+            });
+          });
+        }
+
+        return injections.concat([name, css]);
+      }, [] as string[]),
+    );
+  }, [] as string[]);
 };
 
 export const negative = (scale: { [key: string]: string }) => {

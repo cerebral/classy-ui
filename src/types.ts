@@ -1,9 +1,8 @@
 export interface IClass {
   id: string;
   classname: string;
-  variant: string | null;
+  variant: string;
   shortName: string;
-  css: (name: string) => string;
   variable: {
     value: string;
     originalValue: string;
@@ -25,7 +24,7 @@ export type IClassnames<T extends string> = Record<
             negative: (value: { [key: string]: string }) => { [key: string]: string };
           },
         ) => IVariants);
-    css: (name: string, value: string) => string;
+    css: ((name: string, value: string) => string) | string[];
   }
 >;
 
@@ -33,7 +32,7 @@ export interface IEvaluatedClassnames {
   [name: string]: {
     variants: { [name: string]: string };
     variantsWithoutVariables: { [name: string]: string };
-    css: (name: string, value: string) => string;
+    css: ((name: string, value: string) => string) | string[];
   };
 }
 

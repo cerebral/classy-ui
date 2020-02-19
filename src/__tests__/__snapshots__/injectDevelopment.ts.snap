@@ -1,5 +1,22 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`INJECT DEVELOPMENT should handle references classnames 1`] = `
+Array [
+  "border-top-color_green",
+  ".hover\\\\:border-top-color_green:hover{border-top-color:var(--colors-green);}:root{--colors-green:green;}
+.themes-dark{--colors-green:yellow;}",
+  "border-right-color_green",
+  ".hover\\\\:border-right-color_green:hover{border-right-color:var(--colors-green);}:root{--colors-green:green;}
+.themes-dark{--colors-green:yellow;}",
+  "border-bottom-color_green",
+  ".hover\\\\:border-bottom-color_green:hover{border-bottom-color:var(--colors-green);}:root{--colors-green:green;}
+.themes-dark{--colors-green:yellow;}",
+  "border-left-color_green",
+  ".hover\\\\:border-left-color_green:hover{border-left-color:var(--colors-green);}:root{--colors-green:green;}
+.themes-dark{--colors-green:yellow;}",
+]
+`;
+
 exports[`INJECT DEVELOPMENT should inject both pseudo selector and breakpoint 1`] = `
 Array [
   "hover:md:color_red",
@@ -62,7 +79,7 @@ Array [
 
 exports[`INJECT DEVELOPMENT should inject with pseudo selector 1`] = `
 Array [
-  "hover:color_red",
+  "color_red",
   ".hover\\\\:color_red:hover{color:red;}",
 ]
 `;

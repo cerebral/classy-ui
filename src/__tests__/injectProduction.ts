@@ -87,4 +87,11 @@ describe('INJECT PRODUCTION', () => {
 
     expect(injectProduction(classCollection, classes, config)).toMatchSnapshot();
   });
+  test.only('should handle references classnames', () => {
+    const classCollection: IExtractedClasses = {
+      ['color-green']: createClassObject('border-color-green', ['c', 'hover'], classes, false),
+    };
+
+    expect(injectProduction(classCollection, classes, config)).toMatchSnapshot();
+  });
 });

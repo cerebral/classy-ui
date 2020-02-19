@@ -6,6 +6,8 @@ exports[`INJECT PRODUCTION should group themes 1`] = `".AR_C{color:var(--colors-
 
 exports[`INJECT PRODUCTION should group themes and breakpoints 1`] = `"@media (max-width:768px) {.AR_C{color:var(--colors-green);}.AR_D{color:var(--colors-purple);}}:root{--colors-green:green;--colors-purple:purple;}.themes-dark{--colors-green:yellow;--colors-purple:pink;}"`;
 
+exports[`INJECT PRODUCTION should handle references classnames 1`] = `".hover\\\\:P_C:hover{border-top-color:var(--colors-green);}.hover\\\\:Q_C:hover{border-right-color:var(--colors-green);}.hover\\\\:R_C:hover{border-bottom-color:var(--colors-green);}.hover\\\\:S_C:hover{border-left-color:var(--colors-green);}:root{--colors-green:green;}.themes-dark{--colors-green:yellow;}"`;
+
 exports[`INJECT PRODUCTION should inject both pseudo selector and breakpoint 1`] = `"@media (max-width:768px) {.AR_A:hover{color:red;}}"`;
 
 exports[`INJECT PRODUCTION should inject multiple 1`] = `"@media (max-width:768px) {.AR_A{color:red;}.AR_B:hover{color:blue;}}"`;

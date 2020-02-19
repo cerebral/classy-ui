@@ -13,6 +13,7 @@ export const config: IBaseConfig<
   | 'opacity'
   | 'durations'
   | 'timingFunctions'
+  | 'fontSizes'
 > = {
   variables: {
     breakpoints: {
@@ -221,6 +222,18 @@ export const config: IBaseConfig<
       out: 'cubic-bezier(0, 0, 0.2, 1)',
       'in-out': 'cubic-bezier(0.4, 0, 0.2, 1)',
     },
+    fontSizes: {
+      xs: '0.75rem',
+      sm: '0.875rem',
+      base: '1rem',
+      lg: '1.125rem',
+      xl: '1.25rem',
+      '2xl': '1.5rem',
+      '3xl': '1.875rem',
+      '4xl': '2.25rem',
+      '5xl': '3rem',
+      '6xl': '4rem',
+    },
   },
   screens: {
     sm: (css, { breakpoints }) => `@media (max-width:${breakpoints.sm}) {${css}}`,
@@ -335,7 +348,7 @@ export const config: IBaseConfig<
     },
     borderColor: {
       variants: ({ colors }) => colors,
-      css: (name, value) => `${name}{border-color:${value};}`,
+      css: ['borderTopColor', 'borderRightColor', 'borderBottomColor', 'borderLeftColor'],
     },
     borderTopColor: {
       variants: ({ colors }) => colors,
@@ -355,7 +368,7 @@ export const config: IBaseConfig<
     },
     borderWidth: {
       variants: ({ borderWidths }) => borderWidths,
-      css: (name, value) => `${name}{border-width:${value};}`,
+      css: ['borderTopWidth', 'borderRightWidth', 'borderBottomWidth', 'borderLeftWidth'],
     },
     borderTopWidth: {
       variants: ({ borderWidths }) => borderWidths,
@@ -397,7 +410,7 @@ export const config: IBaseConfig<
         visible: 'visible',
         scroll: 'scroll',
       },
-      css: (name, value) => `${name}{overflow:${value};}`,
+      css: ['overflowX', 'overflowY'],
     },
     overflowX: {
       variants: {
@@ -541,18 +554,7 @@ export const config: IBaseConfig<
       css: (name, value) => `${name}{text-align:${value};}`,
     },
     fontSize: {
-      variants: {
-        xs: '0.75rem',
-        sm: '0.875rem',
-        base: '1rem',
-        lg: '1.125rem',
-        xl: '1.25rem',
-        '2xl': '1.5rem',
-        '3xl': '1.875rem',
-        '4xl': '2.25rem',
-        '5xl': '3rem',
-        '6xl': '4rem',
-      },
+      variants: ({ fontSizes }) => fontSizes,
       css: (name, value) => `${name}{font-size:${value};}`,
     },
     textDecoration: {
@@ -728,11 +730,11 @@ export const config: IBaseConfig<
     },
     margin: {
       variants: ({ spacing }, { negative }) => ({
-        auto: 'auto',
         ...spacing,
         ...negative(spacing),
+        auto: 'auto',
       }),
-      css: (name, value) => `${name}{margin:${value}};`,
+      css: ['marginTop', 'marginRight', 'marginBottom', 'marginLeft'],
     },
     maxHeight: {
       variants: {
@@ -822,59 +824,30 @@ export const config: IBaseConfig<
       css: (name, value) => `${name}{order:${value};}`,
     },
     padding: {
-      variants: ({ spacing }) =>
-        Object.keys(spacing).reduce<IVariants>((aggr, key) => {
-          aggr[key] = `padding:${spacing[key]};`;
-
-          return aggr;
-        }, {}),
-      css: (name, value) => `${name}{${value}}`,
+      variants: ({ spacing }) => spacing,
+      css: ['paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft'],
     },
     paddingTop: {
-      variants: ({ spacing }) =>
-        Object.keys(spacing).reduce<IVariants>((aggr, key) => {
-          aggr[key] = `padding-top:${spacing[key]};`;
-
-          return aggr;
-        }, {}),
-
-      css: (name, value) => `${name}{${value}}`,
+      variants: ({ spacing }) => spacing,
+      css: (name, value) => `${name}{padding-top:${value};}`,
     },
     paddingRight: {
-      variants: ({ spacing }) =>
-        Object.keys(spacing).reduce<IVariants>((aggr, key) => {
-          aggr[key] = `padding-right:${spacing[key]};`;
-
-          return aggr;
-        }, {}),
-
-      css: (name, value) => `${name}{${value}}`,
+      variants: ({ spacing }) => spacing,
+      css: (name, value) => `${name}{padding-right:${value};}`,
     },
     paddingBottom: {
-      variants: ({ spacing }) =>
-        Object.keys(spacing).reduce<IVariants>((aggr, key) => {
-          aggr[key] = `padding-bottom:${spacing[key]};`;
-
-          return aggr;
-        }, {}),
-
-      css: (name, value) => `${name}{${value}}`,
+      variants: ({ spacing }) => spacing,
+      css: (name, value) => `${name}{padding-bottom:${value};}`,
     },
     paddingLeft: {
-      variants: ({ spacing }) =>
-        Object.keys(spacing).reduce<IVariants>((aggr, key) => {
-          aggr[key] = `padding-left:${spacing[key]};`;
-
-          return aggr;
-        }, {}),
-
-      css: (name, value) => `${name}{${value}}`,
+      variants: ({ spacing }) => spacing,
+      css: (name, value) => `${name}{padding-left:${value};}`,
     },
     marginTop: {
       variants: ({ spacing }, { negative }) => ({
         ...spacing,
         ...negative(spacing),
-        auto: 'margin-top:auto;',
+        auto: 'auto;',
       }),
       css: (name, value) => `${name}{margin-top:${value};}`,
     },
@@ -882,7 +855,7 @@ export const config: IBaseConfig<
       variants: ({ spacing }, { negative }) => ({
         ...spacing,
         ...negative(spacing),
-        auto: 'margin-right:auto;',
+        auto: 'auto;',
       }),
       css: (name, value) => `${name}{margin-right:${value};}`,
     },
@@ -890,7 +863,7 @@ export const config: IBaseConfig<
       variants: ({ spacing }, { negative }) => ({
         ...spacing,
         ...negative(spacing),
-        auto: 'margin-bottom:auto;',
+        auto: 'auto;',
       }),
       css: (name, value) => `${name}{margin-bottom:${value};}`,
     },
@@ -898,7 +871,7 @@ export const config: IBaseConfig<
       variants: ({ spacing }, { negative }) => ({
         ...spacing,
         ...negative(spacing),
-        auto: 'margin-left:auto;',
+        auto: 'auto;',
       }),
       css: (name, value) => `${name}{margin-left:${value};}`,
     },

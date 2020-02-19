@@ -71,4 +71,11 @@ describe('INJECT DEVELOPMENT', () => {
 
     expect(injectDevelopment(classCollection, classes, config)).toMatchSnapshot();
   });
+  test('should handle references classnames', () => {
+    const classCollection: IExtractedClasses = {
+      ['color-green']: createClassObject('border-color-green', ['c', 'hover'], classes, false),
+    };
+
+    expect(injectDevelopment(classCollection, classes, config)).toMatchSnapshot();
+  });
 });
