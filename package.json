@@ -1,7 +1,7 @@
 {
   "name": "classy-ui",
-  "version": "2.0.2",
-  "description": "A framework for building and consuming atomic design systems",
+  "version": "3.0.5",
+  "description": "An atomic design system inspired by the wonderful Tailwindcss",
   "author": "Christian Alfoni <christianalfoni@gmail.com>",
   "license": "MIT",
   "repository": "git+https://github.com/cerebral/classy-ui.git",
@@ -39,13 +39,14 @@
     "macro",
     "plugin",
     "runtime",
-    "configs"
+    "normalize.css"
   ],
   "dependencies": {
     "@types/node": "^8.0.0",
     "classnames": "^2.2.6",
     "normalize.css": "^8.0.1",
     "reduce-css-calc": "^2.1.7",
+    "@babel/helper-module-imports": "^7.8.3",
     "tslib": "^1.9.3"
   },
   "devDependencies": {

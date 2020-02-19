@@ -28,6 +28,18 @@ export const addClasses = (classes: string[]) => {
   }
 };
 
+export const fixSpecificity = (classnames: string) => {
+  const a = new Map();
+  for (const n of classnames.split(' ')) {
+    a.set(n.substr(0, n.indexOf('_')), n);
+  }
+  classnames = '';
+  for (const n of a.values()) {
+    classnames += n + ' ';
+  }
+  return classnames;
+};
+
 const throwError = () => {
   throw new Error(
     'CLASSY-UI: The plugin is not active. Either you are in a macro environment and you forgot to import from "classy-ui/macro", or the plugin is not added in your babel configuration',

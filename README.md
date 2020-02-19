@@ -1,5 +1,5 @@
 # classy-ui
 
-A framework for building and consuming atomic design systems
+An atomic design system inspired by the wonderful Tailwindcss
 
-Documentation at [https://cerebral.gitbook.io/classy-ui/](https://cerebral.gitbook.io/classy-ui/).
+Documentation at [https://classy-ui.io](https://classy-ui.io).

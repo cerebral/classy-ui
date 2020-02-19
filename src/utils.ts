@@ -356,9 +356,20 @@ export const createClassObject = (
   classes: IClasses,
   isProduction: boolean,
 ): IExtractedClass => {
-  const withoutWrappingDecorators = decorators.filter(i => !['c', 'group'].includes(i!));
+  if (id && id.startsWith('themes-')) {
+    return {
+      id,
+      name: id,
+      decorators: [],
+    };
+  }
 
-  const uid = [withoutWrappingDecorators.sort().join(':'), id]
+  const withoutWrappingDecorators = decorators.filter(i => !['c', 'group'].includes(i!));
+  const baseName = id ? classes[id].classname : '';
+  const variantName = id && classes[id].variant ? classes[id].variant : '';
+  const className = baseName + (variantName ? `_${variantName}` : '');
+
+  const uid = [withoutWrappingDecorators.sort().join(':'), className]
     .filter(Boolean)
     .filter(i => i!.length > 0)
     .join(':');
@@ -369,12 +380,6 @@ export const createClassObject = (
     return {
       id,
       name: `group ${(id && isProduction ? classes[id].shortName : id) || ''}`,
-      decorators: returnedDecorators,
-    };
-  } else if (uid.startsWith('themes-')) {
-    return {
-      id,
-      name: uid,
       decorators: returnedDecorators,
     };
   }

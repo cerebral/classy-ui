@@ -1,23 +1,23 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`INJECT PRODUCTION should group breakpoints 1`] = `"@media (max-width:768px) {.BD-@{color:red;}.BE-A{color:blue;}}"`;
+exports[`INJECT PRODUCTION should group breakpoints 1`] = `"@media (max-width:768px) {.Q_A{color:red;}.Q_B{color:blue;}}"`;
 
-exports[`INJECT PRODUCTION should group themes 1`] = `".BF-B{color:var(--colors-green);}.BG-C{color:var(--colors-purple);}:root{--colors-green:green;--colors-purple:purple;}.themes-dark{--colors-green:yellow;--colors-purple:pink;}"`;
+exports[`INJECT PRODUCTION should group themes 1`] = `".Q_C{color:var(--colors-green);}.Q_D{color:var(--colors-purple);}:root{--colors-green:green;--colors-purple:purple;}.themes-dark{--colors-green:yellow;--colors-purple:pink;}"`;
 
-exports[`INJECT PRODUCTION should group themes and breakpoints 1`] = `"@media (max-width:768px) {.BF-B{color:var(--colors-green);}.BG-C{color:var(--colors-purple);}}:root{--colors-green:green;--colors-purple:purple;}.themes-dark{--colors-green:yellow;--colors-purple:pink;}"`;
+exports[`INJECT PRODUCTION should group themes and breakpoints 1`] = `"@media (max-width:768px) {.Q_C{color:var(--colors-green);}.Q_D{color:var(--colors-purple);}}:root{--colors-green:green;--colors-purple:purple;}.themes-dark{--colors-green:yellow;--colors-purple:pink;}"`;
 
-exports[`INJECT PRODUCTION should inject both pseudo selector and breakpoint 1`] = `"@media (max-width:768px) {.BD-@:hover{color:red;}}"`;
+exports[`INJECT PRODUCTION should inject both pseudo selector and breakpoint 1`] = `"@media (max-width:768px) {.Q_A:hover{color:red;}}"`;
 
-exports[`INJECT PRODUCTION should inject multiple 1`] = `"@media (max-width:768px) {.BD-@{color:red;}.BE-A:hover{color:blue;}}"`;
+exports[`INJECT PRODUCTION should inject multiple 1`] = `"@media (max-width:768px) {.Q_A{color:red;}.Q_B:hover{color:blue;}}"`;
 
-exports[`INJECT PRODUCTION should inject simple 1`] = `".BD-@{color:red;}"`;
+exports[`INJECT PRODUCTION should inject simple 1`] = `".Q_A{color:red;}"`;
 
-exports[`INJECT PRODUCTION should inject themes 1`] = `"@media (max-width:768px) {.BF-B{color:var(--colors-green);}}:root{--colors-green:green;}.themes-dark{--colors-green:yellow;}"`;
+exports[`INJECT PRODUCTION should inject themes 1`] = `"@media (max-width:768px) {.Q_C{color:var(--colors-green);}}:root{--colors-green:green;}.themes-dark{--colors-green:yellow;}"`;
 
-exports[`INJECT PRODUCTION should inject with breakpoint 1`] = `"@media (max-width:768px) {.BD-@{color:red;}}"`;
+exports[`INJECT PRODUCTION should inject with breakpoint 1`] = `"@media (max-width:768px) {.Q_A{color:red;}}"`;
 
-exports[`INJECT PRODUCTION should inject with multiple breakpoints 1`] = `"@media (max-width:640px) {.BD-@{color:red;}}@media (max-width:1280px) {.BD-@{color:red;}}"`;
+exports[`INJECT PRODUCTION should inject with multiple breakpoints 1`] = `"@media (max-width:640px) {.Q_A{color:red;}}@media (max-width:1280px) {.Q_A{color:red;}}"`;
 
-exports[`INJECT PRODUCTION should inject with multiple pseudo selectors 1`] = `".BD-@:hover{color:red;}"`;
+exports[`INJECT PRODUCTION should inject with multiple pseudo selectors 1`] = `".Q_A:hover{color:red;}"`;
 
-exports[`INJECT PRODUCTION should inject with pseudo selector 1`] = `".BD-@:hover{color:red;}"`;
+exports[`INJECT PRODUCTION should inject with pseudo selector 1`] = `".Q_A:hover{color:red;}"`;

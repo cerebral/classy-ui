@@ -1,6 +1,17 @@
 import { IBaseConfig, IVariants } from '../types';
 
-export const config: IBaseConfig<'breakpoints' | 'spacing' | 'colors'> = {
+export const config: IBaseConfig<
+  | 'breakpoints'
+  | 'spacing'
+  | 'colors'
+  | 'borderWidths'
+  | 'letterSpacing'
+  | 'lineHeight'
+  | 'borderRadius'
+  | 'fontFamily'
+  | 'boxShadows'
+  | 'opacity'
+> = {
   variables: {
     breakpoints: {
       sm: '640px',
@@ -124,6 +135,74 @@ export const config: IBaseConfig<'breakpoints' | 'spacing' | 'colors'> = {
       'pink-800': '#97266d',
       'pink-900': '#702459',
     },
+    fontFamily: {
+      sans: `${[
+        'Inter',
+        '-apple-system',
+        'BlinkMacSystemFont',
+        '"Segoe UI"',
+        'Roboto',
+        '"Helvetica Neue"',
+        'Arial',
+        '"Noto Sans"',
+        'sans-serif',
+        '"Apple Color Emoji"',
+        '"Segoe UI Emoji"',
+        '"Segoe UI Symbol"',
+        '"Noto Color Emoji"',
+      ].join(', ')}`,
+      serif: `${['Georgia', 'Cambria', '"Times New Roman"', 'Times', 'serif'].join(',')}`,
+      mono: `${['Menlo', 'Monaco', 'Consolas', '"Liberation Mono"', '"Courier New"', 'monospace'].join(',')}`,
+    },
+    borderWidths: {
+      '': '1px',
+      '0': '0',
+      '2': '2px',
+      '4': '4px',
+      '8': '8px',
+    },
+    letterSpacing: {
+      tighter: '-0.05em',
+      tight: '-0.025em',
+      normal: '0',
+      wide: '0.025em',
+      wider: '0.05em',
+      widest: '0.1em',
+    },
+    borderRadius: {
+      '': '.25rem;',
+      none: '0;',
+      sm: '.125rem;',
+      lg: '.5rem;',
+      full: '9999px',
+    },
+    lineHeight: {
+      none: '1',
+      tight: '1.25',
+      snug: '1.375',
+      normal: '1.5',
+      relaxed: '1.625',
+      loose: '2',
+    },
+    boxShadows: {
+      '': '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
+      xs: '0 0 0 1px rgba(0, 0, 0, 0.05)',
+      sm: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+      md: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+      lg: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
+      xl: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+      '2xl': '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+      inner: 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)',
+      outline: '0 0 0 3px rgba(66, 153, 225, 0.5)',
+      none: 'none',
+    },
+    opacity: {
+      '0': '0',
+      '25': '0.25',
+      '50': '0.5',
+      '75': '0.75',
+      '100': '1',
+    },
   },
   screens: {
     sm: (css, { breakpoints }) => `@media (max-width:${breakpoints.sm}) {${css}}`,
@@ -132,10 +211,28 @@ export const config: IBaseConfig<'breakpoints' | 'spacing' | 'colors'> = {
     xl: (css, { breakpoints }) => `@media (max-width:${breakpoints.xl}) {${css}}`,
   },
   classnames: {
-    block: name => `${name}{display:block;}`,
-    'inline-block': name => `${name}{display:inline-block;}`,
-    inline: name => `${name}{display:inline;}`,
-    'inline-flex': name => `${name}{display:inline-flex;}`,
+    boxSizing: {
+      variants: {
+        'content-box': 'content-box',
+        'border-box': 'border-box',
+      },
+      css: (name, value) => `${name}{box-sizing:${value};}`,
+    },
+    display: {
+      variants: {
+        block: 'block',
+        'inline-block': 'inline-block',
+        inline: 'inline',
+        'inline-flex': 'inline-flex',
+        table: 'table',
+        'table-row': 'table-row',
+        'table-cell': 'table-cell',
+        grid: 'grid',
+        flex: 'flex',
+        hidden: 'none',
+      },
+      css: (name, value) => `${name}{display:${value};}`,
+    },
     flex: {
       variants: {
         '': 'display:flex',
@@ -157,138 +254,187 @@ export const config: IBaseConfig<'breakpoints' | 'spacing' | 'colors'> = {
       },
       css: (name, value) => `${name}{${value};}`,
     },
-    table: {
+    tableLayout: {
       variants: {
-        '': 'display:table',
-        auto: 'table-layout:auto',
-        fixed: 'table-layout:fixed',
+        auto: 'auto',
+        fixed: 'fixed',
       },
-      css: (name, value) => `${name}{${value};}`,
+      css: (name, value) => `${name}{table-layout:${value};}`,
     },
-    'table-row': name => `${name}{display:table-row;}`,
-    'table-cell': name => `${name}{display:table-cell;}`,
-    grid: name => `${name}{display:grid;}`,
-    hidden: name => `${name}{display:none;}`,
-    static: name => `${name}{position:static;}`,
-    fixed: name => `${name}{position:fixed;}`,
-    absolute: name => `${name}{position:absolute;}`,
-    relative: name => `${name}{position:relative;}`,
-    sticky: name => `${name}{position:sticky;}`,
-    bg: {
-      variants: ({ colors }) => ({
-        fixed: 'background-attachment:fixed',
-        local: 'background-attachment:local',
-        scroll: 'background-attachment:scroll',
-        bottom: 'background-position:bottom',
-        center: 'background-position:center',
-        left: 'background-position:left',
-        'left-bottom': 'background-position:left bottom',
-        'left-top': 'background-position:left top',
-        right: 'background-position:right',
-        'right-bottom': 'background-position:right bottom',
-        'right-top': 'background-position:right top',
-        top: 'background-position:top',
+    position: {
+      variants: {
+        static: 'static',
+        fixed: 'fixed',
+        absolute: 'absolute',
+        relative: 'relative',
+        sticky: 'sticky',
+      },
+      css: (name, value) => `${name}{position:${value};}`,
+    },
+    backgroundAttachment: {
+      variants: {
+        fixed: 'fixed',
+        local: 'local',
+        scroll: 'scroll',
+      },
+      css: (name, value) => `${name}{background-attachment:${value};}`,
+    },
+    backgroundColor: {
+      variants: ({ colors }) => colors,
+      css: (name, value) => `${name}{background-color:${value};}`,
+    },
+    backgroundPosition: {
+      variants: {
+        bottom: 'bottom',
+        center: 'center',
+        left: 'left',
+        'left-bottom': 'left bottom',
+        'left-top': 'left top',
+        right: 'right',
+        'right-bottom': 'right bottom',
+        'right-top': 'right top',
+        top: 'top',
+      },
+      css: (name, value) => `${name}{background-position:${value};}`,
+    },
+    backgroundRepeat: {
+      variants: {
         repeat: 'background-repeat:repeat',
         'no-repeat': 'background-repeat:no-repeat',
         'repeat-x': 'background-repeat:repeat-x',
         'repeat-y': 'background-repeat:repeat-y',
         'repeat-round': 'background-repeat:repeat-round',
         'repeat-space': 'background-repeat:repeat-space',
-        auto: 'background-size:auto',
-        cover: 'background-size:cover',
-        contain: 'background-size:container',
-        ...Object.keys(colors).reduce<IVariants>((aggr, key) => {
-          aggr[key] = `background-color:${colors[key]}`;
-
-          return aggr;
-        }, {}),
-      }),
-      css: (name, value) => `${name}{${value};}`,
+      },
+      css: (name, value) => `${name}{background-repeat:${value};}`,
     },
-    color: {
-      variants: ({ colors }) => colors,
-      css: (name, value) => `${name}{color:${value};}`,
+    backgroundSize: {
+      variants: {
+        auto: 'auto',
+        cover: 'cover',
+        contain: 'contain',
+      },
+      css: (name, value) => `${name}{background-size:${value};}`,
     },
     borderRadius: {
-      variants: {
-        none: '0',
-        sm: '0.125rem',
-        default: '0.25rem',
-        md: '0.375rem',
-        lg: '0.5rem',
-        full: '9999px',
-      },
+      variants: ({ borderRadius }) => borderRadius,
       css: (name, value) => `${name}{border-radius:${value};}`,
     },
-    border: {
-      variants: ({ colors }) => ({
-        '': 'border-width:1px',
-        '0': 'border-width:0',
-        '2': 'border-width:2px',
-        '4': 'border-width:4px',
-        '8': 'border-width:8px',
-        t: 'border-top-width:1px',
-        't-0': 'border-top-width:0',
-        't-2': 'border-top-width:2px',
-        't-4': 'border-top-width:4px',
-        't-8': 'border-top-width:8px',
-        r: 'border-right-width:1px',
-        'r-0': 'border-right-width:0',
-        'r-2': 'border-right-width:2px',
-        'r-4': 'border-right-width:4px',
-        'r-8': 'border-right-width:8px',
-        b: 'border-bottom-width:1px',
-        'b-0': 'border-bottom-width:0',
-        'b-2': 'border-bottom-width:2px',
-        'b-4': 'border-bottom-width:4px',
-        'b-8': 'border-bottom-width:8px',
-        l: 'border-left-width:1px',
-        'l-0': 'border-left-width:0',
-        'l-2': 'border-left-width:2px',
-        'l-4': 'border-left-width:4px',
-        'l-8': 'border-left-width:8px',
-        solid: 'border-style:solid',
-        dashed: 'border-style:dashed',
-        dotted: 'border-style:dotted',
-        double: 'border-style:double',
-        none: 'border-style:none',
-        collapse: 'border-collapse:collapse',
-        separate: 'border-collapse:separate',
-        ...Object.keys(colors).reduce<IVariants>((aggr, key) => {
-          aggr[key] = `border-color:${colors[key]}`;
-
-          return aggr;
-        }, {}),
-      }),
-      css: (name, value) => `${name}{${value};}`,
+    borderTopLeftRadius: {
+      variants: ({ borderRadius }) => borderRadius,
+      css: (name, value) => `${name}{border-top-left-radius:${value};}`,
+    },
+    borderTopRightRadius: {
+      variants: ({ borderRadius }) => borderRadius,
+      css: (name, value) => `${name}{border-top-right-radius:${value};}`,
+    },
+    borderBottomRightRadius: {
+      variants: ({ borderRadius }) => borderRadius,
+      css: (name, value) => `${name}{border-bottom-right-radius:${value};}`,
+    },
+    borderBottomLeftRadius: {
+      variants: ({ borderRadius }) => borderRadius,
+      css: (name, value) => `${name}{border-bottom-left-radius:${value};}`,
+    },
+    borderColor: {
+      variants: ({ colors }) => colors,
+      css: (name, value) => `${name}{border-color:${value};}`,
+    },
+    borderTopColor: {
+      variants: ({ colors }) => colors,
+      css: (name, value) => `${name}{border-top-color:${value};}`,
+    },
+    borderRightColor: {
+      variants: ({ colors }) => colors,
+      css: (name, value) => `${name}{border-right-color:${value};}`,
+    },
+    borderBottomColor: {
+      variants: ({ colors }) => colors,
+      css: (name, value) => `${name}{border-bottom-color:${value};}`,
+    },
+    borderLeftColor: {
+      variants: ({ colors }) => colors,
+      css: (name, value) => `${name}{border-left-color:${value};}`,
+    },
+    borderWidth: {
+      variants: ({ borderWidths }) => borderWidths,
+      css: (name, value) => `${name}{border-width:${value};}`,
+    },
+    borderTopWidth: {
+      variants: ({ borderWidths }) => borderWidths,
+      css: (name, value) => `${name}{border-top-width:${value};}`,
+    },
+    borderRightWidth: {
+      variants: ({ borderWidths }) => borderWidths,
+      css: (name, value) => `${name}{border-right-width:${value};}`,
+    },
+    borderBottomWidth: {
+      variants: ({ borderWidths }) => borderWidths,
+      css: (name, value) => `${name}{border-bottom-width:${value};}`,
+    },
+    borderLeftWidth: {
+      variants: ({ borderWidths }) => borderWidths,
+      css: (name, value) => `${name}{border-left-width:${value};}`,
+    },
+    borderStyle: {
+      variants: {
+        solid: 'solid',
+        dashed: 'dashed',
+        dotted: 'dotted',
+        double: 'double',
+        none: 'none',
+      },
+      css: (name, value) => `${name}{border-style:${value};}`,
+    },
+    borderCollapse: {
+      variants: {
+        '': 'collapse',
+        separate: 'separate',
+      },
+      css: (name, value) => `${name}{border-collapse:${value};}`,
     },
     overflow: {
       variants: {
-        auto: 'overflow:auto',
-        hidden: 'overflow:hidden',
-        visible: 'overflow:visible',
-        scroll: 'overflow:scroll',
-        'x-auto': 'overflow-x:auto',
-        'y-auto': 'overflow-y:auto',
-        'x-hidden': 'overflow-x:hidden',
-        'y-hidden': 'overflow-y:hidden',
-        'x-visible': 'overflow-x:visible',
-        'y-visible': 'overflow-y:visible',
-        'x-scroll': 'overflow-x:scroll',
-        'y-scroll': 'overflow-y:scroll',
+        auto: 'auto',
+        hidden: 'hidden',
+        visible: 'visible',
+        scroll: 'scroll',
       },
-      css: (name, value) => `${name}{${value};}`,
+      css: (name, value) => `${name}{overflow:${value};}`,
     },
-    visible: name => `${name}{visibility:visible;}`,
-    invisible: name => `${name}{visibility:hidden;}`,
-    scrolling: {
+    overflowX: {
+      variants: {
+        auto: 'auto',
+        hidden: 'hidden',
+        visible: 'visible',
+        scroll: 'scroll',
+      },
+      css: (name, value) => `${name}{overflow-x:${value};}`,
+    },
+    overflowY: {
+      variants: {
+        auto: 'auto',
+        hidden: 'hidden',
+        visible: 'visible',
+        scroll: 'scroll',
+      },
+      css: (name, value) => `${name}{overflow-y:${value};}`,
+    },
+    visibility: {
+      variants: {
+        visible: 'visible',
+        hidden: 'hidden',
+      },
+      css: (name, value) => `${name}{visibility:${value};}`,
+    },
+    overflowScrolling: {
       variants: {
         touch: 'touch',
         auto: 'auto',
       },
       css: (name, value) => `${name}{-webkit-overflow-scrolling:${value};}`,
     },
-    items: {
+    alignItems: {
       variants: {
         stretch: 'stretch',
         start: 'flex-start',
@@ -298,19 +444,17 @@ export const config: IBaseConfig<'breakpoints' | 'spacing' | 'colors'> = {
       },
       css: (name, value) => `${name}{align-items:${value};}`,
     },
-    shadow: {
+    flexDirection: {
       variants: {
-        xs: '0 0 0 1px rgba(0, 0, 0, 0.05)',
-        sm: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
-        default: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
-        md: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-        lg: '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
-        xl: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
-        '2xl': '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-        inner: 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)',
-        outline: '0 0 0 3px rgba(66, 153, 225, 0.5)',
-        none: 'none',
+        row: 'row',
+        'row-reverse': 'row-reverse',
+        column: 'column',
+        'column-reverse': 'column-reverse',
       },
+      css: (name, value) => `${name}{flex-direction:${value};}`,
+    },
+    boxShadow: {
+      variants: ({ boxShadows }) => boxShadows,
       css: (name, value) => `${name}{box-shadow:${value};}`,
     },
     outline: {
@@ -335,7 +479,7 @@ export const config: IBaseConfig<'breakpoints' | 'spacing' | 'colors'> = {
       },
       css: (name, value) => `${name}{resize:${value};}`,
     },
-    select: {
+    userSelect: {
       variants: {
         none: 'none',
         text: 'text',
@@ -343,17 +487,6 @@ export const config: IBaseConfig<'breakpoints' | 'spacing' | 'colors'> = {
         auto: 'auto',
       },
       css: (name, value) => `${name}{user-select:${value};}`,
-    },
-    container: {
-      variants: ({ breakpoints }) => ({
-        none: 'width:100%',
-        ...Object.keys(breakpoints).reduce<IVariants>((aggr, key) => {
-          aggr[key] = `max-width:${breakpoints[key]};`;
-
-          return aggr;
-        }, {}),
-      }),
-      css: (name, value) => `${name}{${value};}`,
     },
     cursor: {
       variants: {
@@ -379,75 +512,84 @@ export const config: IBaseConfig<'breakpoints' | 'spacing' | 'colors'> = {
       },
       css: (name, value) => `${name}{appearance:${value};}`,
     },
-    font: {
+    fontWeight: {
       variants: {
-        hairline: 'font-weight:100',
-        thin: 'font-weight:200',
-        light: 'font-weight:300',
-        normal: 'font-weight:400',
-        medium: 'font-weight:500',
-        semibold: 'font-weight:600',
-        bold: 'font-weight:700',
-        extrabold: 'font-weight:800',
-        black: 'font-weight:900',
-        sans: `font-family:${[
-          'Inter',
-          '-apple-system',
-          'BlinkMacSystemFont',
-          '"Segoe UI"',
-          'Roboto',
-          '"Helvetica Neue"',
-          'Arial',
-          '"Noto Sans"',
-          'sans-serif',
-          '"Apple Color Emoji"',
-          '"Segoe UI Emoji"',
-          '"Segoe UI Symbol"',
-          '"Noto Color Emoji"',
-        ].join(', ')}`,
-        serif: `font-family:${['Georgia', 'Cambria', '"Times New Roman"', 'Times', 'serif'].join(',')}`,
-        mono: `font-family:${['Menlo', 'Monaco', 'Consolas', '"Liberation Mono"', '"Courier New"', 'monospace'].join(
-          ',',
-        )}`,
+        hairline: '100',
+        thin: '200',
+        light: '300',
+        normal: '400',
+        medium: '500',
+        semibold: '600',
+        bold: '700',
+        extrabold: '800',
+        black: '900',
       },
-      css: (name, value) => `${name}{${value};}`,
+      css: (name, value) => `${name}{font-weight:${value};}`,
     },
-    text: {
-      variants: ({ colors }) => ({
-        xs: 'font-size:0.75rem',
-        sm: 'font-size:0.875rem',
-        base: 'font-size:1rem',
-        lg: 'font-size:1.125rem',
-        xl: 'font-size:1.25rem',
-        '2xl': 'font-size:1.5rem',
-        '3xl': 'font-size:1.875rem',
-        '4xl': 'font-size:2.25rem',
-        '5xl': 'font-size:3rem',
-        '6xl': 'font-size:4rem',
-        left: 'text-align:left',
-        center: 'text-align:center',
-        right: 'text-align:right',
-        justify: 'text-align:justify',
-        ...Object.keys(colors).reduce<IVariants>((aggr, key) => {
-          aggr[key] = `color:${colors[key]}`;
-
-          return aggr;
-        }, {}),
-      }),
-      css: (name, value) => `${name}{${value};}`,
+    fontFamily: {
+      variants: ({ fontFamily }) => fontFamily,
+      css: (name, value) => `${name}{font-family:${value};}`,
     },
-    underline: name => `${name}{text-decoration:underline;}`,
-    'line-through': name => `${name}{text-decoration:line-through;}`,
-    'no-underline': name => `${name}{text-decoration:none;}`,
-    antialiased: name => `${name}{-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;}`,
-    'subpixel-antialiased': name => `${name}{-webkit-font-smoothing: auto;-moz-osx-font-smoothing: auto;}`,
-    italic: name => `${name}{font-style:italic;}`,
-    'non-italic': name => `${name}{font-style:normal;}`,
-    uppercase: name => `${name}{text-transform:uppercase;}`,
-    lowercase: name => `${name}{text-transform:lowercase;}`,
-    capitalize: name => `${name}{text-transform:capitalize;}`,
-    'normal-case': name => `${name}{text-transform:none;}`,
-    align: {
+    color: {
+      variants: ({ colors }) => colors,
+      css: (name, value) => `${name}{color:${value};}`,
+    },
+    textAlign: {
+      variants: {
+        left: 'left',
+        center: 'center',
+        right: 'right',
+        justify: 'justify',
+      },
+      css: (name, value) => `${name}{text-align:${value};}`,
+    },
+    fontSize: {
+      variants: {
+        xs: '0.75rem',
+        sm: '0.875rem',
+        base: '1rem',
+        lg: '1.125rem',
+        xl: '1.25rem',
+        '2xl': '1.5rem',
+        '3xl': '1.875rem',
+        '4xl': '2.25rem',
+        '5xl': '3rem',
+        '6xl': '4rem',
+      },
+      css: (name, value) => `${name}{font-size:${value};}`,
+    },
+    textDecoration: {
+      variants: {
+        underline: 'underline',
+        'line-through': 'line-through',
+        none: 'none',
+      },
+      css: (name, value) => `${name}{text-decoration:${value};}`,
+    },
+    fontSmoothing: {
+      variants: {
+        antialiased: '-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;',
+        'subpixel-antialiased': '-webkit-font-smoothing: auto;-moz-osx-font-smoothing: auto;',
+      },
+      css: (name, value) => `${name}{${value}}`,
+    },
+    fontStyle: {
+      variants: {
+        italic: 'italic',
+        normal: 'normal',
+      },
+      css: (name, value) => `${name}{font-style:${value};}`,
+    },
+    textTransform: {
+      variants: {
+        uppercase: 'uppercase',
+        lowercase: 'lowercase',
+        capitalize: 'capitalize',
+        none: 'none',
+      },
+      css: (name, value) => `${name}{text-transform:${value}}`,
+    },
+    verticalAlign: {
       variants: {
         baseline: 'baseline',
         top: 'top',
@@ -458,7 +600,7 @@ export const config: IBaseConfig<'breakpoints' | 'spacing' | 'colors'> = {
       },
       css: (name, value) => `${name}{vertical-align:${value};}`,
     },
-    h: {
+    height: {
       variants: ({ spacing }) => ({
         auto: 'auto',
         ...spacing,
@@ -466,17 +608,6 @@ export const config: IBaseConfig<'breakpoints' | 'spacing' | 'colors'> = {
         screen: '100vh',
       }),
       css: (name, value) => `${name}{height:${value};}`,
-    },
-    inset: {
-      variants: {
-        '0': 'top:0;right:0;bottom:0;left:0;',
-        'y-0': 'top:0;bottom:0;',
-        'x-0': 'right:0;left:0;',
-        'y-auto': 'top:auto;bottom:auto;',
-        'x-auto': 'right:auto;left:auto;',
-        auto: 'top:auto;right:auto;bottom:auto;left:auto;',
-      },
-      css: (name, value) => `${name}{${value}}`,
     },
     whitespace: {
       variants: {
@@ -489,73 +620,76 @@ export const config: IBaseConfig<'breakpoints' | 'spacing' | 'colors'> = {
       css: (name, value) => `${name}{white-space:${value};}`,
     },
     top: {
-      variants: {
-        '0': '0',
+      variants: ({ spacing }) => ({
         auto: 'auto',
-      },
+        ...spacing,
+      }),
       css: (name, value) => `${name}{top:${value};}`,
     },
-    break: {
+    overflowWrap: {
       variants: {
-        normal: 'word-brea:normal;overflow-wrap:normal;',
-        words: 'overflow-wrap:break-word;',
-        all: 'word-break:break-all;',
+        normal: 'normal',
+        'break-word': 'break-word',
       },
-      css: (name, value) => `${name}{${value}}`,
+      css: (name, value) => `${name}{overflow-wrap:${value};}`,
     },
-    truncate: () => '{overflow: hidden;text-overflow: ellipsis;white-space: nowrap}',
-    right: {
+    wordBreak: {
       variants: {
-        '0': '0',
-        auto: 'auto',
+        normal: 'normal',
+        'break-all': 'break-all',
       },
+      css: (name, value) => `${name}{word-break:${value};}`,
+    },
+    textOverflow: {
+      variants: {
+        clip: 'clip',
+        ellipsis: 'ellipsis',
+      },
+      css: (name, value) => `${name}{text-overflow:${value};white-space: nowrap;overflow: hidden;}`,
+    },
+    right: {
+      variants: ({ spacing }) => ({
+        auto: 'auto',
+        ...spacing,
+      }),
       css: (name, value) => `${name}{right:${value};}`,
     },
     left: {
-      variants: {
-        '0': '0',
+      variants: ({ spacing }) => ({
         auto: 'auto',
-      },
+        ...spacing,
+      }),
       css: (name, value) => `${name}{left:${value};}`,
     },
     bottom: {
-      variants: {
-        '0': '0',
+      variants: ({ spacing }) => ({
         auto: 'auto',
-      },
+        ...spacing,
+      }),
       css: (name, value) => `${name}{bottom:${value};}`,
     },
-    tracking: {
-      variants: {
-        tighter: '-0.05em',
-        tight: '-0.025em',
-        normal: '0',
-        wide: '0.025em',
-        wider: '0.05em',
-        widest: '0.1em',
-      },
+    letterSpacing: {
+      variants: ({ letterSpacing }) => letterSpacing,
       css: (name, value) => `${name}{letter-spacing:${value};}`,
     },
-    leading: {
-      variants: {
-        none: '1',
-        tight: '1.25',
-        snug: '1.375',
-        normal: '1.5',
-        relaxed: '1.625',
-        loose: '2',
-      },
+    lineHeight: {
+      variants: ({ lineHeight }) => lineHeight,
       css: (name, value) => `${name}{line-height:${value};}`,
     },
-    list: {
+    listStyleType: {
       variants: {
-        none: 'list-style-type:none',
-        disc: 'list-style-type:disc',
-        decimal: 'list-style-type:decimal',
-        inside: 'list-style-position:inside',
-        outside: 'list-style-position:outside',
+        none: 'none',
+        disc: 'disc',
+        decimal: 'decimal',
       },
-      css: (name, value) => `${name}{${value};}`,
+      css: (name, value) => `${name}{list-style-type:${value};}`,
+    },
+    listStylePosition: {
+      variants: {
+        inside: 'inside',
+        outside: 'outside',
+      },
+      css: (name, value) => `${name}{list-style-position:${value};}`,
     },
     float: {
       variants: {
@@ -565,7 +699,7 @@ export const config: IBaseConfig<'breakpoints' | 'spacing' | 'colors'> = {
       },
       css: (name, value) => `${name}{float:${value};}`,
     },
-    content: {
+    alignContent: {
       variants: {
         start: 'flex-start',
         center: 'center',
@@ -575,7 +709,7 @@ export const config: IBaseConfig<'breakpoints' | 'spacing' | 'colors'> = {
       },
       css: (name, value) => `${name}{align-content:${value};}`,
     },
-    self: {
+    alignSelf: {
       variants: {
         auto: 'auto',
         start: 'flex-start',
@@ -585,7 +719,7 @@ export const config: IBaseConfig<'breakpoints' | 'spacing' | 'colors'> = {
       },
       css: (name, value) => `${name}{align-self:${value};}`,
     },
-    justify: {
+    justifyContent: {
       variants: {
         start: 'flex-start',
         center: 'center',
@@ -604,14 +738,14 @@ export const config: IBaseConfig<'breakpoints' | 'spacing' | 'colors'> = {
       }),
       css: (name, value) => `${name}{margin:${value}};`,
     },
-    maxH: {
+    maxHeight: {
       variants: {
         full: '100%',
         screen: '100vh',
       },
       css: (name, value) => `${name}{max-height:${value};}`,
     },
-    maxW: {
+    maxWidth: {
       variants: {
         none: 'none',
         xs: '20rem',
@@ -628,7 +762,7 @@ export const config: IBaseConfig<'breakpoints' | 'spacing' | 'colors'> = {
       },
       css: (name, value) => `${name}{max-width:${value};}`,
     },
-    minH: {
+    minHeight: {
       variants: {
         '0': '0',
         full: '100%',
@@ -636,41 +770,39 @@ export const config: IBaseConfig<'breakpoints' | 'spacing' | 'colors'> = {
       },
       css: (name, value) => `${name}{min-height:${value};}`,
     },
-    minW: {
+    minWidth: {
       variants: {
         '0': '0',
         full: '100%',
       },
       css: (name, value) => `${name}{min-width:${value};}`,
     },
-    object: {
+    objectFit: {
       variants: {
-        contain: 'object-fit:contain',
-        cover: 'object-fit:cover',
-        fill: 'object-fit:fill',
-        none: 'object-fit:none',
-        'scale-down': 'object-fit:scale-down',
-        bottom: 'object-position:bottom',
-        center: 'object-position:center',
-        left: 'object-position:left',
-        'left-bottom': 'object-position:left bottom',
-        'left-top': 'object-position:left top',
-        right: 'object-position:right',
-        'right-bottom': 'object-position:right bottom',
-        'right-top': 'object-position:right top',
-        top: 'object-position:top',
+        contain: 'contain',
+        cover: 'cover',
+        fill: 'fill',
+        none: 'none',
+        'scale-down': 'scale-down',
       },
-      css: (name, value) => `${name}{${value};}`,
+      css: (name, value) => `${name}{object-fit:${value};}`,
     },
-
-    opacity: {
+    objectPosition: {
       variants: {
-        '0': '0',
-        '25': '0.25',
-        '50': '0.5',
-        '75': '0.75',
-        '100': '1',
+        bottom: 'bottom',
+        center: 'center',
+        left: 'left',
+        'left-bottom': 'left bottom',
+        'left-top': 'left top',
+        right: 'right',
+        'right-bottom': 'right bottom',
+        'right-top': 'right top',
+        top: 'top',
       },
+      css: (name, value) => `${name}{object-position:${value};}`,
+    },
+    opacity: {
+      variants: ({ opacity }) => opacity,
       css: (name, value) => `${name}{opacity:${value};}`,
     },
     order: {
@@ -693,7 +825,7 @@ export const config: IBaseConfig<'breakpoints' | 'spacing' | 'colors'> = {
       },
       css: (name, value) => `${name}{order:${value};}`,
     },
-    p: {
+    padding: {
       variants: ({ spacing }) =>
         Object.keys(spacing).reduce<IVariants>((aggr, key) => {
           aggr[key] = `padding:${spacing[key]};`;
@@ -702,27 +834,7 @@ export const config: IBaseConfig<'breakpoints' | 'spacing' | 'colors'> = {
         }, {}),
       css: (name, value) => `${name}{${value}}`,
     },
-    py: {
-      variants: ({ spacing }) =>
-        Object.keys(spacing).reduce<IVariants>((aggr, key) => {
-          aggr[key] = `padding-top:${spacing[key]};padding-bottom:${spacing[key]};`;
-
-          return aggr;
-        }, {}),
-
-      css: (name, value) => `${name}{${value}}`,
-    },
-    px: {
-      variants: ({ spacing }) =>
-        Object.keys(spacing).reduce<IVariants>((aggr, key) => {
-          aggr[key] = `padding-left:${spacing[key]};padding-right:${spacing[key]};`;
-
-          return aggr;
-        }, {}),
-
-      css: (name, value) => `${name}{${value}}`,
-    },
-    pt: {
+    paddingTop: {
       variants: ({ spacing }) =>
         Object.keys(spacing).reduce<IVariants>((aggr, key) => {
           aggr[key] = `padding-top:${spacing[key]};`;
@@ -732,7 +844,7 @@ export const config: IBaseConfig<'breakpoints' | 'spacing' | 'colors'> = {
 
       css: (name, value) => `${name}{${value}}`,
     },
-    pr: {
+    paddingRight: {
       variants: ({ spacing }) =>
         Object.keys(spacing).reduce<IVariants>((aggr, key) => {
           aggr[key] = `padding-right:${spacing[key]};`;
@@ -742,7 +854,7 @@ export const config: IBaseConfig<'breakpoints' | 'spacing' | 'colors'> = {
 
       css: (name, value) => `${name}{${value}}`,
     },
-    pb: {
+    paddingBottom: {
       variants: ({ spacing }) =>
         Object.keys(spacing).reduce<IVariants>((aggr, key) => {
           aggr[key] = `padding-bottom:${spacing[key]};`;
@@ -752,7 +864,7 @@ export const config: IBaseConfig<'breakpoints' | 'spacing' | 'colors'> = {
 
       css: (name, value) => `${name}{${value}}`,
     },
-    pl: {
+    paddingLeft: {
       variants: ({ spacing }) =>
         Object.keys(spacing).reduce<IVariants>((aggr, key) => {
           aggr[key] = `padding-left:${spacing[key]};`;
@@ -762,86 +874,37 @@ export const config: IBaseConfig<'breakpoints' | 'spacing' | 'colors'> = {
 
       css: (name, value) => `${name}{${value}}`,
     },
-    m: {
-      variants: ({ spacing }) => ({
-        ...Object.keys(spacing).reduce<IVariants>((aggr, key) => {
-          aggr[key] = `margin:${spacing[key]};`;
-
-          return aggr;
-        }, {}),
-        auto: 'margin:auto;',
-      }),
-      css: (name, value) => `${name}{${value}}`,
-    },
-    my: {
-      variants: ({ spacing }) => ({
-        ...Object.keys(spacing).reduce<IVariants>((aggr, key) => {
-          aggr[key] = `margin-top:${spacing[key]};margin-bottom:${spacing[key]};`;
-
-          return aggr;
-        }, {}),
-        auto: 'margin-top:auto;margin-bottom:auto;',
-      }),
-      css: (name, value) => `${name}{${value}}`,
-    },
-    mx: {
-      variants: ({ spacing }) => ({
-        ...Object.keys(spacing).reduce<IVariants>((aggr, key) => {
-          aggr[key] = `margin-left:${spacing[key]};margin-right:${spacing[key]};`;
-
-          return aggr;
-        }, {}),
-        auto: 'margin-left:auto;margin-right:auto;',
-      }),
-      css: (name, value) => `${name}{${value}}`,
-    },
-    mt: {
-      variants: ({ spacing }) => ({
-        ...Object.keys(spacing).reduce<IVariants>((aggr, key) => {
-          aggr[key] = `margin-top:${spacing[key]};`;
-
-          return aggr;
-        }, {}),
+    marginTop: {
+      variants: ({ spacing }, { negative }) => ({
+        ...spacing,
+        ...negative(spacing),
         auto: 'margin-top:auto;',
       }),
-      css: (name, value) => `${name}{${value}}`,
+      css: (name, value) => `${name}{margin-top:${value};}`,
     },
-    mr: {
-      variants: ({ spacing }) => ({
-        ...Object.keys(spacing).reduce<IVariants>((aggr, key) => {
-          aggr[key] = `margin-right:${spacing[key]};`;
-
-          return aggr;
-        }, {}),
+    marginRight: {
+      variants: ({ spacing }, { negative }) => ({
+        ...spacing,
+        ...negative(spacing),
         auto: 'margin-right:auto;',
       }),
-      css: (name, value) => `${name}{${value}}`,
+      css: (name, value) => `${name}{margin-right:${value};}`,
     },
-    mb: {
-      variants: ({ spacing }) => ({
-        ...Object.keys(spacing).reduce<IVariants>((aggr, key) => {
-          aggr[key] = `margin-bottom:${spacing[key]};`;
-
-          return aggr;
-        }, {}),
+    marginBottom: {
+      variants: ({ spacing }, { negative }) => ({
+        ...spacing,
+        ...negative(spacing),
         auto: 'margin-bottom:auto;',
       }),
-      css: (name, value) => `${name}{${value}}`,
+      css: (name, value) => `${name}{margin-bottom:${value};}`,
     },
-    ml: {
-      variants: ({ spacing }) => ({
-        ...Object.keys(spacing).reduce<IVariants>((aggr, key) => {
-          aggr[key] = `margin-left:${spacing[key]};`;
-
-          return aggr;
-        }, {}),
+    marginLeft: {
+      variants: ({ spacing }, { negative }) => ({
+        ...spacing,
+        ...negative(spacing),
         auto: 'margin-left:auto;',
       }),
-      css: (name, value) => `${name}{${value}}`,
-    },
-    placeholder: {
-      variants: ({ colors }) => colors,
-      css: (name, value) => `${name}::placeholder{color:${value};}`,
+      css: (name, value) => `${name}{margin-left:${value};}`,
     },
     stroke: {
       variants: {
@@ -849,7 +912,7 @@ export const config: IBaseConfig<'breakpoints' | 'spacing' | 'colors'> = {
       },
       css: (name, value) => `${name}{stroke:${value};}`,
     },
-    w: {
+    width: {
       variants: ({ spacing }) => ({
         auto: 'auto',
         ...spacing,
@@ -884,7 +947,7 @@ export const config: IBaseConfig<'breakpoints' | 'spacing' | 'colors'> = {
       }),
       css: (name, value) => `${name}{width:${value};}`,
     },
-    z: {
+    zIndex: {
       variants: {
         auto: 'auto',
         '0': '0',
@@ -1033,56 +1096,6 @@ export const config: IBaseConfig<'breakpoints' | 'spacing' | 'colors'> = {
       css: (name, value) => `${name}{transform:translate(${value});}`,
     },
     skew: () => '',
-    rounded: {
-      variants: {
-        '': 'border-radius:.25rem;',
-        none: 'border-radius:0;',
-        sm: 'border-radius:.125rem;',
-        lg: 'border-radius:.5rem;',
-        full: 'border-radius:9999px',
-        't-none': 'border-radius-top-left:0;border-radius-top-right:0;',
-        'r-none': 'border-radius-top-right:0;border-radius-bottom-right:0;',
-        'b-none': 'border-radius-bottom-left:0;border-radius-bottom-right:0;',
-        'l-none': 'border-radius-bottom-left:0;border-radius-top-left:0;',
-        't-sm': 'border-top-left-radius:.125rem;border-top-right-radius:.125rem;',
-        'r-sm': 'border-top-right-radius:.125rem;border-bottom-right-radius:.125rem;',
-        'b-sm': 'border-bottom-right-radius: .125rem;border-bottom-left-radius:.125rem;',
-        'l-sm': 'border-top-left-radius:.125rem;border-bottom-left-radius:.125rem;',
-        t: 'border-top-left-radius:.25rem;border-top-right-radius:.25rem;',
-        r: 'border-top-right-radius:.25rem;border-bottom-right-radius:.25rem;',
-        b: 'border-bottom-right-radius:.25rem;border-bottom-left-radius:.25rem;',
-        l: 'border-top-left-radius:.25rem;border-bottom-left-radius:.25rem;',
-        't-lg': 'border-top-left-radius:.5rem;border-top-right-radius:.5rem;',
-        'r-lg': 'border-top-right-radius:.5rem;border-bottom-right-radius:.5rem;',
-        'b-lg': 'border-bottom-right-radius:.5rem;border-bottom-left-radius:.5rem;',
-        'l-lg': 'border-top-left-radius:.5rem;border-bottom-left-radius:.5rem;',
-        't-full': 'border-top-left-radius:9999px;border-top-right-radius:9999px;',
-        'r-full': 'border-top-right-radius:9999px;border-bottom-right-radius:9999px;',
-        'b-full': 'border-bottom-right-radius:9999px;border-bottom-left-radius:9999px;',
-        'l-full': 'border-top-left-radius:9999px;border-bottom-left-radius:9999px;',
-        'tl-none': 'border-top-left-radius:0;',
-        'tr-none': 'border-top-right-radius:0;',
-        'br-none': 'border-bottom-right-radius:0;',
-        'bl-none': 'border-bottom-left-radius:0;',
-        'tl-sm': 'border-top-left-radius:.125rem;',
-        'tr-sm': 'border-top-right-radius:.125rem;',
-        'br-sm': 'border-bottom-right-radius:.125rem;',
-        'bl-sm': 'border-bottom-left-radius:.125rem;',
-        tl: 'border-top-left-radius:.25rem;',
-        tr: 'border-top-right-radius:.25rem;',
-        br: 'border-bottom-right-radius:.25rem;',
-        bl: 'border-bottom-left-radius:.25rem;',
-        'tl-lg': 'border-top-left-radius:.5rem;',
-        'tr-lg': 'border-top-right-radius:.5rem;',
-        'br-lg': 'border-bottom-right-radius:.5rem;',
-        'bl-lg': 'border-bottom-left-radius:.5rem;',
-        'tl-full': 'border-top-left-radius:9999px;',
-        'tr-full': 'border-top-right-radius:9999px;',
-        'br-full': 'border-bottom-right-radius:9999px;',
-        'bl-full': 'border-bottom-left-radius:9999px;',
-      },
-      css: (name, value) => `${name}{${value}}`,
-    },
     transitionProperty: {
       variants: {
         none: 'none',
@@ -1116,9 +1129,9 @@ export const config: IBaseConfig<'breakpoints' | 'spacing' | 'colors'> = {
       },
       css: (name, value) => `${name}{transition-duration:${value};}`,
     },
-    srOnly: name =>
+    screenReaderOnly: name =>
       `${name}{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border-width:0;}`,
-    notSrOnly: () =>
+    notScreenReaderOnly: () =>
       `${name}{position:static;width:auto;height:auto;padding:0;margin:0;overflow:visible;clip:auto;white-space:normal;}`,
   },
 };

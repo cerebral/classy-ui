@@ -8,8 +8,8 @@ group('color-blue', 'color-red')
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
+import 'classy-ui/preflight.css';
 import { addClasses as _addClasses } from 'classy-ui/runtime';
-import { group } from 'classy-ui';
 ('group color-blue color-red ');
 
 _addClasses([]);
@@ -25,11 +25,11 @@ c(group(), { 'color-red': true })
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
+import 'classy-ui/preflight.css';
 import { addClasses as _addClasses } from 'classy-ui/runtime';
-import { c, group } from 'classy-ui';
-(true ? 'color-red ' : ' ').replace(/(?:^|\\s)(?:)[^\\s]+/g, '') + 'group ';
+(true ? 'color_red ' : '') + 'group ';
 
-_addClasses(['color-red', '.color-red{color:red;}']);
+_addClasses(['color_red', '.color_red{color:red;}']);
 
 
 `;
@@ -42,11 +42,11 @@ hover('color-red')
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
+import 'classy-ui/preflight.css';
 import { addClasses as _addClasses } from 'classy-ui/runtime';
-import { c, hover } from 'classy-ui';
-('hover:color-red ');
+('hover:color_red ');
 
-_addClasses(['hover:color-red', '.hover\\\\:color-red:hover{color:red;}']);
+_addClasses(['hover:color_red', '.hover\\\\:color_red:hover{color:red;}']);
 
 
 `;
@@ -59,11 +59,11 @@ c(md(hover('color-red')))
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
+import 'classy-ui/preflight.css';
 import { addClasses as _addClasses } from 'classy-ui/runtime';
-import { c, hover, md } from 'classy-ui';
-('hover:md:color-red ');
+('hover:md:color_red ');
 
-_addClasses(['hover:md:color-red', '@media (max-width:768px) {.hover\\\\:md\\\\:color-red:hover{color:red;}}']);
+_addClasses(['hover:md:color_red', '@media (max-width:768px) {.hover\\\\:md\\\\:color_red:hover{color:red;}}']);
 
 
 `;
@@ -76,11 +76,11 @@ c(md('color-red'))
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
+import 'classy-ui/preflight.css';
 import { addClasses as _addClasses } from 'classy-ui/runtime';
-import { c, md } from 'classy-ui';
-('md:color-red ');
+('md:color_red ');
 
-_addClasses(['md:color-red', '@media (max-width:768px) {.md\\\\:color-red{color:red;}}']);
+_addClasses(['md:color_red', '@media (max-width:768px) {.md\\\\:color_red{color:red;}}']);
 
 
 `;
@@ -93,15 +93,15 @@ c('color-blue', md(lg(hover('color-red'))))
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
+import 'classy-ui/preflight.css';
 import { addClasses as _addClasses } from 'classy-ui/runtime';
-import { c, hover, md, lg } from 'classy-ui';
-('color-blue hover:lg:md:color-red ');
+('color_blue hover:lg:md:color_red ');
 
 _addClasses([
-  'color-blue',
-  '.color-blue{color:blue;}',
-  'hover:lg:md:color-red',
-  '@media (max-width:1024px) {.hover\\\\:lg\\\\:md\\\\:color-red:hover{color:red;}}@media (max-width:768px) {.hover\\\\:lg\\\\:md\\\\:color-red:hover{color:red;}}',
+  'color_blue',
+  '.color_blue{color:blue;}',
+  'hover:lg:md:color_red',
+  '@media (max-width:1024px) {.hover\\\\:lg\\\\:md\\\\:color_red:hover{color:red;}}@media (max-width:768px) {.hover\\\\:lg\\\\:md\\\\:color_red:hover{color:red;}}',
 ]);
 
 
@@ -115,11 +115,11 @@ c(hover('color-red'))
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
+import 'classy-ui/preflight.css';
 import { addClasses as _addClasses } from 'classy-ui/runtime';
-import { c, hover } from 'classy-ui';
-('hover:color-red ');
+('hover:color_red ');
 
-_addClasses(['hover:color-red', '.hover\\\\:color-red:hover{color:red;}']);
+_addClasses(['hover:color_red', '.hover\\\\:color_red:hover{color:red;}']);
 
 
 `;
@@ -132,11 +132,51 @@ c('color-red')
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
+import 'classy-ui/preflight.css';
 import { addClasses as _addClasses } from 'classy-ui/runtime';
-import { c } from 'classy-ui';
-('color-red ');
+('color_red ');
 
-_addClasses(['color-red', '.color-red{color:red;}']);
+_addClasses(['color_red', '.color_red{color:red;}']);
+
+
+`;
+
+exports[`classy-ui should fix specificity inside object: should fix specificity inside object 1`] = `
+
+import { c, hover } from 'classy-ui'
+
+const buttonBlue = c('color-blue');
+const buttonGreen = c('color-green');
+
+const buttonRed = c(buttonBlue, buttonGreen, 'color-red');
+
+{className: c(buttonRed, hover('color-green'))}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import 'classy-ui/preflight.css';
+import { addClasses as _addClasses } from 'classy-ui/runtime';
+import { fixSpecificity as _fixSpecificity2 } from 'classy-ui/runtime';
+import { fixSpecificity as _fixSpecificity } from 'classy-ui/runtime';
+const buttonBlue = 'color_blue ';
+const buttonGreen = 'color_green ';
+
+const buttonRed = _fixSpecificity(buttonBlue + buttonGreen + 'color_red ');
+
+{
+  className: _fixSpecificity2(buttonRed + 'hover:color_green ');
+}
+
+_addClasses([
+  'color_blue',
+  '.color_blue{color:blue;}',
+  'color_green',
+  '.color_green{color:var(--colors-green);}:root{--colors-green:green;}\\n.themes-dark{--colors-green:yellow;}',
+  'color_red',
+  '.color_red{color:red;}',
+  'hover:color_green',
+  '.hover\\\\:color_green:hover{color:var(--colors-green);}:root{--colors-green:green;}\\n.themes-dark{--colors-green:yellow;}',
+]);
 
 
 `;
@@ -151,25 +191,27 @@ c(compose, moreCompose, 'color-red', 'bg-red')
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
+import 'classy-ui/preflight.css';
 import { addClasses as _addClasses } from 'classy-ui/runtime';
-import { c } from 'classy-ui';
-const compose = 'color-blue bg-blue ';
-const moreCompose = 'color-green bg-green ';
-(compose + moreCompose).replace(/(?:^|\\s)(?:color-|bg-)[^\\s]+/g, '') + 'color-red bg-red ';
+import { fixSpecificity as _fixSpecificity } from 'classy-ui/runtime';
+const compose = 'color_blue bg_blue ';
+const moreCompose = 'color_green bg_green ';
+
+_fixSpecificity(compose + moreCompose + 'color_red bg_red ');
 
 _addClasses([
-  'color-blue',
-  '.color-blue{color:blue;}',
-  'bg-blue',
-  '.bg-blue{background-color:blue;}',
-  'color-green',
-  '.color-green{color:var(--colors-green);}:root{--colors-green:green;}\\n.themes-dark{--colors-green:yellow;}',
-  'bg-green',
-  '.bg-green{background-color:var(--colors-green);}:root{--colors-green:background-color:green;}\\n.themes-dark{--colors-green:yellow;}',
-  'color-red',
-  '.color-red{color:red;}',
-  'bg-red',
-  '.bg-red{background-color:red;}',
+  'color_blue',
+  '.color_blue{color:blue;}',
+  'bg_blue',
+  '.bg_blue{background-color:blue;}',
+  'color_green',
+  '.color_green{color:var(--colors-green);}:root{--colors-green:green;}\\n.themes-dark{--colors-green:yellow;}',
+  'bg_green',
+  '.bg_green{background-color:var(--colors-green);}:root{--colors-green:background-color:green;}\\n.themes-dark{--colors-green:yellow;}',
+  'color_red',
+  '.color_red{color:red;}',
+  'bg_red',
+  '.bg_red{background-color:red;}',
 ]);
 
 
@@ -183,8 +225,8 @@ group()
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
+import 'classy-ui/preflight.css';
 import { addClasses as _addClasses } from 'classy-ui/runtime';
-import { c, group } from 'classy-ui';
 ('group ');
 
 _addClasses([]);
@@ -200,21 +242,37 @@ c(group(), { 'color-red': true }, 'bg-red', { 'block': true }, 'inline-block')
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
+import 'classy-ui/preflight.css';
 import { addClasses as _addClasses } from 'classy-ui/runtime';
-import { c, group } from 'classy-ui';
-((true ? 'color-red ' : ' ') + (true ? 'block ' : ' ')).replace(/(?:^|\\s)(?:|bg-|inline-)[^\\s]+/g, '') +
-  'group bg-red inline-block ';
+(true ? 'color_red ' : '') + (true ? 'block ' : '') + 'group bg_red inline-block ';
 
 _addClasses([
-  'color-red',
-  '.color-red{color:red;}',
-  'bg-red',
-  '.bg-red{background-color:red;}',
+  'color_red',
+  '.color_red{color:red;}',
+  'bg_red',
+  '.bg_red{background-color:red;}',
   'block',
   '.block{display:block;}',
   'inline-block',
   '.inline-block{display:inline-block;}',
 ]);
+
+
+`;
+
+exports[`classy-ui should handle dynamic calls to some function: should handle dynamic calls to some function 1`] = `
+
+import { c, group } from 'classy-ui'
+
+c(group(), someFunction())
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import 'classy-ui/preflight.css';
+import { addClasses as _addClasses } from 'classy-ui/runtime';
+someFunction() + 'group ';
+
+_addClasses([]);
 
 
 `;
@@ -227,28 +285,12 @@ c(group())
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
+import 'classy-ui/preflight.css';
 import { addClasses as _addClasses } from 'classy-ui/runtime';
-import { c, group } from 'classy-ui';
 ('group ');
 
 _addClasses([]);
 
-
-`;
-
-exports[`classy-ui should throw if group was renamed: should throw if group was renamed 1`] = `
-
-import { c, group as g } from 'classy-ui'
-
-c(group())
-
-      ↓ ↓ ↓ ↓ ↓ ↓
-
-SyntaxError: unknown: Composing variabels is only allowed with classnames()
-[0m [90m 1 | [39m[36mimport[39m { c[33m,[39m group as g } from [32m'classy-ui'[39m[0m
-[0m [90m 2 | [39m[0m
-[0m[31m[1m>[22m[39m[90m 3 | [39mc(group())[0m
-[0m [90m   | [39m  [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[0m
 
 `;
 
