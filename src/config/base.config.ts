@@ -394,7 +394,47 @@ export const config: IBaseConfig<
         double: 'double',
         none: 'none',
       },
-      css: (name, value) => `${name}{border-style:${value};}`,
+      css: ['borderTopStyle', 'borderRightStyle', 'borderBottomStyle', 'borderLeftStyle'],
+    },
+    borderTopStyle: {
+      variants: {
+        solid: 'solid',
+        dashed: 'dashed',
+        dotted: 'dotted',
+        double: 'double',
+        none: 'none',
+      },
+      css: (name, value) => `${name}{border-top-style:${value};}`,
+    },
+    borderRightStyle: {
+      variants: {
+        solid: 'solid',
+        dashed: 'dashed',
+        dotted: 'dotted',
+        double: 'double',
+        none: 'none',
+      },
+      css: (name, value) => `${name}{border-right-style:${value};}`,
+    },
+    borderBottomStyle: {
+      variants: {
+        solid: 'solid',
+        dashed: 'dashed',
+        dotted: 'dotted',
+        double: 'double',
+        none: 'none',
+      },
+      css: (name, value) => `${name}{border-bottom-style:${value};}`,
+    },
+    borderLeftStyle: {
+      variants: {
+        solid: 'solid',
+        dashed: 'dashed',
+        dotted: 'dotted',
+        double: 'double',
+        none: 'none',
+      },
+      css: (name, value) => `${name}{border-left-style:${value};}`,
     },
     borderCollapse: {
       variants: {
