@@ -8,15 +8,15 @@ import { transform as transformConfigToClasses } from '../config/transform-confi
 import { IExtractedClass, IExtractedClasses } from '../types';
 import { createClassObject, evaluateConfig, getUserConfig, injectDevelopment, injectProduction } from '../utils';
 
-const cssPath = join(process.cwd(), 'node_modules', 'classy-ui', 'styles.css');
+const cssPath = join(__dirname, '..', '..', 'styles.css');
 const config = evaluateConfig(getUserConfig());
 const classes = transformConfigToClasses(config);
 
 if (process.env.NODE_ENV !== 'test') {
   try {
-    const esTypesPath = join(process.cwd(), 'node_modules', 'classy-ui', 'es', 'classy-ui.d.ts');
-    const libTypesPath = join(process.cwd(), 'node_modules', 'classy-ui', 'lib', 'classy-ui.d.ts');
-    const types = transformClassesToTypes(classes, config);
+    const esTypesPath = join(__dirname, '..', '..', 'es', 'classy-ui.d.ts');
+    const libTypesPath = join(__dirname, '..', '..', 'lib', 'classy-ui.d.ts');
+    const types = transformClassesToTypes(config);
 
     writeFileSync(esTypesPath, types);
     writeFileSync(libTypesPath, types);

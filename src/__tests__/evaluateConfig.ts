@@ -6,7 +6,7 @@ describe('EVALUATE CONFIGS', () => {
   test('should evaluate a config', () => {
     const config = json(
       evaluateConfig({
-        variables: {
+        tokens: {
           colors: {
             red: 'red',
           },
@@ -20,7 +20,7 @@ describe('EVALUATE CONFIGS', () => {
   test('should evaluate a config with themes', () => {
     const config = json(
       evaluateConfig({
-        variables: {
+        tokens: {
           colors: {
             red: 'red',
           },

@@ -20,12 +20,13 @@ export type IClassnames<T extends string> = Record<
     variants?:
       | { [name: string]: string }
       | ((
-          variables: IVariables<T>,
+          tokens: ITokens<T>,
           utils: {
             negative: (value: { [key: string]: string }) => { [key: string]: string };
           },
         ) => IVariants);
     css: ((name: string, value: string) => string) | string[];
+    description?: string;
   }
 >;
 
@@ -34,17 +35,20 @@ export interface IEvaluatedClassnames {
     variants: { [name: string]: string };
     variantsWithoutVariables: { [name: string]: string };
     css: ((name: string, value: string) => string) | string[];
+    description?: string;
   };
 }
 
-export type IVariables<T extends string> = {
+export type ITokens<T extends string> = {
   [key in T]: { [variant: string]: string };
 };
 
-export interface IBaseConfig<T extends string, U = IVariables<T>> {
-  variables: IVariables<T>;
+export interface IBaseConfig<T extends string, U = ITokens<T>> {
+  tokens: {
+    [key in T]: { [variant: string]: string | { value: string; description: string } };
+  };
   screens: {
-    [name: string]: (css: string, variables: IVariables<T>) => string;
+    [name: string]: (css: string, tokens: ITokens<T>) => string;
   };
   classnames: IClassnames<T>;
   themes?: {
@@ -54,12 +58,12 @@ export interface IBaseConfig<T extends string, U = IVariables<T>> {
   };
 }
 
-export interface IConfig<T extends string, U = IVariables<T>> {
-  variables?: {
-    [key in T]: ((variables: IVariables<T>) => { [variant: string]: string }) | { [variant: string]: string };
+export interface IConfig<T extends string, U = ITokens<T>> {
+  tokens?: {
+    [key in T]: ((tokens: ITokens<T>) => { [variant: string]: string }) | { [variant: string]: string };
   };
   screens?: {
-    [name: string]: (css: string, variables: IVariables<T>) => string;
+    [name: string]: (css: string, tokens: ITokens<T>) => string;
   };
   classnames?: IClassnames<T>;
   themes?: {
@@ -70,17 +74,17 @@ export interface IConfig<T extends string, U = IVariables<T>> {
 }
 
 export interface IEvaluatedThemes {
-  [variable: string]: {
-    [key: string]: {
+  [tokens: string]: {
+    [token: string]: {
       [theme: string]: string;
     };
   };
 }
 
 export interface IEvaluatedConfig {
-  variables: IVariables<any>;
+  tokens: ITokens<any>;
   screens: {
-    [name: string]: (css: string, variables: IVariables<any>) => string;
+    [name: string]: (css: string, tokens: ITokens<any>) => string;
   };
   classnames: IEvaluatedClassnames;
   themeNames: string[];
@@ -94,13 +98,13 @@ export interface IClassesByType {
   common: {
     [id: string]: string;
   };
-  themeVariables: {
+  themeTokens: {
     [theme: string]: {
-      [variable: string]: string;
+      [token: string]: string;
     };
   };
-  rootVariables: {
-    [variable: string]: string;
+  rootTokens: {
+    [token: string]: string;
   };
 }
 
