@@ -8,11 +8,12 @@ pluginTester({
   snapshot: true,
   tests: [
     {
+      only: true,
       title: 'should convert simple',
       code: `
-import { c } from 'classy-ui'
+import { compose, tokens } from 'classy-ui'
 
-c('color-red')`,
+compose(tokens.color.red)`,
     },
     {
       title: 'should convert pseudos',
