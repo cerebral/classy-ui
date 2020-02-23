@@ -79,10 +79,62 @@ export function processReferences(babel: any, state: any, refs: any) {
     state.file.ast.program.body.push(runtimeCall);
   }
 
-  function collectGlobally(classObj: IExtractedClass) {
-    if (classObj.uid) {
-      classCollection[classObj.uid] = classObj;
-    }
+  function processCompose(cRefs: any[]) {
+    cRefs.forEach((path: any) => {
+      if (t.isCallExpression(path.parentPath.parent)) {
+        const b = path.scope.getBinding(path.parent.callee.name);
+        if (t.isImportSpecifier(b.path.node) && b.path.parent.source.value.startsWith('classy-ui')) {
+          throw path.buildCodeFrameError(`CLASSY-UI: don't nest c/compose calls`);
+        }
+      }
+
+      const statementPath = path.parentPath;
+      const args = statementPath.node.arguments;
+
+      statementPath.replaceWith(convertToExpression(args));
+    });
+  }
+
+  function processTokens(tRefs: any[], isProduction: boolean) {
+    tRefs.forEach((tRef: any) => {
+      if (!t.isMemberExpression(tRef.parent)) {
+        throw tRef.buildCodeFrameError(`CLASSY-UI: t/tokens can't be used without a base class`);
+      }
+      const memExpr = extractMemberExpression(tRef);
+      if (memExpr.arr.length >= 2) {
+        const [baseClass, token, ...decorators] = memExpr.arr;
+        const classObject = createClassObject({ baseClass, token, decorators }, classes, isProduction);
+        collectGlobally(classObject);
+        memExpr.root.replaceWith(t.stringLiteral(classObject.name));
+      } else {
+        throw tRef.buildCodeFrameError(`CLASSY-UI: t/tokens must reference a base class and a token`);
+      }
+      return tRef;
+    });
+  }
+
+  function processGroup(refs: any[]) {
+    refs.forEach((ref: any) => {
+      if (!t.isCallExpression(ref.parent)) {
+        throw ref.buildCodeFrameError(`CLASSY-UI: group must be used inside c/compose`);
+      }
+      if (ref.parent.callee === ref.node) {
+        throw ref.buildCodeFrameError(`CLASSY-UI: group should not be invoked`);
+      }
+
+      ref.replaceWith(t.stringLiteral(ref.node.name));
+    });
+  }
+
+  function processThemes(refs: any[]) {
+    refs.forEach((ref: any) => {
+      if (t.isMemberExpression(ref.parent)) {
+        const memberExpr = extractMemberExpression(ref);
+        memberExpr.root.replaceWith(t.stringLiteral(ref.node.name + '-' + memberExpr.arr.join('-')));
+      } else {
+        throw ref.buildCodeFrameError(`CLASSY-UI: add the theme name here like themes.dark`);
+      }
+    });
   }
 
   function convertToExpression(classAttribs: any[]) {
@@ -126,76 +178,10 @@ export function processReferences(babel: any, state: any, refs: any) {
     return start;
   }
 
-  function getImportName(name: string, scope: any) {
-    const binding = scope.getBinding(name);
-    if (binding && t.isImportSpecifier(binding.path.node) && binding.path.parent.source.value.startsWith('classy-ui')) {
-      return binding.path.node.imported.name;
+  function collectGlobally(classObj: IExtractedClass) {
+    if (classObj.uid) {
+      classCollection[classObj.uid] = classObj;
     }
-    return null;
-  }
-
-  function processCompose(cRefs: any[]) {
-    cRefs
-      // Only use top-most class
-      .filter((path: any) => {
-        // path.node will always be an identifier
-        // if path.parentPath.parent is a CallExpression
-        // it's callee name must not be part of classy-ui to be allowed here
-
-        if (t.isCallExpression(path.parentPath.parent)) {
-          return getImportName(path.parentPath.parent.callee.name, path.scope) === null;
-        }
-        return true;
-      })
-
-      .forEach((path: any) => {
-        const statementPath = path.parentPath;
-        const args = statementPath.node.arguments;
-
-        statementPath.replaceWith(convertToExpression(args));
-      });
-  }
-
-  function processGroup(refs: any[]) {
-    refs.forEach((ref: any) => {
-      if (!t.isCallExpression(ref.parent)) {
-        throw ref.buildCodeFrameError(`CLASSY-UI: group must be used inside compose`);
-      }
-      if (ref.parent.callee === ref.node) {
-        throw ref.buildCodeFrameError(`CLASSY-UI: group should not be invoked`);
-      }
-
-      ref.replaceWith(t.stringLiteral(ref.node.name));
-    });
-  }
-
-  function processThemes(refs: any[]) {
-    refs.forEach((ref: any) => {
-      if (t.isMemberExpression(ref.parent)) {
-        const memberExpr = extractMemberExpression(ref);
-        memberExpr.root.replaceWith(t.stringLiteral(ref.node.name + '-' + memberExpr.arr.join('-')));
-      } else {
-        throw ref.buildCodeFrameError(`CLASSY-UI: add the theme name here like themes.dark`);
-      }
-    });
-  }
-
-  function processTokens(tRefs: any[], isProduction: boolean) {
-    tRefs.forEach((tRef: any) => {
-      if (!t.isMemberExpression(tRef.parent)) {
-        throw tRef.buildCodeFrameError(`CLASSY-UI: t/tokens can't be used without a base class`);
-      }
-      const memExpr = extractMemberExpression(tRef);
-      if (memExpr.arr.length >= 2) {
-        const [baseClass, token, ...decorators] = memExpr.arr;
-        const classObject = createClassObject({ baseClass, token, decorators }, classes, isProduction);
-        collectGlobally(classObject);
-        memExpr.root.replaceWith(t.stringLiteral(classObject.name));
-      } else {
-        throw tRef.buildCodeFrameError(`CLASSY-UI: t/tokens must reference a base class and a token`);
-      }
-      return tRef;
-    });
   }
 
   function extractMemberExpression(tRefPath: any) {
