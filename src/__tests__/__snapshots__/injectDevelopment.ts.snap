@@ -1,85 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`INJECT DEVELOPMENT should handle references classnames 1`] = `
-Array [
-  "border-top-color_green",
-  ".hover\\\\:border-top-color_green:hover{border-top-color:var(--colors-green);}:root{--colors-green:green;}
-.themes-dark{--colors-green:yellow;}",
-  "border-right-color_green",
-  ".hover\\\\:border-right-color_green:hover{border-right-color:var(--colors-green);}:root{--colors-green:green;}
-.themes-dark{--colors-green:yellow;}",
-  "border-bottom-color_green",
-  ".hover\\\\:border-bottom-color_green:hover{border-bottom-color:var(--colors-green);}:root{--colors-green:green;}
-.themes-dark{--colors-green:yellow;}",
-  "border-left-color_green",
-  ".hover\\\\:border-left-color_green:hover{border-left-color:var(--colors-green);}:root{--colors-green:green;}
-.themes-dark{--colors-green:yellow;}",
-]
-`;
-
-exports[`INJECT DEVELOPMENT should inject both pseudo selector and breakpoint 1`] = `
-Array [
-  "hover:md:color_red",
-  "@media (max-width:768px) {.hover\\\\:md\\\\:color_red:hover{color:red;}}",
-]
-`;
-
-exports[`INJECT DEVELOPMENT should inject group decorators 1`] = `
-Array [
-  "groupHover:color_green",
-  ".group:hover .groupHover\\\\:color_green{color:var(--colors-green);}:root{--colors-green:green;}
-.themes-dark{--colors-green:yellow;}",
-]
-`;
-
-exports[`INJECT DEVELOPMENT should inject multiple 1`] = `
-Array [
-  "md:color_red",
-  "@media (max-width:768px) {.md\\\\:color_red{color:red;}}",
-  "hover:md:color_blue",
-  "@media (max-width:768px) {.hover\\\\:md\\\\:color_blue:hover{color:blue;}}",
-]
-`;
-
 exports[`INJECT DEVELOPMENT should inject simple 1`] = `
 Array [
-  "color_red",
-  ".color_red{color:red;}",
-]
-`;
-
-exports[`INJECT DEVELOPMENT should inject themes 1`] = `
-Array [
-  "md:color_green",
-  "@media (max-width:768px) {.md\\\\:color_green{color:var(--colors-green);}}:root{--colors-green:green;}
-.themes-dark{--colors-green:yellow;}",
-]
-`;
-
-exports[`INJECT DEVELOPMENT should inject with breakpoint 1`] = `
-Array [
-  "md:color_red",
-  "@media (max-width:768px) {.md\\\\:color_red{color:red;}}",
-]
-`;
-
-exports[`INJECT DEVELOPMENT should inject with multiple breakpoints 1`] = `
-Array [
-  "sm:xl:color_red",
-  "@media (max-width:640px) {.sm\\\\:xl\\\\:color_red{color:red;}}@media (max-width:1280px) {.sm\\\\:xl\\\\:color_red{color:red;}}",
-]
-`;
-
-exports[`INJECT DEVELOPMENT should inject with multiple pseudo selectors 1`] = `
-Array [
-  "firstChild:hover:color_red",
-  ".firstChild\\\\:hover\\\\:color_red:first-child:hover{color:red;}",
-]
-`;
-
-exports[`INJECT DEVELOPMENT should inject with pseudo selector 1`] = `
-Array [
-  "color_red",
-  ".hover\\\\:color_red:hover{color:red;}",
+  "color-red",
+  ".color-red{color:red;}",
 ]
 `;

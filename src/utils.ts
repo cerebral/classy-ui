@@ -308,7 +308,7 @@ export const injectDevelopment = (classCollection: IExtractedClasses, classes: I
     return aggr.concat(
       classnameKeys.reduce((injections, classnameKey) => {
         const classConfig = config.classnames[classnameKey];
-        const name = `${camelToDash(classnameKey)}_${configClass.variant}`;
+        const name = `${camelToDash(classnameKey)}-${configClass.variant}`;
         const classname = prefix + name;
         const classEntry = createClassEntry(classname, otherDecorators, evaluatedName =>
           (classConfig.css as any)(evaluatedName, classConfig.variants[configClass.variant]),
@@ -370,11 +370,20 @@ export const negateValue = (value: string) => {
 };
 
 export const createClassObject = (
-  id: string | undefined,
-  decorators: IExtractedClass['decorators'],
+  {
+    baseClass,
+    token,
+    decorators,
+  }: {
+    baseClass: string;
+    token: string;
+    decorators: string[];
+  },
   classes: IClasses,
   isProduction: boolean,
 ): IExtractedClass => {
+  /*
+  TODO: We have to handle themes
   if (id && id.startsWith('themes-')) {
     return {
       id,
@@ -382,19 +391,17 @@ export const createClassObject = (
       decorators: [],
     };
   }
-
-  const withoutWrappingDecorators = decorators.filter(i => !['c', 'group'].includes(i!));
-  const baseName = id ? classes[id].classname : '';
-  const variantName = id && classes[id].variant ? classes[id].variant : '';
-  const className = baseName + (variantName ? `_${variantName}` : '');
-
-  const uid = [withoutWrappingDecorators.sort().join(':'), camelToDash(className)]
+  */
+  const id = `${camelToDash(baseClass)}-${token}`;
+  const uid = [decorators.sort().join(':'), id]
     .filter(Boolean)
     .filter(i => i!.length > 0)
     .join(':');
 
-  const returnedDecorators = withoutWrappingDecorators.slice() as IExtractedClass['decorators'];
+  const returnedDecorators = decorators.slice() as IExtractedClass['decorators'];
 
+  // TODO: We need to handle GROUP
+  /*
   if (decorators[decorators.length - 1] === 'group') {
     return {
       id,
@@ -402,12 +409,13 @@ export const createClassObject = (
       decorators: returnedDecorators,
     };
   }
+  */
 
   let name: string;
   if (id && isProduction && classes[id].derived) {
     name = classes[id]
       .derived!.reduce((aggr, key) => {
-        return aggr.concat(classes[`${camelToDash(key)}-${variantName}`].shortName);
+        return aggr.concat(classes[id].shortName);
       }, [] as string[])
       .join(' ');
   } else if (id && isProduction) {
@@ -415,7 +423,7 @@ export const createClassObject = (
   } else if (id && classes[id].derived) {
     name = classes[id]
       .derived!.reduce((aggr, key) => {
-        return aggr.concat(`${camelToDash(key)}_${variantName}`);
+        return aggr.concat(`${camelToDash(key)}-${token}`);
       }, [] as string[])
       .join(' ');
   } else {
