@@ -58,11 +58,14 @@ export function processReferences(babel: any, state: any, refs: any) {
   const isProduction = babel.getEnv() === 'production';
   const classCollection: IExtractedClasses = {};
 
-  refs['tokens'] && processTokens(t, refs['tokens'], isProduction);
-  refs['t'] && processTokens(t, refs['t'], isProduction);
+  refs['tokens'] && processTokens(refs['tokens'], isProduction);
+  refs['t'] && processTokens(refs['t'], isProduction);
 
-  refs['compose'] && processCompose(t, refs['compose']);
-  refs['c'] && processCompose(t, refs['c']);
+  refs['group'] && processGroup(refs['group']);
+  refs['themes'] && processThemes(refs['themes']);
+
+  refs['compose'] && processCompose(refs['compose']);
+  refs['c'] && processCompose(refs['c']);
 
   if (isProduction) {
     writeFileSync(cssPath, injectProduction(classCollection, classes, config));
@@ -91,7 +94,7 @@ export function processReferences(babel: any, state: any, refs: any) {
     const strings: string[] = [];
     const others: any[] = [];
     for (const item of classAttribs) {
-      if (t.stringLiteral(item)) {
+      if (t.isStringLiteral(item)) {
         strings.push(item.value);
       } else {
         needsRuntime = true;
@@ -131,7 +134,7 @@ export function processReferences(babel: any, state: any, refs: any) {
     return null;
   }
 
-  function processCompose(t: any, cRefs: any[]) {
+  function processCompose(cRefs: any[]) {
     cRefs
       // Only use top-most class
       .filter((path: any) => {
@@ -153,8 +156,38 @@ export function processReferences(babel: any, state: any, refs: any) {
       });
   }
 
-  function processTokens(t: any, tRefs: any[], isProduction: boolean) {
-    tRefs.map((tRef: any) => {
+  function processGroup(refs: any[]) {
+    refs.forEach((ref: any) => {
+      if (!t.isCallExpression(ref.parent)) {
+        // Throw here: group parent must ba a call expression
+        // because it can only be used inside c(group)
+        return;
+      }
+      if (ref.parent.callee === ref.node) {
+        // Throw here: group should not be invoked
+        // group()
+        return;
+      }
+
+      ref.replaceWith(t.stringLiteral(ref.node.name));
+    });
+  }
+
+  function processThemes(refs: any[]) {
+    refs.forEach((ref: any) => {
+      if (t.isMemberExpression(ref.parent)) {
+        const memberExpr = extractMemberExpression(ref);
+        memberExpr.root.replaceWith(t.stringLiteral(ref.node.name + '-' + memberExpr.arr.join('-')));
+      } else {
+        // TODO: ERROR
+      }
+    });
+  }
+
+  function processTokens(tRefs: any[], isProduction: boolean) {
+    tRefs.forEach((tRef: any) => {
+      // TODO: Test if it is inside a member expression
+
       const memExpr = extractMemberExpression(tRef);
       if (memExpr.arr.length >= 2) {
         const [baseClass, token, ...decorators] = memExpr.arr;
