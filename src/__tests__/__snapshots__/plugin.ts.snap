@@ -1,0 +1,255 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`classy-ui should allow group with conditional after it: should allow group with conditional after it 1`] = `
+
+import { compose, group, tokens } from 'classy-ui'
+
+compose(group, true ? tokens.color.red : '')
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { addClasses as _addClasses } from 'classy-ui/runtime';
+import { fixSpecificity as _fixSpecificity } from 'classy-ui/runtime';
+
+_fixSpecificity((true ? 'color-red' : '') + 'group ');
+
+_addClasses(['color-red', '.color-red{color:red;}']);
+
+
+`;
+
+exports[`classy-ui should convert both breakpoints and pseudos: should convert both breakpoints and pseudos 1`] = `
+
+import { compose, tokens } from 'classy-ui'
+
+compose(tokens.color.red.md.hover)
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { addClasses as _addClasses } from 'classy-ui/runtime';
+('hover:md:color-red ');
+
+_addClasses(['color-red', '@media (max-width:768px) {.hover\\\\:md\\\\:color-red:hover{color:red;}}']);
+
+
+`;
+
+exports[`classy-ui should convert breakpoints: should convert breakpoints 1`] = `
+
+import { compose, tokens } from 'classy-ui'
+
+compose(tokens.color.red.md)
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { addClasses as _addClasses } from 'classy-ui/runtime';
+('md:color-red ');
+
+_addClasses(['color-red', '@media (max-width:768px) {.md\\\\:color-red{color:red;}}']);
+
+
+`;
+
+exports[`classy-ui should convert complex compositions: should convert complex compositions 1`] = `
+
+import { compose, tokens } from 'classy-ui'
+
+compose(tokens.color.blue, tokens.color.red.md.lg.hover)
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { addClasses as _addClasses } from 'classy-ui/runtime';
+('color-blue hover:lg:md:color-red ');
+
+_addClasses([
+  'color-blue',
+  '.color-blue{color:blue;}',
+  'color-red',
+  '@media (max-width:1024px) {.hover\\\\:lg\\\\:md\\\\:color-red:hover{color:red;}}@media (max-width:768px) {.hover\\\\:lg\\\\:md\\\\:color-red:hover{color:red;}}',
+]);
+
+
+`;
+
+exports[`classy-ui should convert pseudos: should convert pseudos 1`] = `
+
+import { compose, tokens } from 'classy-ui'
+
+compose(tokens.color.red.hover)
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { addClasses as _addClasses } from 'classy-ui/runtime';
+('hover:color-red ');
+
+_addClasses(['color-red', '.hover\\\\:color-red:hover{color:red;}']);
+
+
+`;
+
+exports[`classy-ui should convert simple: should convert simple 1`] = `
+
+import { compose, tokens } from 'classy-ui'
+
+compose(tokens.color.red)
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { addClasses as _addClasses } from 'classy-ui/runtime';
+('color-red ');
+
+_addClasses(['color-red', '.color-red{color:red;}']);
+
+
+`;
+
+exports[`classy-ui should fix specificity inside object: should fix specificity inside object 1`] = `
+
+import { compose, tokens } from 'classy-ui'
+
+const buttonBlue = compose(tokens.color.blue);
+const buttonGreen = compose(tokens.color.green);
+
+const buttonRed = compose(buttonBlue, buttonGreen, tokens.color.red);
+
+{className: compose(buttonRed, tokens.color.green.hover)}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { addClasses as _addClasses } from 'classy-ui/runtime';
+import { fixSpecificity as _fixSpecificity2 } from 'classy-ui/runtime';
+import { fixSpecificity as _fixSpecificity } from 'classy-ui/runtime';
+const buttonBlue = 'color-blue ';
+const buttonGreen = 'color-green ';
+
+const buttonRed = _fixSpecificity(buttonBlue + buttonGreen + 'color-red ');
+
+{
+  className: _fixSpecificity2(buttonRed + 'hover:color-green ');
+}
+
+_addClasses([
+  'color-blue',
+  '.color-blue{color:blue;}',
+  'color-green',
+  '.color-green{color:var(--colors-green);}:root{--colors-green:green;}\\n.themes-dark{--colors-green:yellow;}',
+  'color-red',
+  '.color-red{color:red;}',
+  'color-green',
+  '.hover\\\\:color-green:hover{color:var(--colors-green);}:root{--colors-green:green;}\\n.themes-dark{--colors-green:yellow;}',
+]);
+
+
+`;
+
+exports[`classy-ui should fix specifiy issue in dynamic composition: should fix specifiy issue in dynamic composition 1`] = `
+
+import { compose, tokens } from 'classy-ui'
+const aCompose = compose(tokens.color.blue, tokens.backgroundColor.blue)
+const moreCompose = compose(tokens.color.green, tokens.backgroundColor.green)
+
+compose(aCompose, moreCompose, tokens.color.red, tokens.backgroundColor.red)
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { addClasses as _addClasses } from 'classy-ui/runtime';
+import { fixSpecificity as _fixSpecificity } from 'classy-ui/runtime';
+const aCompose = 'color-blue background-color-blue ';
+const moreCompose = 'color-green background-color-green ';
+
+_fixSpecificity(aCompose + moreCompose + 'color-red background-color-red ');
+
+_addClasses([
+  'color-blue',
+  '.color-blue{color:blue;}',
+  'background-color-blue',
+  '.background-color-blue{background-color:blue;}',
+  'color-green',
+  '.color-green{color:var(--colors-green);}:root{--colors-green:green;}\\n.themes-dark{--colors-green:yellow;}',
+  'background-color-green',
+  '.background-color-green{background-color:var(--colors-green);}:root{--colors-green:green;}\\n.themes-dark{--colors-green:yellow;}',
+  'color-red',
+  '.color-red{color:red;}',
+  'background-color-red',
+  '.background-color-red{background-color:red;}',
+]);
+
+
+`;
+
+exports[`classy-ui should handle complex dynamic composition: should handle complex dynamic composition 1`] = `
+
+import { compose, group, tokens } from 'classy-ui'
+
+c(group, true ? tokens.color.red : '', tokens.backgroundColor.red, true ? tokens.display.block : '', tokens.display.inline)
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { addClasses as _addClasses } from 'classy-ui/runtime';
+c('group', true ? 'color-red' : '', 'background-color-red', true ? 'display-block' : '', 'display-inline');
+
+_addClasses([
+  'color-red',
+  '.color-red{color:red;}',
+  'background-color-red',
+  '.background-color-red{background-color:red;}',
+  'display-block',
+  '.display-block{display:block;}',
+  'display-inline',
+  '.display-inline{display:inline;}',
+]);
+
+
+`;
+
+exports[`classy-ui should handle derived classnames: should handle derived classnames 1`] = `
+
+import { c } from 'classy-ui'
+
+{className: c('padding-2')}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { addClasses as _addClasses } from 'classy-ui/runtime';
+{
+  className: 'padding-2 ';
+}
+
+_addClasses([]);
+
+
+`;
+
+exports[`classy-ui should handle dynamic calls to some function: should handle dynamic calls to some function 1`] = `
+
+import { compose, group } from 'classy-ui'
+
+compose(group, someFunction())
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { addClasses as _addClasses } from 'classy-ui/runtime';
+import { fixSpecificity as _fixSpecificity } from 'classy-ui/runtime';
+
+_fixSpecificity(someFunction() + 'group ');
+
+_addClasses([]);
+
+
+`;
+
+exports[`classy-ui should not throw when using group inside c call: should not throw when using group inside c call 1`] = `
+
+import { compose, group } from 'classy-ui'
+
+compose(group)
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { addClasses as _addClasses } from 'classy-ui/runtime';
+('group ');
+
+_addClasses([]);
+
+
+`;
