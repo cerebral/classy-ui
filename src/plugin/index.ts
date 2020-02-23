@@ -159,14 +159,10 @@ export function processReferences(babel: any, state: any, refs: any) {
   function processGroup(refs: any[]) {
     refs.forEach((ref: any) => {
       if (!t.isCallExpression(ref.parent)) {
-        // Throw here: group parent must ba a call expression
-        // because it can only be used inside c(group)
-        return;
+        throw ref.buildCodeFrameError(`CLASSY-UI: group must be used inside compose`);
       }
       if (ref.parent.callee === ref.node) {
-        // Throw here: group should not be invoked
-        // group()
-        return;
+        throw ref.buildCodeFrameError(`CLASSY-UI: group should not be invoked`);
       }
 
       ref.replaceWith(t.stringLiteral(ref.node.name));
@@ -179,25 +175,24 @@ export function processReferences(babel: any, state: any, refs: any) {
         const memberExpr = extractMemberExpression(ref);
         memberExpr.root.replaceWith(t.stringLiteral(ref.node.name + '-' + memberExpr.arr.join('-')));
       } else {
-        // TODO: ERROR
+        throw ref.buildCodeFrameError(`CLASSY-UI: add the theme name here like themes.dark`);
       }
     });
   }
 
   function processTokens(tRefs: any[], isProduction: boolean) {
     tRefs.forEach((tRef: any) => {
-      // TODO: Test if it is inside a member expression
-
+      if (!t.isMemberExpression(tRef.parent)) {
+        throw tRef.buildCodeFrameError(`CLASSY-UI: t/tokens can't be used without a base class`);
+      }
       const memExpr = extractMemberExpression(tRef);
       if (memExpr.arr.length >= 2) {
         const [baseClass, token, ...decorators] = memExpr.arr;
         const classObject = createClassObject({ baseClass, token, decorators }, classes, isProduction);
-
         collectGlobally(classObject);
-
         memExpr.root.replaceWith(t.stringLiteral(classObject.name));
       } else {
-        // At least two entries needs
+        throw tRef.buildCodeFrameError(`CLASSY-UI: t/tokens must reference a base class and a token`);
       }
       return tRef;
     });
