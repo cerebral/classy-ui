@@ -13,7 +13,7 @@ import { fixSpecificity as _fixSpecificity } from 'classy-ui/runtime';
 
 _fixSpecificity(true ? 'color@RED ' : ' ');
 
-_addClasses(['color\\\\@RED', '.color\\\\@RED {\\n  color: red;\\n}']);
+_addClasses(['color@RED', '.color\\\\@RED {\\n  color: red;\\n}']);
 
 
 `;
@@ -29,10 +29,7 @@ compose(tokens.color.RED.md.hover)
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 ('hover:md:color@RED ');
 
-_addClasses([
-  'hover:md:color\\\\@RED',
-  '@media (max-width: 768px) {.hover\\\\:md\\\\:color\\\\@RED:hover {\\n  color: red;\\n}}',
-]);
+_addClasses(['hover:md:color@RED', '@media (max-width: 768px) {.hover\\\\:md\\\\:color\\\\@RED:hover {\\n  color: red;\\n}}']);
 
 
 `;
@@ -48,7 +45,7 @@ compose(tokens.color.RED.md)
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 ('md:color@RED ');
 
-_addClasses(['md:color\\\\@RED', '@media (max-width: 768px) {.md\\\\:color\\\\@RED {\\n  color: red;\\n}}']);
+_addClasses(['md:color@RED', '@media (max-width: 768px) {.md\\\\:color\\\\@RED {\\n  color: red;\\n}}']);
 
 
 `;
@@ -65,9 +62,9 @@ import { addClasses as _addClasses } from 'classy-ui/runtime';
 ('color@BLUE hover:lg:md:color@RED ');
 
 _addClasses([
-  'color\\\\@BLUE',
+  'color@BLUE',
   '.color\\\\@BLUE {\\n  color: blue;\\n}',
-  'hover:lg:md:color\\\\@RED',
+  'hover:lg:md:color@RED',
   '@media (max-width: 1024px) {.hover\\\\:lg\\\\:md\\\\:color\\\\@RED:hover {\\n  color: red;\\n}}@media (max-width: 768px) {.hover\\\\:lg\\\\:md\\\\:color\\\\@RED:hover {\\n  color: red;\\n}}',
 ]);
 
@@ -85,7 +82,7 @@ compose(tokens.color.RED.hover)
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 ('hover:color@RED ');
 
-_addClasses(['hover:color\\\\@RED', '.hover\\\\:color\\\\@RED:hover {\\n  color: red;\\n}']);
+_addClasses(['hover:color@RED', '.hover\\\\:color\\\\@RED:hover {\\n  color: red;\\n}']);
 
 
 `;
@@ -101,7 +98,7 @@ compose(tokens.color.RED)
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 ('color@RED ');
 
-_addClasses(['color\\\\@RED', '.color\\\\@RED {\\n  color: red;\\n}']);
+_addClasses(['color@RED', '.color\\\\@RED {\\n  color: red;\\n}']);
 
 
 `;
@@ -132,13 +129,13 @@ const buttonRed = _fixSpecificity(buttonBlue + buttonGreen);
 }
 
 _addClasses([
-  'color\\\\@BLUE',
+  'color@BLUE',
   '.color\\\\@BLUE {\\n  color: blue;\\n}',
-  'color\\\\@GREEN',
+  'color@GREEN',
   '.color\\\\@GREEN {\\n  color: var(--colors-GREEN);\\n}:root{--colors-GREEN:green;}\\n.themes-dark{--colors-GREEN:yellow;}',
-  'color\\\\@RED',
+  'color@RED',
   '.color\\\\@RED {\\n  color: red;\\n}',
-  'hover:color\\\\@GREEN',
+  'hover:color@GREEN',
   '.hover\\\\:color\\\\@GREEN:hover {\\n  color: var(--colors-GREEN);\\n}:root{--colors-GREEN:green;}\\n.themes-dark{--colors-GREEN:yellow;}',
 ]);
 
@@ -163,17 +160,17 @@ const moreCompose = 'color@GREEN background-color@GREEN ';
 _fixSpecificity(aCompose + moreCompose);
 
 _addClasses([
-  'color\\\\@BLUE',
+  'color@BLUE',
   '.color\\\\@BLUE {\\n  color: blue;\\n}',
-  'background-color\\\\@BLUE',
+  'background-color@BLUE',
   '.background-color\\\\@BLUE {\\n  background-color: blue;\\n}',
-  'color\\\\@GREEN',
+  'color@GREEN',
   '.color\\\\@GREEN {\\n  color: var(--colors-GREEN);\\n}:root{--colors-GREEN:green;}\\n.themes-dark{--colors-GREEN:yellow;}',
-  'background-color\\\\@GREEN',
+  'background-color@GREEN',
   '.background-color\\\\@GREEN {\\n  background-color: var(--colors-GREEN);\\n}:root{--colors-GREEN:green;}\\n.themes-dark{--colors-GREEN:yellow;}',
-  'color\\\\@RED',
+  'color@RED',
   '.color\\\\@RED {\\n  color: red;\\n}',
-  'background-color\\\\@RED',
+  'background-color@RED',
   '.background-color\\\\@RED {\\n  background-color: red;\\n}',
 ]);
 
@@ -193,7 +190,7 @@ import { fixSpecificity as _fixSpecificity } from 'classy-ui/runtime';
 
 _fixSpecificity(true ? 'color@RED ' : ' ');
 
-_addClasses(['color\\\\@RED', '.color\\\\@RED {\\n  color: red;\\n}']);
+_addClasses(['color@RED', '.color\\\\@RED {\\n  color: red;\\n}']);
 
 
 `;
@@ -210,13 +207,13 @@ import { addClasses as _addClasses } from 'classy-ui/runtime';
 c('group ', true ? 'color@RED ' : ' ', 'background-color@RED ', true ? 'display@BLOCK ' : ' ', 'display@INLINE_BLOCK ');
 
 _addClasses([
-  'color\\\\@RED',
+  'color@RED',
   '.color\\\\@RED {\\n  color: red;\\n}',
-  'background-color\\\\@RED',
+  'background-color@RED',
   '.background-color\\\\@RED {\\n  background-color: red;\\n}',
-  'display\\\\@BLOCK',
+  'display@BLOCK',
   '.display\\\\@BLOCK {\\n  display: block;\\n}',
-  'display\\\\@INLINE_BLOCK',
+  'display@INLINE_BLOCK',
   '.display\\\\@INLINE_BLOCK {\\n  display: inline-block;\\n}',
 ]);
 
@@ -237,9 +234,9 @@ import { fixSpecificity as _fixSpecificity } from 'classy-ui/runtime';
 _fixSpecificity(true ? 'color@GREEN ' : 'color@RED ');
 
 _addClasses([
-  'color\\\\@GREEN',
+  'color@GREEN',
   '.color\\\\@GREEN {\\n  color: var(--colors-GREEN);\\n}:root{--colors-GREEN:green;}\\n.themes-dark{--colors-GREEN:yellow;}',
-  'color\\\\@RED',
+  'color@RED',
   '.color\\\\@RED {\\n  color: red;\\n}',
 ]);
 
@@ -260,13 +257,13 @@ import { addClasses as _addClasses } from 'classy-ui/runtime';
 }
 
 _addClasses([
-  'padding-top\\\\@SPACING_02',
+  'padding-top@SPACING_02',
   '.padding-top\\\\@SPACING_02 {\\n  padding-top: 0.5rem;\\n}',
-  'padding-right\\\\@SPACING_02',
+  'padding-right@SPACING_02',
   '.padding-right\\\\@SPACING_02 {\\n  padding-right: 0.5rem;\\n}',
-  'padding-bottom\\\\@SPACING_02',
+  'padding-bottom@SPACING_02',
   '.padding-bottom\\\\@SPACING_02 {\\n  padding-bottom: 0.5rem;\\n}',
-  'padding-left\\\\@SPACING_02',
+  'padding-left@SPACING_02',
   '.padding-left\\\\@SPACING_02 {\\n  padding-left: 0.5rem;\\n}',
 ]);
 

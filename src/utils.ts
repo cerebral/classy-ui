@@ -246,7 +246,7 @@ export const injectProduction = (classCollection: IExtractedClasses, classes: IC
         const classConfig = config.classnames[classnameKey];
         const id = `${camelToDash(classnameKey)}-${configClass.token}`;
         const name = classes[id].shortName;
-        const classname = prefix + name;
+        const classname = prefix + name.replace('@', '\\@');
 
         classEntry = createClassEntry(classname, otherDecorators, evaluatedName =>
           (classConfig.css as any)(evaluatedName, classConfig.tokens[configClass.token]),
@@ -307,9 +307,9 @@ export const injectDevelopment = (classCollection: IExtractedClasses, classes: I
     return aggr.concat(
       classnameKeys.reduce((injections, classnameKey) => {
         const classConfig = config.classnames[classnameKey];
-        const name = `${camelToDash(classnameKey)}\\\@${configClass.token}`;
+        const name = `${camelToDash(classnameKey)}@${configClass.token}`;
         const classname = prefix + name;
-        const classEntry = createClassEntry(classname, otherDecorators, evaluatedName =>
+        const classEntry = createClassEntry(classname.replace('@', '\\@'), otherDecorators, evaluatedName =>
           (classConfig.css as any)(evaluatedName, classConfig.tokens[configClass.token]),
         );
 
