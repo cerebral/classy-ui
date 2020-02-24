@@ -1,7 +1,7 @@
 import { writeFileSync } from 'fs';
 import { join } from 'path';
 
-import { addNamed } from '@babel/helper-module-imports';
+import { addNamed, addSideEffect } from '@babel/helper-module-imports';
 
 import { transform as transformClassesToTypes } from '../config/transform-classes-to-types';
 import { transform as transformConfigToClasses } from '../config/transform-config-to-classes';
@@ -78,6 +78,10 @@ export function processReferences(babel: any, state: any, refs: any) {
 
   if (isProduction) {
     writeFileSync(cssPath, injectProduction(classCollection, classes, config));
+
+    if (state.opts.autoImport !== false) {
+      addSideEffect(state.file.path, 'classy-ui/styles.css');
+    }
   } else {
     const runtimeCall = t.expressionStatement(
       t.callExpression(addNamed(state.file.path, 'addClasses', 'classy-ui/runtime'), [
@@ -114,7 +118,7 @@ export function processReferences(babel: any, state: any, refs: any) {
         const [baseClass, token, ...decorators] = memExpr.arr;
         const classObject = createClassObject({ baseClass, token, decorators }, classes, isProduction);
         collectGlobally(classObject);
-        memExpr.root.replaceWith(t.stringLiteral(classObject.name));
+        memExpr.root.replaceWith(t.stringLiteral(classObject.name + ' '));
       } else {
         throw tRef.buildCodeFrameError(`CLASSY-UI: t/tokens must reference a base class and a token`);
       }
@@ -131,7 +135,7 @@ export function processReferences(babel: any, state: any, refs: any) {
         throw ref.buildCodeFrameError(`CLASSY-UI: group should not be invoked`);
       }
 
-      ref.replaceWith(t.stringLiteral(ref.node.name));
+      ref.replaceWith(t.stringLiteral(ref.node.name + ' '));
     });
   }
 
@@ -139,7 +143,7 @@ export function processReferences(babel: any, state: any, refs: any) {
     refs.forEach((ref: any) => {
       if (t.isMemberExpression(ref.parent)) {
         const memberExpr = extractMemberExpression(ref);
-        memberExpr.root.replaceWith(t.stringLiteral(ref.node.name + '-' + memberExpr.arr.join('-')));
+        memberExpr.root.replaceWith(t.stringLiteral(ref.node.name + '-' + memberExpr.arr.join('-') + ' '));
       } else {
         throw ref.buildCodeFrameError(`CLASSY-UI: add the theme name here like themes.dark`);
       }
@@ -169,7 +173,7 @@ export function processReferences(babel: any, state: any, refs: any) {
 
     // if there are only string literals just return them. This is a _short path_
     if (strings.length > 0 && others.length === 0) {
-      return t.stringLiteral(strings.join(' ') + ' ');
+      return t.stringLiteral(strings.join(''));
     }
 
     const max = others.length - 1;
@@ -178,15 +182,15 @@ export function processReferences(babel: any, state: any, refs: any) {
       start = t.binaryExpression('+', others[i], start);
     }
 
+    if (needsRuntime) {
+      return t.callExpression(addNamed(state.file.path, 'fixSpecificity', 'classy-ui/runtime'), [start]);
+    }
+
     if (strings.length === 0) {
       return start;
     }
 
-    start = t.binaryExpression('+', start, t.stringLiteral(strings.join(' ') + ' '));
-
-    if (needsRuntime) {
-      return t.callExpression(addNamed(state.file.path, 'fixSpecificity', 'classy-ui/runtime'), [start]);
-    }
+    start = t.binaryExpression('+', start, t.stringLiteral(strings.join('')));
 
     return start;
   }

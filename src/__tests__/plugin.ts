@@ -64,14 +64,14 @@ compose(group)`,
       code: `
 import { compose, group, tokens } from 'classy-ui'
 
-compose(group, true ? tokens.color.RED : '')`,
+compose(group, true ? tokens.color.RED : ' ')`,
     },
     {
       title: 'should handle complex dynamic composition',
       code: `
 import { compose, group, tokens } from 'classy-ui'
 
-c(group, true ? tokens.color.RED : '', tokens.backgroundColor.RED, true ? tokens.display.BLOCK : '', tokens.display.INLINE_BLOCK)`,
+c(group, true ? tokens.color.RED : ' ', tokens.backgroundColor.RED, true ? tokens.display.BLOCK : ' ', tokens.display.INLINE_BLOCK)`,
     },
     {
       title: 'should fix specifiy issue in dynamic composition',
