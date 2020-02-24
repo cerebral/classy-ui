@@ -182,15 +182,19 @@ export function processReferences(babel: any, state: any, refs: any) {
       start = t.binaryExpression('+', others[i], start);
     }
 
-    if (needsRuntime) {
-      return t.callExpression(addNamed(state.file.path, 'fixSpecificity', 'classy-ui/runtime'), [start]);
-    }
-
     if (strings.length === 0) {
-      return start;
+      if (needsRuntime) {
+        return t.callExpression(addNamed(state.file.path, 'fixSpecificity', 'classy-ui/runtime'), [start]);
+      } else {
+        return start;
+      }
     }
 
     start = t.binaryExpression('+', start, t.stringLiteral(strings.join('')));
+
+    if (needsRuntime) {
+      return t.callExpression(addNamed(state.file.path, 'fixSpecificity', 'classy-ui/runtime'), [start]);
+    }
 
     return start;
   }

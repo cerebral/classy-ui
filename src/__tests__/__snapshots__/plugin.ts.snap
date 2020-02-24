@@ -11,7 +11,7 @@ compose(group, true ? tokens.color.RED : ' ')
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 import { fixSpecificity as _fixSpecificity } from 'classy-ui/runtime';
 
-_fixSpecificity(true ? 'color@RED ' : ' ');
+_fixSpecificity((true ? 'color@RED ' : ' ') + 'group ');
 
 _addClasses(['color@RED', '.color\\\\@RED {\\n  color: red;\\n}']);
 
@@ -122,10 +122,10 @@ import { fixSpecificity as _fixSpecificity } from 'classy-ui/runtime';
 const buttonBlue = 'color@BLUE ';
 const buttonGreen = 'color@GREEN ';
 
-const buttonRed = _fixSpecificity(buttonBlue + buttonGreen);
+const buttonRed = _fixSpecificity(buttonBlue + buttonGreen + 'color@RED ');
 
 {
-  className: _fixSpecificity2(buttonRed);
+  className: _fixSpecificity2(buttonRed + 'hover:color@GREEN ');
 }
 
 _addClasses([
@@ -157,7 +157,7 @@ import { fixSpecificity as _fixSpecificity } from 'classy-ui/runtime';
 const aCompose = 'color@BLUE background-color@BLUE ';
 const moreCompose = 'color@GREEN background-color@GREEN ';
 
-_fixSpecificity(aCompose + moreCompose);
+_fixSpecificity(aCompose + moreCompose + 'color@RED background-color@RED ');
 
 _addClasses([
   'color@BLUE',
@@ -281,7 +281,7 @@ compose(group, someFunction())
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 import { fixSpecificity as _fixSpecificity } from 'classy-ui/runtime';
 
-_fixSpecificity(someFunction());
+_fixSpecificity(someFunction() + 'group ');
 
 _addClasses([]);
 
