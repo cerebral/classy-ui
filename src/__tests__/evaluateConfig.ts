@@ -8,34 +8,34 @@ describe('EVALUATE CONFIGS', () => {
       evaluateConfig({
         tokens: {
           colors: {
-            red: 'red',
+            RED: 'red',
           },
         },
       }),
     );
-    expect(config.variables.colors.red).toBe('red');
-    expect(config.classnames.color.tokens.red).toBe('red');
-    expect(config.classnames.color.tokensWithoutVariables.red).toBe('red');
+    expect(config.tokens.colors.RED).toBe('red');
+    expect(config.classnames.color.tokens.RED).toBe('red');
+    expect(config.classnames.color.tokensWithoutVariables.RED).toBe('red');
   });
   test('should evaluate a config with themes', () => {
     const config = json(
       evaluateConfig({
         tokens: {
           colors: {
-            red: 'red',
+            RED: 'red',
           },
         },
         themes: {
           dark: {
             colors: {
-              red: 'blue',
+              RED: 'blue',
             },
           },
         },
       }),
     );
-    expect(config.classnames.color.tokens.red).toBe('var(--colors-red)');
-    expect(config.classnames.color.tokensWithoutVariables.red).toBe('red');
+    expect(config.classnames.color.tokens.RED).toBe('var(--colors-RED)');
+    expect(config.classnames.color.tokensWithoutVariables.RED).toBe('red');
     expect(config.themeNames).toEqual(['dark']);
   });
 });
