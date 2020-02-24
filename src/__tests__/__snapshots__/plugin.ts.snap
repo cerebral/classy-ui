@@ -294,3 +294,27 @@ SyntaxError: unknown: CLASSY-UI: don't nest c/compose calls
 [0m [90m   | [39m        [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[0m
 
 `;
+
+exports[`classy-ui should throw when using default import: should throw when using default import 1`] = `
+
+import classy from 'classy-ui'
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+SyntaxError: unknown: This style of importing isn't allowed.
+[0m[31m[1m>[22m[39m[90m 1 | [39m[36mimport[39m classy from [32m'classy-ui'[39m[0m
+[0m [90m   | [39m       [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[0m
+
+`;
+
+exports[`classy-ui should throw when using namespace import: should throw when using namespace import 1`] = `
+
+import * as classy from 'classy-ui'
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+SyntaxError: unknown: This style of importing isn't allowed.
+[0m[31m[1m>[22m[39m[90m 1 | [39m[36mimport[39m [33m*[39m as classy from [32m'classy-ui'[39m[0m
+[0m [90m   | [39m       [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[0m
+
+`;

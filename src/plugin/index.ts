@@ -26,6 +26,7 @@ if (process.env.NODE_ENV !== 'test') {
 }
 
 export default (babel: any) => {
+  const { types: t } = babel;
   return {
     name: 'classy-ui/plugin',
     visitor: {
@@ -33,7 +34,15 @@ export default (babel: any) => {
         programmPath.traverse({
           ImportDeclaration(path: any) {
             if (path?.node?.source?.value === 'classy-ui') {
-              const imports = path.node.specifiers.map((s: any) => ({ local: s.local.name, name: s.imported.name }));
+              const imports = path
+                .get('specifiers')
+                .filter((s: any) => {
+                  if (!t.isImportSpecifier(s.node)) {
+                    throw s.buildCodeFrameError(`This style of importing isn't allowed.`);
+                  }
+                  return true;
+                })
+                .map((s: any) => ({ local: s.node.local.name, name: s.node.imported.name }));
 
               const referencePaths = imports.reduce((aggr: any, { local, name }: { local: string; name: string }) => {
                 const binding = path.scope.getBinding(local);

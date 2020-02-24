@@ -124,5 +124,19 @@ c(themes.dark)
 
 `,
     },
+    {
+      title: 'should throw when using default import',
+      error: true,
+      code: `
+import classy from 'classy-ui'
+`,
+    },
+    {
+      title: 'should throw when using namespace import',
+      error: true,
+      code: `
+import * as classy from 'classy-ui'
+`,
+    },
   ],
 });
