@@ -354,7 +354,7 @@ export const negative = (scale: { [key: string]: string }) => {
     .reduce(
       (negativeScale, key) => ({
         ...negativeScale,
-        [`-${key}`]: negateValue(scale[key]),
+        [`NEG_${key}`]: negateValue(scale[key]),
       }),
       {},
     );
