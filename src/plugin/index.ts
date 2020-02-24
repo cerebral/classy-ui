@@ -159,7 +159,11 @@ export function processReferences(babel: any, state: any, refs: any) {
         strings.push(item.value);
       } else {
         needsRuntime = true;
-        others.push(item);
+        if (t.isLogicalExpression(item) && item.operator === '&&') {
+          others.push(t.conditionalExpression(item.left, item.right, t.stringLiteral(' ')));
+        } else {
+          others.push(item);
+        }
       }
     }
 

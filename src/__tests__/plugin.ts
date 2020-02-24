@@ -138,5 +138,19 @@ import classy from 'classy-ui'
 import * as classy from 'classy-ui'
 `,
     },
+    {
+      title: 'should handle binary expressions',
+      code: `
+import { compose, tokens } from 'classy-ui'
+
+compose(true && tokens.color.RED)`,
+    },
+    {
+      title: 'should handle conditional expression',
+      code: `
+import { compose, tokens } from 'classy-ui'
+
+compose(true ? tokens.color.GREEN : tokens.color.RED )`,
+    },
   ],
 });

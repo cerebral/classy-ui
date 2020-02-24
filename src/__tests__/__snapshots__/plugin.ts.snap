@@ -177,6 +177,22 @@ _addClasses([
 
 `;
 
+exports[`classy-ui should handle binary expressions: should handle binary expressions 1`] = `
+
+import { compose, tokens } from 'classy-ui'
+
+compose(true && tokens.color.RED)
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { addClasses as _addClasses } from 'classy-ui/runtime';
+true ? 'color-RED' : ' ';
+
+_addClasses(['color-RED', '.color-RED {\\n  color: red;\\n}']);
+
+
+`;
+
 exports[`classy-ui should handle complex dynamic composition: should handle complex dynamic composition 1`] = `
 
 import { compose, group, tokens } from 'classy-ui'
@@ -197,6 +213,25 @@ _addClasses([
   '.display-BLOCK {\\n  display: block;\\n}',
   'display-INLINE_BLOCK',
   '.display-INLINE_BLOCK {\\n  display: inline-block;\\n}',
+]);
+
+
+`;
+
+exports[`classy-ui should handle conditional expression: should handle conditional expression 1`] = `
+
+import { compose, tokens } from 'classy-ui'
+
+compose(true ? tokens.color.GREEN : token.color.RED )
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { addClasses as _addClasses } from 'classy-ui/runtime';
+true ? 'color-GREEN' : token.color.RED;
+
+_addClasses([
+  'color-GREEN',
+  '.color-GREEN {\\n  color: var(--colors-GREEN);\\n}:root{--colors-GREEN:green;}\\n.themes-dark{--colors-GREEN:yellow;}',
 ]);
 
 
