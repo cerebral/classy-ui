@@ -8,29 +8,29 @@ const classes = transform(config);
 describe('INJECT PRODUCTION', () => {
   test('should inject simple', () => {
     const classCollection: IExtractedClasses = {
-      ['color-red']: createClassObject({ baseClass: 'color', token: 'red', decorators: [] }, classes, true),
+      ['color-RED']: createClassObject({ baseClass: 'color', token: 'RED', decorators: [] }, classes, true),
     };
 
     expect(injectProduction(classCollection, classes, config)).toMatchSnapshot();
   });
   test('should inject with pseudo selector', () => {
     const classCollection: IExtractedClasses = {
-      ['color-red']: createClassObject({ baseClass: 'color', token: 'red', decorators: ['hover'] }, classes, true),
+      ['color-RED']: createClassObject({ baseClass: 'color', token: 'RED', decorators: ['hover'] }, classes, true),
     };
 
     expect(injectProduction(classCollection, classes, config)).toMatchSnapshot();
   });
   test('should inject with breakpoint', () => {
     const classCollection: IExtractedClasses = {
-      ['color-red']: createClassObject({ baseClass: 'color', token: 'red', decorators: ['md'] }, classes, true),
+      ['color-RED']: createClassObject({ baseClass: 'color', token: 'RED', decorators: ['md'] }, classes, true),
     };
 
     expect(injectProduction(classCollection, classes, config)).toMatchSnapshot();
   });
   test('should inject both pseudo selector and breakpoint', () => {
     const classCollection: IExtractedClasses = {
-      ['color-red']: createClassObject(
-        { baseClass: 'color', token: 'red', decorators: ['hover', 'md'] },
+      ['color-RED']: createClassObject(
+        { baseClass: 'color', token: 'RED', decorators: ['hover', 'md'] },
         classes,
         true,
       ),
@@ -40,8 +40,8 @@ describe('INJECT PRODUCTION', () => {
   });
   test('should inject with multiple pseudo selectors', () => {
     const classCollection: IExtractedClasses = {
-      ['color-red']: createClassObject(
-        { baseClass: 'color', token: 'red', decorators: ['hover', 'firstChild'] },
+      ['color-RED']: createClassObject(
+        { baseClass: 'color', token: 'RED', decorators: ['hover', 'firstChild'] },
         classes,
         true,
       ),
@@ -51,16 +51,16 @@ describe('INJECT PRODUCTION', () => {
   });
   test('should inject with multiple breakpoints', () => {
     const classCollection: IExtractedClasses = {
-      ['color-red']: createClassObject({ baseClass: 'color', token: 'red', decorators: ['sm', 'xl'] }, classes, true),
+      ['color-RED']: createClassObject({ baseClass: 'color', token: 'RED', decorators: ['sm', 'xl'] }, classes, true),
     };
 
     expect(injectProduction(classCollection, classes, config)).toMatchSnapshot();
   });
   test('should inject multiple', () => {
     const classCollection: IExtractedClasses = {
-      ['color-red']: createClassObject({ baseClass: 'color', token: 'red', decorators: ['md'] }, classes, true),
-      ['color-blue']: createClassObject(
-        { baseClass: 'color', token: 'blue', decorators: ['hover', 'md'] },
+      ['color-RED']: createClassObject({ baseClass: 'color', token: 'RED', decorators: ['md'] }, classes, true),
+      ['color-BLUE']: createClassObject(
+        { baseClass: 'color', token: 'BLUE', decorators: ['hover', 'md'] },
         classes,
         true,
       ),
@@ -70,39 +70,39 @@ describe('INJECT PRODUCTION', () => {
   });
   test('should inject themes', () => {
     const classCollection: IExtractedClasses = {
-      ['color-green']: createClassObject({ baseClass: 'color', token: 'green', decorators: ['md'] }, classes, true),
+      ['color-GREEN']: createClassObject({ baseClass: 'color', token: 'GREEN', decorators: ['md'] }, classes, true),
     };
 
     expect(injectProduction(classCollection, classes, config)).toMatchSnapshot();
   });
   test('should group breakpoints', () => {
     const classCollection: IExtractedClasses = {
-      ['color-red']: createClassObject({ baseClass: 'color', token: 'red', decorators: ['md'] }, classes, true),
-      ['color-blue']: createClassObject({ baseClass: 'color', token: 'blue', decorators: ['md'] }, classes, true),
+      ['color-RED']: createClassObject({ baseClass: 'color', token: 'RED', decorators: ['md'] }, classes, true),
+      ['color-BLUE']: createClassObject({ baseClass: 'color', token: 'BLUE', decorators: ['md'] }, classes, true),
     };
 
     expect(injectProduction(classCollection, classes, config)).toMatchSnapshot();
   });
   test('should group themes', () => {
     const classCollection: IExtractedClasses = {
-      ['color-green']: createClassObject({ baseClass: 'color', token: 'green', decorators: [] }, classes, true),
-      ['color-purple']: createClassObject({ baseClass: 'color', token: 'purple', decorators: [] }, classes, true),
+      ['color-GREEN']: createClassObject({ baseClass: 'color', token: 'GREEN', decorators: [] }, classes, true),
+      ['color-PURPLE']: createClassObject({ baseClass: 'color', token: 'PURPLE', decorators: [] }, classes, true),
     };
 
     expect(injectProduction(classCollection, classes, config)).toMatchSnapshot();
   });
   test('should group themes and breakpoints', () => {
     const classCollection: IExtractedClasses = {
-      ['color-green']: createClassObject({ baseClass: 'color', token: 'red', decorators: ['md'] }, classes, true),
-      ['color-purple']: createClassObject({ baseClass: 'color', token: 'purple', decorators: ['md'] }, classes, true),
+      ['color-GREEN']: createClassObject({ baseClass: 'color', token: 'RED', decorators: ['md'] }, classes, true),
+      ['color-PURPLE']: createClassObject({ baseClass: 'color', token: 'PURPLE', decorators: ['md'] }, classes, true),
     };
 
     expect(injectProduction(classCollection, classes, config)).toMatchSnapshot();
   });
   test('should handle references classnames', () => {
     const classCollection: IExtractedClasses = {
-      ['color-green']: createClassObject(
-        { baseClass: 'borderColor', token: 'green', decorators: ['hover'] },
+      ['color-GREEN']: createClassObject(
+        { baseClass: 'borderColor', token: 'GREEN', decorators: ['hover'] },
         classes,
         false,
       ),

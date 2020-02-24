@@ -1,18 +1,18 @@
 // Used for testing
 module.exports = {
-  variables: {
+  tokens: {
     colors: {
-      red: 'red',
-      blue: 'blue',
-      green: 'green',
-      purple: 'purple',
+      RED: 'red',
+      BLUE: 'blue',
+      GREEN: 'green',
+      PURPLE: 'purple',
     },
   },
   themes: {
     dark: {
       colors: {
-        green: 'yellow',
-        purple: 'pink',
+        GREEN: 'yellow',
+        PURPLE: 'pink',
       },
     },
   },

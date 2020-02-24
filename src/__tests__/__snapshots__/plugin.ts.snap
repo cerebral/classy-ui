@@ -4,16 +4,16 @@ exports[`classy-ui should allow group with conditional after it: should allow gr
 
 import { compose, group, tokens } from 'classy-ui'
 
-compose(group, true ? tokens.color.red : '')
+compose(group, true ? tokens.color.RED : '')
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 import { fixSpecificity as _fixSpecificity } from 'classy-ui/runtime';
 
-_fixSpecificity((true ? 'color-red' : '') + 'group ');
+_fixSpecificity((true ? 'color-RED' : '') + 'group ');
 
-_addClasses(['color-red', '.color-red{color:red;}']);
+_addClasses(['color-RED', '.color-RED {\\n  color: red;\\n}']);
 
 
 `;
@@ -22,14 +22,14 @@ exports[`classy-ui should convert both breakpoints and pseudos: should convert b
 
 import { compose, tokens } from 'classy-ui'
 
-compose(tokens.color.red.md.hover)
+compose(tokens.color.RED.md.hover)
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
 import { addClasses as _addClasses } from 'classy-ui/runtime';
-('hover:md:color-red ');
+('hover:md:color-RED ');
 
-_addClasses(['hover:md:color-red', '@media (max-width:768px) {.hover\\\\:md\\\\:color-red:hover{color:red;}}']);
+_addClasses(['hover:md:color-RED', '@media (max-width: 768px) {.hover\\\\:md\\\\:color-RED:hover {\\n  color: red;\\n}}']);
 
 
 `;
@@ -38,14 +38,14 @@ exports[`classy-ui should convert breakpoints: should convert breakpoints 1`] = 
 
 import { compose, tokens } from 'classy-ui'
 
-compose(tokens.color.red.md)
+compose(tokens.color.RED.md)
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
 import { addClasses as _addClasses } from 'classy-ui/runtime';
-('md:color-red ');
+('md:color-RED ');
 
-_addClasses(['md:color-red', '@media (max-width:768px) {.md\\\\:color-red{color:red;}}']);
+_addClasses(['md:color-RED', '@media (max-width: 768px) {.md\\\\:color-RED {\\n  color: red;\\n}}']);
 
 
 `;
@@ -54,18 +54,18 @@ exports[`classy-ui should convert complex compositions: should convert complex c
 
 import { compose, tokens } from 'classy-ui'
 
-compose(tokens.color.blue, tokens.color.red.md.lg.hover)
+compose(tokens.color.BLUE, tokens.color.RED.md.lg.hover)
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
 import { addClasses as _addClasses } from 'classy-ui/runtime';
-('color-blue hover:lg:md:color-red ');
+('color-BLUE hover:lg:md:color-RED ');
 
 _addClasses([
-  'color-blue',
-  '.color-blue{color:blue;}',
-  'hover:lg:md:color-red',
-  '@media (max-width:1024px) {.hover\\\\:lg\\\\:md\\\\:color-red:hover{color:red;}}@media (max-width:768px) {.hover\\\\:lg\\\\:md\\\\:color-red:hover{color:red;}}',
+  'color-BLUE',
+  '.color-BLUE {\\n  color: blue;\\n}',
+  'hover:lg:md:color-RED',
+  '@media (max-width: 1024px) {.hover\\\\:lg\\\\:md\\\\:color-RED:hover {\\n  color: red;\\n}}@media (max-width: 768px) {.hover\\\\:lg\\\\:md\\\\:color-RED:hover {\\n  color: red;\\n}}',
 ]);
 
 
@@ -75,14 +75,14 @@ exports[`classy-ui should convert pseudos: should convert pseudos 1`] = `
 
 import { compose, tokens } from 'classy-ui'
 
-compose(tokens.color.red.hover)
+compose(tokens.color.RED.hover)
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
 import { addClasses as _addClasses } from 'classy-ui/runtime';
-('hover:color-red ');
+('hover:color-RED ');
 
-_addClasses(['hover:color-red', '.hover\\\\:color-red:hover{color:red;}']);
+_addClasses(['hover:color-RED', '.hover\\\\:color-RED:hover {\\n  color: red;\\n}']);
 
 
 `;
@@ -91,14 +91,14 @@ exports[`classy-ui should convert simple: should convert simple 1`] = `
 
 import { compose, tokens } from 'classy-ui'
 
-compose(tokens.color.red)
+compose(tokens.color.RED)
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
 import { addClasses as _addClasses } from 'classy-ui/runtime';
-('color-red ');
+('color-RED ');
 
-_addClasses(['color-red', '.color-red{color:red;}']);
+_addClasses(['color-RED', '.color-RED {\\n  color: red;\\n}']);
 
 
 `;
@@ -107,36 +107,36 @@ exports[`classy-ui should fix specificity inside object: should fix specificity 
 
 import { compose, tokens } from 'classy-ui'
 
-const buttonBlue = compose(tokens.color.blue);
-const buttonGreen = compose(tokens.color.green);
+const buttonBlue = compose(tokens.color.BLUE);
+const buttonGreen = compose(tokens.color.GREEN);
 
-const buttonRed = compose(buttonBlue, buttonGreen, tokens.color.red);
+const buttonRed = compose(buttonBlue, buttonGreen, tokens.color.RED);
 
-{className: compose(buttonRed, tokens.color.green.hover)}
+{className: compose(buttonRed, tokens.color.GREEN.hover)}
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 import { fixSpecificity as _fixSpecificity2 } from 'classy-ui/runtime';
 import { fixSpecificity as _fixSpecificity } from 'classy-ui/runtime';
-const buttonBlue = 'color-blue ';
-const buttonGreen = 'color-green ';
+const buttonBlue = 'color-BLUE ';
+const buttonGreen = 'color-GREEN ';
 
-const buttonRed = _fixSpecificity(buttonBlue + buttonGreen + 'color-red ');
+const buttonRed = _fixSpecificity(buttonBlue + buttonGreen + 'color-RED ');
 
 {
-  className: _fixSpecificity2(buttonRed + 'hover:color-green ');
+  className: _fixSpecificity2(buttonRed + 'hover:color-GREEN ');
 }
 
 _addClasses([
-  'color-blue',
-  '.color-blue{color:blue;}',
-  'color-green',
-  '.color-green{color:var(--colors-green);}:root{--colors-green:green;}\\n.themes-dark{--colors-green:yellow;}',
-  'color-red',
-  '.color-red{color:red;}',
-  'hover:color-green',
-  '.hover\\\\:color-green:hover{color:var(--colors-green);}:root{--colors-green:green;}\\n.themes-dark{--colors-green:yellow;}',
+  'color-BLUE',
+  '.color-BLUE {\\n  color: blue;\\n}',
+  'color-GREEN',
+  '.color-GREEN {\\n  color: var(--colors-GREEN);\\n}:root{--colors-GREEN:green;}\\n.themes-dark{--colors-GREEN:yellow;}',
+  'color-RED',
+  '.color-RED {\\n  color: red;\\n}',
+  'hover:color-GREEN',
+  '.hover\\\\:color-GREEN:hover {\\n  color: var(--colors-GREEN);\\n}:root{--colors-GREEN:green;}\\n.themes-dark{--colors-GREEN:yellow;}',
 ]);
 
 
@@ -145,33 +145,33 @@ _addClasses([
 exports[`classy-ui should fix specifiy issue in dynamic composition: should fix specifiy issue in dynamic composition 1`] = `
 
 import { compose, tokens } from 'classy-ui'
-const aCompose = compose(tokens.color.blue, tokens.backgroundColor.blue)
-const moreCompose = compose(tokens.color.green, tokens.backgroundColor.green)
+const aCompose = compose(tokens.color.BLUE, tokens.backgroundColor.BLUE)
+const moreCompose = compose(tokens.color.GREEN, tokens.backgroundColor.GREEN)
 
-compose(aCompose, moreCompose, tokens.color.red, tokens.backgroundColor.red)
+compose(aCompose, moreCompose, tokens.color.RED, tokens.backgroundColor.RED)
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 import { fixSpecificity as _fixSpecificity } from 'classy-ui/runtime';
-const aCompose = 'color-blue background-color-blue ';
-const moreCompose = 'color-green background-color-green ';
+const aCompose = 'color-BLUE background-color-BLUE ';
+const moreCompose = 'color-GREEN background-color-GREEN ';
 
-_fixSpecificity(aCompose + moreCompose + 'color-red background-color-red ');
+_fixSpecificity(aCompose + moreCompose + 'color-RED background-color-RED ');
 
 _addClasses([
-  'color-blue',
-  '.color-blue{color:blue;}',
-  'background-color-blue',
-  '.background-color-blue{background-color:blue;}',
-  'color-green',
-  '.color-green{color:var(--colors-green);}:root{--colors-green:green;}\\n.themes-dark{--colors-green:yellow;}',
-  'background-color-green',
-  '.background-color-green{background-color:var(--colors-green);}:root{--colors-green:green;}\\n.themes-dark{--colors-green:yellow;}',
-  'color-red',
-  '.color-red{color:red;}',
-  'background-color-red',
-  '.background-color-red{background-color:red;}',
+  'color-BLUE',
+  '.color-BLUE {\\n  color: blue;\\n}',
+  'background-color-BLUE',
+  '.background-color-BLUE {\\n  background-color: blue;\\n}',
+  'color-GREEN',
+  '.color-GREEN {\\n  color: var(--colors-GREEN);\\n}:root{--colors-GREEN:green;}\\n.themes-dark{--colors-GREEN:yellow;}',
+  'background-color-GREEN',
+  '.background-color-GREEN {\\n  background-color: var(--colors-GREEN);\\n}:root{--colors-GREEN:green;}\\n.themes-dark{--colors-GREEN:yellow;}',
+  'color-RED',
+  '.color-RED {\\n  color: red;\\n}',
+  'background-color-RED',
+  '.background-color-RED {\\n  background-color: red;\\n}',
 ]);
 
 
@@ -181,22 +181,49 @@ exports[`classy-ui should handle complex dynamic composition: should handle comp
 
 import { compose, group, tokens } from 'classy-ui'
 
-c(group, true ? tokens.color.red : '', tokens.backgroundColor.red, true ? tokens.display.block : '', tokens.display.inline)
+c(group, true ? tokens.color.RED : '', tokens.backgroundColor.RED, true ? tokens.display.BLOCK : '', tokens.display.INLINE_BLOCK)
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
 import { addClasses as _addClasses } from 'classy-ui/runtime';
-c('group', true ? 'color-red' : '', 'background-color-red', true ? 'display-block' : '', 'display-inline');
+c('group', true ? 'color-RED' : '', 'background-color-RED', true ? 'display-BLOCK' : '', 'display-INLINE_BLOCK');
 
 _addClasses([
-  'color-red',
-  '.color-red{color:red;}',
-  'background-color-red',
-  '.background-color-red{background-color:red;}',
-  'display-block',
-  '.display-block{display:block;}',
-  'display-inline',
-  '.display-inline{display:inline;}',
+  'color-RED',
+  '.color-RED {\\n  color: red;\\n}',
+  'background-color-RED',
+  '.background-color-RED {\\n  background-color: red;\\n}',
+  'display-BLOCK',
+  '.display-BLOCK {\\n  display: block;\\n}',
+  'display-INLINE_BLOCK',
+  '.display-INLINE_BLOCK {\\n  display: inline-block;\\n}',
+]);
+
+
+`;
+
+exports[`classy-ui should handle derived classnames: should handle derived classnames 1`] = `
+
+import { compose, tokens } from 'classy-ui'
+
+{className: compose(tokens.padding.SPACING_02)}
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { addClasses as _addClasses } from 'classy-ui/runtime';
+{
+  className: 'padding-top-SPACING_02 padding-right-SPACING_02 padding-bottom-SPACING_02 padding-left-SPACING_02 ';
+}
+
+_addClasses([
+  'padding-top-SPACING_02',
+  '.padding-top-SPACING_02 {\\n  padding-top: 0.5rem;\\n}',
+  'padding-right-SPACING_02',
+  '.padding-right-SPACING_02 {\\n  padding-right: 0.5rem;\\n}',
+  'padding-bottom-SPACING_02',
+  '.padding-bottom-SPACING_02 {\\n  padding-bottom: 0.5rem;\\n}',
+  'padding-left-SPACING_02',
+  '.padding-left-SPACING_02 {\\n  padding-left: 0.5rem;\\n}',
 ]);
 
 
@@ -256,14 +283,14 @@ exports[`classy-ui should throw when nesting c call: should throw when nesting c
 
 import { compose, tokens } from 'classy-ui'
 
-compose(compose(tokens.color.blue))
+compose(compose(tokens.color.BLUE))
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
 SyntaxError: unknown: CLASSY-UI: don't nest c/compose calls
 [0m [90m 1 | [39m[36mimport[39m { compose[33m,[39m tokens } from [32m'classy-ui'[39m[0m
 [0m [90m 2 | [39m[0m
-[0m[31m[1m>[22m[39m[90m 3 | [39mcompose(compose(tokens[33m.[39mcolor[33m.[39mblue))[0m
+[0m[31m[1m>[22m[39m[90m 3 | [39mcompose(compose(tokens[33m.[39mcolor[33m.[39m[33mBLUE[39m))[0m
 [0m [90m   | [39m        [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[0m
 
 `;

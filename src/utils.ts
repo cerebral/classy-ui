@@ -14,7 +14,7 @@ import {
   IEvaluatedThemes,
   IExtractedClass,
   IExtractedClasses,
-  IVariables,
+  IGlobalTokens,
 } from './types';
 
 export const allowedPseudoDecorators = [
@@ -37,24 +37,24 @@ export const getClassesFromConfig = (
 ) => {
   const classname = config.classnames[classnameKey];
 
-  return Object.keys(classname.variants).reduce((aggr, variantKey, variantIndex) => {
-    const id = `${camelToDash(classnameKey)}-${variantKey}`;
+  return Object.keys(classname.tokens).reduce((aggr, tokenKey, tokenIndex) => {
+    const id = `${camelToDash(classnameKey)}-${tokenKey}`;
     const cssDeriver = config.classnames[classnameKey].css;
     return {
       ...aggr,
       [id]: {
         id,
         classname: classnameKey,
-        variant: variantKey,
+        token: tokenKey,
         derived: Array.isArray(cssDeriver) ? cssDeriver : null,
         variable:
-          classname.variants[variantKey] !== classname.variantsWithoutVariables[variantKey]
+          classname.tokens[tokenKey] !== classname.tokensWithoutVariables[tokenKey]
             ? {
-                value: classname.variants[variantKey],
-                originalValue: classname.variantsWithoutVariables[variantKey],
+                value: classname.tokens[tokenKey],
+                originalValue: classname.tokensWithoutVariables[tokenKey],
               }
             : null,
-        shortName: getShortName(variantIndex),
+        shortName: getShortName(tokenIndex),
       },
     };
   }, {} as IClasses);
@@ -77,31 +77,31 @@ export const deepAssign = (
 };
 
 export const evaluateConfig = (config: IConfig<any>): IEvaluatedConfig => {
-  const configVariables = config.variables || {};
-  const originalVariables: IVariables<any> = {
-    ...baseConfig.variables,
-    ...Object.keys(configVariables).reduce<IVariables<any>>((aggr, key) => {
-      if (typeof configVariables[key] === 'function') {
-        aggr[key] = (configVariables[key] as any)(baseConfig.variables);
+  const configTokens = config.tokens || {};
+  const originalTokens: IGlobalTokens<any> = {
+    ...baseConfig.tokens,
+    ...(Object.keys(configTokens).reduce<IGlobalTokens<any>>((aggr, key) => {
+      if (typeof configTokens[key] === 'function') {
+        aggr[key] = (configTokens[key] as any)(baseConfig.tokens);
       } else {
-        aggr[key] = configVariables[key] as { [key: string]: string };
+        aggr[key] = configTokens[key] as any;
       }
       return aggr;
-    }, {}),
+    }, {}) as any),
   };
 
-  // Reverse themes lookup to variable instead
+  // Reverse themes lookup to tokens instead
   const configThemes = config.themes || {};
-  const themesByVariable = Object.keys(configThemes).reduce((aggr, themeKey) => {
-    Object.keys(configThemes[themeKey]).forEach(variableKey => {
-      if (!aggr[variableKey]) {
-        aggr[variableKey] = {};
+  const themesByTokens = Object.keys(configThemes).reduce((aggr, themeKey) => {
+    Object.keys(configThemes[themeKey]).forEach(tokenKey => {
+      if (!aggr[tokenKey]) {
+        aggr[tokenKey] = {};
       }
-      Object.keys(configThemes[themeKey][variableKey]).forEach(valueKey => {
-        if (!aggr[variableKey][valueKey]) {
-          aggr[variableKey][valueKey] = {};
+      Object.keys(configThemes[themeKey][tokenKey]).forEach(valueKey => {
+        if (!aggr[tokenKey][valueKey]) {
+          aggr[tokenKey][valueKey] = {};
         }
-        aggr[variableKey][valueKey][themeKey] = configThemes[themeKey][variableKey][valueKey];
+        aggr[tokenKey][valueKey][themeKey] = configThemes[themeKey][tokenKey][valueKey];
       });
     });
 
@@ -109,12 +109,10 @@ export const evaluateConfig = (config: IConfig<any>): IEvaluatedConfig => {
   }, {} as IEvaluatedThemes);
 
   // Evaluated variables where values are replaced by CSS variable
-  const variables = Object.keys(originalVariables).reduce<IVariables<any>>((aggr, key) => {
-    aggr[key] = Object.keys(originalVariables[key]).reduce<{ [variant: string]: string }>((subAggr, subKey) => {
+  const tokens = Object.keys(originalTokens).reduce<IGlobalTokens<any>>((aggr, key) => {
+    aggr[key] = Object.keys(originalTokens[key]).reduce<{ [token: string]: string }>((subAggr, subKey) => {
       subAggr[subKey] =
-        themesByVariable[key] && themesByVariable[key][subKey]
-          ? `var(--${key}-${subKey})`
-          : originalVariables[key][subKey];
+        themesByTokens[key] && themesByTokens[key][subKey] ? `var(--${key}-${subKey})` : originalTokens[key][subKey];
 
       return subAggr;
     }, {});
@@ -122,7 +120,7 @@ export const evaluateConfig = (config: IConfig<any>): IEvaluatedConfig => {
     return aggr;
   }, {});
 
-  // Call any dynamic classname variants with both the original variables and
+  // Call any dynamic classname tokens with both the original variables and
   // the ones who have been evaluated with CSS variables
   const allClassnames: IClassnames<any> = { ...baseConfig.classnames, ...config.classnames };
   const classnames = Object.keys(allClassnames).reduce((aggr, key) => {
@@ -131,14 +129,15 @@ export const evaluateConfig = (config: IConfig<any>): IEvaluatedConfig => {
     } else {
       aggr[key] = {
         ...allClassnames[key],
-        variantsWithoutVariables:
-          typeof (allClassnames[key] as any).variants === 'function'
-            ? (allClassnames[key] as any).variants(originalVariables, { negative })
-            : (allClassnames[key] as any).variants,
-        variants:
-          typeof (allClassnames[key] as any).variants === 'function'
-            ? (allClassnames[key] as any).variants(variables, { negative })
-            : (allClassnames[key] as any).variants,
+        tokensWithoutVariables:
+          typeof (allClassnames[key] as any).tokens === 'function'
+            ? (allClassnames[key] as any).tokens(originalTokens, { negative })
+            : (allClassnames[key] as any).tokens,
+        tokens:
+          typeof (allClassnames[key] as any).tokens === 'function'
+            ? (allClassnames[key] as any).tokens(tokens, { negative })
+            : (allClassnames[key] as any).tokens,
+        description: (allClassnames[key] as any).description,
       } as any;
     }
 
@@ -146,10 +145,10 @@ export const evaluateConfig = (config: IConfig<any>): IEvaluatedConfig => {
   }, {} as IEvaluatedClassnames);
 
   return {
-    variables,
+    tokens,
     screens: config.screens || baseConfig.screens,
     classnames,
-    themes: themesByVariable,
+    themes: themesByTokens,
     themeNames: Object.keys(config.themes || {}),
   };
 };
@@ -174,23 +173,23 @@ export const createProductionCss = (productionClassesByType: IClassesByType, con
       const screenCss = productionClassesByType.screens[screen].reduce((aggr, classCss) => {
         return aggr + classCss;
       }, '');
-      css += config.screens[screen](screenCss, config.variables);
+      css += config.screens[screen](screenCss, config.tokens);
     }
   });
 
-  const variableKeys = Object.keys(productionClassesByType.rootVariables);
+  const variableKeys = Object.keys(productionClassesByType.rootTokens);
 
   if (variableKeys.length) {
     css += ':root{';
     variableKeys.forEach(key => {
-      css += `${key}:${productionClassesByType.rootVariables[key]};`;
+      css += `${key}:${productionClassesByType.rootTokens[key]};`;
     });
     css += '}';
   }
 
-  Object.keys(productionClassesByType.themeVariables).forEach(theme => {
-    const variables = Object.keys(productionClassesByType.themeVariables[theme]).reduce(
-      (aggr, variableKey) => `${aggr}${productionClassesByType.themeVariables[theme][variableKey]}`,
+  Object.keys(productionClassesByType.themeTokens).forEach(theme => {
+    const variables = Object.keys(productionClassesByType.themeTokens[theme]).reduce(
+      (aggr, variableKey) => `${aggr}${productionClassesByType.themeTokens[theme][variableKey]}`,
       '',
     );
     css += `.themes-${theme}{${variables}}`;
@@ -227,8 +226,8 @@ export const injectProduction = (classCollection: IExtractedClasses, classes: IC
   const productionClassesByType: IClassesByType = {
     screens: {},
     common: {},
-    themeVariables: {},
-    rootVariables: {},
+    themeTokens: {},
+    rootTokens: {},
   };
 
   Object.keys(classCollection).forEach(uid => {
@@ -245,12 +244,12 @@ export const injectProduction = (classCollection: IExtractedClasses, classes: IC
 
       classnameKeys.forEach(classnameKey => {
         const classConfig = config.classnames[classnameKey];
-        const id = `${camelToDash(classnameKey)}-${configClass.variant}`;
+        const id = `${camelToDash(classnameKey)}-${configClass.token}`;
         const name = classes[id].shortName;
         const classname = prefix + name;
 
         classEntry = createClassEntry(classname, otherDecorators, evaluatedName =>
-          (classConfig.css as any)(evaluatedName, classConfig.variants[configClass.variant]),
+          (classConfig.css as any)(evaluatedName, classConfig.tokens[configClass.token]),
         );
 
         if (screenDecorators.length) {
@@ -271,16 +270,16 @@ export const injectProduction = (classCollection: IExtractedClasses, classes: IC
           );
 
           config.themeNames.forEach(theme => {
-            productionClassesByType.themeVariables[theme] = productionClassesByType.themeVariables[theme] || {};
+            productionClassesByType.themeTokens[theme] = productionClassesByType.themeTokens[theme] || {};
             variables.forEach(variable => {
               const variableParts = variable.substr(2).split('-');
               const variableKey = variableParts.shift() as string;
               const variableValueKey = variableParts.join('-');
 
-              productionClassesByType.themeVariables[theme][
+              productionClassesByType.themeTokens[theme][
                 variable
               ] = `${variable}:${themes[variableKey][variableValueKey][theme]};`;
-              productionClassesByType.rootVariables[variable] = originalValue;
+              productionClassesByType.rootTokens[variable] = originalValue;
             });
           });
         }
@@ -308,17 +307,17 @@ export const injectDevelopment = (classCollection: IExtractedClasses, classes: I
     return aggr.concat(
       classnameKeys.reduce((injections, classnameKey) => {
         const classConfig = config.classnames[classnameKey];
-        const name = `${camelToDash(classnameKey)}-${configClass.variant}`;
+        const name = `${camelToDash(classnameKey)}-${configClass.token}`;
         const classname = prefix + name;
         const classEntry = createClassEntry(classname, otherDecorators, evaluatedName =>
-          (classConfig.css as any)(evaluatedName, classConfig.variants[configClass.variant]),
+          (classConfig.css as any)(evaluatedName, classConfig.tokens[configClass.token]),
         );
 
         let css = '';
 
         if (screenDecorators.length) {
           screenDecorators.forEach(screen => {
-            css += config.screens[screen](classEntry, config.variables);
+            css += config.screens[screen](classEntry, config.tokens);
           });
         } else {
           css = classEntry;
@@ -382,16 +381,6 @@ export const createClassObject = (
   classes: IClasses,
   isProduction: boolean,
 ): IExtractedClass => {
-  /*
-  TODO: We have to handle themes
-  if (id && id.startsWith('themes-')) {
-    return {
-      id,
-      name: id,
-      decorators: [],
-    };
-  }
-  */
   const id = `${camelToDash(baseClass)}-${token}`;
   const uid = [decorators.sort().join(':'), id]
     .filter(Boolean)
@@ -399,17 +388,6 @@ export const createClassObject = (
     .join(':');
 
   const returnedDecorators = decorators.slice() as IExtractedClass['decorators'];
-
-  // TODO: We need to handle GROUP
-  /*
-  if (decorators[decorators.length - 1] === 'group') {
-    return {
-      id,
-      name: `group ${(id && isProduction ? classes[id].shortName : id) || ''}`,
-      decorators: returnedDecorators,
-    };
-  }
-  */
 
   let name: string;
   if (id && isProduction && classes[id].derived) {

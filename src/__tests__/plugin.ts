@@ -12,35 +12,35 @@ pluginTester({
       code: `
 import { compose, tokens } from 'classy-ui'
 
-compose(tokens.color.red)`,
+compose(tokens.color.RED)`,
     },
     {
       title: 'should convert pseudos',
       code: `
 import { compose, tokens } from 'classy-ui'
 
-compose(tokens.color.red.hover)`,
+compose(tokens.color.RED.hover)`,
     },
     {
       title: 'should convert breakpoints',
       code: `
 import { compose, tokens } from 'classy-ui'
 
-compose(tokens.color.red.md)`,
+compose(tokens.color.RED.md)`,
     },
     {
       title: 'should convert both breakpoints and pseudos',
       code: `
 import { compose, tokens } from 'classy-ui'
 
-compose(tokens.color.red.md.hover)`,
+compose(tokens.color.RED.md.hover)`,
     },
     {
       title: 'should convert complex compositions',
       code: `
 import { compose, tokens } from 'classy-ui'
 
-compose(tokens.color.blue, tokens.color.red.md.lg.hover)
+compose(tokens.color.BLUE, tokens.color.RED.md.lg.hover)
 `,
     },
     {
@@ -49,7 +49,7 @@ compose(tokens.color.blue, tokens.color.red.md.lg.hover)
       code: `
 import { compose, tokens } from 'classy-ui'
 
-compose(compose(tokens.color.blue))`,
+compose(compose(tokens.color.BLUE))`,
     },
     {
       error: false,
@@ -64,23 +64,23 @@ compose(group)`,
       code: `
 import { compose, group, tokens } from 'classy-ui'
 
-compose(group, true ? tokens.color.red : '')`,
+compose(group, true ? tokens.color.RED : '')`,
     },
     {
       title: 'should handle complex dynamic composition',
       code: `
 import { compose, group, tokens } from 'classy-ui'
 
-c(group, true ? tokens.color.red : '', tokens.backgroundColor.red, true ? tokens.display.block : '', tokens.display.inline)`,
+c(group, true ? tokens.color.RED : '', tokens.backgroundColor.RED, true ? tokens.display.BLOCK : '', tokens.display.INLINE_BLOCK)`,
     },
     {
       title: 'should fix specifiy issue in dynamic composition',
       code: `
 import { compose, tokens } from 'classy-ui'
-const aCompose = compose(tokens.color.blue, tokens.backgroundColor.blue)
-const moreCompose = compose(tokens.color.green, tokens.backgroundColor.green)
+const aCompose = compose(tokens.color.BLUE, tokens.backgroundColor.BLUE)
+const moreCompose = compose(tokens.color.GREEN, tokens.backgroundColor.GREEN)
 
-compose(aCompose, moreCompose, tokens.color.red, tokens.backgroundColor.red)`,
+compose(aCompose, moreCompose, tokens.color.RED, tokens.backgroundColor.RED)`,
     },
     {
       title: 'should handle dynamic calls to some function',
@@ -94,12 +94,12 @@ compose(group, someFunction())`,
       code: `
 import { compose, tokens } from 'classy-ui'
 
-const buttonBlue = compose(tokens.color.blue);
-const buttonGreen = compose(tokens.color.green);
+const buttonBlue = compose(tokens.color.BLUE);
+const buttonGreen = compose(tokens.color.GREEN);
 
-const buttonRed = compose(buttonBlue, buttonGreen, tokens.color.red);
+const buttonRed = compose(buttonBlue, buttonGreen, tokens.color.RED);
 
-{className: compose(buttonRed, tokens.color.green.hover)}
+{className: compose(buttonRed, tokens.color.GREEN.hover)}
 
 
 `,
@@ -109,7 +109,7 @@ const buttonRed = compose(buttonBlue, buttonGreen, tokens.color.red);
       code: `
 import { compose, tokens } from 'classy-ui'
 
-{className: compose(tokens.padding.2)}
+{className: compose(tokens.padding.SPACING_02)}
 
 
 `,
