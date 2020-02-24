@@ -2,23 +2,23 @@
 
 exports[`INJECT DEVELOPMENT should handle references classnames 1`] = `
 Array [
-  "border-top-color-GREEN",
-  ".border-top-color-GREEN:hover {
+  "border-top-color\\\\@GREEN",
+  ".border-top-color\\\\@GREEN:hover {
   border-top-color: var(--colors-GREEN);
 }:root{--colors-GREEN:green;}
 .themes-dark{--colors-GREEN:yellow;}",
-  "border-right-color-GREEN",
-  ".border-right-color-GREEN:hover {
+  "border-right-color\\\\@GREEN",
+  ".border-right-color\\\\@GREEN:hover {
   border-right-color: var(--colors-GREEN);
 }:root{--colors-GREEN:green;}
 .themes-dark{--colors-GREEN:yellow;}",
-  "border-bottom-color-GREEN",
-  ".border-bottom-color-GREEN:hover {
+  "border-bottom-color\\\\@GREEN",
+  ".border-bottom-color\\\\@GREEN:hover {
   border-bottom-color: var(--colors-GREEN);
 }:root{--colors-GREEN:green;}
 .themes-dark{--colors-GREEN:yellow;}",
-  "border-left-color-GREEN",
-  ".border-left-color-GREEN:hover {
+  "border-left-color\\\\@GREEN",
+  ".border-left-color\\\\@GREEN:hover {
   border-left-color: var(--colors-GREEN);
 }:root{--colors-GREEN:green;}
 .themes-dark{--colors-GREEN:yellow;}",
@@ -27,8 +27,8 @@ Array [
 
 exports[`INJECT DEVELOPMENT should inject both pseudo selector and breakpoint 1`] = `
 Array [
-  "hover:md:color-RED",
-  "@media (max-width: 768px) {.hover\\\\:md\\\\:color-RED:hover {
+  "hover:md:color\\\\@RED",
+  "@media (max-width: 768px) {.hover\\\\:md\\\\:color\\\\@RED:hover {
   color: red;
 }}",
 ]
@@ -36,8 +36,8 @@ Array [
 
 exports[`INJECT DEVELOPMENT should inject group decorators 1`] = `
 Array [
-  "groupHover:color-GREEN",
-  ".group:hover .groupHover\\\\:color-GREEN {
+  "groupHover:color\\\\@GREEN",
+  ".group:hover .groupHover\\\\:color\\\\@GREEN {
   color: var(--colors-GREEN);
 }:root{--colors-GREEN:green;}
 .themes-dark{--colors-GREEN:yellow;}",
@@ -46,12 +46,12 @@ Array [
 
 exports[`INJECT DEVELOPMENT should inject multiple 1`] = `
 Array [
-  "md:color-RED",
-  "@media (max-width: 768px) {.md\\\\:color-RED {
+  "md:color\\\\@RED",
+  "@media (max-width: 768px) {.md\\\\:color\\\\@RED {
   color: red;
 }}",
-  "hover:md:color-BLUE",
-  "@media (max-width: 768px) {.hover\\\\:md\\\\:color-BLUE:hover {
+  "hover:md:color\\\\@BLUE",
+  "@media (max-width: 768px) {.hover\\\\:md\\\\:color\\\\@BLUE:hover {
   color: blue;
 }}",
 ]
@@ -59,8 +59,8 @@ Array [
 
 exports[`INJECT DEVELOPMENT should inject simple 1`] = `
 Array [
-  "color-RED",
-  ".color-RED {
+  "color\\\\@RED",
+  ".color\\\\@RED {
   color: red;
 }",
 ]
@@ -68,8 +68,8 @@ Array [
 
 exports[`INJECT DEVELOPMENT should inject themes 1`] = `
 Array [
-  "md:color-GREEN",
-  "@media (max-width: 768px) {.md\\\\:color-GREEN {
+  "md:color\\\\@GREEN",
+  "@media (max-width: 768px) {.md\\\\:color\\\\@GREEN {
   color: var(--colors-GREEN);
 }}:root{--colors-GREEN:green;}
 .themes-dark{--colors-GREEN:yellow;}",
@@ -78,8 +78,8 @@ Array [
 
 exports[`INJECT DEVELOPMENT should inject with breakpoint 1`] = `
 Array [
-  "md:color-RED",
-  "@media (max-width: 768px) {.md\\\\:color-RED {
+  "md:color\\\\@RED",
+  "@media (max-width: 768px) {.md\\\\:color\\\\@RED {
   color: red;
 }}",
 ]
@@ -87,10 +87,10 @@ Array [
 
 exports[`INJECT DEVELOPMENT should inject with multiple breakpoints 1`] = `
 Array [
-  "sm:xl:color-RED",
-  "@media (max-width: 640px) {.sm\\\\:xl\\\\:color-RED {
+  "sm:xl:color\\\\@RED",
+  "@media (max-width: 640px) {.sm\\\\:xl\\\\:color\\\\@RED {
   color: red;
-}}@media (max-width: 1280px) {.sm\\\\:xl\\\\:color-RED {
+}}@media (max-width: 1280px) {.sm\\\\:xl\\\\:color\\\\@RED {
   color: red;
 }}",
 ]
@@ -98,8 +98,8 @@ Array [
 
 exports[`INJECT DEVELOPMENT should inject with multiple pseudo selectors 1`] = `
 Array [
-  "firstChild:hover:color-RED",
-  ".firstChild\\\\:hover\\\\:color-RED:first-child:hover {
+  "firstChild:hover:color\\\\@RED",
+  ".firstChild\\\\:hover\\\\:color\\\\@RED:first-child:hover {
   color: red;
 }",
 ]
@@ -107,8 +107,8 @@ Array [
 
 exports[`INJECT DEVELOPMENT should inject with pseudo selector 1`] = `
 Array [
-  "hover:color-RED",
-  ".hover\\\\:color-RED:hover {
+  "hover:color\\\\@RED",
+  ".hover\\\\:color\\\\@RED:hover {
   color: red;
 }",
 ]
