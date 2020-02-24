@@ -259,7 +259,7 @@ export const injectProduction = (classCollection: IExtractedClasses, classes: IC
             productionClassesByType.screens[screen].push(classEntry);
           });
         } else {
-          productionClassesByType.common[id] = classEntry;
+          productionClassesByType.common[classname] = classEntry;
         }
 
         if (configClass.variable) {
@@ -343,7 +343,7 @@ export const injectDevelopment = (classCollection: IExtractedClasses, classes: I
           });
         }
 
-        return injections.concat([name, css]);
+        return injections.concat([classname, css]);
       }, [] as string[]),
     );
   }, [] as string[]);

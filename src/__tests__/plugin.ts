@@ -107,9 +107,19 @@ const buttonRed = compose(buttonBlue, buttonGreen, tokens.color.red);
     {
       title: 'should handle derived classnames',
       code: `
-import { c } from 'classy-ui'
+import { compose, tokens } from 'classy-ui'
 
-{className: c('padding-2')}
+{className: compose(tokens.padding.2)}
+
+
+`,
+    },
+    {
+      title: 'should handle themes',
+      code: `
+import { themes } from 'classy-ui'
+
+c(themes.dark)
 
 
 `,

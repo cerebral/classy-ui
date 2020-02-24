@@ -29,7 +29,7 @@ compose(tokens.color.red.md.hover)
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 ('hover:md:color-red ');
 
-_addClasses(['color-red', '@media (max-width:768px) {.hover\\\\:md\\\\:color-red:hover{color:red;}}']);
+_addClasses(['hover:md:color-red', '@media (max-width:768px) {.hover\\\\:md\\\\:color-red:hover{color:red;}}']);
 
 
 `;
@@ -45,7 +45,7 @@ compose(tokens.color.red.md)
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 ('md:color-red ');
 
-_addClasses(['color-red', '@media (max-width:768px) {.md\\\\:color-red{color:red;}}']);
+_addClasses(['md:color-red', '@media (max-width:768px) {.md\\\\:color-red{color:red;}}']);
 
 
 `;
@@ -64,7 +64,7 @@ import { addClasses as _addClasses } from 'classy-ui/runtime';
 _addClasses([
   'color-blue',
   '.color-blue{color:blue;}',
-  'color-red',
+  'hover:lg:md:color-red',
   '@media (max-width:1024px) {.hover\\\\:lg\\\\:md\\\\:color-red:hover{color:red;}}@media (max-width:768px) {.hover\\\\:lg\\\\:md\\\\:color-red:hover{color:red;}}',
 ]);
 
@@ -82,7 +82,7 @@ compose(tokens.color.red.hover)
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 ('hover:color-red ');
 
-_addClasses(['color-red', '.hover\\\\:color-red:hover{color:red;}']);
+_addClasses(['hover:color-red', '.hover\\\\:color-red:hover{color:red;}']);
 
 
 `;
@@ -135,7 +135,7 @@ _addClasses([
   '.color-green{color:var(--colors-green);}:root{--colors-green:green;}\\n.themes-dark{--colors-green:yellow;}',
   'color-red',
   '.color-red{color:red;}',
-  'color-green',
+  'hover:color-green',
   '.hover\\\\:color-green:hover{color:var(--colors-green);}:root{--colors-green:green;}\\n.themes-dark{--colors-green:yellow;}',
 ]);
 
@@ -202,24 +202,6 @@ _addClasses([
 
 `;
 
-exports[`classy-ui should handle derived classnames: should handle derived classnames 1`] = `
-
-import { c } from 'classy-ui'
-
-{className: c('padding-2')}
-
-      ↓ ↓ ↓ ↓ ↓ ↓
-
-import { addClasses as _addClasses } from 'classy-ui/runtime';
-{
-  className: 'padding-2 ';
-}
-
-_addClasses([]);
-
-
-`;
-
 exports[`classy-ui should handle dynamic calls to some function: should handle dynamic calls to some function 1`] = `
 
 import { compose, group } from 'classy-ui'
@@ -232,6 +214,22 @@ import { addClasses as _addClasses } from 'classy-ui/runtime';
 import { fixSpecificity as _fixSpecificity } from 'classy-ui/runtime';
 
 _fixSpecificity(someFunction() + 'group ');
+
+_addClasses([]);
+
+
+`;
+
+exports[`classy-ui should handle themes: should handle themes 1`] = `
+
+import { themes } from 'classy-ui'
+
+c(themes.dark)
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { addClasses as _addClasses } from 'classy-ui/runtime';
+c('themes-dark');
 
 _addClasses([]);
 
@@ -251,5 +249,21 @@ import { addClasses as _addClasses } from 'classy-ui/runtime';
 
 _addClasses([]);
 
+
+`;
+
+exports[`classy-ui should throw when nesting c call: should throw when nesting c call 1`] = `
+
+import { compose, tokens } from 'classy-ui'
+
+compose(compose(tokens.color.blue))
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+SyntaxError: unknown: CLASSY-UI: don't nest c/compose calls
+[0m [90m 1 | [39m[36mimport[39m { compose[33m,[39m tokens } from [32m'classy-ui'[39m[0m
+[0m [90m 2 | [39m[0m
+[0m[31m[1m>[22m[39m[90m 3 | [39mcompose(compose(tokens[33m.[39mcolor[33m.[39mblue))[0m
+[0m [90m   | [39m        [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[0m
 
 `;
