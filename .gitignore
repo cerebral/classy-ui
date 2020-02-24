@@ -5,7 +5,7 @@
 dist
 lib
 es
-styles.css
+styles
 
 ### macOS ###
 *.DS_Store

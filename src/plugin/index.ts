@@ -1,5 +1,5 @@
-import { writeFileSync } from 'fs';
-import { join } from 'path';
+import { writeFileSync, mkdirSync } from 'fs';
+import { join, basename, extname, relative } from 'path';
 
 import { addNamed, addSideEffect } from '@babel/helper-module-imports';
 
@@ -8,7 +8,7 @@ import { transform as transformConfigToClasses } from '../config/transform-confi
 import { IExtractedClass, IExtractedClasses } from '../types';
 import { createClassObject, evaluateConfig, getUserConfig, injectDevelopment, injectProduction } from '../utils';
 
-const cssPath = join(__dirname, '..', '..', 'styles.css');
+const cssFolder = join(__dirname, '..', '..', 'styles');
 const config = evaluateConfig(getUserConfig());
 const classes = transformConfigToClasses(config);
 
@@ -20,6 +20,7 @@ if (process.env.NODE_ENV !== 'test') {
 
     writeFileSync(esTypesPath, types);
     writeFileSync(libTypesPath, types);
+    mkdirSync(cssFolder);
   } catch {
     // Codesandbox or some other unwritable environment
   }
@@ -62,8 +63,11 @@ export default (babel: any) => {
   };
 };
 
+let gloabelId = 0;
+
 export function processReferences(babel: any, state: any, refs: any) {
   const { types: t } = babel;
+  const filePath = state.file.opts.parserOpts.sourceFileName;
   const isProduction = babel.getEnv() === 'production';
   const classCollection: IExtractedClasses = {};
 
@@ -76,11 +80,16 @@ export function processReferences(babel: any, state: any, refs: any) {
   refs['compose'] && processCompose(refs['compose']);
   refs['c'] && processCompose(refs['c']);
 
-  if (isProduction) {
+  if (isProduction && filePath) {
+    const cssFilePrefix = basename(relative(process.cwd(), filePath).replace(/\/|\\/g, '_'), extname(filePath));
+
+    const cssFileName = cssFilePrefix + '-' + gloabelId++ + '.css';
+    const cssPath = join(cssFolder, cssFileName);
+
     writeFileSync(cssPath, injectProduction(classCollection, classes, config));
 
     if (state.opts.autoImport !== false) {
-      addSideEffect(state.file.path, 'classy-ui/styles.css');
+      addSideEffect(state.file.path, 'classy-ui/styles/' + cssFileName);
     }
   } else {
     const runtimeCall = t.expressionStatement(
