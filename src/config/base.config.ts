@@ -21,10 +21,10 @@ export const config: IBaseConfig<
 > = {
   tokens: {
     breakpoints: {
-      SMALL_SCREEN: '640px',
-      MEDIUM_SCREEN: '768px',
-      LARGE_SCREEN: '1024px',
-      EXTRA_LARGE_SCREEN: '1280px',
+      SMALL: '640px',
+      MEDIUM: '768px',
+      LARGE: '1024px',
+      EXTRA_LARGE: '1280px',
     },
     spacing: {
       PX: '1px',
@@ -240,10 +240,10 @@ export const config: IBaseConfig<
     },
   },
   screens: {
-    sm: (css, { breakpoints }) => `@media (max-width: ${breakpoints.SMALL_SCREEN}) {${css}}`,
-    md: (css, { breakpoints }) => `@media (max-width: ${breakpoints.MEDIUM_SCREEN}) {${css}}`,
-    lg: (css, { breakpoints }) => `@media (max-width: ${breakpoints.LARGE_SCREEN}) {${css}}`,
-    xl: (css, { breakpoints }) => `@media (max-width: ${breakpoints.EXTRA_LARGE_SCREEN}) {${css}}`,
+    sm: (css, { breakpoints }) => `@media (max-width: ${breakpoints.SMALL}) {${css}}`,
+    md: (css, { breakpoints }) => `@media (max-width: ${breakpoints.MEDIUM}) {${css}}`,
+    lg: (css, { breakpoints }) => `@media (max-width: ${breakpoints.LARGE}) {${css}}`,
+    xl: (css, { breakpoints }) => `@media (max-width: ${breakpoints.EXTRA_LARGE}) {${css}}`,
   },
   classnames: {
     boxSizing: {
