@@ -31,7 +31,7 @@ export const addClasses = (classes: string[]) => {
 export const fixSpecificity = (classnames: string) => {
   const a = new Map();
   for (const n of classnames.split(' ')) {
-    a.set(n.substr(0, n.indexOf('_')), n);
+    a.set(n.substr(0, n.indexOf('-')), n);
   }
   classnames = '';
   for (const n of a.values()) {
@@ -47,22 +47,8 @@ const throwError = () => {
 };
 
 export const c = throwError;
-export const hover = throwError;
+export const t = throwError;
+export const compose = throwError;
+export const tokens = throwError;
+export const themes = throwError;
 export const group = throwError;
-export const active = throwError;
-export const disabled = throwError;
-export const visited = throwError;
-export const firstChild = throwError;
-export const lastChild = throwError;
-export const oddChild = throwError;
-export const evenChild = throwError;
-export const focusWithin = throwError;
-export const groupHover = throwError;
-export const groupActive = throwError;
-export const groupDisabled = throwError;
-export const groupVisited = throwError;
-export const groupFirstChild = throwError;
-export const groupLastChild = throwError;
-export const groupOddChild = throwError;
-export const groupEvenChild = throwError;
-export const groupFocusWithin = throwError;
