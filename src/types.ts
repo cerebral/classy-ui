@@ -1,7 +1,7 @@
 export interface IClass {
   id: string;
   classname: string;
-  variant: string;
+  token: string;
   shortName: string;
   derived: string[] | null;
   variable: {
@@ -12,19 +12,19 @@ export interface IClass {
 
 export type IClasses = Record<string, IClass>;
 
-export type IVariants = Record<string, string>;
+export type ITokens = Record<string, string>;
 
 export type IClassnames<T extends string> = Record<
   string,
   {
-    variants?:
+    tokens?:
       | { [name: string]: string }
       | ((
-          tokens: ITokens<T>,
+          tokens: IGlobalTokens<T>,
           utils: {
             negative: (value: { [key: string]: string }) => { [key: string]: string };
           },
-        ) => IVariants);
+        ) => ITokens);
     css: ((name: string, value: string) => string) | string[];
     description?: string;
   }
@@ -32,23 +32,23 @@ export type IClassnames<T extends string> = Record<
 
 export interface IEvaluatedClassnames {
   [name: string]: {
-    variants: { [name: string]: string };
-    variantsWithoutVariables: { [name: string]: string };
+    tokens: { [name: string]: string };
+    tokensWithoutVariables: { [name: string]: string };
     css: ((name: string, value: string) => string) | string[];
     description?: string;
   };
 }
 
-export type ITokens<T extends string> = {
-  [key in T]: { [variant: string]: string };
+export type IGlobalTokens<T extends string> = {
+  [key in T]: { [token: string]: string };
 };
 
-export interface IBaseConfig<T extends string, U = ITokens<T>> {
+export interface IBaseConfig<T extends string, U = IGlobalTokens<T>> {
   tokens: {
-    [key in T]: { [variant: string]: string | { value: string; description: string } };
+    [key in T]: { [token: string]: string };
   };
   screens: {
-    [name: string]: (css: string, tokens: ITokens<T>) => string;
+    [name: string]: (css: string, tokens: IGlobalTokens<T>) => string;
   };
   classnames: IClassnames<T>;
   themes?: {
@@ -58,12 +58,12 @@ export interface IBaseConfig<T extends string, U = ITokens<T>> {
   };
 }
 
-export interface IConfig<T extends string, U = ITokens<T>> {
+export interface IConfig<T extends string, U = IGlobalTokens<T>> {
   tokens?: {
-    [key in T]: ((tokens: ITokens<T>) => { [variant: string]: string }) | { [variant: string]: string };
+    [key in T]: ((tokens: IGlobalTokens<T>) => { [token: string]: string }) | { [token: string]: string };
   };
   screens?: {
-    [name: string]: (css: string, tokens: ITokens<T>) => string;
+    [name: string]: (css: string, tokens: IGlobalTokens<T>) => string;
   };
   classnames?: IClassnames<T>;
   themes?: {
@@ -82,9 +82,9 @@ export interface IEvaluatedThemes {
 }
 
 export interface IEvaluatedConfig {
-  tokens: ITokens<any>;
+  tokens: IGlobalTokens<any>;
   screens: {
-    [name: string]: (css: string, tokens: ITokens<any>) => string;
+    [name: string]: (css: string, tokens: IGlobalTokens<any>) => string;
   };
   classnames: IEvaluatedClassnames;
   themeNames: string[];

@@ -14,8 +14,8 @@ describe('EVALUATE CONFIGS', () => {
       }),
     );
     expect(config.variables.colors.red).toBe('red');
-    expect(config.classnames.color.variants.red).toBe('red');
-    expect(config.classnames.color.variantsWithoutVariables.red).toBe('red');
+    expect(config.classnames.color.tokens.red).toBe('red');
+    expect(config.classnames.color.tokensWithoutVariables.red).toBe('red');
   });
   test('should evaluate a config with themes', () => {
     const config = json(
@@ -34,8 +34,8 @@ describe('EVALUATE CONFIGS', () => {
         },
       }),
     );
-    expect(config.classnames.color.variants.red).toBe('var(--colors-red)');
-    expect(config.classnames.color.variantsWithoutVariables.red).toBe('red');
+    expect(config.classnames.color.tokens.red).toBe('var(--colors-red)');
+    expect(config.classnames.color.tokensWithoutVariables.red).toBe('red');
     expect(config.themeNames).toEqual(['dark']);
   });
 });

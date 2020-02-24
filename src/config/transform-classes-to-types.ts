@@ -1,20 +1,20 @@
 import { IEvaluatedConfig } from '../types';
 import { allowedPseudoDecorators, camelToDash } from '../utils';
 
-function convertClassnameToType(baseClass: string, variant: string, config: IEvaluatedConfig) {
+function convertClassnameToType(baseClass: string, token: string, config: IEvaluatedConfig) {
   const cssConstructor = config.classnames[baseClass].css;
   const css: string[] =
     typeof cssConstructor === 'function'
       ? [
-          cssConstructor(`.${camelToDash(baseClass)}_${variant}`, config.classnames[baseClass].variants[variant])
+          cssConstructor(`.${camelToDash(baseClass)}-${token}`, config.classnames[baseClass].tokens[token])
             .split('\n')
             .join('\n   * '),
         ]
       : cssConstructor.reduce<string[]>((aggr, derivedBaseClass) => {
           return aggr.concat(
             (config.classnames[derivedBaseClass].css as any)(
-              `.${camelToDash(baseClass)}_${variant}`,
-              config.classnames[derivedBaseClass].variants[variant],
+              `.${camelToDash(baseClass)}-${token}`,
+              config.classnames[derivedBaseClass].tokens[token],
             )
               .split('\n')
               .join('\n   * '),
@@ -23,17 +23,17 @@ function convertClassnameToType(baseClass: string, variant: string, config: IEva
   return `
   /**
    ${
-     config.classnames[baseClass].variants[variant].startsWith('#')
-       ? `* ![${config.classnames[baseClass].variants[variant]}](https://placehold.it/15/${config.classnames[
+     config.classnames[baseClass].tokens[token].startsWith('#')
+       ? `* ![${config.classnames[baseClass].tokens[token]}](https://placehold.it/15/${config.classnames[
            baseClass
-         ].variants[variant].substr(1)}/000000?text=+)`
+         ].tokens[token].substr(1)}/000000?text=+)`
        : ''
    }
    * \`\`\`css
    * ${css.join('\n')}
    * \`\`\`
    */
-  "${variant}": IDecorators;
+  "${token}": IDecorators;
   `;
 }
 
@@ -134,9 +134,9 @@ export type TTokens = {
       : ''
   }
   ${baseClass}: {
-    ${Object.keys(config.classnames[baseClass].variants)
-      .reduce<string[]>((subAggr, variant) => {
-        return subAggr.concat(convertClassnameToType(baseClass, variant, config));
+    ${Object.keys(config.classnames[baseClass].tokens)
+      .reduce<string[]>((subAggr, token) => {
+        return subAggr.concat(convertClassnameToType(baseClass, token, config));
       }, [])
       .join('\n')}
   }

@@ -247,7 +247,7 @@ export const config: IBaseConfig<
   },
   classnames: {
     boxSizing: {
-      variants: {
+      tokens: {
         CONTENT_BOX: 'content-box',
         BORDER_BOX: 'border-box',
       },
@@ -255,7 +255,7 @@ export const config: IBaseConfig<
       description: describeClassname('box-sizing', 'Sets how the total width and height of an element is calculated.'),
     },
     display: {
-      variants: {
+      tokens: {
         BLOCK: 'block',
         INLINE_BLOCK: 'inline-block',
         INLINE: 'inline',
@@ -270,14 +270,14 @@ export const config: IBaseConfig<
       css: (name, value) => `${name} {\n  display: ${value};\n}`,
     },
     tableLayout: {
-      variants: {
+      tokens: {
         AUTO: 'auto',
         FIXED: 'fixed',
       },
       css: (name, value) => `${name} {\n  table-layout: ${value};\n}`,
     },
     position: {
-      variants: {
+      tokens: {
         STATIC: 'static',
         FIXED: 'fixed',
         ABSOLUTE: 'absolute',
@@ -287,7 +287,7 @@ export const config: IBaseConfig<
       css: (name, value) => `${name} {\n  position: ${value};\n}`,
     },
     backgroundAttachment: {
-      variants: {
+      tokens: {
         FIXED: 'fixed',
         LOCAL: 'local',
         SCROLL: 'scroll',
@@ -295,11 +295,11 @@ export const config: IBaseConfig<
       css: (name, value) => `${name} {\n  background-attachment: ${value};\n}`,
     },
     backgroundColor: {
-      variants: ({ colors }) => colors,
+      tokens: ({ colors }) => colors,
       css: (name, value) => `${name} {\n  background-color: ${value};\n}`,
     },
     backgroundPosition: {
-      variants: {
+      tokens: {
         BOTTOM: 'bottom',
         CENTER: 'center',
         LEFT: 'left',
@@ -313,7 +313,7 @@ export const config: IBaseConfig<
       css: (name, value) => `${name} {\n  background-position: ${value};\n}`,
     },
     backgroundRepeat: {
-      variants: {
+      tokens: {
         REPEAT: 'background-repeat:repeat',
         NO_REPEAT: 'background-repeat:no-repeat',
         REPEAT_X: 'background-repeat:repeat-x',
@@ -324,7 +324,7 @@ export const config: IBaseConfig<
       css: (name, value) => `${name} {\n  background-repeat: ${value};\n}`,
     },
     backgroundSize: {
-      variants: {
+      tokens: {
         AUTO: 'auto',
         COVER: 'cover',
         CONTAIN: 'contain',
@@ -332,67 +332,67 @@ export const config: IBaseConfig<
       css: (name, value) => `${name} {\n  background-size: ${value};\n}`,
     },
     borderRadius: {
-      variants: ({ borderRadius }) => borderRadius,
+      tokens: ({ borderRadius }) => borderRadius,
       css: (name, value) => `${name} {\n  border-radius: ${value};\n}`,
     },
     borderTopLeftRadius: {
-      variants: ({ borderRadius }) => borderRadius,
+      tokens: ({ borderRadius }) => borderRadius,
       css: (name, value) => `${name} {\n  border-top-left-radius: ${value};\n}`,
     },
     borderTopRightRadius: {
-      variants: ({ borderRadius }) => borderRadius,
+      tokens: ({ borderRadius }) => borderRadius,
       css: (name, value) => `${name} {\n  border-top-right-radius: ${value};\n}`,
     },
     borderBottomRightRadius: {
-      variants: ({ borderRadius }) => borderRadius,
+      tokens: ({ borderRadius }) => borderRadius,
       css: (name, value) => `${name} {\n  border-bottom-right-radius: ${value};\n}`,
     },
     borderBottomLeftRadius: {
-      variants: ({ borderRadius }) => borderRadius,
+      tokens: ({ borderRadius }) => borderRadius,
       css: (name, value) => `${name} {\n  border-bottom-left-radius: ${value};\n}`,
     },
     borderColor: {
-      variants: ({ colors }) => colors,
+      tokens: ({ colors }) => colors,
       css: ['borderTopColor', 'borderRightColor', 'borderBottomColor', 'borderLeftColor'],
     },
     borderTopColor: {
-      variants: ({ colors }) => colors,
+      tokens: ({ colors }) => colors,
       css: (name, value) => `${name} {\n  border-top-color: ${value};\n}`,
     },
     borderRightColor: {
-      variants: ({ colors }) => colors,
+      tokens: ({ colors }) => colors,
       css: (name, value) => `${name} {\n  border-right-color: ${value};\n}`,
     },
     borderBottomColor: {
-      variants: ({ colors }) => colors,
+      tokens: ({ colors }) => colors,
       css: (name, value) => `${name} {\n  border-bottom-color: ${value};\n}`,
     },
     borderLeftColor: {
-      variants: ({ colors }) => colors,
+      tokens: ({ colors }) => colors,
       css: (name, value) => `${name} {\n  border-left-color: ${value};\n}`,
     },
     borderWidth: {
-      variants: ({ borderWidths }) => borderWidths,
+      tokens: ({ borderWidths }) => borderWidths,
       css: ['borderTopWidth', 'borderRightWidth', 'borderBottomWidth', 'borderLeftWidth'],
     },
     borderTopWidth: {
-      variants: ({ borderWidths }) => borderWidths,
+      tokens: ({ borderWidths }) => borderWidths,
       css: (name, value) => `${name} {\n  border-top-width: ${value};\n}`,
     },
     borderRightWidth: {
-      variants: ({ borderWidths }) => borderWidths,
+      tokens: ({ borderWidths }) => borderWidths,
       css: (name, value) => `${name} {\n  border-right-width: ${value};\n}`,
     },
     borderBottomWidth: {
-      variants: ({ borderWidths }) => borderWidths,
+      tokens: ({ borderWidths }) => borderWidths,
       css: (name, value) => `${name} {\n  border-bottom-width: ${value};\n}`,
     },
     borderLeftWidth: {
-      variants: ({ borderWidths }) => borderWidths,
+      tokens: ({ borderWidths }) => borderWidths,
       css: (name, value) => `${name} {\n  border-left-width: ${value};\n}`,
     },
     borderStyle: {
-      variants: {
+      tokens: {
         SOLID: 'solid',
         DASHED: 'dashed',
         DOTTED: 'dotted',
@@ -402,7 +402,7 @@ export const config: IBaseConfig<
       css: ['borderTopStyle', 'borderRightStyle', 'borderBottomStyle', 'borderLeftStyle'],
     },
     borderTopStyle: {
-      variants: {
+      tokens: {
         SOLID: 'solid',
         DASHED: 'dashed',
         DOTTED: 'dotted',
@@ -412,7 +412,7 @@ export const config: IBaseConfig<
       css: (name, value) => `${name} {\n  border-top-style: ${value};\n}`,
     },
     borderRightStyle: {
-      variants: {
+      tokens: {
         SOLID: 'solid',
         DASHED: 'dashed',
         DOTTED: 'dotted',
@@ -422,7 +422,7 @@ export const config: IBaseConfig<
       css: (name, value) => `${name} {\n  border-right-style: ${value};\n}`,
     },
     borderBottomStyle: {
-      variants: {
+      tokens: {
         SOLID: 'solid',
         DASHED: 'dashed',
         DOTTED: 'dotted',
@@ -432,7 +432,7 @@ export const config: IBaseConfig<
       css: (name, value) => `${name} {\n  border-bottom-style: ${value};\n}`,
     },
     borderLeftStyle: {
-      variants: {
+      tokens: {
         SOLID: 'solid',
         DASHED: 'dashed',
         DOTTED: 'dotted',
@@ -442,14 +442,14 @@ export const config: IBaseConfig<
       css: (name, value) => `${name} {\n  border-left-style: ${value};\n}`,
     },
     borderCollapse: {
-      variants: {
+      tokens: {
         COLLAPSE: 'collapse',
         SEPARATE: 'separate',
       },
       css: (name, value) => `${name} {\n  border-collapse: ${value};\n}`,
     },
     overflow: {
-      variants: {
+      tokens: {
         AUTO: 'auto',
         HIDDEN: 'hidden',
         VISIBLE: 'visible',
@@ -458,7 +458,7 @@ export const config: IBaseConfig<
       css: ['overflowX', 'overflowY'],
     },
     overflowX: {
-      variants: {
+      tokens: {
         AUTO: 'auto',
         HIDDEN: 'hidden',
         VISIBLE: 'visible',
@@ -467,7 +467,7 @@ export const config: IBaseConfig<
       css: (name, value) => `${name} {\n  overflow-x: ${value};\n}`,
     },
     overflowY: {
-      variants: {
+      tokens: {
         AUTO: 'auto',
         HIDDEN: 'hidden',
         VISIBLE: 'visible',
@@ -476,21 +476,21 @@ export const config: IBaseConfig<
       css: (name, value) => `${name} {\n  overflow-y: ${value};\n}`,
     },
     visibility: {
-      variants: {
+      tokens: {
         VISIBLE: 'visible',
         HIDDEN: 'hidden',
       },
       css: (name, value) => `${name} {\n  visibility: ${value};\n}`,
     },
     overflowScrolling: {
-      variants: {
+      tokens: {
         TOUCH: 'touch',
         AUTO: 'auto',
       },
       css: (name, value) => `${name} {\n  -webkit-overflow-scrolling: ${value};\n}`,
     },
     alignItems: {
-      variants: {
+      tokens: {
         STRETCH: 'stretch',
         START: 'flex-start',
         CENTER: 'center',
@@ -500,7 +500,7 @@ export const config: IBaseConfig<
       css: (name, value) => `${name} {\n  align-items: ${value};\n}`,
     },
     flexDirection: {
-      variants: {
+      tokens: {
         ROW: 'row',
         ROW_REVERSE: 'row-reverse',
         COLUMN: 'column',
@@ -509,24 +509,24 @@ export const config: IBaseConfig<
       css: (name, value) => `${name} {\n  flex-direction: ${value};\n}`,
     },
     boxShadow: {
-      variants: ({ boxShadows }) => boxShadows,
+      tokens: ({ boxShadows }) => boxShadows,
       css: (name, value) => `${name} {\n  box-shadow: ${value};\n}`,
     },
     outline: {
-      variants: {
+      tokens: {
         NONE: '0',
       },
       css: (name, value) => `${name} {\n  outline: ${value};\n}`,
     },
     pointerEvents: {
-      variants: {
+      tokens: {
         NONE: 'none',
         AUTO: 'auto',
       },
       css: (name, value) => `${name} {\n  pointer-events: ${value}}`,
     },
     resize: {
-      variants: {
+      tokens: {
         BOTH: 'both',
         NONE: 'none',
         VERTICAL: 'vertical',
@@ -535,7 +535,7 @@ export const config: IBaseConfig<
       css: (name, value) => `${name} {\n  resize: ${value};\n}`,
     },
     userSelect: {
-      variants: {
+      tokens: {
         NONE: 'none',
         TEXT: 'text',
         ALL: 'all',
@@ -544,7 +544,7 @@ export const config: IBaseConfig<
       css: (name, value) => `${name} {\n  user-select: ${value};\n}`,
     },
     cursor: {
-      variants: {
+      tokens: {
         AUTO: 'auto',
         DEFAULT: 'default',
         POINTER: 'pointer',
@@ -556,19 +556,19 @@ export const config: IBaseConfig<
       css: (name, value) => `${name} {\n  cursor: ${value};\n}`,
     },
     fill: {
-      variants: {
+      tokens: {
         CURRENT: 'currentColor',
       },
       css: (name, value) => `${name} {\n  fill: ${value};\n}`,
     },
     appearance: {
-      variants: {
+      tokens: {
         NONE: 'none',
       },
       css: (name, value) => `${name} {\n  appearance: ${value};\n}`,
     },
     fontWeight: {
-      variants: {
+      tokens: {
         HAIRLINE: '100',
         THIN: '200',
         LIGHT: '300',
@@ -582,11 +582,11 @@ export const config: IBaseConfig<
       css: (name, value) => `${name} {\n  font-weight: ${value};\n}`,
     },
     fontFamily: {
-      variants: ({ fontFamily }) => fontFamily,
+      tokens: ({ fontFamily }) => fontFamily,
       css: (name, value) => `${name} {\n  font-family: ${value};\n}`,
     },
     color: {
-      variants: ({ colors }) => colors,
+      tokens: ({ colors }) => colors,
       css: (name, value) => `${name} {\n  color: ${value};\n}`,
       description: describeClassname(
         'color',
@@ -594,7 +594,7 @@ export const config: IBaseConfig<
       ),
     },
     textAlign: {
-      variants: {
+      tokens: {
         LEFT: 'left',
         CENTER: 'center',
         RIGHT: 'right',
@@ -603,11 +603,11 @@ export const config: IBaseConfig<
       css: (name, value) => `${name} {\n  text-align: ${value};\n}`,
     },
     fontSize: {
-      variants: ({ fontSizes }) => fontSizes,
+      tokens: ({ fontSizes }) => fontSizes,
       css: (name, value) => `${name} {\n  font-size: ${value};\n}`,
     },
     textDecoration: {
-      variants: {
+      tokens: {
         UNDERLINE: 'underline',
         LINE_THROUGH: 'line-through',
         NONE: 'none',
@@ -615,21 +615,21 @@ export const config: IBaseConfig<
       css: (name, value) => `${name} {\n  text-decoration: ${value};\n}`,
     },
     fontSmoothing: {
-      variants: {
+      tokens: {
         ANTIALIASED: '-webkit-font-smoothing: antialiased;-moz-osx-font-smoothing: grayscale;',
         SUBPIXEL_ANTIALIASED: '-webkit-font-smoothing: auto;-moz-osx-font-smoothing: auto;',
       },
       css: (name, value) => `${name} {\n  ${value}\n}`,
     },
     fontStyle: {
-      variants: {
+      tokens: {
         ITALIC: 'italic',
         NORMAL: 'normal',
       },
       css: (name, value) => `${name} {\n  font-style: ${value};\n}`,
     },
     textTransform: {
-      variants: {
+      tokens: {
         UPPERCASE: 'uppercase',
         LOWERCASE: 'lowercase',
         CAPITALIZE: 'capitalize',
@@ -638,7 +638,7 @@ export const config: IBaseConfig<
       css: (name, value) => `${name} {\n  text-transform: ${value}}`,
     },
     verticalAlign: {
-      variants: {
+      tokens: {
         BASELINE: 'baseline',
         TOP: 'top',
         MIDDLE: 'middle',
@@ -649,7 +649,7 @@ export const config: IBaseConfig<
       css: (name, value) => `${name} {\n  vertical-align: ${value};\n}`,
     },
     height: {
-      variants: ({ spacing }) => ({
+      tokens: ({ spacing }) => ({
         AUTO: 'auto',
         ...spacing,
         FULL: '100%',
@@ -658,7 +658,7 @@ export const config: IBaseConfig<
       css: (name, value) => `${name} {\n  height: ${value};\n}`,
     },
     whitespace: {
-      variants: {
+      tokens: {
         NORMAL: 'normal',
         NO_WRAP: 'nowrap',
         PRE: 'pre',
@@ -668,64 +668,64 @@ export const config: IBaseConfig<
       css: (name, value) => `${name} {\n  white-space: ${value};\n}`,
     },
     top: {
-      variants: ({ spacing }) => ({
+      tokens: ({ spacing }) => ({
         AUTO: 'auto',
         ...spacing,
       }),
       css: (name, value) => `${name} {\n  top: ${value};\n}`,
     },
     overflowWrap: {
-      variants: {
+      tokens: {
         NORMAL: 'normal',
         BREAK_WORD: 'break-word',
       },
       css: (name, value) => `${name} {\n  overflow-wrap: ${value};\n}`,
     },
     wordBreak: {
-      variants: {
+      tokens: {
         NORMAL: 'normal',
         BREAK_ALL: 'break-all',
       },
       css: (name, value) => `${name} {\n  word-break: ${value};\n}`,
     },
     textOverflow: {
-      variants: {
+      tokens: {
         CLIP: 'clip',
         ELLIPSIS: 'ellipsis',
       },
       css: (name, value) => `${name} {\n  text-overflow: ${value};white-space: nowrap;overflow: hidden;\n}`,
     },
     right: {
-      variants: ({ spacing }) => ({
+      tokens: ({ spacing }) => ({
         AUTO: 'auto',
         ...spacing,
       }),
       css: (name, value) => `${name} {\n  right: ${value};\n}`,
     },
     left: {
-      variants: ({ spacing }) => ({
+      tokens: ({ spacing }) => ({
         AUTO: 'auto',
         ...spacing,
       }),
       css: (name, value) => `${name} {\n  left: ${value};\n}`,
     },
     bottom: {
-      variants: ({ spacing }) => ({
+      tokens: ({ spacing }) => ({
         AUTO: 'auto',
         ...spacing,
       }),
       css: (name, value) => `${name} {\n  bottom: ${value};\n}`,
     },
     letterSpacing: {
-      variants: ({ letterSpacing }) => letterSpacing,
+      tokens: ({ letterSpacing }) => letterSpacing,
       css: (name, value) => `${name} {\n  letter-spacing: ${value};\n}`,
     },
     lineHeight: {
-      variants: ({ lineHeight }) => lineHeight,
+      tokens: ({ lineHeight }) => lineHeight,
       css: (name, value) => `${name} {\n  line-height: ${value};\n}`,
     },
     listStyleType: {
-      variants: {
+      tokens: {
         NONE: 'none',
         DISC: 'disc',
         DECIMAL: 'decimal',
@@ -733,14 +733,14 @@ export const config: IBaseConfig<
       css: (name, value) => `${name} {\n  list-style-type: ${value};\n}`,
     },
     listStylePosition: {
-      variants: {
+      tokens: {
         INSIDE: 'inside',
         OUTSIDE: 'outside',
       },
       css: (name, value) => `${name} {\n  list-style-position: ${value};\n}`,
     },
     float: {
-      variants: {
+      tokens: {
         RIGHT: 'right',
         LEFT: 'left',
         NONE: 'none',
@@ -748,7 +748,7 @@ export const config: IBaseConfig<
       css: (name, value) => `${name} {\n  float: ${value};\n}`,
     },
     alignContent: {
-      variants: {
+      tokens: {
         START: 'flex-start',
         CENTER: 'center',
         END: 'flex-end',
@@ -758,7 +758,7 @@ export const config: IBaseConfig<
       css: (name, value) => `${name} {\n  align-content: ${value};\n}`,
     },
     alignSelf: {
-      variants: {
+      tokens: {
         AUTO: 'auto',
         START: 'flex-start',
         CENTER: 'center',
@@ -768,7 +768,7 @@ export const config: IBaseConfig<
       css: (name, value) => `${name} {\n  align-self: ${value};\n}`,
     },
     justifyContent: {
-      variants: {
+      tokens: {
         START: 'flex-start',
         CENTER: 'center',
         END: 'flex-end',
@@ -778,7 +778,7 @@ export const config: IBaseConfig<
       css: (name, value) => `${name} {\n  justify-content: ${value};\n}`,
     },
     margin: {
-      variants: ({ spacing }, { negative }) => ({
+      tokens: ({ spacing }, { negative }) => ({
         ...spacing,
         ...negative(spacing),
         AUTO: 'auto',
@@ -786,7 +786,7 @@ export const config: IBaseConfig<
       css: ['marginTop', 'marginRight', 'marginBottom', 'marginLeft'],
     },
     marginVertical: {
-      variants: ({ spacing }, { negative }) => ({
+      tokens: ({ spacing }, { negative }) => ({
         ...spacing,
         ...negative(spacing),
         AUTO: 'auto',
@@ -794,7 +794,7 @@ export const config: IBaseConfig<
       css: ['marginTop', 'marginBottom'],
     },
     marginHorizontal: {
-      variants: ({ spacing }, { negative }) => ({
+      tokens: ({ spacing }, { negative }) => ({
         ...spacing,
         ...negative(spacing),
         AUTO: 'auto',
@@ -802,14 +802,14 @@ export const config: IBaseConfig<
       css: ['marginLeft', 'marginRight'],
     },
     maxHeight: {
-      variants: {
+      tokens: {
         FULL: '100%',
         SCREEN: '100vh',
       },
       css: (name, value) => `${name} {\n  max-height: ${value};\n}`,
     },
     maxWidth: {
-      variants: {
+      tokens: {
         NONE: 'none',
         XS: '20rem',
         SM: '24rem',
@@ -826,7 +826,7 @@ export const config: IBaseConfig<
       css: (name, value) => `${name} {\n  max-width: ${value};\n}`,
     },
     minHeight: {
-      variants: {
+      tokens: {
         NONE: '0',
         FULL: '100%',
         SCREEN: '100vh',
@@ -834,14 +834,14 @@ export const config: IBaseConfig<
       css: (name, value) => `${name} {\n  min-height: ${value};\n}`,
     },
     minWidth: {
-      variants: {
+      tokens: {
         NONE: '0',
         FULL: '100%',
       },
       css: (name, value) => `${name} {\n  min-width: ${value};\n}`,
     },
     objectFit: {
-      variants: {
+      tokens: {
         CONTAIN: 'contain',
         COVER: 'cover',
         FILL: 'fill',
@@ -851,7 +851,7 @@ export const config: IBaseConfig<
       css: (name, value) => `${name} {\n  object-fit: ${value};\n}`,
     },
     objectPosition: {
-      variants: {
+      tokens: {
         BOTTOM: 'bottom',
         CENTER: 'center',
         LEFT: 'left',
@@ -865,11 +865,11 @@ export const config: IBaseConfig<
       css: (name, value) => `${name} {\n  object-position: ${value};\n}`,
     },
     opacity: {
-      variants: ({ opacity }) => opacity,
+      tokens: ({ opacity }) => opacity,
       css: (name, value) => `${name} {\n  opacity: ${value};\n}`,
     },
     order: {
-      variants: {
+      tokens: {
         FIRST: '-9999',
         LAST: '9999',
         NONE: '0',
@@ -889,35 +889,35 @@ export const config: IBaseConfig<
       css: (name, value) => `${name} {\n  order: ${value};\n}`,
     },
     padding: {
-      variants: ({ spacing }) => spacing,
+      tokens: ({ spacing }) => spacing,
       css: ['paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft'],
     },
     paddingVertical: {
-      variants: ({ spacing }) => spacing,
+      tokens: ({ spacing }) => spacing,
       css: ['paddingTop', 'paddingBottom'],
     },
     paddingHorizontal: {
-      variants: ({ spacing }) => spacing,
+      tokens: ({ spacing }) => spacing,
       css: ['paddingLeft', 'paddingRight'],
     },
     paddingTop: {
-      variants: ({ spacing }) => spacing,
+      tokens: ({ spacing }) => spacing,
       css: (name, value) => `${name} {\n  padding-top: ${value};\n}`,
     },
     paddingRight: {
-      variants: ({ spacing }) => spacing,
+      tokens: ({ spacing }) => spacing,
       css: (name, value) => `${name} {\n  padding-right: ${value};\n}`,
     },
     paddingBottom: {
-      variants: ({ spacing }) => spacing,
+      tokens: ({ spacing }) => spacing,
       css: (name, value) => `${name} {\n  padding-bottom: ${value};\n}`,
     },
     paddingLeft: {
-      variants: ({ spacing }) => spacing,
+      tokens: ({ spacing }) => spacing,
       css: (name, value) => `${name} {\n  padding-left: ${value};\n}`,
     },
     marginTop: {
-      variants: ({ spacing }, { negative }) => ({
+      tokens: ({ spacing }, { negative }) => ({
         ...spacing,
         ...negative(spacing),
         AUTO: 'auto;',
@@ -925,7 +925,7 @@ export const config: IBaseConfig<
       css: (name, value) => `${name} {\n  margin-top: ${value};\n}`,
     },
     marginRight: {
-      variants: ({ spacing }, { negative }) => ({
+      tokens: ({ spacing }, { negative }) => ({
         ...spacing,
         ...negative(spacing),
         AUTO: 'auto;',
@@ -933,7 +933,7 @@ export const config: IBaseConfig<
       css: (name, value) => `${name} {\n  margin-right: ${value};\n}`,
     },
     marginBottom: {
-      variants: ({ spacing }, { negative }) => ({
+      tokens: ({ spacing }, { negative }) => ({
         ...spacing,
         ...negative(spacing),
         AUTO: 'auto;',
@@ -941,7 +941,7 @@ export const config: IBaseConfig<
       css: (name, value) => `${name} {\n  margin-bottom: ${value};\n}`,
     },
     marginLeft: {
-      variants: ({ spacing }, { negative }) => ({
+      tokens: ({ spacing }, { negative }) => ({
         ...spacing,
         ...negative(spacing),
         AUTO: 'auto;',
@@ -949,13 +949,13 @@ export const config: IBaseConfig<
       css: (name, value) => `${name} {\n  margin-left: ${value};\n}`,
     },
     stroke: {
-      variants: {
+      tokens: {
         CURRENT: 'currentColor',
       },
       css: (name, value) => `${name} {\n  stroke: ${value};\n}`,
     },
     width: {
-      variants: ({ spacing }) => ({
+      tokens: ({ spacing }) => ({
         auto: 'auto',
         ...spacing,
         WIDTH_1_2: '50%',
@@ -990,7 +990,7 @@ export const config: IBaseConfig<
       css: (name, value) => `${name} {\n  width: ${value};\n}`,
     },
     zIndex: {
-      variants: {
+      tokens: {
         AUTO: 'auto',
         NONE: '0',
         Z_10: '10',
@@ -1002,11 +1002,11 @@ export const config: IBaseConfig<
       css: (name, value) => `${name} {\n  z-index: ${value};\n}`,
     },
     gap: {
-      variants: ({ spacing }) => spacing,
+      tokens: ({ spacing }) => spacing,
       css: (name, value) => `${name} {\n  gap: ${value};\n}`,
     },
     gridTemplateColumns: {
-      variants: {
+      tokens: {
         NONE: 'none',
         COLUMNS_01: 'repeat(1, minmax(0, 1fr))',
         COLUMNS_02: 'repeat(2, minmax(0, 1fr))',
@@ -1024,7 +1024,7 @@ export const config: IBaseConfig<
       css: (name, value) => `${name} {\n  grid-template-columns: ${value};\n}`,
     },
     gridColumn: {
-      variants: {
+      tokens: {
         AUTO: 'auto',
         SPAN_01: 'span 1 / span 1',
         SPAN_02: 'span 2 / span 2',
@@ -1042,7 +1042,7 @@ export const config: IBaseConfig<
       css: (name, value) => `${name} {\n  grid-column: ${value};\n}`,
     },
     gridColumnStart: {
-      variants: {
+      tokens: {
         AUTO: 'auto',
         START_01: '1',
         START_02: '2',
@@ -1061,7 +1061,7 @@ export const config: IBaseConfig<
       css: (name, value) => `${name} {\n  grid-column-start: ${value};\n}`,
     },
     gridColumnEnd: {
-      variants: {
+      tokens: {
         AUTO: 'auto',
         END_01: '1',
         END_02: '2',
@@ -1080,7 +1080,7 @@ export const config: IBaseConfig<
       css: (name, value) => `${name} {\n  grid-column-end: ${value};\n}`,
     },
     transformOrigin: {
-      variants: {
+      tokens: {
         CENTER: 'center',
         TOP: 'top',
         TOP_RIGHT: 'top right',
@@ -1094,7 +1094,7 @@ export const config: IBaseConfig<
       css: (name, value) => `${name} {\n  transform-origin: ${value};\n}`,
     },
     scale: {
-      variants: {
+      tokens: {
         NONE: '0',
         SCALE_050: '.5',
         SCAØE_075: '.75',
@@ -1109,7 +1109,7 @@ export const config: IBaseConfig<
       css: (name, value) => `${name} {\n  transform:scale(${value});\n}`,
     },
     rotate: {
-      variants: {
+      tokens: {
         DEG_NEG_180: '-180deg',
         DEG_NEG_90: '-90deg',
         DEG_NEG_45: '-45deg',
@@ -1121,7 +1121,7 @@ export const config: IBaseConfig<
       css: (name, value) => `${name} {\n  transform:rotate(${value});\n}`,
     },
     translate: {
-      variants: ({ spacing }, { negative }) => ({
+      tokens: ({ spacing }, { negative }) => ({
         ...spacing,
         ...negative(spacing),
         NEG_FULL: '-100%',
@@ -1132,7 +1132,7 @@ export const config: IBaseConfig<
       css: (name, value) => `${name} {\n  transform:translate(${value});\n}`,
     },
     transitionProperty: {
-      variants: {
+      tokens: {
         NONE: 'none',
         ALL: 'all',
         DEFAULT: 'background-color, border-color, color, opacity, transform',
@@ -1143,15 +1143,15 @@ export const config: IBaseConfig<
       css: (name, value) => `${name} {\n  transition-property: ${value};\n}`,
     },
     transitionTimingFunction: {
-      variants: ({ timingFunctions }) => timingFunctions,
+      tokens: ({ timingFunctions }) => timingFunctions,
       css: (name, value) => `${name} {\n  transition-timing-function: ${value};\n}`,
     },
     transitionDuration: {
-      variants: ({ durations }) => durations,
+      tokens: ({ durations }) => durations,
       css: (name, value) => `${name} {\n  transition-duration: ${value};\n}`,
     },
     utils: {
-      variants: {
+      tokens: {
         CLEARFIX: '::after{\n  content: "";display: table;clear: both;\n}',
         SCREEN_REDER:
           '{\n  position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border-width:0;\n}',

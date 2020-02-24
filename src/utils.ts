@@ -14,7 +14,7 @@ import {
   IEvaluatedThemes,
   IExtractedClass,
   IExtractedClasses,
-  ITokens,
+  IGlobalTokens,
 } from './types';
 
 export const allowedPseudoDecorators = [
@@ -37,24 +37,24 @@ export const getClassesFromConfig = (
 ) => {
   const classname = config.classnames[classnameKey];
 
-  return Object.keys(classname.variants).reduce((aggr, variantKey, variantIndex) => {
-    const id = `${camelToDash(classnameKey)}-${variantKey}`;
+  return Object.keys(classname.tokens).reduce((aggr, tokenKey, tokenIndex) => {
+    const id = `${camelToDash(classnameKey)}-${tokenKey}`;
     const cssDeriver = config.classnames[classnameKey].css;
     return {
       ...aggr,
       [id]: {
         id,
         classname: classnameKey,
-        variant: variantKey,
+        token: tokenKey,
         derived: Array.isArray(cssDeriver) ? cssDeriver : null,
         variable:
-          classname.variants[variantKey] !== classname.variantsWithoutVariables[variantKey]
+          classname.tokens[tokenKey] !== classname.tokensWithoutVariables[tokenKey]
             ? {
-                value: classname.variants[variantKey],
-                originalValue: classname.variantsWithoutVariables[variantKey],
+                value: classname.tokens[tokenKey],
+                originalValue: classname.tokensWithoutVariables[tokenKey],
               }
             : null,
-        shortName: getShortName(variantIndex),
+        shortName: getShortName(tokenIndex),
       },
     };
   }, {} as IClasses);
@@ -78,13 +78,13 @@ export const deepAssign = (
 
 export const evaluateConfig = (config: IConfig<any>): IEvaluatedConfig => {
   const configTokens = config.tokens || {};
-  const originalTokens: ITokens<any> = {
+  const originalTokens: IGlobalTokens<any> = {
     ...baseConfig.tokens,
-    ...(Object.keys(configTokens).reduce<ITokens<any>>((aggr, key) => {
+    ...(Object.keys(configTokens).reduce<IGlobalTokens<any>>((aggr, key) => {
       if (typeof configTokens[key] === 'function') {
         aggr[key] = (configTokens[key] as any)(baseConfig.tokens);
       } else {
-        aggr[key] = typeof configTokens[key] === 'string' ? configTokens[key] : (configTokens[key] as any).value;
+        aggr[key] = configTokens[key] as any;
       }
       return aggr;
     }, {}) as any),
@@ -109,8 +109,8 @@ export const evaluateConfig = (config: IConfig<any>): IEvaluatedConfig => {
   }, {} as IEvaluatedThemes);
 
   // Evaluated variables where values are replaced by CSS variable
-  const tokens = Object.keys(originalTokens).reduce<ITokens<any>>((aggr, key) => {
-    aggr[key] = Object.keys(originalTokens[key]).reduce<{ [variant: string]: string }>((subAggr, subKey) => {
+  const tokens = Object.keys(originalTokens).reduce<IGlobalTokens<any>>((aggr, key) => {
+    aggr[key] = Object.keys(originalTokens[key]).reduce<{ [token: string]: string }>((subAggr, subKey) => {
       subAggr[subKey] =
         themesByTokens[key] && themesByTokens[key][subKey] ? `var(--${key}-${subKey})` : originalTokens[key][subKey];
 
@@ -120,7 +120,7 @@ export const evaluateConfig = (config: IConfig<any>): IEvaluatedConfig => {
     return aggr;
   }, {});
 
-  // Call any dynamic classname variants with both the original variables and
+  // Call any dynamic classname tokens with both the original variables and
   // the ones who have been evaluated with CSS variables
   const allClassnames: IClassnames<any> = { ...baseConfig.classnames, ...config.classnames };
   const classnames = Object.keys(allClassnames).reduce((aggr, key) => {
@@ -129,14 +129,14 @@ export const evaluateConfig = (config: IConfig<any>): IEvaluatedConfig => {
     } else {
       aggr[key] = {
         ...allClassnames[key],
-        variantsWithoutVariables:
-          typeof (allClassnames[key] as any).variants === 'function'
-            ? (allClassnames[key] as any).variants(originalTokens, { negative })
-            : (allClassnames[key] as any).variants,
-        variants:
-          typeof (allClassnames[key] as any).variants === 'function'
-            ? (allClassnames[key] as any).variants(tokens, { negative })
-            : (allClassnames[key] as any).variants,
+        tokensWithoutVariables:
+          typeof (allClassnames[key] as any).tokens === 'function'
+            ? (allClassnames[key] as any).tokens(originalTokens, { negative })
+            : (allClassnames[key] as any).tokens,
+        tokens:
+          typeof (allClassnames[key] as any).tokens === 'function'
+            ? (allClassnames[key] as any).tokens(tokens, { negative })
+            : (allClassnames[key] as any).tokens,
         description: (allClassnames[key] as any).description,
       } as any;
     }
@@ -244,12 +244,12 @@ export const injectProduction = (classCollection: IExtractedClasses, classes: IC
 
       classnameKeys.forEach(classnameKey => {
         const classConfig = config.classnames[classnameKey];
-        const id = `${camelToDash(classnameKey)}-${configClass.variant}`;
+        const id = `${camelToDash(classnameKey)}-${configClass.token}`;
         const name = classes[id].shortName;
         const classname = prefix + name;
 
         classEntry = createClassEntry(classname, otherDecorators, evaluatedName =>
-          (classConfig.css as any)(evaluatedName, classConfig.variants[configClass.variant]),
+          (classConfig.css as any)(evaluatedName, classConfig.tokens[configClass.token]),
         );
 
         if (screenDecorators.length) {
@@ -307,10 +307,10 @@ export const injectDevelopment = (classCollection: IExtractedClasses, classes: I
     return aggr.concat(
       classnameKeys.reduce((injections, classnameKey) => {
         const classConfig = config.classnames[classnameKey];
-        const name = `${camelToDash(classnameKey)}-${configClass.variant}`;
+        const name = `${camelToDash(classnameKey)}-${configClass.token}`;
         const classname = prefix + name;
         const classEntry = createClassEntry(classname, otherDecorators, evaluatedName =>
-          (classConfig.css as any)(evaluatedName, classConfig.variants[configClass.variant]),
+          (classConfig.css as any)(evaluatedName, classConfig.tokens[configClass.token]),
         );
 
         let css = '';
@@ -381,16 +381,6 @@ export const createClassObject = (
   classes: IClasses,
   isProduction: boolean,
 ): IExtractedClass => {
-  /*
-  TODO: We have to handle themes
-  if (id && id.startsWith('themes-')) {
-    return {
-      id,
-      name: id,
-      decorators: [],
-    };
-  }
-  */
   const id = `${camelToDash(baseClass)}-${token}`;
   const uid = [decorators.sort().join(':'), id]
     .filter(Boolean)
@@ -398,17 +388,6 @@ export const createClassObject = (
     .join(':');
 
   const returnedDecorators = decorators.slice() as IExtractedClass['decorators'];
-
-  // TODO: We need to handle GROUP
-  /*
-  if (decorators[decorators.length - 1] === 'group') {
-    return {
-      id,
-      name: `group ${(id && isProduction ? classes[id].shortName : id) || ''}`,
-      decorators: returnedDecorators,
-    };
-  }
-  */
 
   let name: string;
   if (id && isProduction && classes[id].derived) {

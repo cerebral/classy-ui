@@ -4,7 +4,7 @@ import { join } from 'path';
 import { evaluateConfig, getUserConfig } from '../utils';
 import { transform as transformClassesToTypes } from './transform-classes-to-types';
 
-const config = evaluateConfig(getUserConfig());
+const config = evaluateConfig({});
 
 if (process.env.NODE_ENV !== 'test') {
   const esTypesPath = join(process.cwd(), 'es', 'classy-ui.d.ts');
