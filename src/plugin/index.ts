@@ -33,20 +33,18 @@ export default (babel: any) => {
         programmPath.traverse({
           ImportDeclaration(path: any) {
             if (path?.node?.source?.value === 'classy-ui') {
-              const imports = path.node.specifiers.map((s: any) => s.local.name);
+              const imports = path.node.specifiers.map((s: any) => ({ local: s.local.name, name: s.imported.name }));
 
-              const referencePaths = imports.reduce((aggr: any[], localName: string) => {
-                const binding = path.scope.getBinding(localName);
+              const referencePaths = imports.reduce((aggr: any, { local, name }: { local: string; name: string }) => {
+                const binding = path.scope.getBinding(local);
                 if (binding && Boolean(binding.referencePaths.length)) {
-                  aggr = aggr.concat(binding.referencePaths);
+                  aggr[name] = binding.referencePaths;
                 }
                 return aggr;
-              }, []);
+              }, {});
 
-              if (Boolean(referencePaths.length)) {
-                processReferences(babel, state, referencePaths);
-                path.remove();
-              }
+              processReferences(babel, state, referencePaths);
+              path.remove();
             }
           },
         });
@@ -55,35 +53,103 @@ export default (babel: any) => {
   };
 };
 
-export function processReferences(babel: any, state: any, classnamesRefs: any) {
+export function processReferences(babel: any, state: any, refs: any) {
   const { types: t } = babel;
-
   const isProduction = babel.getEnv() === 'production';
-
   const classCollection: IExtractedClasses = {};
 
-  function collectGlobally(classObj: IExtractedClass): string[] {
-    if (classObj.id && classObj.uid) {
-      classCollection[classObj.uid] = classObj;
-    }
-    return classObj.name.trim().split(' ');
+  refs['tokens'] && processTokens(refs['tokens'], isProduction);
+  refs['t'] && processTokens(refs['t'], isProduction);
+
+  refs['group'] && processGroup(refs['group']);
+  refs['themes'] && processThemes(refs['themes']);
+
+  refs['compose'] && processCompose(refs['compose']);
+  refs['c'] && processCompose(refs['c']);
+
+  if (isProduction) {
+    writeFileSync(cssPath, injectProduction(classCollection, classes, config));
+  } else {
+    const runtimeCall = t.expressionStatement(
+      t.callExpression(addNamed(state.file.path, 'addClasses', 'classy-ui/runtime'), [
+        t.arrayExpression(injectDevelopment(classCollection, classes, config).map(value => t.stringLiteral(value))),
+      ]),
+    );
+
+    state.file.ast.program.body.push(runtimeCall);
   }
 
-  function convertToExpression(classAttribs: Set<any>) {
-    if (classAttribs.size === 0) {
+  function processCompose(cRefs: any[]) {
+    cRefs.forEach((path: any) => {
+      if (t.isCallExpression(path.parentPath.parent)) {
+        const b = path.scope.getBinding(path.parent.callee.name);
+        if (t.isImportSpecifier(b.path.node) && b.path.parent.source.value.startsWith('classy-ui')) {
+          throw path.buildCodeFrameError(`CLASSY-UI: don't nest c/compose calls`);
+        }
+      }
+
+      const statementPath = path.parentPath;
+      const args = statementPath.node.arguments;
+
+      statementPath.replaceWith(convertToExpression(args));
+    });
+  }
+
+  function processTokens(tRefs: any[], isProduction: boolean) {
+    tRefs.forEach((tRef: any) => {
+      if (!t.isMemberExpression(tRef.parent)) {
+        throw tRef.buildCodeFrameError(`CLASSY-UI: t/tokens can't be used without a base class`);
+      }
+      const memExpr = extractMemberExpression(tRef);
+      if (memExpr.arr.length >= 2) {
+        const [baseClass, token, ...decorators] = memExpr.arr;
+        const classObject = createClassObject({ baseClass, token, decorators }, classes, isProduction);
+        collectGlobally(classObject);
+        memExpr.root.replaceWith(t.stringLiteral(classObject.name));
+      } else {
+        throw tRef.buildCodeFrameError(`CLASSY-UI: t/tokens must reference a base class and a token`);
+      }
+      return tRef;
+    });
+  }
+
+  function processGroup(refs: any[]) {
+    refs.forEach((ref: any) => {
+      if (!t.isCallExpression(ref.parent)) {
+        throw ref.buildCodeFrameError(`CLASSY-UI: group must be used inside c/compose`);
+      }
+      if (ref.parent.callee === ref.node) {
+        throw ref.buildCodeFrameError(`CLASSY-UI: group should not be invoked`);
+      }
+
+      ref.replaceWith(t.stringLiteral(ref.node.name));
+    });
+  }
+
+  function processThemes(refs: any[]) {
+    refs.forEach((ref: any) => {
+      if (t.isMemberExpression(ref.parent)) {
+        const memberExpr = extractMemberExpression(ref);
+        memberExpr.root.replaceWith(t.stringLiteral(ref.node.name + '-' + memberExpr.arr.join('-')));
+      } else {
+        throw ref.buildCodeFrameError(`CLASSY-UI: add the theme name here like themes.dark`);
+      }
+    });
+  }
+
+  function convertToExpression(classAttribs: any[]) {
+    if (classAttribs.length === 0) {
       return t.stringLiteral(' ');
     }
 
     let needsRuntime: boolean = false;
     const strings: string[] = [];
     const others: any[] = [];
-    for (const item of classAttribs.values()) {
-      if (typeof item === 'string') {
-        strings.push(item);
+    for (const item of classAttribs) {
+      if (t.isStringLiteral(item)) {
+        strings.push(item.value);
       } else {
-        if (t.isIdentifier(item)) {
-          needsRuntime = true;
-        }
+        needsRuntime = true;
         others.push(item);
       }
     }
@@ -112,138 +178,24 @@ export function processReferences(babel: any, state: any, classnamesRefs: any) {
     return start;
   }
 
-  function getImportName(name: string, scope: any) {
-    const binding = scope.getBinding(name);
-    if (binding && t.isImportSpecifier(binding.path.node) && binding.path.parent.source.value.startsWith('classy-ui')) {
-      return binding.path.node.imported.name;
-    }
-    return null;
-  }
-
-  function throwIfInvalidId(path: any, id: string) {
-    if (!classes[id] && !id.startsWith('themes-')) {
-      throw path.buildCodeFrameError(`CLASSY-UI: Could not find classname ${id}`);
-    }
-  }
-  function throwIfForbiddenDecorator(path: any, decorators: string[], name: string) {
-    if (decorators.includes(name)) {
-      throw path.buildCodeFrameError(`Duplicating ${name} is not allowed.`);
+  function collectGlobally(classObj: IExtractedClass) {
+    if (classObj.uid) {
+      classCollection[classObj.uid] = classObj;
     }
   }
 
-  function throwIfNotStartedByC(path: any, decorators: string[]) {
-    if (decorators[0] !== 'c') {
-      throw path.buildCodeFrameError(`Composing variabels is only allowed with c()`);
+  function extractMemberExpression(tRefPath: any) {
+    let prev = tRefPath;
+    let path = prev.parentPath;
+    let arr = [];
+    while (path.node.type === 'MemberExpression') {
+      path.node.property && arr.push(path.node.property.name);
+      prev = path;
+      path = path.parentPath;
     }
-  }
-
-  function getId(path: any) {
-    if (t.isStringLiteral(path.node)) {
-      return path.node.value;
-    } else if (t.isIdentifier(path.node)) {
-      return path.node.name;
-    } else {
-      throw path.buildCodeFrameError(`This property is not supported`);
-    }
-  }
-
-  function collectClassnames(decorators: string[], argumentPaths: any[], classArgs: Set<any>) {
-    // if root call has no arguments
-    if (argumentPaths.length === 0) {
-      collectGlobally(createClassObject(undefined, decorators, classes, isProduction)).forEach(
-        classArgs.add,
-        classArgs,
-      );
-    }
-
-    // process arguments
-    for (let argPath of argumentPaths) {
-      const node = argPath.node;
-
-      if (t.isStringLiteral(node)) {
-        throwIfInvalidId(argPath, node.value);
-
-        collectGlobally(createClassObject(node.value, decorators, classes, isProduction)).forEach(
-          classArgs.add,
-          classArgs,
-        );
-      } else if (t.isIdentifier(node)) {
-        throwIfNotStartedByC(argPath, decorators);
-        classArgs.add(node);
-      } else if (t.isCallExpression(node) && t.isIdentifier(node.callee)) {
-        // To support import { hover as ho }...
-        const importedName = getImportName(node.callee.name, argPath.scope);
-
-        if (importedName) {
-          throwIfForbiddenDecorator(argPath, decorators, importedName);
-
-          // Create new decorators including current one
-          const newDecorators = decorators.slice();
-          newDecorators.push(importedName);
-
-          const childArguments = argPath.get('arguments');
-          if (Boolean(childArguments.length)) {
-            collectClassnames(newDecorators, childArguments, classArgs);
-          } else {
-            // if subsequent calls have no arguments
-            collectGlobally(createClassObject(undefined, newDecorators, classes, isProduction)).forEach(
-              classArgs.add,
-              classArgs,
-            );
-          }
-        } else {
-          // This is an unknown call to some function
-          classArgs.add(node);
-        }
-      } else if (t.isObjectExpression(node)) {
-        for (let propPath of argPath.get('properties')) {
-          const id = getId(propPath.get('key'));
-          throwIfInvalidId(propPath, id);
-          collectGlobally(createClassObject(id, decorators, classes, isProduction))
-            .map(name => {
-              return t.conditionalExpression(propPath.node.value, t.stringLiteral(name + ' '), t.stringLiteral(''));
-            })
-            .forEach(classArgs.add, classArgs);
-        }
-      } else {
-        classArgs.add(node);
-      }
-    }
-  }
-  classnamesRefs
-    // Only use top-most class
-    .filter((path: any) => {
-      // path.node will always be an identifier
-      // if path.parentPath.parent is a CallExpression
-      // it's callee name must not be part of classy-ui to be allowed here
-
-      if (t.isCallExpression(path.parentPath.parent)) {
-        return getImportName(path.parentPath.parent.callee.name, path.scope) === null;
-      }
-      return true;
-    })
-    .forEach((path: any) => {
-      const statementPath = path.parentPath;
-      const extractedClasnames = new Set();
-
-      collectClassnames(
-        [getImportName(path.node.name, path.scope)],
-        statementPath.get('arguments'),
-        extractedClasnames,
-      );
-
-      statementPath.replaceWith(convertToExpression(extractedClasnames));
-    });
-
-  if (isProduction) {
-    writeFileSync(cssPath, injectProduction(classCollection, classes, config));
-  } else {
-    const runtimeCall = t.expressionStatement(
-      t.callExpression(addNamed(state.file.path, 'addClasses', 'classy-ui/runtime'), [
-        t.arrayExpression(injectDevelopment(classCollection, classes, config).map(value => t.stringLiteral(value))),
-      ]),
-    );
-
-    state.file.ast.program.body.push(runtimeCall);
+    return {
+      root: prev,
+      arr,
+    };
   }
 }
