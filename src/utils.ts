@@ -246,7 +246,7 @@ export const injectProduction = (classCollection: IExtractedClasses, classes: IC
         const classConfig = config.classnames[classnameKey];
         const id = `${camelToDash(classnameKey)}-${configClass.token}`;
         const name = classes[id].shortName;
-        const classname = prefix + name.replace('@', '\\@');
+        const classname = prefix + name;
 
         classEntry = createClassEntry(classname, otherDecorators, evaluatedName =>
           (classConfig.css as any)(evaluatedName, classConfig.tokens[configClass.token]),
@@ -307,9 +307,9 @@ export const injectDevelopment = (classCollection: IExtractedClasses, classes: I
     return aggr.concat(
       classnameKeys.reduce((injections, classnameKey) => {
         const classConfig = config.classnames[classnameKey];
-        const name = `${camelToDash(classnameKey)}@${configClass.token}`;
+        const name = `${camelToDash(classnameKey)}__${configClass.token}`;
         const classname = prefix + name;
-        const classEntry = createClassEntry(classname.replace('@', '\\@'), otherDecorators, evaluatedName =>
+        const classEntry = createClassEntry(classname, otherDecorators, evaluatedName =>
           (classConfig.css as any)(evaluatedName, classConfig.tokens[configClass.token]),
         );
 
@@ -382,7 +382,7 @@ export const createClassObject = (
   isProduction: boolean,
 ): IExtractedClass => {
   const id = `${camelToDash(baseClass)}-${token}`;
-  const uid = [decorators.sort().join(':'), `${camelToDash(baseClass)}@${token}`]
+  const uid = [decorators.sort().join(':'), `${camelToDash(baseClass)}__${token}`]
     .filter(Boolean)
     .filter(i => i!.length > 0)
     .join(':');
@@ -401,7 +401,7 @@ export const createClassObject = (
   } else if (id && classes[id].derived) {
     name = classes[id]
       .derived!.reduce((aggr, key) => {
-        return aggr.concat(`${camelToDash(key)}@${token}`);
+        return aggr.concat(`${camelToDash(key)}__${token}`);
       }, [] as string[])
       .join(' ');
   } else {
