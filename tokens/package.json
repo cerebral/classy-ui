@@ -1,0 +1,7 @@
+{
+  "name": "classy-ui/tokens",
+  "private": true,
+  "main": "../lib/config/tokens",
+  "module": "../es/config/tokens",
+  "jsnext:main": "../es/config/tokens"
+}

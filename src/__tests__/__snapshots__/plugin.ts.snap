@@ -11,7 +11,7 @@ compose(group, true ? tokens.color.RED : ' ')
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 import { fixSpecificity as _fixSpecificity } from 'classy-ui/runtime';
 
-_fixSpecificity(true ? 'color__RED ' : ' ');
+_fixSpecificity((true ? 'color__RED ' : ' ') + 'group ');
 
 _addClasses(['color__RED', '.color__RED {\\n  color: red;\\n}']);
 
@@ -122,10 +122,10 @@ import { fixSpecificity as _fixSpecificity } from 'classy-ui/runtime';
 const buttonBlue = 'color__BLUE ';
 const buttonGreen = 'color__GREEN ';
 
-const buttonRed = _fixSpecificity(buttonBlue + buttonGreen + 'color@RED ');
+const buttonRed = _fixSpecificity(buttonBlue + buttonGreen + 'color__RED ');
 
 {
-  className: _fixSpecificity2(buttonRed + 'hover:color@GREEN ');
+  className: _fixSpecificity2(buttonRed + 'hover:color__GREEN ');
 }
 
 _addClasses([
@@ -157,7 +157,7 @@ import { fixSpecificity as _fixSpecificity } from 'classy-ui/runtime';
 const aCompose = 'color__BLUE background-color__BLUE ';
 const moreCompose = 'color__GREEN background-color__GREEN ';
 
-_fixSpecificity(aCompose + moreCompose + 'color@RED background-color@RED ');
+_fixSpecificity(aCompose + moreCompose + 'color__RED background-color__RED ');
 
 _addClasses([
   'color__BLUE',
@@ -253,24 +253,24 @@ exports[`classy-ui should handle derived classnames: should handle derived class
 
 import { compose, tokens } from 'classy-ui'
 
-{className: compose(tokens.padding.SPACING_02)}
+{className: compose(tokens.padding.SPACING_1)}
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 {
-  className: 'padding-top__SPACING_02 padding-right__SPACING_02 padding-bottom__SPACING_02 padding-left__SPACING_02 ';
+  className: 'padding-top__SPACING_1 padding-right__SPACING_1 padding-bottom__SPACING_1 padding-left__SPACING_1 ';
 }
 
 _addClasses([
-  'padding-top__SPACING_02',
-  '.padding-top__SPACING_02 {\\n  padding-top: 0.5rem;\\n}',
-  'padding-right__SPACING_02',
-  '.padding-right__SPACING_02 {\\n  padding-right: 0.5rem;\\n}',
-  'padding-bottom__SPACING_02',
-  '.padding-bottom__SPACING_02 {\\n  padding-bottom: 0.5rem;\\n}',
-  'padding-left__SPACING_02',
-  '.padding-left__SPACING_02 {\\n  padding-left: 0.5rem;\\n}',
+  'padding-top__SPACING_1',
+  '.padding-top__SPACING_1 {\\n  padding-top: 1rem;\\n}',
+  'padding-right__SPACING_1',
+  '.padding-right__SPACING_1 {\\n  padding-right: 1rem;\\n}',
+  'padding-bottom__SPACING_1',
+  '.padding-bottom__SPACING_1 {\\n  padding-bottom: 1rem;\\n}',
+  'padding-left__SPACING_1',
+  '.padding-left__SPACING_1 {\\n  padding-left: 1rem;\\n}',
 ]);
 
 

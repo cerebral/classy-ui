@@ -1,7 +1,7 @@
 {
   "name": "classy-ui",
   "version": "5.0.2",
-  "description": "Your design system at your fingertips",
+  "description": "Design tokens at your fingertips",
   "author": "Christian Alfoni <christianalfoni@gmail.com>",
   "license": "MIT",
   "repository": "git+https://github.com/cerebral/classy-ui.git",

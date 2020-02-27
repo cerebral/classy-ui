@@ -14,13 +14,13 @@ export type IClasses = Record<string, IClass>;
 
 export type ITokens = Record<string, string>;
 
-export type IClassnames<T extends string> = Record<
+export type IClassnames = Record<
   string,
   {
     tokens?:
       | { [name: string]: string }
       | ((
-          tokens: IGlobalTokens<T>,
+          tokens: IGlobalTokens,
           utils: {
             negative: (value: { [key: string]: string }) => { [key: string]: string };
           },
@@ -39,36 +39,36 @@ export interface IEvaluatedClassnames {
   };
 }
 
-export type IGlobalTokens<T extends string> = {
-  [key in T]: { [token: string]: string };
-};
-
-export interface IBaseConfig<T extends string, U = IGlobalTokens<T>> {
-  tokens: {
-    [key in T]: { [token: string]: string };
-  };
-  screens: {
-    [name: string]: (css: string, tokens: IGlobalTokens<T>) => string;
-  };
-  classnames: IClassnames<T>;
-  themes?: {
-    [name: string]: {
-      [key in keyof U]: U[key];
-    };
-  };
+export interface IGlobalTokens {
+  spacing: { [token: string]: string };
+  colors: { [token: string]: string };
+  lineWidths: { [token: string]: string };
+  letterSpacing: { [token: string]: string };
+  lineHeight: { [token: string]: string };
+  borderRadius: { [token: string]: string };
+  fontFamily: { [token: string]: string };
+  boxShadows: { [token: string]: string };
+  opacity: { [token: string]: string };
+  durations: { [token: string]: string };
+  timingFunctions: { [token: string]: string };
+  fontSizes: { [token: string]: string };
+  fontStyles: { [token: string]: string };
+  gridTemplateColumns: { [token: string]: string };
+  gridSpacing: { [token: string]: string };
 }
 
-export interface IConfig<T extends string, U = IGlobalTokens<T>> {
-  tokens?: {
-    [key in T]: ((tokens: IGlobalTokens<T>) => { [token: string]: string }) | { [token: string]: string };
-  };
+export interface IScreens {
+  [key: string]: (css: string) => string;
+}
+
+export interface IConfig {
+  tokens?: Partial<IGlobalTokens>;
   screens?: {
-    [name: string]: (css: string, tokens: IGlobalTokens<T>) => string;
+    [name: string]: (css: string) => string;
   };
-  classnames?: IClassnames<T>;
   themes?: {
     [name: string]: {
-      [key in keyof U]: U[key];
+      [key in keyof IGlobalTokens]?: Partial<IGlobalTokens[key]>;
     };
   };
 }
@@ -82,13 +82,13 @@ export interface IEvaluatedThemes {
 }
 
 export interface IEvaluatedConfig {
-  tokens: IGlobalTokens<any>;
+  tokens: IGlobalTokens;
   screens: {
-    [name: string]: (css: string, tokens: IGlobalTokens<any>) => string;
+    [name: string]: (css: string) => string;
   };
   classnames: IEvaluatedClassnames;
   themeNames: string[];
-  themes?: IEvaluatedThemes;
+  themes: IEvaluatedThemes;
 }
 
 export interface IClassesByType {

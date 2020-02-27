@@ -109,7 +109,7 @@ const buttonRed = compose(buttonBlue, buttonGreen, tokens.color.RED);
       code: `
 import { compose, tokens } from 'classy-ui'
 
-{className: compose(tokens.padding.SPACING_02)}
+{className: compose(tokens.padding.SPACING_1)}
 
 
 `,
