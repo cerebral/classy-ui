@@ -1586,6 +1586,14 @@ const classnames: IClassnames = {
       'The margin-bottom CSS property sets the margin area on the bottom of an element. A positive value places it farther from its neighbors, while a negative value places it closer.',
     ),
   },
+  placeholder: {
+    tokens: ({ colors }) => colors,
+    css: (name, value) => `${name}::placeholder {\n  color: ${value};\n}`,
+    description: describeClassname(
+      '::placeholder',
+      'The ::placeholder CSS pseudo-element represents the placeholder text in an <input> or <textarea> element.',
+    ),
+  },
   marginLeft: {
     tokens: ({ spacing }, { negative }) => ({
       ...spacing,
