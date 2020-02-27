@@ -6,7 +6,7 @@ function convertClassnameToType(baseClass: string, token: string, config: IEvalu
   const css: string[] =
     typeof cssConstructor === 'function'
       ? [
-          cssConstructor(`.${camelToDash(baseClass)}-${token}`, config.classnames[baseClass].tokens[token])
+          cssConstructor(`.${camelToDash(baseClass)}-${token}`, config.classnames[baseClass].tokens[token].value)
             .split('\n')
             .join('\n   * '),
         ]
@@ -14,7 +14,7 @@ function convertClassnameToType(baseClass: string, token: string, config: IEvalu
           return aggr.concat(
             (config.classnames[derivedBaseClass].css as any)(
               `.${camelToDash(baseClass)}-${token}`,
-              config.classnames[derivedBaseClass].tokens[token],
+              config.classnames[derivedBaseClass].tokens[token].value,
             )
               .split('\n')
               .join('\n   * '),
@@ -23,10 +23,10 @@ function convertClassnameToType(baseClass: string, token: string, config: IEvalu
   return `
   /**
    ${
-     config.classnames[baseClass].tokens[token].startsWith('#')
+     config.classnames[baseClass].tokens[token].value.startsWith('#')
        ? `* ![${config.classnames[baseClass].tokens[token]}](https://placehold.it/15/${config.classnames[
            baseClass
-         ].tokens[token].substr(1)}/000000?text=+)`
+         ].tokens[token].value.substr(1)}/000000?text=+)`
        : ''
    }
    * \`\`\`css

@@ -12,17 +12,17 @@ export interface IClass {
 
 export type IClasses = Record<string, IClass>;
 
-export type ITokens = Record<string, string>;
+export type ITokens = Record<string, IToken>;
 
 export type IClassnames = Record<
   string,
   {
     tokens?:
-      | { [name: string]: string }
+      | ITokens
       | ((
-          tokens: IGlobalTokens,
+          tokens: IGlobalTokens<IToken>,
           utils: {
-            negative: (value: { [key: string]: string }) => { [key: string]: string };
+            negative: (value: { [key: string]: IToken }) => { [key: string]: IToken };
           },
         ) => ITokens);
     css: ((name: string, value: string) => string) | string[];
@@ -32,29 +32,34 @@ export type IClassnames = Record<
 
 export interface IEvaluatedClassnames {
   [name: string]: {
-    tokens: { [name: string]: string };
-    tokensWithoutVariables: { [name: string]: string };
+    tokens: { [name: string]: IToken };
+    tokensWithoutVariables: { [name: string]: IToken };
     css: ((name: string, value: string) => string) | string[];
     description?: string;
   };
 }
 
-export interface IGlobalTokens {
-  spacing: { [token: string]: string };
-  colors: { [token: string]: string };
-  lineWidths: { [token: string]: string };
-  letterSpacing: { [token: string]: string };
-  lineHeight: { [token: string]: string };
-  borderRadius: { [token: string]: string };
-  fontFamily: { [token: string]: string };
-  boxShadows: { [token: string]: string };
-  opacity: { [token: string]: string };
-  durations: { [token: string]: string };
-  timingFunctions: { [token: string]: string };
-  fontSizes: { [token: string]: string };
-  fontStyles: { [token: string]: string };
-  gridTemplateColumns: { [token: string]: string };
-  gridSpacing: { [token: string]: string };
+export interface IToken {
+  value: string;
+  [key: string]: any;
+}
+
+export interface IGlobalTokens<T> {
+  spacing: { [token: string]: T };
+  colors: { [token: string]: T };
+  lineWidths: { [token: string]: T };
+  letterSpacing: { [token: string]: T };
+  lineHeight: { [token: string]: T };
+  borderRadius: { [token: string]: T };
+  fontFamily: { [token: string]: T };
+  boxShadows: { [token: string]: T };
+  opacity: { [token: string]: T };
+  durations: { [token: string]: T };
+  timingFunctions: { [token: string]: T };
+  fontSizes: { [token: string]: T };
+  fontStyles: { [token: string]: T };
+  gridTemplateColumns: { [token: string]: T };
+  gridSpacing: { [token: string]: T };
 }
 
 export interface IScreens {
@@ -62,13 +67,13 @@ export interface IScreens {
 }
 
 export interface IConfig {
-  tokens?: Partial<IGlobalTokens>;
+  tokens?: Partial<IGlobalTokens<string | IToken>>;
   screens?: {
     [name: string]: (css: string) => string;
   };
   themes?: {
     [name: string]: {
-      [key in keyof IGlobalTokens]?: Partial<IGlobalTokens[key]>;
+      [key in keyof IGlobalTokens<any>]?: Partial<IGlobalTokens<any>[key]>;
     };
   };
 }
@@ -82,7 +87,7 @@ export interface IEvaluatedThemes {
 }
 
 export interface IEvaluatedConfig {
-  tokens: IGlobalTokens;
+  tokens: IGlobalTokens<IToken>;
   screens: {
     [name: string]: (css: string) => string;
   };

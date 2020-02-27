@@ -1,6 +1,6 @@
-import { IGlobalTokens } from '../types';
+import { IGlobalTokens, IToken } from '../types';
 
-const tokens: IGlobalTokens = {
+const tokens: IGlobalTokens<string | IToken> = {
   gridSpacing: {
     AUTO: 'auto',
     SPAN_1: 'span 1',

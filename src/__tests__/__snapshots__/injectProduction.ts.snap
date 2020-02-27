@@ -5,7 +5,7 @@ exports[`INJECT PRODUCTION should group breakpoints 1`] = `
   color: red;
 }.AV__B {
   color: blue;
-}}"
+}}.themes-dark{}"
 `;
 
 exports[`INJECT PRODUCTION should group themes 1`] = `
@@ -39,7 +39,7 @@ exports[`INJECT PRODUCTION should handle references classnames 1`] = `
 exports[`INJECT PRODUCTION should inject both pseudo selector and breakpoint 1`] = `
 "@media (max-width: 768px) {.AV__A:hover {
   color: red;
-}}"
+}}.themes-dark{}"
 `;
 
 exports[`INJECT PRODUCTION should inject multiple 1`] = `
@@ -47,13 +47,13 @@ exports[`INJECT PRODUCTION should inject multiple 1`] = `
   color: red;
 }.AV__B:hover {
   color: blue;
-}}"
+}}.themes-dark{}"
 `;
 
 exports[`INJECT PRODUCTION should inject simple 1`] = `
 ".AV__A {
   color: red;
-}"
+}.themes-dark{}"
 `;
 
 exports[`INJECT PRODUCTION should inject themes 1`] = `
@@ -65,7 +65,7 @@ exports[`INJECT PRODUCTION should inject themes 1`] = `
 exports[`INJECT PRODUCTION should inject with breakpoint 1`] = `
 "@media (max-width: 768px) {.AV__A {
   color: red;
-}}"
+}}.themes-dark{}"
 `;
 
 exports[`INJECT PRODUCTION should inject with multiple breakpoints 1`] = `
@@ -73,17 +73,17 @@ exports[`INJECT PRODUCTION should inject with multiple breakpoints 1`] = `
   color: red;
 }}@media (max-width: 1280px) {.AV__A {
   color: red;
-}}"
+}}.themes-dark{}"
 `;
 
 exports[`INJECT PRODUCTION should inject with multiple pseudo selectors 1`] = `
 ".AV__A:first-child:hover {
   color: red;
-}"
+}.themes-dark{}"
 `;
 
 exports[`INJECT PRODUCTION should inject with pseudo selector 1`] = `
 ".AV__A:hover {
   color: red;
-}"
+}.themes-dark{}"
 `;

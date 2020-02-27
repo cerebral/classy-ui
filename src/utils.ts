@@ -16,7 +16,7 @@ import {
   IExtractedClass,
   IExtractedClasses,
   IGlobalTokens,
-  ITokens,
+  IToken,
 } from './types';
 
 export const allowedPseudoDecorators = [
@@ -52,8 +52,8 @@ export const getClassesFromConfig = (
         variable:
           classname.tokens[tokenKey] !== classname.tokensWithoutVariables[tokenKey]
             ? {
-                value: classname.tokens[tokenKey],
-                originalValue: classname.tokensWithoutVariables[tokenKey],
+                value: classname.tokens[tokenKey].value,
+                originalValue: classname.tokensWithoutVariables[tokenKey].value,
               }
             : null,
         shortName: getShortName(tokenIndex),
@@ -79,15 +79,27 @@ export const deepAssign = (
 };
 
 export const evaluateConfig = (config: IConfig): IEvaluatedConfig => {
-  const originalTokens = Object.keys(defaultTokens).reduce<IGlobalTokens>((aggr, key) => {
-    (aggr as any)[key] = config.tokens
-      ? (config.tokens as any)[key]
-        ? (config.tokens as any)[key]
-        : {}
-      : (defaultTokens as any)[key];
+  const originalTokens = Object.keys(defaultTokens).reduce<IGlobalTokens<IToken>>((aggr, key) => {
+    const toExtract =
+      config.tokens && (config.tokens as any)[key]
+        ? config.tokens && (config.tokens as any)[key]
+        : config.tokens
+        ? {}
+        : (defaultTokens as any)[key];
+
+    (aggr as any)[key] = Object.keys(toExtract).reduce<{ [token: string]: IToken }>((subAggr, subKey) => {
+      subAggr[subKey] =
+        typeof toExtract[subKey] === 'string'
+          ? {
+              value: toExtract[subKey],
+            }
+          : toExtract[subKey];
+
+      return subAggr;
+    }, {});
 
     return aggr;
-  }, {} as IGlobalTokens);
+  }, {} as IGlobalTokens<IToken>);
 
   // Reverse themes lookup to tokens instead
   const configThemes = config.themes || {};
@@ -108,13 +120,16 @@ export const evaluateConfig = (config: IConfig): IEvaluatedConfig => {
   }, {} as IEvaluatedThemes);
 
   // Evaluated variables where values are replaced by CSS variable
-  const tokens = Object.keys(originalTokens).reduce<IGlobalTokens>((aggr, key) => {
-    (aggr as any)[key] = Object.keys((originalTokens as any)[key]).reduce<{ [token: string]: string }>(
+  const tokens = Object.keys(originalTokens).reduce<IGlobalTokens<IToken>>((aggr, key) => {
+    (aggr as any)[key] = Object.keys((originalTokens as any)[key]).reduce<{ [token: string]: IToken }>(
       (subAggr, subKey) => {
-        subAggr[subKey] =
-          themesByTokens[key] && themesByTokens[key][subKey]
-            ? `var(--${key}-${subKey})`
-            : (originalTokens as any)[key][subKey];
+        subAggr[subKey] = {
+          ...(originalTokens as any)[key][subKey],
+          value:
+            themesByTokens[key] && themesByTokens[key][subKey]
+              ? `var(--${key}-${subKey})`
+              : (originalTokens as any)[key][subKey].value,
+        };
 
         return subAggr;
       },
@@ -122,27 +137,23 @@ export const evaluateConfig = (config: IConfig): IEvaluatedConfig => {
     );
 
     return aggr;
-  }, {} as IGlobalTokens);
+  }, {} as IGlobalTokens<IToken>);
 
   // Call any dynamic classname tokens with both the original variables and
   // the ones who have been evaluated with CSS variables
   const evaluatedClassnames = Object.keys(classnames).reduce((aggr, key) => {
-    if (typeof classnames[key] === 'function') {
-      aggr[key] = classnames[key] as any;
-    } else {
-      aggr[key] = {
-        ...classnames[key],
-        tokensWithoutVariables:
-          typeof (classnames[key] as any).tokens === 'function'
-            ? (classnames[key] as any).tokens(originalTokens, { negative })
-            : (classnames[key] as any).tokens,
-        tokens:
-          typeof (classnames[key] as any).tokens === 'function'
-            ? (classnames[key] as any).tokens(tokens, { negative })
-            : (classnames[key] as any).tokens,
-        description: (classnames[key] as any).description,
-      } as any;
-    }
+    aggr[key] = {
+      ...classnames[key],
+      tokensWithoutVariables:
+        typeof (classnames[key] as any).tokens === 'function'
+          ? (classnames[key] as any).tokens(originalTokens, { negative })
+          : (classnames[key] as any).tokens,
+      tokens:
+        typeof (classnames[key] as any).tokens === 'function'
+          ? (classnames[key] as any).tokens(tokens, { negative })
+          : (classnames[key] as any).tokens,
+      description: (classnames[key] as any).description,
+    } as any;
 
     return aggr;
   }, {} as IEvaluatedClassnames);
@@ -252,7 +263,7 @@ export const injectProduction = (classCollection: IExtractedClasses, classes: IC
         const classname = prefix + name;
 
         classEntry = createClassEntry(classname, otherDecorators, evaluatedName =>
-          (classConfig.css as any)(evaluatedName, classConfig.tokens[configClass.token]),
+          (classConfig.css as any)(evaluatedName, classConfig.tokens[configClass.token].value),
         );
 
         if (screenDecorators.length) {
@@ -313,7 +324,7 @@ export const injectDevelopment = (classCollection: IExtractedClasses, classes: I
         const name = `${camelToDash(classnameKey)}__${configClass.token}`;
         const classname = prefix + name;
         const classEntry = createClassEntry(classname, otherDecorators, evaluatedName =>
-          (classConfig.css as any)(evaluatedName, classConfig.tokens[configClass.token]),
+          (classConfig.css as any)(evaluatedName, classConfig.tokens[configClass.token].value),
         );
 
         let css = '';
@@ -351,13 +362,16 @@ export const injectDevelopment = (classCollection: IExtractedClasses, classes: I
   }, [] as string[]);
 };
 
-export const negative = (scale: { [key: string]: string }) => {
+export const negative = (scale: { [key: string]: IToken }) => {
   return Object.keys(scale)
-    .filter(key => scale[key] !== '0')
+    .filter(key => scale[key].value !== '0')
     .reduce(
       (negativeScale, key) => ({
         ...negativeScale,
-        [`NEG_${key}`]: negateValue(scale[key]),
+        [`NEG_${key}`]: {
+          ...scale[key],
+          value: negateValue(scale[key].value),
+        },
       }),
       {},
     );
