@@ -29,6 +29,13 @@ function convertClassnameToType(baseClass: string, token: string, config: IEvalu
          ].tokens[token].value.substr(1)}/000000?text=+)`
        : ''
    }
+   ${Object.keys(config.classnames[baseClass].tokens[token]).reduce((aggr, key) => {
+     if (key === 'value') {
+       return aggr;
+     }
+
+     return `${aggr}* **${key}**: ${config.classnames[baseClass].tokens[token][key]}\n`;
+   }, '')}
    * \`\`\`css
    * ${css.join('\n')}
    * \`\`\`

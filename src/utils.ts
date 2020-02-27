@@ -82,7 +82,7 @@ export const evaluateConfig = (config: IConfig): IEvaluatedConfig => {
   const originalTokens = Object.keys(defaultTokens).reduce<IGlobalTokens<IToken>>((aggr, key) => {
     const toExtract =
       config.tokens && (config.tokens as any)[key]
-        ? config.tokens && (config.tokens as any)[key]
+        ? (config.tokens as any)[key]
         : config.tokens
         ? {}
         : (defaultTokens as any)[key];
