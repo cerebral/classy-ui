@@ -1,14 +1,16 @@
-import { writeFileSync, mkdirSync } from 'fs';
-import { join, basename, extname, relative } from 'path';
+import { writeFileSync } from 'fs';
+import { join } from 'path';
 
-import { addNamed, addSideEffect } from '@babel/helper-module-imports';
+import { addNamed } from '@babel/helper-module-imports';
+import autoprefixer from 'autoprefixer';
+import CleanCSS from 'clean-css';
+import postcss from 'postcss';
 
 import { transform as transformClassesToTypes } from '../config/transform-classes-to-types';
 import { transform as transformConfigToClasses } from '../config/transform-config-to-classes';
 import { IExtractedClass, IExtractedClasses } from '../types';
 import { createClassObject, evaluateConfig, getUserConfig, injectDevelopment, injectProduction } from '../utils';
 
-const cssFolder = join(__dirname, '..', '..', 'styles');
 const config = evaluateConfig(getUserConfig());
 const classes = transformConfigToClasses(config);
 
@@ -20,7 +22,6 @@ if (process.env.NODE_ENV !== 'test') {
 
     writeFileSync(esTypesPath, types);
     writeFileSync(libTypesPath, types);
-    mkdirSync(cssFolder);
   } catch {
     // Codesandbox or some other unwritable environment
   }
@@ -63,7 +64,7 @@ export default (babel: any) => {
   };
 };
 
-let gloabelId = 0;
+let result: string;
 
 export function processReferences(babel: any, state: any, refs: any) {
   const { types: t } = babel;
@@ -81,16 +82,15 @@ export function processReferences(babel: any, state: any, refs: any) {
   refs['c'] && processCompose(refs['c']);
 
   if (isProduction && filePath) {
-    const cssFilePrefix = basename(relative(process.cwd(), filePath).replace(/\/|\\/g, '_'), extname(filePath));
-
-    const cssFileName = cssFilePrefix + '-' + gloabelId++ + '.css';
-    const cssPath = join(cssFolder, cssFileName);
-
-    writeFileSync(cssPath, injectProduction(classCollection, classes, config));
-
-    if (state.opts.autoImport !== false) {
-      addSideEffect(state.file.path, 'classy-ui/styles/' + cssFileName);
+    if (!result) {
+      process.on('exit', () => {
+        writeFileSync(
+          join(process.cwd(), state.opts.output || 'dist', 'classy-ui.css'),
+          new CleanCSS().minify(postcss([autoprefixer]).process(result).css).styles,
+        );
+      });
     }
+    result = injectProduction(classCollection, classes, config);
   } else {
     const runtimeCall = t.expressionStatement(
       t.callExpression(addNamed(state.file.path, 'addClasses', 'classy-ui/runtime'), [
