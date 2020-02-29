@@ -8,8 +8,15 @@ import postcss from 'postcss';
 
 import { transform as transformClassesToTypes } from '../config/transform-classes-to-types';
 import { transform as transformConfigToClasses } from '../config/transform-config-to-classes';
-import { IExtractedClass, IExtractedClasses } from '../types';
-import { createClassObject, evaluateConfig, getUserConfig, injectDevelopment, injectProduction } from '../utils';
+import { IClassesByType, IExtractedClass, IExtractedClasses } from '../types';
+import {
+  createClassObject,
+  createProductionCss,
+  evaluateConfig,
+  getUserConfig,
+  injectDevelopment,
+  injectProduction,
+} from '../utils';
 
 const config = evaluateConfig(getUserConfig());
 const classes = transformConfigToClasses(config);
@@ -64,7 +71,13 @@ export default (babel: any) => {
   };
 };
 
-let result: string;
+let hasRegisteredExitHook = false;
+export const productionClassesByType: IClassesByType = {
+  screens: {},
+  common: {},
+  themeTokens: {},
+  rootTokens: {},
+};
 
 export function processReferences(babel: any, state: any, refs: any) {
   const { types: t } = babel;
@@ -81,16 +94,20 @@ export function processReferences(babel: any, state: any, refs: any) {
   refs['compose'] && processCompose(refs['compose']);
   refs['c'] && processCompose(refs['c']);
 
+  // We require access to the babel options, so have to do it here
+  if (!hasRegisteredExitHook) {
+    hasRegisteredExitHook = true;
+    process.on('exit', () => {
+      writeFileSync(
+        join(process.cwd(), state.opts.output || 'public', 'classy-ui.css'),
+        new CleanCSS().minify(postcss([autoprefixer]).process(createProductionCss(productionClassesByType, config)).css)
+          .styles,
+      );
+    });
+  }
+
   if (isProduction && filePath) {
-    if (!result) {
-      process.on('exit', () => {
-        writeFileSync(
-          join(process.cwd(), state.opts.output || 'dist', 'classy-ui.css'),
-          new CleanCSS().minify(postcss([autoprefixer]).process(result).css).styles,
-        );
-      });
-    }
-    result = injectProduction(classCollection, classes, config);
+    injectProduction(productionClassesByType, classCollection, classes, config);
   } else {
     const runtimeCall = t.expressionStatement(
       t.callExpression(addNamed(state.file.path, 'addClasses', 'classy-ui/runtime'), [

@@ -236,77 +236,73 @@ export const createClassEntry = (name: string, decorators: string[], css: (name:
 
 export const flat = (array: any[]) => array.reduce((aggr, item) => aggr.concat(item), []);
 
-export const injectProduction = (() => {
-  const productionClassesByType: IClassesByType = {
-    screens: {},
-    common: {},
-    themeTokens: {},
-    rootTokens: {},
-  };
+export const injectProduction = (
+  productionClassesByType: IClassesByType,
+  classCollection: IExtractedClasses,
+  classes: IClasses,
+  config: IEvaluatedConfig,
+) => {
+  Object.keys(classCollection).forEach(uid => {
+    const extractedClass = classCollection[uid];
+    const configClass = classes[extractedClass.id as string];
+    const screenDecorators = extractedClass.decorators.filter(decorator => decorator in config.screens);
+    const otherDecorators = extractedClass.decorators.filter(decorator => !(decorator in config.screens));
+    let classEntry: any;
+    try {
+      const prefix = extractedClass.name.substr(0, extractedClass.name.lastIndexOf(':') + 1);
+      const cssProcessor = config.classnames[configClass.classname].css;
+      // The classname definition might references other CSS processors, we extract the base classname for lookups
+      const classnameKeys = Array.isArray(cssProcessor) ? cssProcessor : [configClass.classname];
 
-  return (classCollection: IExtractedClasses, classes: IClasses, config: IEvaluatedConfig) => {
-    Object.keys(classCollection).forEach(uid => {
-      const extractedClass = classCollection[uid];
-      const configClass = classes[extractedClass.id as string];
-      const screenDecorators = extractedClass.decorators.filter(decorator => decorator in config.screens);
-      const otherDecorators = extractedClass.decorators.filter(decorator => !(decorator in config.screens));
-      let classEntry: any;
-      try {
-        const prefix = extractedClass.name.substr(0, extractedClass.name.lastIndexOf(':') + 1);
-        const cssProcessor = config.classnames[configClass.classname].css;
-        // The classname definition might references other CSS processors, we extract the base classname for lookups
-        const classnameKeys = Array.isArray(cssProcessor) ? cssProcessor : [configClass.classname];
+      classnameKeys.forEach(classnameKey => {
+        const classConfig = config.classnames[classnameKey];
+        const id = `${camelToDash(classnameKey)}-${configClass.token}`;
+        const name = classes[id].shortName;
+        const classname = prefix + name;
 
-        classnameKeys.forEach(classnameKey => {
-          const classConfig = config.classnames[classnameKey];
-          const id = `${camelToDash(classnameKey)}-${configClass.token}`;
-          const name = classes[id].shortName;
-          const classname = prefix + name;
+        classEntry = createClassEntry(classname, otherDecorators, evaluatedName =>
+          (classConfig.css as any)(evaluatedName, classConfig.tokens[configClass.token].value),
+        );
 
-          classEntry = createClassEntry(classname, otherDecorators, evaluatedName =>
-            (classConfig.css as any)(evaluatedName, classConfig.tokens[configClass.token].value),
+        if (screenDecorators.length) {
+          screenDecorators.forEach(screen => {
+            productionClassesByType.screens[screen] = productionClassesByType.screens[screen] || [];
+            productionClassesByType.screens[screen].push(classEntry);
+          });
+        } else {
+          productionClassesByType.common[classname] = classEntry;
+        }
+
+        if (configClass.variable) {
+          const themes = config.themes || {};
+          const variableValue = configClass.variable.value;
+          const originalValue = configClass.variable.originalValue;
+          const variables = (variableValue.match(/var\(.*\)/) || []).map(varString =>
+            varString.replace(/var\(|\)/g, ''),
           );
 
-          if (screenDecorators.length) {
-            screenDecorators.forEach(screen => {
-              productionClassesByType.screens[screen] = productionClassesByType.screens[screen] || [];
-              productionClassesByType.screens[screen].push(classEntry);
+          config.themeNames.forEach(theme => {
+            productionClassesByType.themeTokens[theme] = productionClassesByType.themeTokens[theme] || {};
+            variables.forEach(variable => {
+              const variableParts = variable.substr(2).split('-');
+              const variableKey = variableParts.shift() as string;
+              const variableValueKey = variableParts.join('-');
+
+              productionClassesByType.themeTokens[theme][
+                variable
+              ] = `${variable}:${themes[variableKey][variableValueKey][theme]};`;
+              productionClassesByType.rootTokens[variable] = originalValue;
             });
-          } else {
-            productionClassesByType.common[classname] = classEntry;
-          }
+          });
+        }
+      });
+    } catch (error) {
+      throw new Error(uid + JSON.stringify(extractedClass, null, 2));
+    }
+  });
 
-          if (configClass.variable) {
-            const themes = config.themes || {};
-            const variableValue = configClass.variable.value;
-            const originalValue = configClass.variable.originalValue;
-            const variables = (variableValue.match(/var\(.*\)/) || []).map(varString =>
-              varString.replace(/var\(|\)/g, ''),
-            );
-
-            config.themeNames.forEach(theme => {
-              productionClassesByType.themeTokens[theme] = productionClassesByType.themeTokens[theme] || {};
-              variables.forEach(variable => {
-                const variableParts = variable.substr(2).split('-');
-                const variableKey = variableParts.shift() as string;
-                const variableValueKey = variableParts.join('-');
-
-                productionClassesByType.themeTokens[theme][
-                  variable
-                ] = `${variable}:${themes[variableKey][variableValueKey][theme]};`;
-                productionClassesByType.rootTokens[variable] = originalValue;
-              });
-            });
-          }
-        });
-      } catch (error) {
-        throw new Error(uid + JSON.stringify(extractedClass, null, 2));
-      }
-    });
-
-    return createProductionCss(productionClassesByType, config);
-  };
-})();
+  return productionClassesByType;
+};
 
 export const injectDevelopment = (classCollection: IExtractedClasses, classes: IClasses, config: IEvaluatedConfig) => {
   return Object.keys(classCollection).reduce((aggr, uid) => {

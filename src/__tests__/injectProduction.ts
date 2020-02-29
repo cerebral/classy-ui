@@ -1,31 +1,62 @@
 import { transform } from '../config/transform-config-to-classes';
-import { IExtractedClasses } from '../types';
-import { createClassObject, evaluateConfig, injectProduction } from '../utils';
+import { productionClassesByType } from '../plugin';
+import { IClassesByType, IExtractedClasses } from '../types';
+import { createClassObject, createProductionCss, evaluateConfig, injectProduction } from '../utils';
 
 const config = evaluateConfig(require('../../classy-ui.config.js'));
 const classes = transform(config);
 
 describe('INJECT PRODUCTION', () => {
+  beforeEach(() => {
+    productionClassesByType.common = {};
+    productionClassesByType.rootTokens = {};
+    productionClassesByType.screens = {};
+    productionClassesByType.themeTokens = {};
+  });
   test('should inject simple', () => {
     const classCollection: IExtractedClasses = {
       ['color-RED']: createClassObject({ baseClass: 'color', token: 'RED', decorators: [] }, classes, true),
     };
+    const productionClassesByType: IClassesByType = {
+      screens: {},
+      common: {},
+      themeTokens: {},
+      rootTokens: {},
+    };
 
-    expect(injectProduction(classCollection, classes, config)).toMatchSnapshot();
+    expect(
+      createProductionCss(injectProduction(productionClassesByType, classCollection, classes, config), config),
+    ).toMatchSnapshot();
   });
   test('should inject with pseudo selector', () => {
     const classCollection: IExtractedClasses = {
       ['color-RED']: createClassObject({ baseClass: 'color', token: 'RED', decorators: ['hover'] }, classes, true),
     };
+    const productionClassesByType: IClassesByType = {
+      screens: {},
+      common: {},
+      themeTokens: {},
+      rootTokens: {},
+    };
 
-    expect(injectProduction(classCollection, classes, config)).toMatchSnapshot();
+    expect(
+      createProductionCss(injectProduction(productionClassesByType, classCollection, classes, config), config),
+    ).toMatchSnapshot();
   });
   test('should inject with breakpoint', () => {
     const classCollection: IExtractedClasses = {
       ['color-RED']: createClassObject({ baseClass: 'color', token: 'RED', decorators: ['md'] }, classes, true),
     };
+    const productionClassesByType: IClassesByType = {
+      screens: {},
+      common: {},
+      themeTokens: {},
+      rootTokens: {},
+    };
 
-    expect(injectProduction(classCollection, classes, config)).toMatchSnapshot();
+    expect(
+      createProductionCss(injectProduction(productionClassesByType, classCollection, classes, config), config),
+    ).toMatchSnapshot();
   });
   test('should inject both pseudo selector and breakpoint', () => {
     const classCollection: IExtractedClasses = {
@@ -35,8 +66,16 @@ describe('INJECT PRODUCTION', () => {
         true,
       ),
     };
+    const productionClassesByType: IClassesByType = {
+      screens: {},
+      common: {},
+      themeTokens: {},
+      rootTokens: {},
+    };
 
-    expect(injectProduction(classCollection, classes, config)).toMatchSnapshot();
+    expect(
+      createProductionCss(injectProduction(productionClassesByType, classCollection, classes, config), config),
+    ).toMatchSnapshot();
   });
   test('should inject with multiple pseudo selectors', () => {
     const classCollection: IExtractedClasses = {
@@ -46,15 +85,31 @@ describe('INJECT PRODUCTION', () => {
         true,
       ),
     };
+    const productionClassesByType: IClassesByType = {
+      screens: {},
+      common: {},
+      themeTokens: {},
+      rootTokens: {},
+    };
 
-    expect(injectProduction(classCollection, classes, config)).toMatchSnapshot();
+    expect(
+      createProductionCss(injectProduction(productionClassesByType, classCollection, classes, config), config),
+    ).toMatchSnapshot();
   });
   test('should inject with multiple breakpoints', () => {
     const classCollection: IExtractedClasses = {
       ['color-RED']: createClassObject({ baseClass: 'color', token: 'RED', decorators: ['sm', 'xl'] }, classes, true),
     };
+    const productionClassesByType: IClassesByType = {
+      screens: {},
+      common: {},
+      themeTokens: {},
+      rootTokens: {},
+    };
 
-    expect(injectProduction(classCollection, classes, config)).toMatchSnapshot();
+    expect(
+      createProductionCss(injectProduction(productionClassesByType, classCollection, classes, config), config),
+    ).toMatchSnapshot();
   });
   test('should inject multiple', () => {
     const classCollection: IExtractedClasses = {
@@ -65,39 +120,79 @@ describe('INJECT PRODUCTION', () => {
         true,
       ),
     };
+    const productionClassesByType: IClassesByType = {
+      screens: {},
+      common: {},
+      themeTokens: {},
+      rootTokens: {},
+    };
 
-    expect(injectProduction(classCollection, classes, config)).toMatchSnapshot();
+    expect(
+      createProductionCss(injectProduction(productionClassesByType, classCollection, classes, config), config),
+    ).toMatchSnapshot();
   });
   test('should inject themes', () => {
     const classCollection: IExtractedClasses = {
       ['color-GREEN']: createClassObject({ baseClass: 'color', token: 'GREEN', decorators: ['md'] }, classes, true),
     };
+    const productionClassesByType: IClassesByType = {
+      screens: {},
+      common: {},
+      themeTokens: {},
+      rootTokens: {},
+    };
 
-    expect(injectProduction(classCollection, classes, config)).toMatchSnapshot();
+    expect(
+      createProductionCss(injectProduction(productionClassesByType, classCollection, classes, config), config),
+    ).toMatchSnapshot();
   });
   test('should group breakpoints', () => {
     const classCollection: IExtractedClasses = {
       ['color-RED']: createClassObject({ baseClass: 'color', token: 'RED', decorators: ['md'] }, classes, true),
       ['color-BLUE']: createClassObject({ baseClass: 'color', token: 'BLUE', decorators: ['md'] }, classes, true),
     };
+    const productionClassesByType: IClassesByType = {
+      screens: {},
+      common: {},
+      themeTokens: {},
+      rootTokens: {},
+    };
 
-    expect(injectProduction(classCollection, classes, config)).toMatchSnapshot();
+    expect(
+      createProductionCss(injectProduction(productionClassesByType, classCollection, classes, config), config),
+    ).toMatchSnapshot();
   });
   test('should group themes', () => {
     const classCollection: IExtractedClasses = {
       ['color-GREEN']: createClassObject({ baseClass: 'color', token: 'GREEN', decorators: [] }, classes, true),
       ['color-PURPLE']: createClassObject({ baseClass: 'color', token: 'PURPLE', decorators: [] }, classes, true),
     };
+    const productionClassesByType: IClassesByType = {
+      screens: {},
+      common: {},
+      themeTokens: {},
+      rootTokens: {},
+    };
 
-    expect(injectProduction(classCollection, classes, config)).toMatchSnapshot();
+    expect(
+      createProductionCss(injectProduction(productionClassesByType, classCollection, classes, config), config),
+    ).toMatchSnapshot();
   });
   test('should group themes and breakpoints', () => {
     const classCollection: IExtractedClasses = {
       ['color-GREEN']: createClassObject({ baseClass: 'color', token: 'RED', decorators: ['md'] }, classes, true),
       ['color-PURPLE']: createClassObject({ baseClass: 'color', token: 'PURPLE', decorators: ['md'] }, classes, true),
     };
+    const productionClassesByType: IClassesByType = {
+      screens: {},
+      common: {},
+      themeTokens: {},
+      rootTokens: {},
+    };
 
-    expect(injectProduction(classCollection, classes, config)).toMatchSnapshot();
+    expect(
+      createProductionCss(injectProduction(productionClassesByType, classCollection, classes, config), config),
+    ).toMatchSnapshot();
   });
   test('should handle references classnames', () => {
     const classCollection: IExtractedClasses = {
@@ -107,7 +202,15 @@ describe('INJECT PRODUCTION', () => {
         false,
       ),
     };
+    const productionClassesByType: IClassesByType = {
+      screens: {},
+      common: {},
+      themeTokens: {},
+      rootTokens: {},
+    };
 
-    expect(injectProduction(classCollection, classes, config)).toMatchSnapshot();
+    expect(
+      createProductionCss(injectProduction(productionClassesByType, classCollection, classes, config), config),
+    ).toMatchSnapshot();
   });
 });
