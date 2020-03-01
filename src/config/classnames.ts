@@ -1747,12 +1747,12 @@ const classnames: IClassnames = {
       'The z-index CSS property sets the z-order of a positioned element and its descendants or flex items. Overlapping elements with a larger z-index cover those with a smaller one.',
     ),
   },
-  gap: {
+  gridGap: {
     tokens: ({ spacing }) => spacing,
     css: ['rowGap', 'columnGap'],
     description: describeClassname(
       'gap',
-      'The gap CSS property sets the gaps (gutters) between rows and columns. It is a shorthand for row-gap and column-gap.',
+      'The grid-gap CSS property sets the gaps (gutters) between rows and columns. It is a shorthand for row-gap and column-gap.',
     ),
   },
   rowGap: {
@@ -1979,7 +1979,7 @@ const classnames: IClassnames = {
       CLEARFIX: {
         value: '::after{\n  content: "";\n  display: table;\n  clear: both;\n}',
       },
-      SCREEN_REDER: {
+      SCREEN_READER: {
         value:
           '{\n  position:absolute;\n  width:1px;\n  height:1px;\n  padding:0;\n  margin:-1px;\n  overflow:hidden;\n  clip:rect(0,0,0,0);\n  white-space:nowrap;\n  border-width:0;\n}',
       },
@@ -1989,7 +1989,7 @@ const classnames: IClassnames = {
       },
     },
     css: (name, value) => `${name}${value}`,
-    description: describeClassname('utils (Classy-UI)', "A set of utility tokens, you'r welcome :-)", false),
+    description: describeClassname('utils (Classy-UI)', "A set of utility tokens, you're welcome :-)", false),
   },
 };
 
