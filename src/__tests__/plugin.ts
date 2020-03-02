@@ -152,5 +152,13 @@ import { compose, tokens } from 'classy-ui'
 
 compose(true ? tokens.color.GREEN : tokens.color.RED )`,
     },
+    {
+      error: true,
+      title: 'should throw when using invalid class',
+      code: `
+import { compose, tokens } from 'classy-ui'
+
+compose(tokens.color.BLU)`,
+    },
   ],
 });

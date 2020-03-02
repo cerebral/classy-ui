@@ -357,6 +357,18 @@ SyntaxError: unknown: This style of importing isn't allowed.
 
 `;
 
+exports[`classy-ui should throw when using invalid class: should throw when using invalid class 1`] = `
+
+import { compose, tokens } from 'classy-ui'
+
+compose(tokens.color.BLU)
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+TypeError: unknown: Cannot read property 'derived' of undefined
+
+`;
+
 exports[`classy-ui should throw when using namespace import: should throw when using namespace import 1`] = `
 
 import * as classy from 'classy-ui'
