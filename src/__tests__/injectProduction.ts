@@ -223,8 +223,12 @@ describe('INJECT PRODUCTION', () => {
   });
   test('should not override with screens', () => {
     const classCollection: IExtractedClasses = {
-      ['color-RED']: createClassObject({ baseClass: 'color', token: 'RED', decorators: [] }, classes, true),
-      ['color-GREEN']: createClassObject({ baseClass: 'color', token: 'GREEN', decorators: ['laptop'] }, classes, true),
+      ['paddingLeft-SPACING_8']: createClassObject({ baseClass: 'color', token: 'RED', decorators: [] }, classes, true),
+      ['paddingLeft-SPACING_4']: createClassObject(
+        { baseClass: 'color', token: 'BLUE', decorators: ['mobile'] },
+        classes,
+        true,
+      ),
     };
     const productionClassesByType: IClassesByType = {
       screens: {},
