@@ -22,14 +22,17 @@ exports[`classy-ui should convert both breakpoints and pseudos: should convert b
 
 import { compose, tokens } from 'classy-ui'
 
-compose(tokens.color.RED.md.hover)
+compose(tokens.color.RED.tablet.hover)
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
 import { addClasses as _addClasses } from 'classy-ui/runtime';
-('hover:md:color__RED ');
+('hover:tablet:color__RED ');
 
-_addClasses(['hover:md:color__RED', '@media (max-width: 768px) {.hover\\\\:md\\\\:color__RED:hover {\\n  color: red;\\n}}']);
+_addClasses([
+  'hover:tablet:color__RED',
+  '@media (max-width: 768px) {.hover\\\\:tablet\\\\:color__RED:hover {\\n  color: red;\\n}}',
+]);
 
 
 `;
@@ -38,14 +41,14 @@ exports[`classy-ui should convert breakpoints: should convert breakpoints 1`] = 
 
 import { compose, tokens } from 'classy-ui'
 
-compose(tokens.color.RED.md)
+compose(tokens.color.RED.tablet)
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
 import { addClasses as _addClasses } from 'classy-ui/runtime';
-('md:color__RED ');
+('tablet:color__RED ');
 
-_addClasses(['md:color__RED', '@media (max-width: 768px) {.md\\\\:color__RED {\\n  color: red;\\n}}']);
+_addClasses(['tablet:color__RED', '@media (max-width: 768px) {.tablet\\\\:color__RED {\\n  color: red;\\n}}']);
 
 
 `;
@@ -54,18 +57,18 @@ exports[`classy-ui should convert complex compositions: should convert complex c
 
 import { compose, tokens } from 'classy-ui'
 
-compose(tokens.color.BLUE, tokens.color.RED.md.lg.hover)
+compose(tokens.color.BLUE, tokens.color.RED.tablet.laptop.hover)
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
 import { addClasses as _addClasses } from 'classy-ui/runtime';
-('color__BLUE hover:lg:md:color__RED ');
+('color__BLUE hover:laptop:tablet:color__RED ');
 
 _addClasses([
   'color__BLUE',
   '.color__BLUE {\\n  color: blue;\\n}',
-  'hover:lg:md:color__RED',
-  '@media (max-width: 1024px) {.hover\\\\:lg\\\\:md\\\\:color__RED:hover {\\n  color: red;\\n}}@media (max-width: 768px) {.hover\\\\:lg\\\\:md\\\\:color__RED:hover {\\n  color: red;\\n}}',
+  'hover:laptop:tablet:color__RED',
+  '@media (max-width: 1024px) {.hover\\\\:laptop\\\\:tablet\\\\:color__RED:hover {\\n  color: red;\\n}}@media (max-width: 768px) {.hover\\\\:laptop\\\\:tablet\\\\:color__RED:hover {\\n  color: red;\\n}}',
 ]);
 
 

@@ -26,21 +26,21 @@ compose(tokens.color.RED.hover)`,
       code: `
 import { compose, tokens } from 'classy-ui'
 
-compose(tokens.color.RED.md)`,
+compose(tokens.color.RED.tablet)`,
     },
     {
       title: 'should convert both breakpoints and pseudos',
       code: `
 import { compose, tokens } from 'classy-ui'
 
-compose(tokens.color.RED.md.hover)`,
+compose(tokens.color.RED.tablet.hover)`,
     },
     {
       title: 'should convert complex compositions',
       code: `
 import { compose, tokens } from 'classy-ui'
 
-compose(tokens.color.BLUE, tokens.color.RED.md.lg.hover)
+compose(tokens.color.BLUE, tokens.color.RED.tablet.laptop.hover)
 `,
     },
     {

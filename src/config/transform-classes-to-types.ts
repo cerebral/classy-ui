@@ -119,7 +119,7 @@ ${Object.keys(config.screens)
     screen => `
   /**
    * \`\`\`css
-   * ${config.screens[screen]('{\n  $token\n}').replace('@', '\\@')}
+   * \${config.screens[screen]('\n    $token\n')}
    * \`\`\`
    */
   ${screen}: IDecorators;

@@ -69,9 +69,9 @@ exports[`INJECT PRODUCTION should inject with breakpoint 1`] = `
 `;
 
 exports[`INJECT PRODUCTION should inject with multiple breakpoints 1`] = `
-"@media (max-width: 640px) {.AV__A {
+"@media (max-width: 1024px) {.AV__A {
   color: red;
-}}@media (max-width: 1280px) {.AV__A {
+}}@media (max-width: 640px) {.AV__A {
   color: red;
 }}.themes-dark{}"
 `;
@@ -86,4 +86,12 @@ exports[`INJECT PRODUCTION should inject with pseudo selector 1`] = `
 ".AV__A:hover {
   color: red;
 }.themes-dark{}"
+`;
+
+exports[`INJECT PRODUCTION should not override with screens 1`] = `
+".AV__A {
+  color: red;
+}@media (max-width: 1024px) {.AV__C {
+  color: var(--colors-GREEN);
+}}:root{--colors-GREEN:green;}.themes-dark{--colors-GREEN:yellow;}"
 `;

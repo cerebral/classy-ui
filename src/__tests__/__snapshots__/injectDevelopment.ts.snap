@@ -27,8 +27,8 @@ Array [
 
 exports[`INJECT DEVELOPMENT should inject both pseudo selector and breakpoint 1`] = `
 Array [
-  "hover:md:color__RED",
-  "@media (max-width: 768px) {.hover\\\\:md\\\\:color__RED:hover {
+  "hover:tablet:color__RED",
+  "@media (max-width: 768px) {.hover\\\\:tablet\\\\:color__RED:hover {
   color: red;
 }}",
 ]
@@ -46,12 +46,12 @@ Array [
 
 exports[`INJECT DEVELOPMENT should inject multiple 1`] = `
 Array [
-  "md:color__RED",
-  "@media (max-width: 768px) {.md\\\\:color__RED {
+  "tablet:color__RED",
+  "@media (max-width: 768px) {.tablet\\\\:color__RED {
   color: red;
 }}",
-  "hover:md:color__BLUE",
-  "@media (max-width: 768px) {.hover\\\\:md\\\\:color__BLUE:hover {
+  "hover:tablet:color__BLUE",
+  "@media (max-width: 768px) {.hover\\\\:tablet\\\\:color__BLUE:hover {
   color: blue;
 }}",
 ]
@@ -68,8 +68,8 @@ Array [
 
 exports[`INJECT DEVELOPMENT should inject themes 1`] = `
 Array [
-  "md:color__GREEN",
-  "@media (max-width: 768px) {.md\\\\:color__GREEN {
+  "tablet:color__GREEN",
+  "@media (max-width: 768px) {.tablet\\\\:color__GREEN {
   color: var(--colors-GREEN);
 }}:root{--colors-GREEN:green;}
 .themes-dark{--colors-GREEN:yellow;}",
@@ -78,8 +78,8 @@ Array [
 
 exports[`INJECT DEVELOPMENT should inject with breakpoint 1`] = `
 Array [
-  "md:color__RED",
-  "@media (max-width: 768px) {.md\\\\:color__RED {
+  "tablet:color__RED",
+  "@media (max-width: 768px) {.tablet\\\\:color__RED {
   color: red;
 }}",
 ]
@@ -87,10 +87,10 @@ Array [
 
 exports[`INJECT DEVELOPMENT should inject with multiple breakpoints 1`] = `
 Array [
-  "sm:xl:color__RED",
-  "@media (max-width: 640px) {.sm\\\\:xl\\\\:color__RED {
+  "laptop:mobile:color__RED",
+  "@media (max-width: 1024px) {.laptop\\\\:mobile\\\\:color__RED {
   color: red;
-}}@media (max-width: 1280px) {.sm\\\\:xl\\\\:color__RED {
+}}@media (max-width: 640px) {.laptop\\\\:mobile\\\\:color__RED {
   color: red;
 }}",
 ]

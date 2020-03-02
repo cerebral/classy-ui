@@ -23,7 +23,7 @@ describe('INJECT DEVELOPMENT', () => {
   });
   test('should inject with breakpoint', () => {
     const classCollection: IExtractedClasses = {
-      ['color-RED']: createClassObject({ baseClass: 'color', token: 'RED', decorators: ['md'] }, classes, false),
+      ['color-RED']: createClassObject({ baseClass: 'color', token: 'RED', decorators: ['tablet'] }, classes, false),
     };
 
     expect(injectDevelopment(classCollection, classes, config)).toMatchSnapshot();
@@ -31,7 +31,7 @@ describe('INJECT DEVELOPMENT', () => {
   test('should inject both pseudo selector and breakpoint', () => {
     const classCollection: IExtractedClasses = {
       ['color-RED']: createClassObject(
-        { baseClass: 'color', token: 'RED', decorators: ['md', 'hover'] },
+        { baseClass: 'color', token: 'RED', decorators: ['tablet', 'hover'] },
         classes,
         false,
       ),
@@ -52,16 +52,20 @@ describe('INJECT DEVELOPMENT', () => {
   });
   test('should inject with multiple breakpoints', () => {
     const classCollection: IExtractedClasses = {
-      ['color-RED']: createClassObject({ baseClass: 'color', token: 'RED', decorators: ['sm', 'xl'] }, classes, false),
+      ['color-RED']: createClassObject(
+        { baseClass: 'color', token: 'RED', decorators: ['mobile', 'laptop'] },
+        classes,
+        false,
+      ),
     };
 
     expect(injectDevelopment(classCollection, classes, config)).toMatchSnapshot();
   });
   test('should inject multiple', () => {
     const classCollection: IExtractedClasses = {
-      ['color-RED']: createClassObject({ baseClass: 'color', token: 'RED', decorators: ['md'] }, classes, false),
+      ['color-RED']: createClassObject({ baseClass: 'color', token: 'RED', decorators: ['tablet'] }, classes, false),
       ['color-BLUE']: createClassObject(
-        { baseClass: 'color', token: 'BLUE', decorators: ['hover', 'md'] },
+        { baseClass: 'color', token: 'BLUE', decorators: ['hover', 'tablet'] },
         classes,
         false,
       ),
@@ -71,7 +75,11 @@ describe('INJECT DEVELOPMENT', () => {
   });
   test('should inject themes', () => {
     const classCollection: IExtractedClasses = {
-      ['color-GREEN']: createClassObject({ baseClass: 'color', token: 'GREEN', decorators: ['md'] }, classes, false),
+      ['color-GREEN']: createClassObject(
+        { baseClass: 'color', token: 'GREEN', decorators: ['tablet'] },
+        classes,
+        false,
+      ),
     };
 
     expect(injectDevelopment(classCollection, classes, config)).toMatchSnapshot();
