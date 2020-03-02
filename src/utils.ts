@@ -385,7 +385,7 @@ export const createProductionClassObjects = (
   const id = `${camelToDash(baseClass)}-${token}`;
 
   if (id && !(id in classes)) {
-    throw new Error(`The token ${token} does not exist on property ${baseClass}`);
+    throw new Error(`The token "${token}" does not exist on property "${baseClass}"`);
   }
 
   if (classes[id].derived) {
