@@ -237,93 +237,90 @@ export const injectProduction = (
   classes: IClasses,
   config: IEvaluatedConfig,
 ) => {
-  Object.keys(classCollection).forEach(uid => {
-    const extractedClass = classCollection[uid];
-    const evaluatedClass = classes[extractedClass.id as string];
-    const configClass = config.classnames[evaluatedClass.classname];
-    const screenDecorators = extractedClass.decorators.filter(decorator => decorator in config.screens);
-    const otherDecorators = extractedClass.decorators.filter(decorator => !(decorator in config.screens));
-    const classEntry = createClassEntry(extractedClass.name, otherDecorators, evaluatedName =>
-      (configClass.css as any)(evaluatedName, configClass.tokens[evaluatedClass.token].value),
-    );
+  Object.keys(classCollection).forEach(composition => {
+    Object.keys(classCollection[composition]).forEach(id => {
+      const extractedClass = classCollection[composition][id];
+      const evaluatedClass = classes[extractedClass.id as string];
+      const configClass = config.classnames[evaluatedClass.classname];
+      const classEntry = createClassEntry(extractedClass.name, extractedClass.decorators, evaluatedName =>
+        (configClass.css as any)(evaluatedName, configClass.tokens[evaluatedClass.token].value),
+      );
 
-    if (screenDecorators.length) {
-      screenDecorators.forEach(screen => {
-        productionClassesByType.screens[screen] = productionClassesByType.screens[screen] || [];
-        productionClassesByType.screens[screen].push(classEntry);
-      });
-    } else {
-      productionClassesByType.common[extractedClass.name] = classEntry;
-    }
+      if (composition in config.screens) {
+        productionClassesByType.screens[extractedClass.composition] =
+          productionClassesByType.screens[extractedClass.composition] || [];
+        productionClassesByType.screens[extractedClass.composition].push(classEntry);
+      } else {
+        productionClassesByType.common[extractedClass.name] = classEntry;
+      }
 
-    if (evaluatedClass.variable) {
-      const themes = config.themes || {};
-      const variableValue = evaluatedClass.variable.value;
-      const originalValue = evaluatedClass.variable.originalValue;
-      const variables = (variableValue.match(/var\(.*\)/) || []).map(varString => varString.replace(/var\(|\)/g, ''));
+      if (evaluatedClass.variable) {
+        const themes = config.themes || {};
+        const variableValue = evaluatedClass.variable.value;
+        const originalValue = evaluatedClass.variable.originalValue;
+        const variables = (variableValue.match(/var\(.*\)/) || []).map(varString => varString.replace(/var\(|\)/g, ''));
 
-      config.themeNames.forEach(theme => {
-        productionClassesByType.themeTokens[theme] = productionClassesByType.themeTokens[theme] || {};
-        variables.forEach(variable => {
-          const variableParts = variable.substr(2).split('-');
-          const variableKey = variableParts.shift() as string;
-          const variableValueKey = variableParts.join('-');
+        config.themeNames.forEach(theme => {
+          productionClassesByType.themeTokens[theme] = productionClassesByType.themeTokens[theme] || {};
+          variables.forEach(variable => {
+            const variableParts = variable.substr(2).split('-');
+            const variableKey = variableParts.shift() as string;
+            const variableValueKey = variableParts.join('-');
 
-          productionClassesByType.themeTokens[theme][
-            variable
-          ] = `${variable}:${themes[variableKey][variableValueKey][theme]};`;
-          productionClassesByType.rootTokens[variable] = originalValue;
+            productionClassesByType.themeTokens[theme][
+              variable
+            ] = `${variable}:${themes[variableKey][variableValueKey][theme]};`;
+            productionClassesByType.rootTokens[variable] = originalValue;
+          });
         });
-      });
-    }
-    try {
-    } catch (error) {
-      throw new Error(uid + JSON.stringify(extractedClass, null, 2));
-    }
+      }
+    });
   });
 
   return productionClassesByType;
 };
 
 export const injectDevelopment = (classCollection: IExtractedClasses, classes: IClasses, config: IEvaluatedConfig) => {
-  return Object.keys(classCollection).reduce((aggr, uid) => {
-    const extractedClass = classCollection[uid];
-    const screenDecorators = extractedClass.decorators.filter(decorator => decorator in config.screens);
-    const otherDecorators = extractedClass.decorators.filter(decorator => !(decorator in config.screens));
-    const evaluatedClass = classes[extractedClass.id];
-    const configClass = config.classnames[evaluatedClass.classname];
-    const classEntry = createClassEntry(extractedClass.name, otherDecorators, evaluatedName =>
-      (configClass.css as any)(evaluatedName, configClass.tokens[evaluatedClass.token].value),
+  return Object.keys(classCollection).reduce((aggr, composition) => {
+    return aggr.concat(
+      Object.keys(classCollection[composition]).reduce((subAggr, id) => {
+        const extractedClass = classCollection[composition][id];
+        const evaluatedClass = classes[extractedClass.id];
+        const configClass = config.classnames[evaluatedClass.classname];
+        const classEntry = createClassEntry(extractedClass.name, extractedClass.decorators, evaluatedName =>
+          (configClass.css as any)(evaluatedName, configClass.tokens[evaluatedClass.token].value),
+        );
+
+        let css = '';
+
+        if (composition in config.screens) {
+          css += config.screens[extractedClass.composition](classEntry);
+        } else {
+          css = classEntry;
+        }
+
+        if (evaluatedClass.variable) {
+          const themes = config.themes || {};
+          const variableValue = evaluatedClass.variable.value;
+          const originalValue = evaluatedClass.variable.originalValue;
+          const variables = (variableValue.match(/var\(.*\)/) || []).map(varString =>
+            varString.replace(/var\(|\)/g, ''),
+          );
+
+          variables.forEach(variable => {
+            const variableParts = variable.substr(2).split('-');
+            const variableKey = variableParts.shift() as string;
+            const variableValueKey = variableParts.join('-');
+
+            config.themeNames.forEach(theme => {
+              css += `:root{${variable}:${originalValue};}\n.themes-${theme}{${variable}:${themes[variableKey][variableValueKey][theme]};}`;
+            });
+          });
+        }
+
+        return subAggr.concat([extractedClass.name, css]);
+      }, [] as string[]),
     );
-
-    let css = '';
-
-    if (screenDecorators.length) {
-      screenDecorators.forEach(screen => {
-        css += config.screens[screen](classEntry);
-      });
-    } else {
-      css = classEntry;
-    }
-
-    if (evaluatedClass.variable) {
-      const themes = config.themes || {};
-      const variableValue = evaluatedClass.variable.value;
-      const originalValue = evaluatedClass.variable.originalValue;
-      const variables = (variableValue.match(/var\(.*\)/) || []).map(varString => varString.replace(/var\(|\)/g, ''));
-
-      variables.forEach(variable => {
-        const variableParts = variable.substr(2).split('-');
-        const variableKey = variableParts.shift() as string;
-        const variableValueKey = variableParts.join('-');
-
-        config.themeNames.forEach(theme => {
-          css += `:root{${variable}:${originalValue};}\n.themes-${theme}{${variable}:${themes[variableKey][variableValueKey][theme]};}`;
-        });
-      });
-    }
-
-    return aggr.concat([extractedClass.name, css]);
   }, [] as string[]);
 };
 
@@ -359,7 +356,10 @@ export const createName = (decorators: string[], name: string) => {
 
 export const createExtractedClasses = (extractedClasses: IExtractedClass[]) => {
   return extractedClasses.reduce<IExtractedClasses>((aggr, extractedClass) => {
-    aggr[extractedClass.id] = extractedClass;
+    if (!aggr[extractedClass.composition]) {
+      aggr[extractedClass.composition] = {};
+    }
+    aggr[extractedClass.composition][extractedClass.id] = extractedClass;
 
     return aggr;
   }, {});
@@ -403,6 +403,7 @@ export const createProductionClassObjects = (
           : evaluatedProductionShortnames.tokens.indexOf(token) + 1,
       );
       const shortDecorators = decorators
+        .concat(composition === 'compose' ? [] : composition)
         .sort()
         .map(decorator =>
           generateCharsFromNumber(
@@ -416,6 +417,7 @@ export const createProductionClassObjects = (
         id: `${camelToDash(key)}-${token}`,
         name: `${decorators.length ? `${shortDecorators}:` : ''}${shortClassname}__${shortToken}`,
         decorators,
+        composition,
       });
     }, [] as IExtractedClass[]);
   }
@@ -431,6 +433,7 @@ export const createProductionClassObjects = (
       : evaluatedProductionShortnames.tokens.indexOf(token) + 1,
   );
   const shortDecorators = decorators
+    .concat(composition === 'compose' ? [] : composition)
     .sort()
     .map(decorator =>
       generateCharsFromNumber(
@@ -445,6 +448,7 @@ export const createProductionClassObjects = (
       id,
       name: `${decorators.length ? `${shortDecorators}:` : ''}${shortClassname}__${shortToken}`,
       decorators,
+      composition,
     },
   ];
 };
@@ -468,8 +472,12 @@ export const createClassObjects = (
     return classes[id].derived!.reduce((aggr, key) => {
       return aggr.concat({
         id: `${camelToDash(key)}-${token}`,
-        name: createName(decorators, `${camelToDash(key)}__${token}`),
+        name: createName(
+          decorators.concat(composition === 'compose' ? [] : composition),
+          `${camelToDash(key)}__${token}`,
+        ),
         decorators,
+        composition,
       });
     }, [] as IExtractedClass[]);
   }
@@ -477,8 +485,12 @@ export const createClassObjects = (
   return [
     {
       id,
-      name: createName(decorators, `${camelToDash(baseClass)}__${token}`),
+      name: createName(
+        decorators.concat(composition === 'compose' ? [] : composition),
+        `${camelToDash(baseClass)}__${token}`,
+      ),
       decorators,
+      composition,
     },
   ];
 };

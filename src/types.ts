@@ -116,8 +116,11 @@ export interface IExtractedClass {
   id: string;
   name: string;
   decorators: string[];
+  composition: string;
 }
 
 export interface IExtractedClasses {
-  [uid: string]: IExtractedClass;
+  [composition: string]: {
+    [id: string]: IExtractedClass;
+  };
 }

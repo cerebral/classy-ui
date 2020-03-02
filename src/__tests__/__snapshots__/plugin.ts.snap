@@ -20,9 +20,9 @@ _addClasses(['color__RED', '.color__RED {\\n  color: red;\\n}']);
 
 exports[`classy-ui should convert both breakpoints and pseudos: should convert both breakpoints and pseudos 1`] = `
 
-import { compose, tokens } from 'classy-ui'
+import { tablet, tokens } from 'classy-ui'
 
-compose(tokens.color.RED.tablet.hover)
+tablet(tokens.color.RED.hover)
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
@@ -39,9 +39,9 @@ _addClasses([
 
 exports[`classy-ui should convert breakpoints: should convert breakpoints 1`] = `
 
-import { compose, tokens } from 'classy-ui'
+import { tablet, tokens } from 'classy-ui'
 
-compose(tokens.color.RED.tablet)
+tablet(tokens.color.RED)
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
@@ -49,27 +49,6 @@ import { addClasses as _addClasses } from 'classy-ui/runtime';
 ('tablet:color__RED ');
 
 _addClasses(['tablet:color__RED', '@media (max-width: 768px) {.tablet\\\\:color__RED {\\n  color: red;\\n}}']);
-
-
-`;
-
-exports[`classy-ui should convert complex compositions: should convert complex compositions 1`] = `
-
-import { compose, tokens } from 'classy-ui'
-
-compose(tokens.color.BLUE, tokens.color.RED.tablet.laptop.hover)
-
-      ↓ ↓ ↓ ↓ ↓ ↓
-
-import { addClasses as _addClasses } from 'classy-ui/runtime';
-('color__BLUE hover:laptop:tablet:color__RED ');
-
-_addClasses([
-  'color__BLUE',
-  '.color__BLUE {\\n  color: blue;\\n}',
-  'hover:laptop:tablet:color__RED',
-  '@media (max-width: 1024px) {.hover\\\\:laptop\\\\:tablet\\\\:color__RED:hover {\\n  color: red;\\n}}@media (max-width: 768px) {.hover\\\\:laptop\\\\:tablet\\\\:color__RED:hover {\\n  color: red;\\n}}',
-]);
 
 
 `;
@@ -134,12 +113,10 @@ const buttonRed = _fixSpecificity(buttonBlue + buttonGreen + 'color__RED ');
 _addClasses([
   'color__BLUE',
   '.color__BLUE {\\n  color: blue;\\n}',
-  'color__GREEN',
-  '.color__GREEN {\\n  color: var(--colors-GREEN);\\n}:root{--colors-GREEN:green;}\\n.themes-dark{--colors-GREEN:yellow;}',
-  'color__RED',
-  '.color__RED {\\n  color: red;\\n}',
   'hover:color__GREEN',
   '.hover\\\\:color__GREEN:hover {\\n  color: var(--colors-GREEN);\\n}:root{--colors-GREEN:green;}\\n.themes-dark{--colors-GREEN:yellow;}',
+  'color__RED',
+  '.color__RED {\\n  color: red;\\n}',
 ]);
 
 
@@ -209,21 +186,21 @@ c(group, true ? tokens.color.RED : ' ', tokens.backgroundColor.RED, true ? token
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 c(
   'group ',
-  true ? 'color__RED ' : ' ',
-  'background-color__RED ',
-  true ? 'display__BLOCK ' : ' ',
-  'display__INLINE_BLOCK ',
+  true ? 'c:color__RED ' : ' ',
+  'c:background-color__RED ',
+  true ? 'c:display__BLOCK ' : ' ',
+  'c:display__INLINE_BLOCK ',
 );
 
 _addClasses([
-  'color__RED',
-  '.color__RED {\\n  color: red;\\n}',
-  'background-color__RED',
-  '.background-color__RED {\\n  background-color: red;\\n}',
-  'display__BLOCK',
-  '.display__BLOCK {\\n  display: block;\\n}',
-  'display__INLINE_BLOCK',
-  '.display__INLINE_BLOCK {\\n  display: inline-block;\\n}',
+  'c:color__RED',
+  '.c\\\\:color__RED {\\n  color: red;\\n}',
+  'c:background-color__RED',
+  '.c\\\\:background-color__RED {\\n  background-color: red;\\n}',
+  'c:display__BLOCK',
+  '.c\\\\:display__BLOCK {\\n  display: block;\\n}',
+  'c:display__INLINE_BLOCK',
+  '.c\\\\:display__INLINE_BLOCK {\\n  display: inline-block;\\n}',
 ]);
 
 
@@ -309,27 +286,6 @@ import { addClasses as _addClasses } from 'classy-ui/runtime';
 c('themes-dark ');
 
 _addClasses([]);
-
-
-`;
-
-exports[`classy-ui should not override same token with different decorators: should not override same token with different decorators 1`] = `
-
-import { compose, tokens } from 'classy-ui'
-
-compose(tokens.color.RED, tokens.color.RED.mobile)
-
-      ↓ ↓ ↓ ↓ ↓ ↓
-
-import { addClasses as _addClasses } from 'classy-ui/runtime';
-('color__RED mobile:color__RED ');
-
-_addClasses([
-  'color__RED',
-  '.color__RED {\\n  color: red;\\n}',
-  'mobile:color__RED',
-  '@media (max-width: 640px) {.mobile\\\\:color__RED {\\n  color: red;\\n}}',
-]);
 
 
 `;

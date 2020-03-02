@@ -251,7 +251,10 @@ export function processReferences(babel: any, state: any, refs: any) {
   }
 
   function collectGlobally(classObj: IExtractedClass) {
-    classCollection[classObj.id] = classObj;
+    if (!classCollection[classObj.composition]) {
+      classCollection[classObj.composition] = {};
+    }
+    classCollection[classObj.composition][classObj.id] = classObj;
   }
 
   function extractMemberExpression(tRefPath: any) {

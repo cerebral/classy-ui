@@ -81,21 +81,10 @@ Array [
 ]
 `;
 
-exports[`INJECT DEVELOPMENT should inject with multiple breakpoints 1`] = `
-Array [
-  "laptop:mobile:color__RED",
-  "@media (max-width: 1024px) {.laptop\\\\:mobile\\\\:color__RED {
-  color: red;
-}}@media (max-width: 640px) {.laptop\\\\:mobile\\\\:color__RED {
-  color: red;
-}}",
-]
-`;
-
 exports[`INJECT DEVELOPMENT should inject with multiple pseudo selectors 1`] = `
 Array [
   "firstChild:hover:color__RED",
-  ".firstChild\\\\:hover\\\\:color__RED:first-child:hover {
+  ".firstChild\\\\:hover\\\\:color__RED:hover:first-child {
   color: red;
 }",
 ]

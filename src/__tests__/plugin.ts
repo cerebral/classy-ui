@@ -155,9 +155,9 @@ compose(tokens.color.BLU)`,
     {
       title: 'should not override same token with different decorators',
       code: `
-import { compose, tokens } from 'classy-ui'
+import { compose, tokens, mobile } from 'classy-ui'
 
-compose(tokens.color.RED, tokens.color.RED.mobile)`,
+compose(tokens.color.RED, mobile(tokens.color.RED))`,
     },
   ],
 });
