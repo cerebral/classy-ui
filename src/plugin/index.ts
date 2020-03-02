@@ -97,6 +97,10 @@ export function processReferences(babel: any, state: any, refs: any) {
   refs['group'] && processGroup(refs['group']);
   refs['themes'] && processThemes(refs['themes']);
 
+  ['mobile', 'tablet', 'laptop', 'desktop'].forEach(screenCompose => {
+    refs[screenCompose] && processCompose(refs[screenCompose]);
+  });
+
   refs['compose'] && processCompose(refs['compose']);
   refs['c'] && processCompose(refs['c']);
 
@@ -145,13 +149,22 @@ export function processReferences(babel: any, state: any, refs: any) {
       if (!t.isMemberExpression(tRef.parent)) {
         throw tRef.buildCodeFrameError(`CLASSY-UI: t/tokens can't be used without a base class`);
       }
+      const callExpr = tRef.findParent((p: any) => t.isCallExpression(p));
+      if (!callExpr) {
+        throw tRef.buildCodeFrameError(`CLASSY-UI: t/tokens must be used inside a compose/screen function`);
+      }
+      const composition = callExpr.node.callee.name as string;
       const memExpr = extractMemberExpression(tRef);
       if (memExpr.arr.length >= 2) {
         try {
           const [baseClass, token, ...decorators] = memExpr.arr;
           const classObjects = isProduction
-            ? createProductionClassObjects({ baseClass, token, decorators }, classes, evaluatedProductionShortnames)
-            : createClassObjects({ baseClass, token, decorators }, classes);
+            ? createProductionClassObjects(
+                { composition, baseClass, token, decorators },
+                classes,
+                evaluatedProductionShortnames,
+              )
+            : createClassObjects({ composition, baseClass, token, decorators }, classes);
           classObjects.forEach(collectGlobally);
           memExpr.root.replaceWith(t.stringLiteral(`${classObjects.map(classObject => classObject.name).join(' ')} `));
         } catch (e) {

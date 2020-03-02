@@ -367,10 +367,12 @@ export const createExtractedClasses = (extractedClasses: IExtractedClass[]) => {
 
 export const createProductionClassObjects = (
   {
+    composition,
     baseClass,
     token,
     decorators,
   }: {
+    composition: string;
     baseClass: string;
     token: string;
     decorators: string[];
@@ -449,14 +451,11 @@ export const createProductionClassObjects = (
 
 export const createClassObjects = (
   {
+    composition,
     baseClass,
     token,
     decorators,
-  }: {
-    baseClass: string;
-    token: string;
-    decorators: string[];
-  },
+  }: { composition: string; baseClass: string; token: string; decorators: string[] },
   classes: IClasses,
 ): IExtractedClass[] => {
   const id = `${camelToDash(baseClass)}-${token}`;

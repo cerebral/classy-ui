@@ -24,24 +24,16 @@ compose(tokens.color.RED.hover)`,
     {
       title: 'should convert breakpoints',
       code: `
-import { compose, tokens } from 'classy-ui'
+import { tablet, tokens } from 'classy-ui'
 
-compose(tokens.color.RED.tablet)`,
+tablet(tokens.color.RED)`,
     },
     {
       title: 'should convert both breakpoints and pseudos',
       code: `
-import { compose, tokens } from 'classy-ui'
+import { tablet, tokens } from 'classy-ui'
 
-compose(tokens.color.RED.tablet.hover)`,
-    },
-    {
-      title: 'should convert complex compositions',
-      code: `
-import { compose, tokens } from 'classy-ui'
-
-compose(tokens.color.BLUE, tokens.color.RED.tablet.laptop.hover)
-`,
+tablet(tokens.color.RED.hover)`,
     },
     {
       error: true,
