@@ -95,10 +95,9 @@ export function processReferences(babel: any, state: any, refs: any) {
   refs['c'] && processCompose(refs['c']);
 
   // We require access to the babel options, so have to do it here
-  if (!hasRegisteredExitHook) {
+  if (isProduction && !hasRegisteredExitHook) {
     hasRegisteredExitHook = true;
     process.on('exit', () => {
-      console.log('WUUUUT?', productionClassesByType);
       writeFileSync(
         join(process.cwd(), state.opts.output || 'build', 'classy-ui.css'),
         new CleanCSS().minify(postcss([autoprefixer]).process(createProductionCss(productionClassesByType, config)).css)
