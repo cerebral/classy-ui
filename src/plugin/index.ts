@@ -97,7 +97,7 @@ export function processReferences(babel: any, state: any, refs: any) {
   refs['group'] && processGroup(refs['group']);
   refs['themes'] && processThemes(refs['themes']);
 
-  ['mobile', 'tablet', 'laptop', 'desktop'].forEach(screenCompose => {
+  Object.keys(config.screens).forEach(screenCompose => {
     refs[screenCompose] && processCompose(refs[screenCompose]);
   });
 
@@ -132,7 +132,11 @@ export function processReferences(babel: any, state: any, refs: any) {
     cRefs.forEach((path: any) => {
       if (t.isCallExpression(path.parentPath.parent)) {
         const b = path.scope.getBinding(path.parent.callee.name);
-        if (t.isImportSpecifier(b.path.node) && b.path.parent.source.value.startsWith('classy-ui')) {
+        if (
+          t.isImportSpecifier(b.path.node) &&
+          b.path.parent.source.value.startsWith('classy-ui') &&
+          (b.identifier.name === 'c' || b.identifier.name === 'compose')
+        ) {
           throw path.buildCodeFrameError(`CLASSY-UI: don't nest c/compose calls`);
         }
       }
