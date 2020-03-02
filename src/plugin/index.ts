@@ -98,6 +98,7 @@ export function processReferences(babel: any, state: any, refs: any) {
   if (!hasRegisteredExitHook) {
     hasRegisteredExitHook = true;
     process.on('exit', () => {
+      console.log('WUUUUT?', productionClassesByType);
       writeFileSync(
         join(process.cwd(), state.opts.output || 'build', 'classy-ui.css'),
         new CleanCSS().minify(postcss([autoprefixer]).process(createProductionCss(productionClassesByType, config)).css)

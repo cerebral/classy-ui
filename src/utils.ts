@@ -404,6 +404,10 @@ export const createClassObject = (
 
   const returnedDecorators = decorators.slice() as IExtractedClass['decorators'];
 
+  if (id && !(id in classes)) {
+    throw new Error(`The token ${token} does not exist on property ${baseClass}`);
+  }
+
   let name: string;
   if (id && isProduction && classes[id].derived) {
     name = classes[id]
