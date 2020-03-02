@@ -92,7 +92,6 @@ export function processReferences(babel: any, state: any, refs: any) {
   const classCollection: IExtractedClasses = {};
 
   refs['tokens'] && processTokens(refs['tokens'], isProduction);
-  refs['t'] && processTokens(refs['t'], isProduction);
 
   refs['group'] && processGroup(refs['group']);
   refs['themes'] && processThemes(refs['themes']);
@@ -102,7 +101,6 @@ export function processReferences(babel: any, state: any, refs: any) {
   });
 
   refs['compose'] && processCompose(refs['compose']);
-  refs['c'] && processCompose(refs['c']);
 
   // We require access to the babel options, so have to do it here
   if (isProduction && !hasRegisteredExitHook) {
@@ -135,7 +133,7 @@ export function processReferences(babel: any, state: any, refs: any) {
         if (
           t.isImportSpecifier(b.path.node) &&
           b.path.parent.source.value.startsWith('classy-ui') &&
-          (b.identifier.name === 'c' || b.identifier.name === 'compose')
+          b.identifier.name === 'compose'
         ) {
           throw path.buildCodeFrameError(`CLASSY-UI: don't nest c/compose calls`);
         }

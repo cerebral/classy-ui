@@ -114,20 +114,8 @@ ${allowedPseudoDecorators
 `,
   )
   .join('\n')}
-${Object.keys(config.screens)
-  .map(
-    screen => `
-  /**
-   * \`\`\`css
-   * \\${config.screens[screen](`\n      $token\n`)}
-   * \`\`\`
-   */
-  ${screen}: IDecorators;
-`,
-  )
-  .join('\n')}
 }
-export type TCompose = (...args: Array<IDecorators | TGroup | Themes | TClassname> | boolean) => TClassname;
+export type TCompose = (...args: Array<IDecorators | TGroup | Themes | TClassname | boolean>) => TClassname;
 export type TTokens = { 
   ${Object.keys(config.classnames)
     .reduce<string[]>((aggr, baseClass) => {
@@ -156,9 +144,20 @@ export const themes: {
   ${config.themeNames.reduce<string[]>((aggr, theme) => aggr.concat(`${theme}: Themes.${theme}`), []).join('\n')}
 };
 export const group: TGroup;
-export const c: TCompose;
 export const compose: TCompose;
-export const t: TTokens;
 export const tokens: TTokens;
+
+${Object.keys(config.screens)
+  .map(
+    screen => `
+  /**
+   * \`\`\`css
+   * \\${config.screens[screen](`\n      $token\n`)}
+   * \`\`\`
+   */
+  export const ${screen}: TCompose;
+`,
+  )
+  .join('\n')}
 `;
 };
