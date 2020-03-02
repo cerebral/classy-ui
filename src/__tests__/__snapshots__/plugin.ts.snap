@@ -313,6 +313,27 @@ _addClasses([]);
 
 `;
 
+exports[`classy-ui should not override same token with different decorators: should not override same token with different decorators 1`] = `
+
+import { compose, tokens } from 'classy-ui'
+
+compose(tokens.color.RED, tokens.color.RED.mobile)
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { addClasses as _addClasses } from 'classy-ui/runtime';
+('color__RED mobile:color__RED ');
+
+_addClasses([
+  'color__RED',
+  '.color__RED {\\n  color: red;\\n}',
+  'mobile:color__RED',
+  '@media (max-width: 640px) {.mobile\\\\:color__RED {\\n  color: red;\\n}}',
+]);
+
+
+`;
+
 exports[`classy-ui should not throw when using group inside c call: should not throw when using group inside c call 1`] = `
 
 import { compose, group } from 'classy-ui'

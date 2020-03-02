@@ -160,5 +160,12 @@ import { compose, tokens } from 'classy-ui'
 
 compose(tokens.color.BLU)`,
     },
+    {
+      title: 'should not override same token with different decorators',
+      code: `
+import { compose, tokens } from 'classy-ui'
+
+compose(tokens.color.RED, tokens.color.RED.mobile)`,
+    },
   ],
 });

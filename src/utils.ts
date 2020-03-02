@@ -32,14 +32,10 @@ export const allowedPseudoDecorators = [
   'focusWithin',
 ];
 
-export const getClassesFromConfig = (
-  classnameKey: string,
-  config: IEvaluatedConfig,
-  getShortName: (labelIndex: number) => string,
-) => {
+export const getClassesFromConfig = (classnameKey: string, config: IEvaluatedConfig) => {
   const classname = config.classnames[classnameKey];
 
-  return Object.keys(classname.tokens).reduce((aggr, tokenKey, tokenIndex) => {
+  return Object.keys(classname.tokens).reduce((aggr, tokenKey) => {
     const id = `${camelToDash(classnameKey)}-${tokenKey}`;
     const cssDeriver = config.classnames[classnameKey].css;
     return {
@@ -56,7 +52,6 @@ export const getClassesFromConfig = (
                 originalValue: classname.tokensWithoutVariables[tokenKey].value,
               }
             : null,
-        shortName: getShortName(tokenIndex),
       },
     };
   }, {} as IClasses);
@@ -244,58 +239,44 @@ export const injectProduction = (
 ) => {
   Object.keys(classCollection).forEach(uid => {
     const extractedClass = classCollection[uid];
-    const configClass = classes[extractedClass.id as string];
+    const evaluatedClass = classes[extractedClass.id as string];
+    const configClass = config.classnames[evaluatedClass.classname];
     const screenDecorators = extractedClass.decorators.filter(decorator => decorator in config.screens);
     const otherDecorators = extractedClass.decorators.filter(decorator => !(decorator in config.screens));
-    let classEntry: any;
-    try {
-      const prefix = extractedClass.name.substr(0, extractedClass.name.lastIndexOf(':') + 1);
-      const cssProcessor = config.classnames[configClass.classname].css;
-      // The classname definition might references other CSS processors, we extract the base classname for lookups
-      const classnameKeys = Array.isArray(cssProcessor) ? cssProcessor : [configClass.classname];
+    const classEntry = createClassEntry(extractedClass.name, otherDecorators, evaluatedName =>
+      (configClass.css as any)(evaluatedName, configClass.tokens[evaluatedClass.token].value),
+    );
 
-      classnameKeys.forEach(classnameKey => {
-        const classConfig = config.classnames[classnameKey];
-        const id = `${camelToDash(classnameKey)}-${configClass.token}`;
-        const name = classes[id].shortName;
-        const classname = prefix + name;
-
-        classEntry = createClassEntry(classname, otherDecorators, evaluatedName =>
-          (classConfig.css as any)(evaluatedName, classConfig.tokens[configClass.token].value),
-        );
-
-        if (screenDecorators.length) {
-          screenDecorators.forEach(screen => {
-            productionClassesByType.screens[screen] = productionClassesByType.screens[screen] || [];
-            productionClassesByType.screens[screen].push(classEntry);
-          });
-        } else {
-          productionClassesByType.common[classname] = classEntry;
-        }
-
-        if (configClass.variable) {
-          const themes = config.themes || {};
-          const variableValue = configClass.variable.value;
-          const originalValue = configClass.variable.originalValue;
-          const variables = (variableValue.match(/var\(.*\)/) || []).map(varString =>
-            varString.replace(/var\(|\)/g, ''),
-          );
-
-          config.themeNames.forEach(theme => {
-            productionClassesByType.themeTokens[theme] = productionClassesByType.themeTokens[theme] || {};
-            variables.forEach(variable => {
-              const variableParts = variable.substr(2).split('-');
-              const variableKey = variableParts.shift() as string;
-              const variableValueKey = variableParts.join('-');
-
-              productionClassesByType.themeTokens[theme][
-                variable
-              ] = `${variable}:${themes[variableKey][variableValueKey][theme]};`;
-              productionClassesByType.rootTokens[variable] = originalValue;
-            });
-          });
-        }
+    if (screenDecorators.length) {
+      screenDecorators.forEach(screen => {
+        productionClassesByType.screens[screen] = productionClassesByType.screens[screen] || [];
+        productionClassesByType.screens[screen].push(classEntry);
       });
+    } else {
+      productionClassesByType.common[extractedClass.name] = classEntry;
+    }
+
+    if (evaluatedClass.variable) {
+      const themes = config.themes || {};
+      const variableValue = evaluatedClass.variable.value;
+      const originalValue = evaluatedClass.variable.originalValue;
+      const variables = (variableValue.match(/var\(.*\)/) || []).map(varString => varString.replace(/var\(|\)/g, ''));
+
+      config.themeNames.forEach(theme => {
+        productionClassesByType.themeTokens[theme] = productionClassesByType.themeTokens[theme] || {};
+        variables.forEach(variable => {
+          const variableParts = variable.substr(2).split('-');
+          const variableKey = variableParts.shift() as string;
+          const variableValueKey = variableParts.join('-');
+
+          productionClassesByType.themeTokens[theme][
+            variable
+          ] = `${variable}:${themes[variableKey][variableValueKey][theme]};`;
+          productionClassesByType.rootTokens[variable] = originalValue;
+        });
+      });
+    }
+    try {
     } catch (error) {
       throw new Error(uid + JSON.stringify(extractedClass, null, 2));
     }
@@ -307,56 +288,42 @@ export const injectProduction = (
 export const injectDevelopment = (classCollection: IExtractedClasses, classes: IClasses, config: IEvaluatedConfig) => {
   return Object.keys(classCollection).reduce((aggr, uid) => {
     const extractedClass = classCollection[uid];
-    const mainId = extractedClass.id as string;
     const screenDecorators = extractedClass.decorators.filter(decorator => decorator in config.screens);
     const otherDecorators = extractedClass.decorators.filter(decorator => !(decorator in config.screens));
-    const prefix = extractedClass.name.substr(0, extractedClass.name.lastIndexOf(':') + 1);
-    const configClass = classes[mainId];
-    const cssProcessor = config.classnames[configClass.classname].css;
-    // The classname definition might references other CSS processors, we extract the base classname for lookups
-    const classnameKeys = Array.isArray(cssProcessor) ? cssProcessor : [configClass.classname];
-
-    return aggr.concat(
-      classnameKeys.reduce((injections, classnameKey) => {
-        const classConfig = config.classnames[classnameKey];
-        const name = `${camelToDash(classnameKey)}__${configClass.token}`;
-        const classname = prefix + name;
-        const classEntry = createClassEntry(classname, otherDecorators, evaluatedName =>
-          (classConfig.css as any)(evaluatedName, classConfig.tokens[configClass.token].value),
-        );
-
-        let css = '';
-
-        if (screenDecorators.length) {
-          screenDecorators.forEach(screen => {
-            css += config.screens[screen](classEntry);
-          });
-        } else {
-          css = classEntry;
-        }
-
-        if (configClass.variable) {
-          const themes = config.themes || {};
-          const variableValue = configClass.variable.value;
-          const originalValue = configClass.variable.originalValue;
-          const variables = (variableValue.match(/var\(.*\)/) || []).map(varString =>
-            varString.replace(/var\(|\)/g, ''),
-          );
-
-          variables.forEach(variable => {
-            const variableParts = variable.substr(2).split('-');
-            const variableKey = variableParts.shift() as string;
-            const variableValueKey = variableParts.join('-');
-
-            config.themeNames.forEach(theme => {
-              css += `:root{${variable}:${originalValue};}\n.themes-${theme}{${variable}:${themes[variableKey][variableValueKey][theme]};}`;
-            });
-          });
-        }
-
-        return injections.concat([classname, css]);
-      }, [] as string[]),
+    const evaluatedClass = classes[extractedClass.id];
+    const configClass = config.classnames[evaluatedClass.classname];
+    const classEntry = createClassEntry(extractedClass.name, otherDecorators, evaluatedName =>
+      (configClass.css as any)(evaluatedName, configClass.tokens[evaluatedClass.token].value),
     );
+
+    let css = '';
+
+    if (screenDecorators.length) {
+      screenDecorators.forEach(screen => {
+        css += config.screens[screen](classEntry);
+      });
+    } else {
+      css = classEntry;
+    }
+
+    if (evaluatedClass.variable) {
+      const themes = config.themes || {};
+      const variableValue = evaluatedClass.variable.value;
+      const originalValue = evaluatedClass.variable.originalValue;
+      const variables = (variableValue.match(/var\(.*\)/) || []).map(varString => varString.replace(/var\(|\)/g, ''));
+
+      variables.forEach(variable => {
+        const variableParts = variable.substr(2).split('-');
+        const variableKey = variableParts.shift() as string;
+        const variableValueKey = variableParts.join('-');
+
+        config.themeNames.forEach(theme => {
+          css += `:root{${variable}:${originalValue};}\n.themes-${theme}{${variable}:${themes[variableKey][variableValueKey][theme]};}`;
+        });
+      });
+    }
+
+    return aggr.concat([extractedClass.name, css]);
   }, [] as string[]);
 };
 
@@ -383,7 +350,22 @@ export const negateValue = (value: string) => {
   }
 };
 
-export const createClassObject = (
+export const createName = (decorators: string[], name: string) => {
+  return [decorators.sort().join(':'), name]
+    .filter(Boolean)
+    .filter(i => i!.length > 0)
+    .join(':');
+};
+
+export const createExtractedClasses = (extractedClasses: IExtractedClass[]) => {
+  return extractedClasses.reduce<IExtractedClasses>((aggr, extractedClass) => {
+    aggr[extractedClass.id] = extractedClass;
+
+    return aggr;
+  }, {});
+};
+
+export const createProductionClassObjects = (
   {
     baseClass,
     token,
@@ -394,48 +376,115 @@ export const createClassObject = (
     decorators: string[];
   },
   classes: IClasses,
-  isProduction: boolean,
-): IExtractedClass => {
+  evaluatedProductionShortnames: {
+    classnames: string[];
+    tokens: string[];
+    decorators: string[];
+  },
+) => {
   const id = `${camelToDash(baseClass)}-${token}`;
-  const uid = [decorators.sort().join(':'), `${camelToDash(baseClass)}__${token}`]
-    .filter(Boolean)
-    .filter(i => i!.length > 0)
-    .join(':');
-
-  const returnedDecorators = decorators.slice() as IExtractedClass['decorators'];
 
   if (id && !(id in classes)) {
     throw new Error(`The token ${token} does not exist on property ${baseClass}`);
   }
 
-  let name: string;
-  if (id && isProduction && classes[id].derived) {
-    name = classes[id]
-      .derived!.reduce((aggr, key) => {
-        return aggr.concat(classes[`${camelToDash(key)}-${token}`].shortName);
-      }, [] as string[])
-      .join(' ');
-  } else if (id && isProduction) {
-    name = classes[id].shortName;
-  } else if (id && classes[id].derived) {
-    name = classes[id]
-      .derived!.reduce((aggr, key) => {
-        return aggr.concat(`${camelToDash(key)}__${token}`);
-      }, [] as string[])
-      .join(' ');
-  } else {
-    name = uid;
+  if (classes[id].derived) {
+    return classes[id].derived!.reduce((aggr, key) => {
+      const shortClassname = generateCharsFromNumber(
+        evaluatedProductionShortnames.classnames.indexOf(key) === -1
+          ? evaluatedProductionShortnames.classnames.push(key)
+          : evaluatedProductionShortnames.classnames.indexOf(key) + 1,
+      );
+      const shortToken = generateCharsFromNumber(
+        evaluatedProductionShortnames.tokens.indexOf(token) === -1
+          ? evaluatedProductionShortnames.tokens.push(token)
+          : evaluatedProductionShortnames.tokens.indexOf(token) + 1,
+      );
+      const shortDecorators = decorators
+        .sort()
+        .map(decorator =>
+          generateCharsFromNumber(
+            evaluatedProductionShortnames.decorators.indexOf(decorator) === -1
+              ? evaluatedProductionShortnames.decorators.push(decorator)
+              : evaluatedProductionShortnames.decorators.indexOf(decorator) + 1,
+          ),
+        )
+        .join('');
+      return aggr.concat({
+        id: `${camelToDash(key)}-${token}`,
+        name: `${decorators.length ? `${shortDecorators}:` : ''}${shortClassname}__${shortToken}`,
+        decorators,
+      });
+    }, [] as IExtractedClass[]);
   }
 
-  return {
-    id,
-    uid,
-    name,
-    decorators: returnedDecorators,
-  };
+  const shortClassname = generateCharsFromNumber(
+    evaluatedProductionShortnames.classnames.indexOf(baseClass) === -1
+      ? evaluatedProductionShortnames.classnames.push(baseClass)
+      : evaluatedProductionShortnames.classnames.indexOf(baseClass) + 1,
+  );
+  const shortToken = generateCharsFromNumber(
+    evaluatedProductionShortnames.tokens.indexOf(token) === -1
+      ? evaluatedProductionShortnames.tokens.push(token)
+      : evaluatedProductionShortnames.tokens.indexOf(token) + 1,
+  );
+  const shortDecorators = decorators
+    .sort()
+    .map(decorator =>
+      generateCharsFromNumber(
+        evaluatedProductionShortnames.decorators.indexOf(decorator) === -1
+          ? evaluatedProductionShortnames.decorators.push(decorator)
+          : evaluatedProductionShortnames.decorators.indexOf(decorator) + 1,
+      ),
+    )
+    .join('');
+  return [
+    {
+      id,
+      name: `${decorators.length ? `${shortDecorators}:` : ''}${shortClassname}__${shortToken}`,
+      decorators,
+    },
+  ];
 };
 
-export const generateShortName = (num: number) => {
+export const createClassObjects = (
+  {
+    baseClass,
+    token,
+    decorators,
+  }: {
+    baseClass: string;
+    token: string;
+    decorators: string[];
+  },
+  classes: IClasses,
+): IExtractedClass[] => {
+  const id = `${camelToDash(baseClass)}-${token}`;
+
+  if (id && !(id in classes)) {
+    throw new Error(`The token ${token} does not exist on property ${baseClass}`);
+  }
+
+  if (classes[id].derived) {
+    return classes[id].derived!.reduce((aggr, key) => {
+      return aggr.concat({
+        id: `${camelToDash(key)}-${token}`,
+        name: createName(decorators, `${camelToDash(key)}__${token}`),
+        decorators,
+      });
+    }, [] as IExtractedClass[]);
+  }
+
+  return [
+    {
+      id,
+      name: createName(decorators, `${camelToDash(baseClass)}__${token}`),
+      decorators,
+    },
+  ];
+};
+
+export const generateCharsFromNumber = (num: number) => {
   const baseChar = 'A'.charCodeAt(0);
   let letters = '';
 

@@ -2,26 +2,22 @@
 
 exports[`INJECT DEVELOPMENT should handle references classnames 1`] = `
 Array [
-  "border-top-color__GREEN",
-  ".border-top-color__GREEN:hover {
-  border-top-color: var(--colors-GREEN);
-}:root{--colors-GREEN:green;}
-.themes-dark{--colors-GREEN:yellow;}",
-  "border-right-color__GREEN",
-  ".border-right-color__GREEN:hover {
-  border-right-color: var(--colors-GREEN);
-}:root{--colors-GREEN:green;}
-.themes-dark{--colors-GREEN:yellow;}",
-  "border-bottom-color__GREEN",
-  ".border-bottom-color__GREEN:hover {
-  border-bottom-color: var(--colors-GREEN);
-}:root{--colors-GREEN:green;}
-.themes-dark{--colors-GREEN:yellow;}",
-  "border-left-color__GREEN",
-  ".border-left-color__GREEN:hover {
-  border-left-color: var(--colors-GREEN);
-}:root{--colors-GREEN:green;}
-.themes-dark{--colors-GREEN:yellow;}",
+  "hover:border-top-color__RED",
+  ".hover\\\\:border-top-color__RED:hover {
+  border-top-color: red;
+}",
+  "hover:border-right-color__RED",
+  ".hover\\\\:border-right-color__RED:hover {
+  border-right-color: red;
+}",
+  "hover:border-bottom-color__RED",
+  ".hover\\\\:border-bottom-color__RED:hover {
+  border-bottom-color: red;
+}",
+  "hover:border-left-color__RED",
+  ".hover\\\\:border-left-color__RED:hover {
+  border-left-color: red;
+}",
 ]
 `;
 

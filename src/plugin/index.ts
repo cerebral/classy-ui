@@ -10,7 +10,8 @@ import { transform as transformClassesToTypes } from '../config/transform-classe
 import { transform as transformConfigToClasses } from '../config/transform-config-to-classes';
 import { IClassesByType, IExtractedClass, IExtractedClasses } from '../types';
 import {
-  createClassObject,
+  createClassObjects,
+  createProductionClassObjects,
   createProductionCss,
   evaluateConfig,
   getUserConfig,
@@ -78,6 +79,11 @@ export const productionClassesByType: IClassesByType = {
   themeTokens: {},
   rootTokens: {},
 };
+export const evaluatedProductionShortnames = {
+  classnames: [] as string[],
+  tokens: [] as string[],
+  decorators: [] as string[],
+};
 
 export function processReferences(babel: any, state: any, refs: any) {
   const { types: t } = babel;
@@ -143,9 +149,11 @@ export function processReferences(babel: any, state: any, refs: any) {
       if (memExpr.arr.length >= 2) {
         try {
           const [baseClass, token, ...decorators] = memExpr.arr;
-          const classObject = createClassObject({ baseClass, token, decorators }, classes, isProduction);
-          collectGlobally(classObject);
-          memExpr.root.replaceWith(t.stringLiteral(classObject.name + ' '));
+          const classObjects = isProduction
+            ? createProductionClassObjects({ baseClass, token, decorators }, classes, evaluatedProductionShortnames)
+            : createClassObjects({ baseClass, token, decorators }, classes);
+          classObjects.forEach(collectGlobally);
+          memExpr.root.replaceWith(t.stringLiteral(`${classObjects.map(classObject => classObject.name).join(' ')} `));
         } catch (e) {
           throw memExpr.root.buildCodeFrameError(`CLASSY-UI: ${e.message}`);
         }
@@ -230,9 +238,7 @@ export function processReferences(babel: any, state: any, refs: any) {
   }
 
   function collectGlobally(classObj: IExtractedClass) {
-    if (classObj.uid) {
-      classCollection[classObj.uid] = classObj;
-    }
+    classCollection[classObj.id] = classObj;
   }
 
   function extractMemberExpression(tRefPath: any) {

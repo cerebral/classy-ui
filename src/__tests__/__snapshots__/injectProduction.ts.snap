@@ -1,97 +1,97 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`INJECT PRODUCTION should group breakpoints 1`] = `
-"@media (max-width: 768px) {.AV__A {
+"@media (max-width: 768px) {.A\\\\:A__A {
   color: red;
-}.AV__B {
+}.A\\\\:A__B {
   color: blue;
 }}.themes-dark{}"
 `;
 
 exports[`INJECT PRODUCTION should group themes 1`] = `
-".AV__C {
+".A__A {
   color: var(--colors-GREEN);
-}.AV__D {
+}.A__B {
   color: var(--colors-PURPLE);
 }:root{--colors-GREEN:green;--colors-PURPLE:purple;}.themes-dark{--colors-GREEN:yellow;--colors-PURPLE:pink;}"
 `;
 
 exports[`INJECT PRODUCTION should group themes and breakpoints 1`] = `
-"@media (max-width: 768px) {.AV__A {
+"@media (max-width: 768px) {.A\\\\:A__A {
   color: red;
-}.AV__D {
+}.A\\\\:A__B {
   color: var(--colors-PURPLE);
 }}:root{--colors-PURPLE:purple;}.themes-dark{--colors-PURPLE:pink;}"
 `;
 
 exports[`INJECT PRODUCTION should handle references classnames 1`] = `
-".P__C:hover {
+".A\\\\:A__A:hover {
   border-top-color: var(--colors-GREEN);
-}.Q__C:hover {
+}.A\\\\:B__A:hover {
   border-right-color: var(--colors-GREEN);
-}.R__C:hover {
+}.A\\\\:C__A:hover {
   border-bottom-color: var(--colors-GREEN);
-}.S__C:hover {
+}.A\\\\:D__A:hover {
   border-left-color: var(--colors-GREEN);
 }:root{--colors-GREEN:green;}.themes-dark{--colors-GREEN:yellow;}"
 `;
 
 exports[`INJECT PRODUCTION should inject both pseudo selector and breakpoint 1`] = `
-"@media (max-width: 768px) {.AV__A:hover {
+"@media (max-width: 768px) {.AB\\\\:A__A:hover {
   color: red;
 }}.themes-dark{}"
 `;
 
 exports[`INJECT PRODUCTION should inject multiple 1`] = `
-"@media (max-width: 768px) {.AV__A {
+"@media (max-width: 768px) {.A\\\\:A__A {
   color: red;
-}.AV__B:hover {
+}.BA\\\\:A__B:hover {
   color: blue;
 }}.themes-dark{}"
 `;
 
 exports[`INJECT PRODUCTION should inject simple 1`] = `
-".AV__A {
+".A__A {
   color: red;
 }.themes-dark{}"
 `;
 
 exports[`INJECT PRODUCTION should inject themes 1`] = `
-"@media (max-width: 768px) {.AV__C {
+"@media (max-width: 768px) {.A\\\\:A__A {
   color: var(--colors-GREEN);
 }}:root{--colors-GREEN:green;}.themes-dark{--colors-GREEN:yellow;}"
 `;
 
 exports[`INJECT PRODUCTION should inject with breakpoint 1`] = `
-"@media (max-width: 768px) {.AV__A {
+"@media (max-width: 768px) {.A\\\\:A__A {
   color: red;
 }}.themes-dark{}"
 `;
 
 exports[`INJECT PRODUCTION should inject with multiple breakpoints 1`] = `
-"@media (max-width: 1024px) {.AV__A {
+"@media (max-width: 1024px) {.AB\\\\:A__A {
   color: red;
-}}@media (max-width: 640px) {.AV__A {
+}}@media (max-width: 640px) {.AB\\\\:A__A {
   color: red;
 }}.themes-dark{}"
 `;
 
 exports[`INJECT PRODUCTION should inject with multiple pseudo selectors 1`] = `
-".AV__A:first-child:hover {
+".AB\\\\:A__A:first-child:hover {
   color: red;
 }.themes-dark{}"
 `;
 
 exports[`INJECT PRODUCTION should inject with pseudo selector 1`] = `
-".AV__A:hover {
+".A\\\\:A__A:hover {
   color: red;
 }.themes-dark{}"
 `;
 
 exports[`INJECT PRODUCTION should not override with screens 1`] = `
-".AV__A {
+".A__A {
   color: red;
-}@media (max-width: 640px) {.AV__B {
+}@media (max-width: 640px) {.A\\\\:A__B {
   color: blue;
 }}.themes-dark{}"
 `;

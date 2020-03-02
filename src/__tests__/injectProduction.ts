@@ -1,22 +1,25 @@
 import { transform } from '../config/transform-config-to-classes';
-import { productionClassesByType } from '../plugin';
 import { IClassesByType, IExtractedClasses } from '../types';
-import { createClassObject, createProductionCss, evaluateConfig, injectProduction } from '../utils';
+import {
+  createExtractedClasses,
+  createProductionClassObjects,
+  createProductionCss,
+  evaluateConfig,
+  injectProduction,
+} from '../utils';
 
 const config = evaluateConfig(require('../../classy-ui.config.js'));
 const classes = transform(config);
 
 describe('INJECT PRODUCTION', () => {
-  beforeEach(() => {
-    productionClassesByType.common = {};
-    productionClassesByType.rootTokens = {};
-    productionClassesByType.screens = {};
-    productionClassesByType.themeTokens = {};
-  });
   test('should inject simple', () => {
-    const classCollection: IExtractedClasses = {
-      ['color-RED']: createClassObject({ baseClass: 'color', token: 'RED', decorators: [] }, classes, true),
-    };
+    const classCollection: IExtractedClasses = createExtractedClasses(
+      createProductionClassObjects({ baseClass: 'color', token: 'RED', decorators: [] }, classes, {
+        classnames: [],
+        tokens: [],
+        decorators: [],
+      }),
+    );
     const productionClassesByType: IClassesByType = {
       screens: {},
       common: {},
@@ -29,9 +32,13 @@ describe('INJECT PRODUCTION', () => {
     ).toMatchSnapshot();
   });
   test('should inject with pseudo selector', () => {
-    const classCollection: IExtractedClasses = {
-      ['color-RED']: createClassObject({ baseClass: 'color', token: 'RED', decorators: ['hover'] }, classes, true),
-    };
+    const classCollection: IExtractedClasses = createExtractedClasses(
+      createProductionClassObjects({ baseClass: 'color', token: 'RED', decorators: ['hover'] }, classes, {
+        classnames: [],
+        tokens: [],
+        decorators: [],
+      }),
+    );
     const productionClassesByType: IClassesByType = {
       screens: {},
       common: {},
@@ -44,9 +51,13 @@ describe('INJECT PRODUCTION', () => {
     ).toMatchSnapshot();
   });
   test('should inject with breakpoint', () => {
-    const classCollection: IExtractedClasses = {
-      ['color-RED']: createClassObject({ baseClass: 'color', token: 'RED', decorators: ['tablet'] }, classes, true),
-    };
+    const classCollection: IExtractedClasses = createExtractedClasses(
+      createProductionClassObjects({ baseClass: 'color', token: 'RED', decorators: ['tablet'] }, classes, {
+        classnames: [],
+        tokens: [],
+        decorators: [],
+      }),
+    );
     const productionClassesByType: IClassesByType = {
       screens: {},
       common: {},
@@ -59,13 +70,13 @@ describe('INJECT PRODUCTION', () => {
     ).toMatchSnapshot();
   });
   test('should inject both pseudo selector and breakpoint', () => {
-    const classCollection: IExtractedClasses = {
-      ['color-RED']: createClassObject(
-        { baseClass: 'color', token: 'RED', decorators: ['hover', 'tablet'] },
-        classes,
-        true,
-      ),
-    };
+    const classCollection: IExtractedClasses = createExtractedClasses(
+      createProductionClassObjects({ baseClass: 'color', token: 'RED', decorators: ['hover', 'tablet'] }, classes, {
+        classnames: [],
+        tokens: [],
+        decorators: [],
+      }),
+    );
     const productionClassesByType: IClassesByType = {
       screens: {},
       common: {},
@@ -78,13 +89,13 @@ describe('INJECT PRODUCTION', () => {
     ).toMatchSnapshot();
   });
   test('should inject with multiple pseudo selectors', () => {
-    const classCollection: IExtractedClasses = {
-      ['color-RED']: createClassObject(
-        { baseClass: 'color', token: 'RED', decorators: ['hover', 'firstChild'] },
-        classes,
-        true,
-      ),
-    };
+    const classCollection: IExtractedClasses = createExtractedClasses(
+      createProductionClassObjects({ baseClass: 'color', token: 'RED', decorators: ['hover', 'firstChild'] }, classes, {
+        classnames: [],
+        tokens: [],
+        decorators: [],
+      }),
+    );
     const productionClassesByType: IClassesByType = {
       screens: {},
       common: {},
@@ -97,13 +108,13 @@ describe('INJECT PRODUCTION', () => {
     ).toMatchSnapshot();
   });
   test('should inject with multiple breakpoints', () => {
-    const classCollection: IExtractedClasses = {
-      ['color-RED']: createClassObject(
-        { baseClass: 'color', token: 'RED', decorators: ['mobile', 'laptop'] },
-        classes,
-        true,
-      ),
-    };
+    const classCollection: IExtractedClasses = createExtractedClasses(
+      createProductionClassObjects({ baseClass: 'color', token: 'RED', decorators: ['mobile', 'laptop'] }, classes, {
+        classnames: [],
+        tokens: [],
+        decorators: [],
+      }),
+    );
     const productionClassesByType: IClassesByType = {
       screens: {},
       common: {},
@@ -116,14 +127,25 @@ describe('INJECT PRODUCTION', () => {
     ).toMatchSnapshot();
   });
   test('should inject multiple', () => {
-    const classCollection: IExtractedClasses = {
-      ['color-RED']: createClassObject({ baseClass: 'color', token: 'RED', decorators: ['tablet'] }, classes, true),
-      ['color-BLUE']: createClassObject(
-        { baseClass: 'color', token: 'BLUE', decorators: ['hover', 'tablet'] },
-        classes,
-        true,
-      ),
+    const evaluatedProductionShortnames = {
+      classnames: [],
+      tokens: [],
+      decorators: [],
     };
+    const classCollection: IExtractedClasses = createExtractedClasses(
+      createProductionClassObjects(
+        { baseClass: 'color', token: 'RED', decorators: ['tablet'] },
+        classes,
+        evaluatedProductionShortnames,
+      ).concat(
+        createProductionClassObjects(
+          { baseClass: 'color', token: 'BLUE', decorators: ['hover', 'tablet'] },
+          classes,
+          evaluatedProductionShortnames,
+        ),
+      ),
+    );
+
     const productionClassesByType: IClassesByType = {
       screens: {},
       common: {},
@@ -136,9 +158,13 @@ describe('INJECT PRODUCTION', () => {
     ).toMatchSnapshot();
   });
   test('should inject themes', () => {
-    const classCollection: IExtractedClasses = {
-      ['color-GREEN']: createClassObject({ baseClass: 'color', token: 'GREEN', decorators: ['tablet'] }, classes, true),
-    };
+    const classCollection: IExtractedClasses = createExtractedClasses(
+      createProductionClassObjects({ baseClass: 'color', token: 'GREEN', decorators: ['tablet'] }, classes, {
+        classnames: [],
+        tokens: [],
+        decorators: [],
+      }),
+    );
     const productionClassesByType: IClassesByType = {
       screens: {},
       common: {},
@@ -151,10 +177,25 @@ describe('INJECT PRODUCTION', () => {
     ).toMatchSnapshot();
   });
   test('should group breakpoints', () => {
-    const classCollection: IExtractedClasses = {
-      ['color-RED']: createClassObject({ baseClass: 'color', token: 'RED', decorators: ['tablet'] }, classes, true),
-      ['color-BLUE']: createClassObject({ baseClass: 'color', token: 'BLUE', decorators: ['tablet'] }, classes, true),
+    const evaluatedProductionShortnames = {
+      classnames: [],
+      tokens: [],
+      decorators: [],
     };
+    const classCollection: IExtractedClasses = createExtractedClasses(
+      createProductionClassObjects(
+        { baseClass: 'color', token: 'RED', decorators: ['tablet'] },
+        classes,
+        evaluatedProductionShortnames,
+      ).concat(
+        createProductionClassObjects(
+          { baseClass: 'color', token: 'BLUE', decorators: ['tablet'] },
+          classes,
+          evaluatedProductionShortnames,
+        ),
+      ),
+    );
+
     const productionClassesByType: IClassesByType = {
       screens: {},
       common: {},
@@ -167,10 +208,25 @@ describe('INJECT PRODUCTION', () => {
     ).toMatchSnapshot();
   });
   test('should group themes', () => {
-    const classCollection: IExtractedClasses = {
-      ['color-GREEN']: createClassObject({ baseClass: 'color', token: 'GREEN', decorators: [] }, classes, true),
-      ['color-PURPLE']: createClassObject({ baseClass: 'color', token: 'PURPLE', decorators: [] }, classes, true),
+    const evaluatedProductionShortnames = {
+      classnames: [],
+      tokens: [],
+      decorators: [],
     };
+    const classCollection: IExtractedClasses = createExtractedClasses(
+      createProductionClassObjects(
+        { baseClass: 'color', token: 'GREEN', decorators: [] },
+        classes,
+        evaluatedProductionShortnames,
+      ).concat(
+        createProductionClassObjects(
+          { baseClass: 'color', token: 'PURPLE', decorators: [] },
+          classes,
+          evaluatedProductionShortnames,
+        ),
+      ),
+    );
+
     const productionClassesByType: IClassesByType = {
       screens: {},
       common: {},
@@ -183,14 +239,25 @@ describe('INJECT PRODUCTION', () => {
     ).toMatchSnapshot();
   });
   test('should group themes and breakpoints', () => {
-    const classCollection: IExtractedClasses = {
-      ['color-GREEN']: createClassObject({ baseClass: 'color', token: 'RED', decorators: ['tablet'] }, classes, true),
-      ['color-PURPLE']: createClassObject(
-        { baseClass: 'color', token: 'PURPLE', decorators: ['tablet'] },
-        classes,
-        true,
-      ),
+    const evaluatedProductionShortnames = {
+      classnames: [],
+      tokens: [],
+      decorators: [],
     };
+    const classCollection: IExtractedClasses = createExtractedClasses(
+      createProductionClassObjects(
+        { baseClass: 'color', token: 'RED', decorators: ['tablet'] },
+        classes,
+        evaluatedProductionShortnames,
+      ).concat(
+        createProductionClassObjects(
+          { baseClass: 'color', token: 'PURPLE', decorators: ['tablet'] },
+          classes,
+          evaluatedProductionShortnames,
+        ),
+      ),
+    );
+
     const productionClassesByType: IClassesByType = {
       screens: {},
       common: {},
@@ -203,13 +270,14 @@ describe('INJECT PRODUCTION', () => {
     ).toMatchSnapshot();
   });
   test('should handle references classnames', () => {
-    const classCollection: IExtractedClasses = {
-      ['color-GREEN']: createClassObject(
-        { baseClass: 'borderColor', token: 'GREEN', decorators: ['hover'] },
-        classes,
-        false,
-      ),
-    };
+    const classCollection: IExtractedClasses = createExtractedClasses(
+      createProductionClassObjects({ baseClass: 'borderColor', token: 'GREEN', decorators: ['hover'] }, classes, {
+        classnames: [],
+        tokens: [],
+        decorators: [],
+      }),
+    );
+
     const productionClassesByType: IClassesByType = {
       screens: {},
       common: {},
@@ -222,14 +290,25 @@ describe('INJECT PRODUCTION', () => {
     ).toMatchSnapshot();
   });
   test('should not override with screens', () => {
-    const classCollection: IExtractedClasses = {
-      ['paddingLeft-SPACING_8']: createClassObject({ baseClass: 'color', token: 'RED', decorators: [] }, classes, true),
-      ['paddingLeft-SPACING_4']: createClassObject(
-        { baseClass: 'color', token: 'BLUE', decorators: ['mobile'] },
-        classes,
-        true,
-      ),
+    const evaluatedProductionShortnames = {
+      classnames: [],
+      tokens: [],
+      decorators: [],
     };
+    const classCollection: IExtractedClasses = createExtractedClasses(
+      createProductionClassObjects(
+        { baseClass: 'color', token: 'RED', decorators: [] },
+        classes,
+        evaluatedProductionShortnames,
+      ).concat(
+        createProductionClassObjects(
+          { baseClass: 'color', token: 'BLUE', decorators: ['mobile'] },
+          classes,
+          evaluatedProductionShortnames,
+        ),
+      ),
+    );
+
     const productionClassesByType: IClassesByType = {
       screens: {},
       common: {},

@@ -2,7 +2,6 @@ export interface IClass {
   id: string;
   classname: string;
   token: string;
-  shortName: string;
   derived: string[] | null;
   variable: {
     value: string;
@@ -114,8 +113,7 @@ export interface IClassesByType {
 }
 
 export interface IExtractedClass {
-  id?: string;
-  uid?: string;
+  id: string;
   name: string;
   decorators: string[];
 }
