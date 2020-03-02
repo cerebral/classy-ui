@@ -141,10 +141,14 @@ export function processReferences(babel: any, state: any, refs: any) {
       }
       const memExpr = extractMemberExpression(tRef);
       if (memExpr.arr.length >= 2) {
-        const [baseClass, token, ...decorators] = memExpr.arr;
-        const classObject = createClassObject({ baseClass, token, decorators }, classes, isProduction);
-        collectGlobally(classObject);
-        memExpr.root.replaceWith(t.stringLiteral(classObject.name + ' '));
+        try {
+          const [baseClass, token, ...decorators] = memExpr.arr;
+          const classObject = createClassObject({ baseClass, token, decorators }, classes, isProduction);
+          collectGlobally(classObject);
+          memExpr.root.replaceWith(t.stringLiteral(classObject.name + ' '));
+        } catch (e) {
+          throw memExpr.root.buildCodeFrameError(`CLASSY-UI: ${e.message}`);
+        }
       } else {
         throw tRef.buildCodeFrameError(`CLASSY-UI: t/tokens must reference a base class and a token`);
       }

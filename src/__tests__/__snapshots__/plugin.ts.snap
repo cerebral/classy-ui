@@ -365,7 +365,11 @@ compose(tokens.color.BLU)
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-TypeError: unknown: Cannot read property 'derived' of undefined
+SyntaxError: unknown: CLASSY-UI: The token BLU does not exist on property color
+[0m [90m 1 | [39m[36mimport[39m { compose[33m,[39m tokens } from [32m'classy-ui'[39m[0m
+[0m [90m 2 | [39m[0m
+[0m[31m[1m>[22m[39m[90m 3 | [39mcompose(tokens[33m.[39mcolor[33m.[39m[33mBLU[39m)[0m
+[0m [90m   | [39m        [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[0m
 
 `;
 
