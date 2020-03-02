@@ -99,7 +99,7 @@ export function processReferences(babel: any, state: any, refs: any) {
     hasRegisteredExitHook = true;
     process.on('exit', () => {
       writeFileSync(
-        join(process.cwd(), state.opts.output || 'public', 'classy-ui.css'),
+        join(process.cwd(), state.opts.output || 'build', 'classy-ui.css'),
         new CleanCSS().minify(postcss([autoprefixer]).process(createProductionCss(productionClassesByType, config)).css)
           .styles,
       );

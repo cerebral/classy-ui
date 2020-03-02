@@ -1749,25 +1749,25 @@ const classnames: IClassnames = {
   },
   gridGap: {
     tokens: ({ spacing }) => spacing,
-    css: ['rowGap', 'columnGap'],
+    css: ['gridRowGap', 'gridColumnGap'],
     description: describeClassname(
       'gap',
       'The grid-gap CSS property sets the gaps (gutters) between rows and columns. It is a shorthand for row-gap and column-gap.',
     ),
   },
-  rowGap: {
+  gridRowGap: {
     tokens: ({ spacing }) => spacing,
-    css: (name, value) => `${name} {\n  row-gap: ${value};\n}`,
+    css: (name, value) => `${name} {\n  grid-row-gap: ${value};\n}`,
     description: describeClassname(
-      'row-gap',
+      'grid-row-gap',
       "The row-gap CSS property sets the size of the gap (gutter) between an element's grid rows.",
     ),
   },
-  columnGap: {
+  gridColumnGap: {
     tokens: ({ spacing }) => spacing,
-    css: (name, value) => `${name} {\n  column-gap: ${value};\n}`,
+    css: (name, value) => `${name} {\n  grid-column-gap: ${value};\n}`,
     description: describeClassname(
-      'column-gap',
+      'grid-column-gap',
       "The column-gap CSS property sets the size of the gap (gutter) between an element's grid columns.",
     ),
   },
