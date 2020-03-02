@@ -127,7 +127,7 @@ ${Object.keys(config.screens)
   )
   .join('\n')}
 }
-export type TCompose = (...args: Array<IDecorators | TGroup | Themes | TClassname>) => TClassname;
+export type TCompose = (...args: Array<IDecorators | TGroup | Themes | TClassname> | boolean) => TClassname;
 export type TTokens = { 
   ${Object.keys(config.classnames)
     .reduce<string[]>((aggr, baseClass) => {
