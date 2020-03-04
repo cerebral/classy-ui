@@ -935,6 +935,12 @@ const classnames: IClassnames = {
       BOTTOM: {
         value: 'bottom',
       },
+      SUB: {
+        value: 'sub',
+      },
+      SUPER: {
+        value: 'super',
+      },
       TEXT_TOP: {
         value: 'text-top',
       },
