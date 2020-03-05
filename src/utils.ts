@@ -73,33 +73,42 @@ export const deepAssign = (
   return a;
 };
 
-const getToExtract = (config: IConfig, key: string) => {
-  if (!config.tokens || !(config.tokens as any)[key]) {
-    return (defaultTokens as any)[key];
+const getRawCategoryTokens = (config: IConfig, category: string) => {
+  if (!config.tokens) {
+    return (defaultTokens as any)[category];
   }
 
-  if (typeof  (config.tokens as any)[key] === 'function') {
-    return (config.tokens as any)[key]((defaultTokens as any)[key])
-  } else if  (typeof  (config.tokens as any)[key] === 'object') {
-    return (config.tokens as any)[key];
+  if (!(config.tokens as any)[category]) {
+    return {};
   }
-}
+
+  if (typeof (config.tokens as any)[category] === 'function') {
+    return (config.tokens as any)[category]((defaultTokens as any)[category]);
+  } else if (typeof (config.tokens as any)[category] === 'object') {
+    return (config.tokens as any)[category];
+  } else {
+    return {};
+  }
+};
+
+const getCategoryTokens = (config: IConfig, category: string): { [token: string]: IToken } => {
+  const rawTokens = getRawCategoryTokens(config, category);
+  return Object.keys(rawTokens).reduce<{ [token: string]: IToken }>((categoryTokens, tokenKey) => {
+    categoryTokens[tokenKey] =
+      typeof rawTokens[tokenKey] === 'string'
+        ? {
+            value: rawTokens[tokenKey],
+          }
+        : rawTokens[tokenKey];
+
+    return categoryTokens;
+  }, {});
+};
 
 export const evaluateConfig = (config: IConfig): IEvaluatedConfig => {
-  const originalTokens = Object.keys(defaultTokens).reduce<IGlobalTokens<IToken>>((aggr, key) => {
-    const toExtract = getToExtract(config, key);
-    (aggr as any)[key] = Object.keys(toExtract).reduce<{ [token: string]: IToken }>((subAggr, subKey) => {
-      subAggr[subKey] =
-        typeof toExtract[subKey] === 'string'
-          ? {
-              value: toExtract[subKey],
-            }
-          : toExtract[subKey];
-
-      return subAggr;
-    }, {});
-
-    return aggr;
+  const originalTokens = Object.keys(defaultTokens).reduce<IGlobalTokens<IToken>>((tokens, category) => {
+    (tokens as any)[category] = getCategoryTokens(config, category);
+    return tokens;
   }, {} as IGlobalTokens<IToken>);
 
   // Reverse themes lookup to tokens instead
@@ -121,23 +130,23 @@ export const evaluateConfig = (config: IConfig): IEvaluatedConfig => {
   }, {} as IEvaluatedThemes);
 
   // Evaluated variables where values are replaced by CSS variable
-  const tokens = Object.keys(originalTokens).reduce<IGlobalTokens<IToken>>((aggr, key) => {
-    (aggr as any)[key] = Object.keys((originalTokens as any)[key]).reduce<{ [token: string]: IToken }>(
-      (subAggr, subKey) => {
-        subAggr[subKey] = {
-          ...(originalTokens as any)[key][subKey],
+  const tokens = Object.keys(originalTokens).reduce<IGlobalTokens<IToken>>((tokens, categoryKey) => {
+    (tokens as any)[categoryKey] = Object.keys((originalTokens as any)[categoryKey]).reduce<{ [token: string]: IToken }>(
+      (categoryTokens, tokenKey) => {
+        categoryTokens[tokenKey] = {
+          ...(originalTokens as any)[categoryKey][tokenKey],
           value:
-            themesByTokens[key] && themesByTokens[key][subKey]
-              ? `var(--${key}-${subKey})`
-              : (originalTokens as any)[key][subKey].value,
+            themesByTokens[categoryKey] && themesByTokens[categoryKey][tokenKey]
+              ? `var(--${categoryKey}-${tokenKey})`
+              : (originalTokens as any)[categoryKey][tokenKey].value,
         };
 
-        return subAggr;
+        return categoryTokens;
       },
       {},
     );
 
-    return aggr;
+    return tokens;
   }, {} as IGlobalTokens<IToken>);
 
   // Call any dynamic classname tokens with both the original variables and
@@ -172,12 +181,12 @@ export const getUserConfig = () => {
   try {
     const config = require(join(process.cwd(), 'classy-ui.config.js'));
     if (typeof config === 'function') {
-      return config(defaultTokens);
+      return config({ tokens: defaultTokens, screens: defaultScreens });
     } else {
       return config;
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return {};
   }
 };
