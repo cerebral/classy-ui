@@ -73,15 +73,21 @@ export const deepAssign = (
   return a;
 };
 
+const getToExtract = (config: IConfig, key: string) => {
+  if (!config.tokens || !(config.tokens as any)[key]) {
+    return (defaultTokens as any)[key];
+  }
+
+  if (typeof  (config.tokens as any)[key] === 'function') {
+    return (config.tokens as any)[key]((defaultTokens as any)[key])
+  } else if  (typeof  (config.tokens as any)[key] === 'object') {
+    return (config.tokens as any)[key];
+  }
+}
+
 export const evaluateConfig = (config: IConfig): IEvaluatedConfig => {
   const originalTokens = Object.keys(defaultTokens).reduce<IGlobalTokens<IToken>>((aggr, key) => {
-    const toExtract =
-      config.tokens && (config.tokens as any)[key]
-        ? (config.tokens as any)[key]
-        : config.tokens
-        ? {}
-        : (defaultTokens as any)[key];
-
+    const toExtract = getToExtract(config, key);
     (aggr as any)[key] = Object.keys(toExtract).reduce<{ [token: string]: IToken }>((subAggr, subKey) => {
       subAggr[subKey] =
         typeof toExtract[subKey] === 'string'
@@ -164,8 +170,14 @@ export const evaluateConfig = (config: IConfig): IEvaluatedConfig => {
 
 export const getUserConfig = () => {
   try {
-    return require(join(process.cwd(), 'classy-ui.config.js'));
+    const config = require(join(process.cwd(), 'classy-ui.config.js'));
+    if (typeof config === 'function') {
+      return config(defaultTokens);
+    } else {
+      return config;
+    }
   } catch (error) {
+    console.log(error);
     return {};
   }
 };
