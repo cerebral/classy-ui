@@ -207,7 +207,7 @@ const classnames: IClassnames = {
     ),
   },
   borderRadius: {
-    tokens: ({ borderRadius }) => borderRadius,
+    tokens: ({ radii }) => radii,
     css: ['borderTopLeftRadius', 'borderTopRightRadius', 'borderBottomRightRadius', 'borderBottomLeftRadius'],
     description: describeClassname(
       'border-radius',
@@ -215,7 +215,7 @@ const classnames: IClassnames = {
     ),
   },
   borderTopLeftRadius: {
-    tokens: ({ borderRadius }) => borderRadius,
+    tokens: ({ radii }) => radii,
     css: (name, value) => `${name} {\n  border-top-left-radius: ${value};\n}`,
     description: describeClassname(
       'border-top-left-radius',
@@ -223,7 +223,7 @@ const classnames: IClassnames = {
     ),
   },
   borderTopRightRadius: {
-    tokens: ({ borderRadius }) => borderRadius,
+    tokens: ({ radii }) => radii,
     css: (name, value) => `${name} {\n  border-top-right-radius: ${value};\n}`,
     description: describeClassname(
       'border-top-right-radius',
@@ -231,7 +231,7 @@ const classnames: IClassnames = {
     ),
   },
   borderBottomRightRadius: {
-    tokens: ({ borderRadius }) => borderRadius,
+    tokens: ({ radii }) => radii,
     css: (name, value) => `${name} {\n  border-bottom-right-radius: ${value};\n}`,
     description: describeClassname(
       'border-bottom-right-radius',
@@ -239,7 +239,7 @@ const classnames: IClassnames = {
     ),
   },
   borderBottomLeftRadius: {
-    tokens: ({ borderRadius }) => borderRadius,
+    tokens: ({ radii }) => radii,
     css: (name, value) => `${name} {\n  border-bottom-left-radius: ${value};\n}`,
     description: describeClassname(
       'border-bottom-left-radius',
@@ -287,7 +287,7 @@ const classnames: IClassnames = {
     ),
   },
   borderWidth: {
-    tokens: ({ lineWidths }) => lineWidths,
+    tokens: ({ borderWidths }) => borderWidths,
     css: ['borderTopWidth', 'borderRightWidth', 'borderBottomWidth', 'borderLeftWidth'],
     description: describeClassname(
       'border-width',
@@ -295,7 +295,7 @@ const classnames: IClassnames = {
     ),
   },
   borderTopWidth: {
-    tokens: ({ lineWidths }) => lineWidths,
+    tokens: ({ borderWidths }) => borderWidths,
     css: (name, value) => `${name} {\n  border-top-width: ${value};\n}`,
     description: describeClassname(
       'border-top-width',
@@ -303,7 +303,7 @@ const classnames: IClassnames = {
     ),
   },
   borderRightWidth: {
-    tokens: ({ lineWidths }) => lineWidths,
+    tokens: ({ borderWidths }) => borderWidths,
     css: (name, value) => `${name} {\n  border-right-width: ${value};\n}`,
     description: describeClassname(
       'border-right-width',
@@ -311,7 +311,7 @@ const classnames: IClassnames = {
     ),
   },
   borderBottomWidth: {
-    tokens: ({ lineWidths }) => lineWidths,
+    tokens: ({ borderWidths }) => borderWidths,
     css: (name, value) => `${name} {\n  border-bottom-width: ${value};\n}`,
     description: describeClassname(
       'border-bottom-width',
@@ -319,7 +319,7 @@ const classnames: IClassnames = {
     ),
   },
   borderLeftWidth: {
-    tokens: ({ lineWidths }) => lineWidths,
+    tokens: ({ borderWidths }) => borderWidths,
     css: (name, value) => `${name} {\n  border-left-width: ${value};\n}`,
     description: describeClassname(
       'border-left-width',
@@ -600,11 +600,19 @@ const classnames: IClassnames = {
     ),
   },
   boxShadow: {
-    tokens: ({ boxShadows }) => boxShadows,
+    tokens: ({ shadows }) => shadows,
     css: (name, value) => `${name} {\n  box-shadow: ${value};\n}`,
     description: describeClassname(
       'box-shadow',
       "The box-shadow CSS property adds shadow effects around an element's frame. You can set multiple effects separated by commas. A box shadow is described by X and Y offsets relative to the element, blur and spread radius, and color.",
+    ),
+  },
+  textShadow: {
+    tokens: ({ shadows }) => shadows,
+    css: (name, value) => `${name} {\n  text-shadow: ${value};\n}`,
+    description: describeClassname(
+      'text-shadow',
+      'The text-shadow CSS property adds shadows to text. It accepts a comma-separated list of shadows to be applied to the text and any of its decorations. Each shadow is described by some combination of X and Y offsets from the element, blur radius, and color.',
     ),
   },
   outline: {
@@ -731,35 +739,7 @@ const classnames: IClassnames = {
     ),
   },
   fontWeight: {
-    tokens: {
-      HAIRLINE: {
-        value: '100',
-      },
-      THIN: {
-        value: '200',
-      },
-      LIGHT: {
-        value: '300',
-      },
-      NORMAL: {
-        value: '400',
-      },
-      MEDIUM: {
-        value: '500',
-      },
-      SEMIBOLD: {
-        value: '600',
-      },
-      BOLD: {
-        value: '700',
-      },
-      EXTRABOLD: {
-        value: '800',
-      },
-      BLACK: {
-        value: '900',
-      },
-    },
+    tokens: ({ fontWeights }) => fontWeights,
     css: (name, value) => `${name} {\n  font-weight: ${value};\n}`,
     description: describeClassname(
       'font-weight',
@@ -767,7 +747,7 @@ const classnames: IClassnames = {
     ),
   },
   fontFamily: {
-    tokens: ({ fontFamily }) => fontFamily,
+    tokens: ({ fonts }) => fonts,
     css: (name, value) => `${name} {\n  font-family: ${value};\n}`,
     description: describeClassname(
       'font-family',
@@ -862,8 +842,8 @@ const classnames: IClassnames = {
     ),
   },
   textDecorationThickness: {
-    tokens: ({ lineWidths }) => ({
-      ...lineWidths,
+    tokens: ({ borderWidths }) => ({
+      ...borderWidths,
       AUTO: {
         value: 'auto',
       },
@@ -955,16 +935,10 @@ const classnames: IClassnames = {
     ),
   },
   height: {
-    tokens: ({ spacing }) => ({
+    tokens: ({ size }) => ({
+      ...size,
       AUTO: {
         value: 'auto',
-      },
-      ...spacing,
-      FULL: {
-        value: '100%',
-      },
-      SCREEN: {
-        value: '100vh',
       },
     }),
     css: (name, value) => `${name} {\n  height: ${value};\n}`,
@@ -998,11 +972,11 @@ const classnames: IClassnames = {
     ),
   },
   top: {
-    tokens: ({ spacing }) => ({
+    tokens: ({ space }) => ({
       AUTO: {
         value: 'auto',
       },
-      ...spacing,
+      ...space,
     }),
     css: (name, value) => `${name} {\n  top: ${value};\n}`,
     description: describeClassname(
@@ -1056,11 +1030,11 @@ const classnames: IClassnames = {
     ),
   },
   right: {
-    tokens: ({ spacing }) => ({
+    tokens: ({ space }) => ({
       AUTO: {
         value: 'auto',
       },
-      ...spacing,
+      ...space,
     }),
     css: (name, value) => `${name} {\n  right: ${value};\n}`,
     description: describeClassname(
@@ -1069,11 +1043,11 @@ const classnames: IClassnames = {
     ),
   },
   left: {
-    tokens: ({ spacing }) => ({
+    tokens: ({ space }) => ({
       AUTO: {
         value: 'auto',
       },
-      ...spacing,
+      ...space,
     }),
     css: (name, value) => `${name} {\n  left: ${value};\n}`,
     description: describeClassname(
@@ -1082,11 +1056,11 @@ const classnames: IClassnames = {
     ),
   },
   bottom: {
-    tokens: ({ spacing }) => ({
+    tokens: ({ space }) => ({
       AUTO: {
         value: 'auto',
       },
-      ...spacing,
+      ...space,
     }),
     css: (name, value) => `${name} {\n  bottom: ${value};\n}`,
     description: describeClassname(
@@ -1095,15 +1069,15 @@ const classnames: IClassnames = {
     ),
   },
   letterSpacing: {
-    tokens: ({ letterSpacing }) => letterSpacing,
-    css: (name, value) => `${name} {\n  letter-spacing: ${value};\n}`,
+    tokens: ({ letterSpacings }) => letterSpacings,
+    css: (name, value) => `${name} {\n  letter-space: ${value};\n}`,
     description: describeClassname(
-      'letter-spacing',
-      'The letter-spacing CSS property sets the spacing behavior between text characters.',
+      'letter-space',
+      'The letter-space CSS property sets the space behavior between text characters.',
     ),
   },
   lineHeight: {
-    tokens: ({ lineHeight }) => lineHeight,
+    tokens: ({ lineHeights }) => lineHeights,
     css: (name, value) => `${name} {\n  line-height: ${value};\n}`,
     description: describeClassname(
       'letter-height',
@@ -1234,9 +1208,9 @@ const classnames: IClassnames = {
     ),
   },
   margin: {
-    tokens: ({ spacing }, { negative }) => ({
-      ...spacing,
-      ...negative(spacing),
+    tokens: ({ space }, { negative }) => ({
+      ...space,
+      ...negative(space),
       AUTO: {
         value: 'auto',
       },
@@ -1248,9 +1222,9 @@ const classnames: IClassnames = {
     ),
   },
   marginVertical: {
-    tokens: ({ spacing }, { negative }) => ({
-      ...spacing,
-      ...negative(spacing),
+    tokens: ({ space }, { negative }) => ({
+      ...space,
+      ...negative(space),
       AUTO: {
         value: 'auto',
       },
@@ -1263,9 +1237,9 @@ const classnames: IClassnames = {
     ),
   },
   marginHorizontal: {
-    tokens: ({ spacing }, { negative }) => ({
-      ...spacing,
-      ...negative(spacing),
+    tokens: ({ space }, { negative }) => ({
+      ...space,
+      ...negative(space),
       AUTO: {
         value: 'auto',
       },
@@ -1293,44 +1267,7 @@ const classnames: IClassnames = {
     ),
   },
   maxWidth: {
-    tokens: {
-      NONE: {
-        value: 'none',
-      },
-      WIDTH_1: {
-        value: '20rem',
-      },
-      WIDTH_2: {
-        value: '24rem',
-      },
-      WIDTH_3: {
-        value: '28rem',
-      },
-      WIDTH_4: {
-        value: '32rem',
-      },
-      WIDTH_5: {
-        value: '36rem',
-      },
-      WIDTH_6: {
-        value: '42rem',
-      },
-      WIDTH_7: {
-        value: '48rem',
-      },
-      WIDTH_8: {
-        value: '56rem',
-      },
-      WIDTH_9: {
-        value: '64rem',
-      },
-      WIDTH_10: {
-        value: '72rem',
-      },
-      FULL: {
-        value: '100%',
-      },
-    },
+    tokens: ({ size }) => size,
     css: (name, value) => `${name} {\n  max-width: ${value};\n}`,
     description: describeClassname(
       'max-width',
@@ -1493,7 +1430,7 @@ const classnames: IClassnames = {
     ),
   },
   padding: {
-    tokens: ({ spacing }) => spacing,
+    tokens: ({ space }) => space,
     css: ['paddingTop', 'paddingRight', 'paddingBottom', 'paddingLeft'],
     description: describeClassname(
       'padding',
@@ -1501,7 +1438,7 @@ const classnames: IClassnames = {
     ),
   },
   paddingVertical: {
-    tokens: ({ spacing }) => spacing,
+    tokens: ({ space }) => space,
     css: ['paddingTop', 'paddingBottom'],
     description: describeClassname(
       'padding-vertical (Classy-UI)',
@@ -1510,7 +1447,7 @@ const classnames: IClassnames = {
     ),
   },
   paddingHorizontal: {
-    tokens: ({ spacing }) => spacing,
+    tokens: ({ space }) => space,
     css: ['paddingLeft', 'paddingRight'],
     description: describeClassname(
       'padding-horizontal (Classy-UI)',
@@ -1519,7 +1456,7 @@ const classnames: IClassnames = {
     ),
   },
   paddingTop: {
-    tokens: ({ spacing }) => spacing,
+    tokens: ({ space }) => space,
     css: (name, value) => `${name} {\n  padding-top: ${value};\n}`,
     description: describeClassname(
       'padding-top',
@@ -1527,7 +1464,7 @@ const classnames: IClassnames = {
     ),
   },
   paddingRight: {
-    tokens: ({ spacing }) => spacing,
+    tokens: ({ space }) => space,
     css: (name, value) => `${name} {\n  padding-right: ${value};\n}`,
     description: describeClassname(
       'padding-right',
@@ -1535,7 +1472,7 @@ const classnames: IClassnames = {
     ),
   },
   paddingBottom: {
-    tokens: ({ spacing }) => spacing,
+    tokens: ({ space }) => space,
     css: (name, value) => `${name} {\n  padding-bottom: ${value};\n}`,
     description: describeClassname(
       'padding-bottom',
@@ -1543,7 +1480,7 @@ const classnames: IClassnames = {
     ),
   },
   paddingLeft: {
-    tokens: ({ spacing }) => spacing,
+    tokens: ({ space }) => space,
     css: (name, value) => `${name} {\n  padding-left: ${value};\n}`,
     description: describeClassname(
       'padding-left',
@@ -1551,9 +1488,9 @@ const classnames: IClassnames = {
     ),
   },
   marginTop: {
-    tokens: ({ spacing }, { negative }) => ({
-      ...spacing,
-      ...negative(spacing),
+    tokens: ({ space }, { negative }) => ({
+      ...space,
+      ...negative(space),
       AUTO: {
         value: 'auto;',
       },
@@ -1565,9 +1502,9 @@ const classnames: IClassnames = {
     ),
   },
   marginRight: {
-    tokens: ({ spacing }, { negative }) => ({
-      ...spacing,
-      ...negative(spacing),
+    tokens: ({ space }, { negative }) => ({
+      ...space,
+      ...negative(space),
       AUTO: {
         value: 'auto;',
       },
@@ -1579,9 +1516,9 @@ const classnames: IClassnames = {
     ),
   },
   marginBottom: {
-    tokens: ({ spacing }, { negative }) => ({
-      ...spacing,
-      ...negative(spacing),
+    tokens: ({ space }, { negative }) => ({
+      ...space,
+      ...negative(space),
       AUTO: {
         value: 'auto;',
       },
@@ -1601,9 +1538,9 @@ const classnames: IClassnames = {
     ),
   },
   marginLeft: {
-    tokens: ({ spacing }, { negative }) => ({
-      ...spacing,
-      ...negative(spacing),
+    tokens: ({ space }, { negative }) => ({
+      ...space,
+      ...negative(space),
       AUTO: {
         value: 'auto;',
       },
@@ -1627,94 +1564,88 @@ const classnames: IClassnames = {
     ),
   },
   width: {
-    tokens: ({ spacing }) => ({
+    tokens: ({ size }) => ({
       auto: {
         value: 'auto',
       },
-      ...spacing,
-      WIDTH_1_2: {
+      ...size,
+      SPAN_1_2: {
         value: '50%',
       },
-      WIDTH_1_3: {
+      SPAN_1_3: {
         value: '33.333333%',
       },
-      WIDTH_2_3: {
+      SPAN_2_3: {
         value: '66.666667%',
       },
-      WIDTH_1_4: {
+      SPAN_1_4: {
         value: '25%',
       },
-      WIDTH_2_4: {
+      SPAN_2_4: {
         value: '50%',
       },
-      WIDTH_3_4: {
+      SPAN_3_4: {
         value: '75%',
       },
-      WIDTH_1_5: {
+      SPAN_1_5: {
         value: '20%',
       },
-      WIDTH_2_5: {
+      SPAN_2_5: {
         value: '40%',
       },
-      WIDTH_3_5: {
+      SPAN_3_5: {
         value: '60%',
       },
-      WIDTH_4_5: {
+      SPAN_4_5: {
         value: '80%',
       },
-      WIDTH_1_6: {
+      SPAN_1_6: {
         value: '16.666667%',
       },
-      WIDTH_2_6: {
+      SPAN_2_6: {
         value: '33.333333%',
       },
-      WIDTH_3_6: {
+      SPAN_3_6: {
         value: '50%',
       },
-      WIDTH_4_6: {
+      SPAN_4_6: {
         value: '66.666667%',
       },
-      WIDTH_5_6: {
+      SPAN_5_6: {
         value: '83.333333%',
       },
-      WIDTH_1_12: {
+      SPAN_1_12: {
         value: '8.333333%',
       },
-      WIDTH_2_12: {
+      SPAN_2_12: {
         value: '16.666667%',
       },
-      WIDTH_3_12: {
+      SPAN_3_12: {
         value: '25%',
       },
-      WIDTH_4_12: {
+      SPAN_4_12: {
         value: '33.333333%',
       },
-      WIDTH_5_12: {
+      SPAN_5_12: {
         value: '41.666667%',
       },
-      WIDTH_6_12: {
+      SPAN_6_12: {
         value: '50%',
       },
-      WIDTH_7_12: {
+      SPAN_7_12: {
         value: '58.333333%',
       },
-      WIDTH_8_12: {
+      SPAN_8_12: {
         value: '66.666667%',
       },
-      WIDTH_9_12: {
+      SPAN_9_12: {
         value: '75%',
       },
-      WIDTH_10_12: {
+      SPAN_10_12: {
         value: '83.333333%',
       },
-      WIDTH_11_12: {
+      SPAN_11_12: {
         value: '91.666667%',
-      },
-      FULL: {
-        value: '100%',
-      },
-      SCREEN: {
-        value: '100vw',
       },
     }),
     css: (name, value) => `${name} {\n  width: ${value};\n}`,
@@ -1724,29 +1655,7 @@ const classnames: IClassnames = {
     ),
   },
   zIndex: {
-    tokens: {
-      AUTO: {
-        value: 'auto',
-      },
-      NONE: {
-        value: '0',
-      },
-      Z_10: {
-        value: '10',
-      },
-      Z_20: {
-        value: '20',
-      },
-      Z_30: {
-        value: '30',
-      },
-      Z_40: {
-        value: '40',
-      },
-      Z_50: {
-        value: '50',
-      },
-    },
+    tokens: ({ zIndices }) => zIndices,
     css: (name, value) => `${name} {\n  z-index: ${value};\n}`,
     description: describeClassname(
       'z-index',
@@ -1754,7 +1663,7 @@ const classnames: IClassnames = {
     ),
   },
   gridGap: {
-    tokens: ({ spacing }) => spacing,
+    tokens: ({ space }) => space,
     css: ['gridRowGap', 'gridColumnGap'],
     description: describeClassname(
       'gap',
@@ -1762,7 +1671,7 @@ const classnames: IClassnames = {
     ),
   },
   gridRowGap: {
-    tokens: ({ spacing }) => spacing,
+    tokens: ({ space }) => space,
     css: (name, value) => `${name} {\n  grid-row-gap: ${value};\n}`,
     description: describeClassname(
       'grid-row-gap',
@@ -1770,7 +1679,7 @@ const classnames: IClassnames = {
     ),
   },
   gridColumnGap: {
-    tokens: ({ spacing }) => spacing,
+    tokens: ({ space }) => space,
     css: (name, value) => `${name} {\n  grid-column-gap: ${value};\n}`,
     description: describeClassname(
       'grid-column-gap',
@@ -1786,7 +1695,7 @@ const classnames: IClassnames = {
     ),
   },
   gridColumn: {
-    tokens: ({ gridSpacing }) => gridSpacing,
+    tokens: ({ gridColumns }) => gridColumns,
     css: ['gridColumnStart', 'gridColumnEnd'],
     description: describeClassname(
       'grid-column',
@@ -1794,7 +1703,7 @@ const classnames: IClassnames = {
     ),
   },
   gridColumnStart: {
-    tokens: ({ gridSpacing }) => gridSpacing,
+    tokens: ({ gridColumns }) => gridColumns,
     css: (name, value) => `${name} {\n  grid-column-start: ${value};\n}`,
     description: describeClassname(
       'grid-column-start',
@@ -1802,7 +1711,7 @@ const classnames: IClassnames = {
     ),
   },
   gridColumnEnd: {
-    tokens: ({ gridSpacing }) => gridSpacing,
+    tokens: ({ gridColumns }) => gridColumns,
     css: (name, value) => `${name} {\n  grid-column-end: ${value};\n}`,
     description: describeClassname(
       'grid-column-end',
@@ -1850,16 +1759,16 @@ const classnames: IClassnames = {
       NONE: {
         value: '0',
       },
-      SCALE_050: {
+      SCALE_50: {
         value: '.5',
       },
-      SCALE_075: {
+      SCALE_75: {
         value: '.75',
       },
-      SCALE_090: {
+      SCALE_90: {
         value: '.9',
       },
-      SCALE_095: {
+      SCALE_95: {
         value: '.95',
       },
       SCALE_100: {
@@ -1886,13 +1795,13 @@ const classnames: IClassnames = {
   },
   rotate: {
     tokens: {
-      NEG_DEG_180: {
+      NEGATIVE_DEG_180: {
         value: '-180deg',
       },
-      NEG_DEG_90: {
+      NEGATIVE_DEG_90: {
         value: '-90deg',
       },
-      NEG_DEG_45: {
+      NEGATIVE_DEG_45: {
         value: '-45deg',
       },
       NONE: {
@@ -1915,9 +1824,9 @@ const classnames: IClassnames = {
     ),
   },
   translate: {
-    tokens: ({ spacing }, { negative }) => ({
-      ...spacing,
-      ...negative(spacing),
+    tokens: ({ space }, { negative }) => ({
+      ...space,
+      ...negative(space),
       NEG_FULL: {
         value: '-100%',
       },

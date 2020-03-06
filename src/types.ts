@@ -44,21 +44,25 @@ export interface IToken {
 }
 
 export interface IGlobalTokens<T> {
-  spacing: { [token: string]: T };
+  space: { [token: string]: T };
+  fontSizes: { [token: string]: T };
   colors: { [token: string]: T };
-  lineWidths: { [token: string]: T };
-  letterSpacing: { [token: string]: T };
-  lineHeight: { [token: string]: T };
-  borderRadius: { [token: string]: T };
-  fontFamily: { [token: string]: T };
-  boxShadows: { [token: string]: T };
-  opacity: { [token: string]: T };
+  fonts: { [token: string]: T };
+  fontWeights: { [token: string]: T };
+  fontStyles: { [token: string]: T };
+  lineHeights: { [token: string]: T };
+  letterSpacings: { [token: string]: T };
+  borderWidths: { [token: string]: T };
+  radii: { [token: string]: T };
+  size: { [token: string]: T };
+  shadows: { [token: string]: T };
+  zIndices: { [token: string]: T };
+
   durations: { [token: string]: T };
   timingFunctions: { [token: string]: T };
-  fontSizes: { [token: string]: T };
-  fontStyles: { [token: string]: T };
+  opacity: { [token: string]: T };
+  gridColumns: { [token: string]: T };
   gridTemplateColumns: { [token: string]: T };
-  gridSpacing: { [token: string]: T };
 }
 
 export interface IScreens {
