@@ -72,27 +72,14 @@ export const deepAssign = (
 
   return a;
 };
-
-const getRawCategoryTokens = (config: IConfig, category: string) => {
-  if (!config.tokens) {
-    return (defaultTokens as any)[category];
-  }
-
-  if (!(config.tokens as any)[category]) {
-    return {};
-  }
-
-  if (typeof (config.tokens as any)[category] === 'function') {
-    return (config.tokens as any)[category]((defaultTokens as any)[category]);
-  } else if (typeof (config.tokens as any)[category] === 'object') {
-    return (config.tokens as any)[category];
-  } else {
-    return {};
-  }
-};
-
 const getCategoryTokens = (config: IConfig, category: string): { [token: string]: IToken } => {
-  const rawTokens = getRawCategoryTokens(config, category);
+  const rawTokens =
+    config.tokens && (config.tokens as any)[category]
+      ? (config.tokens as any)[category]
+      : config.tokens
+      ? {}
+      : (defaultTokens as any)[category];
+      
   return Object.keys(rawTokens).reduce<{ [token: string]: IToken }>((categoryTokens, tokenKey) => {
     categoryTokens[tokenKey] =
       typeof rawTokens[tokenKey] === 'string'
@@ -131,20 +118,19 @@ export const evaluateConfig = (config: IConfig): IEvaluatedConfig => {
 
   // Evaluated variables where values are replaced by CSS variable
   const tokens = Object.keys(originalTokens).reduce<IGlobalTokens<IToken>>((tokens, categoryKey) => {
-    (tokens as any)[categoryKey] = Object.keys((originalTokens as any)[categoryKey]).reduce<{ [token: string]: IToken }>(
-      (categoryTokens, tokenKey) => {
-        categoryTokens[tokenKey] = {
-          ...(originalTokens as any)[categoryKey][tokenKey],
-          value:
-            themesByTokens[categoryKey] && themesByTokens[categoryKey][tokenKey]
-              ? `var(--${categoryKey}-${tokenKey})`
-              : (originalTokens as any)[categoryKey][tokenKey].value,
-        };
+    (tokens as any)[categoryKey] = Object.keys((originalTokens as any)[categoryKey]).reduce<{
+      [token: string]: IToken;
+    }>((categoryTokens, tokenKey) => {
+      categoryTokens[tokenKey] = {
+        ...(originalTokens as any)[categoryKey][tokenKey],
+        value:
+          themesByTokens[categoryKey] && themesByTokens[categoryKey][tokenKey]
+            ? `var(--${categoryKey}-${tokenKey})`
+            : (originalTokens as any)[categoryKey][tokenKey].value,
+      };
 
-        return categoryTokens;
-      },
-      {},
-    );
+      return categoryTokens;
+    }, {});
 
     return tokens;
   }, {} as IGlobalTokens<IToken>);
