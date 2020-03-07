@@ -1,4 +1,4 @@
 {
   "presets": ["@babel/preset-typescript"],
-  "plugins": ["classy-ui/plugin"]
+  "plugins": [["classy-ui/plugin", { "output": "public" }]]
 }

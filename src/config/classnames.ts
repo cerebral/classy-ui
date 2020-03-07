@@ -1275,17 +1275,7 @@ const classnames: IClassnames = {
     ),
   },
   minHeight: {
-    tokens: {
-      NONE: {
-        value: '0',
-      },
-      FULL: {
-        value: '100%',
-      },
-      SCREEN: {
-        value: '100vh',
-      },
-    },
+    tokens: ({ size }) => size,
     css: (name, value) => `${name} {\n  min-height: ${value};\n}`,
     description: describeClassname(
       'min-height',
@@ -1293,14 +1283,7 @@ const classnames: IClassnames = {
     ),
   },
   minWidth: {
-    tokens: {
-      NONE: {
-        value: '0',
-      },
-      FULL: {
-        value: '100%',
-      },
-    },
+    tokens: ({ size }) => size,
     css: (name, value) => `${name} {\n  min-width: ${value};\n}`,
     description: describeClassname(
       'min-width',

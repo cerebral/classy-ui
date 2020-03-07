@@ -13,8 +13,9 @@ const getIframeDocument = () => {
   );
 };
 
-export const getStory = () => {
-  // get the document
+export const getStory = story => {
+  cy.visit('http://localhost:5400');
+  cy.get('#explorertokens--' + story).click();
   return (
     getIframeDocument()
       // automatically retries until body is loaded

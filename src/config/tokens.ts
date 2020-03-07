@@ -223,10 +223,10 @@ const tokens: IGlobalTokens<string | IToken> = {
     Z_9: '9',
   },
   opacity: {
-    OPACITY_NONE: '0',
-    OPACITY_10: '0.25',
-    OPACITY_20: '0.5',
-    OPACITY_30: '0.75',
+    OPACITY_0: '0',
+    OPACITY_25: '0.25',
+    OPACITY_50: '0.5',
+    OPACITY_75: '0.75',
     OPACITY_FULL: '1',
   },
   durations: {
