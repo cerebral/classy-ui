@@ -20,15 +20,13 @@ function getSupportedTypescriptTarget() {
 module.exports = {
   testURL: 'http://localhost',
   preset: 'ts-jest',
-  collectCoverageFrom: [
-    'src/**/*.{t,j}s?(x)',
-    '!src/**/*.d.ts',
-  ],
+  collectCoverageFrom: ['src/**/*.{t,j}s?(x)', '!src/**/*.d.ts'],
+  testMatch: ['<rootDir>/src/__tests__/*.[jt]s?(x)'],
   globals: {
     'ts-jest': {
       tsConfig: {
         target: getSupportedTypescriptTarget(),
-      }
-    }
-  }
+      },
+    },
+  },
 };
