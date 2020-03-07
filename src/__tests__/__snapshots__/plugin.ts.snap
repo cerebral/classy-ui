@@ -233,24 +233,24 @@ exports[`classy-ui should handle derived classnames: should handle derived class
 
 import { compose, tokens } from 'classy-ui'
 
-{className: compose(tokens.padding.SPACING_1)}
+{className: compose(tokens.padding.SPACE_1)}
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 {
-  className: 'padding-top__SPACING_1 padding-right__SPACING_1 padding-bottom__SPACING_1 padding-left__SPACING_1 ';
+  className: 'padding-top__SPACE_1 padding-right__SPACE_1 padding-bottom__SPACE_1 padding-left__SPACE_1 ';
 }
 
 _addClasses([
-  'padding-top__SPACING_1',
-  '.padding-top__SPACING_1 {\\n  padding-top: 1rem;\\n}',
-  'padding-right__SPACING_1',
-  '.padding-right__SPACING_1 {\\n  padding-right: 1rem;\\n}',
-  'padding-bottom__SPACING_1',
-  '.padding-bottom__SPACING_1 {\\n  padding-bottom: 1rem;\\n}',
-  'padding-left__SPACING_1',
-  '.padding-left__SPACING_1 {\\n  padding-left: 1rem;\\n}',
+  'padding-top__SPACE_1',
+  '.padding-top__SPACE_1 {\\n  padding-top: 1rem;\\n}',
+  'padding-right__SPACE_1',
+  '.padding-right__SPACE_1 {\\n  padding-right: 1rem;\\n}',
+  'padding-bottom__SPACE_1',
+  '.padding-bottom__SPACE_1 {\\n  padding-bottom: 1rem;\\n}',
+  'padding-left__SPACE_1',
+  '.padding-left__SPACE_1 {\\n  padding-left: 1rem;\\n}',
 ]);
 
 

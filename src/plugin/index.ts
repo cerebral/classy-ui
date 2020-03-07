@@ -79,6 +79,12 @@ export const productionClassesByType: IClassesByType = {
   themeTokens: {},
   rootTokens: {},
 };
+
+/*
+  This can be improved by rather structuring classnames as unique with tokens
+  and decorators underneath. So that A__A (color__RED) and B__A (background-color__RED)
+  can live together
+*/
 export const evaluatedProductionShortnames = {
   classnames: [] as string[],
   tokens: [] as string[],

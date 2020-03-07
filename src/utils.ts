@@ -358,7 +358,7 @@ export const negative = (scale: { [key: string]: IToken }) => {
     .reduce(
       (negativeScale, key) => ({
         ...negativeScale,
-        [`NEG_${key}`]: {
+        [`NEGATIVE_${key}`]: {
           ...scale[key],
           value: negateValue(scale[key].value),
         },

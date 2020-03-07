@@ -7,8 +7,8 @@ module.exports = {
       GREEN: 'green',
       PURPLE: 'purple',
     },
-    spacing: {
-      SPACING_1: '1rem',
+    space: {
+      SPACE_1: '1rem',
     },
   },
   themes: {
