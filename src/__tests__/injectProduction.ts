@@ -8,6 +8,7 @@ import {
   injectProduction,
 } from '../utils';
 
+// tslint:disable-next-line
 const config = evaluateConfig(require('../../classy-ui.config.js'));
 const classes = transform(config);
 

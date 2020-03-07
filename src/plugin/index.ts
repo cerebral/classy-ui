@@ -1,9 +1,8 @@
-import { writeFileSync } from 'fs';
-import { join } from 'path';
-
 import { addNamed } from '@babel/helper-module-imports';
 import autoprefixer from 'autoprefixer';
 import CleanCSS from 'clean-css';
+import { writeFileSync } from 'fs';
+import { join } from 'path';
 import postcss from 'postcss';
 
 import { transform as transformClassesToTypes } from '../config/transform-classes-to-types';
@@ -97,16 +96,27 @@ export function processReferences(babel: any, state: any, refs: any) {
   const isProduction = babel.getEnv() === 'production';
   const classCollection: IExtractedClasses = {};
 
-  refs['tokens'] && processTokens(refs['tokens'], isProduction);
+  if (refs.tokens) {
+    processTokens(refs.tokens, isProduction);
+  }
 
-  refs['group'] && processGroup(refs['group']);
-  refs['themes'] && processThemes(refs['themes']);
+  if (refs.group) {
+    processGroup(refs.group);
+  }
+
+  if (refs.themes) {
+    processThemes(refs.themes);
+  }
 
   Object.keys(config.screens).forEach(screenCompose => {
-    refs[screenCompose] && processCompose(refs[screenCompose]);
+    if (refs[screenCompose]) {
+      processCompose(refs[screenCompose]);
+    }
   });
 
-  refs['compose'] && processCompose(refs['compose']);
+  if (refs.compose) {
+    processCompose(refs.compose);
+  }
 
   // We require access to the babel options, so have to do it here
   if (isProduction && !hasRegisteredExitHook) {
@@ -152,7 +162,7 @@ export function processReferences(babel: any, state: any, refs: any) {
     });
   }
 
-  function processTokens(tRefs: any[], isProduction: boolean) {
+  function processTokens(tRefs: any[], isProductionProcess: boolean) {
     tRefs.forEach((tRef: any) => {
       if (!t.isMemberExpression(tRef.parent)) {
         throw tRef.buildCodeFrameError(`CLASSY-UI: t/tokens can't be used without a base class`);
@@ -166,7 +176,7 @@ export function processReferences(babel: any, state: any, refs: any) {
       if (memExpr.arr.length >= 2) {
         try {
           const [baseClass, token, ...decorators] = memExpr.arr;
-          const classObjects = isProduction
+          const classObjects = isProductionProcess
             ? createProductionClassObjects(
                 { composition, baseClass, token, decorators },
                 classes,
@@ -185,8 +195,8 @@ export function processReferences(babel: any, state: any, refs: any) {
     });
   }
 
-  function processGroup(refs: any[]) {
-    refs.forEach((ref: any) => {
+  function processGroup(processRefs: any[]) {
+    processRefs.forEach((ref: any) => {
       if (!t.isCallExpression(ref.parent)) {
         throw ref.buildCodeFrameError(`CLASSY-UI: group must be used inside c/compose`);
       }
@@ -194,15 +204,15 @@ export function processReferences(babel: any, state: any, refs: any) {
         throw ref.buildCodeFrameError(`CLASSY-UI: group should not be invoked`);
       }
 
-      ref.replaceWith(t.stringLiteral(ref.node.name + ' '));
+      ref.replaceWith(t.stringLiteral(`${ref.node.name} `));
     });
   }
 
-  function processThemes(refs: any[]) {
-    refs.forEach((ref: any) => {
+  function processThemes(processRefs: any[]) {
+    processRefs.forEach((ref: any) => {
       if (t.isMemberExpression(ref.parent)) {
         const memberExpr = extractMemberExpression(ref);
-        memberExpr.root.replaceWith(t.stringLiteral(ref.node.name + '-' + memberExpr.arr.join('-') + ' '));
+        memberExpr.root.replaceWith(t.stringLiteral(`${ref.node.name}-${memberExpr.arr.join('-')} `));
       } else {
         throw ref.buildCodeFrameError(`CLASSY-UI: add the theme name here like themes.dark`);
       }
@@ -214,7 +224,7 @@ export function processReferences(babel: any, state: any, refs: any) {
       return t.stringLiteral(' ');
     }
 
-    let needsRuntime: boolean = false;
+    let needsRuntime = false;
     const strings: string[] = [];
     const others: any[] = [];
     for (const item of classAttribs) {
@@ -268,9 +278,11 @@ export function processReferences(babel: any, state: any, refs: any) {
   function extractMemberExpression(tRefPath: any) {
     let prev = tRefPath;
     let path = prev.parentPath;
-    let arr = [];
+    const arr = [];
     while (path.node.type === 'MemberExpression') {
-      path.node.property && arr.push(path.node.property.name);
+      if (path.node.property) {
+        arr.push(path.node.property.name);
+      }
       prev = path;
       path = path.parentPath;
     }

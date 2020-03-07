@@ -1,6 +1,6 @@
 import { IClassnames } from '../types';
 
-function describeClassname(prop: string, description: string, showMdnLink: boolean = true) {
+function describeClassname(prop: string, description: string, showMdnLink = true) {
   return `### ${prop}\n${description}\n${
     showMdnLink
       ? `[Mozilla Developer Network: ${prop}](https://developer.mozilla.org/en-US/docs/Web/CSS/${prop}).`
