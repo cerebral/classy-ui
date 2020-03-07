@@ -63,10 +63,7 @@ export interface IGlobalTokens<T> {
   opacity: { [token: string]: T };
   gridColumns: { [token: string]: T };
   gridTemplateColumns: { [token: string]: T };
-
-  flexBases: { [token: string]: T };
-  flexGrows: { [token: string]: T };
-  flexShrinks: { [token: string]: T };
+  flex: { [token: string]: T };
 }
 
 export interface IScreens {

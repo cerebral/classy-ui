@@ -618,7 +618,27 @@ const classnames: IClassnames = {
     ),
   },
   flexBasis: {
-    tokens: ({ flexBases }) => flexBases,
+    tokens: ({ space }) => ({
+      ...space,
+      AUTO: {
+        value: 'auto',
+      },
+      FILL: {
+        value: 'fill',
+      },
+      MAX_CONTENT: {
+        value: 'max-content',
+      },
+      MIN_CONTENT: {
+        value: 'min-content',
+      },
+      FIT_CONTENT: {
+        value: 'fit-content',
+      },
+      CONTENT: {
+        value: 'content',
+      },
+    }),
     css: (name, value) => `${name} {\n  flex-basis: ${value};\n}`,
     description: describeClassname(
       'flex-basis',
@@ -626,7 +646,7 @@ const classnames: IClassnames = {
     ),
   },
   flexGrow: {
-    tokens: ({ flexGrows }) => flexGrows,
+    tokens: ({ flex }) => flex,
     css: (name, value) => `${name} {\n  flex-grow: ${value};\n}`,
     description: describeClassname(
       'flex-grow',
@@ -634,7 +654,7 @@ const classnames: IClassnames = {
     ),
   },
   flexShrink: {
-    tokens: ({ flexShrinks }) => flexShrinks,
+    tokens: ({ flex }) => flex,
     css: (name, value) => `${name} {\n  flex-shrink: ${value};\n}`,
     description: describeClassname(
       'flex-shrink',
