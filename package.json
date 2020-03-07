@@ -10,7 +10,7 @@
   "module": "es/index.js",
   "types": "lib/classy-ui.d.ts",
   "scripts": {
-    "build": "npm run build:lib & npm run build:es && node lib/config/create-types-script",
+    "build": "npm run build:lib & npm run build:es && node lib/config/create-types-script.js",
     "build:lib": "tsc --outDir lib --module commonjs",
     "build:es": "tsc --outDir es --module es2015",
     "build:storybook": "NODE_ENV=production build-storybook -s ./public",

@@ -72,28 +72,30 @@ export const deepAssign = (
 
   return a;
 };
+const getCategoryTokens = (config: IConfig, category: string): { [token: string]: IToken } => {
+  const rawTokens =
+    config.tokens && (config.tokens as any)[category]
+      ? (config.tokens as any)[category]
+      : config.tokens
+      ? {}
+      : (defaultTokens as any)[category];
+      
+  return Object.keys(rawTokens).reduce<{ [token: string]: IToken }>((categoryTokens, tokenKey) => {
+    categoryTokens[tokenKey] =
+      typeof rawTokens[tokenKey] === 'string'
+        ? {
+            value: rawTokens[tokenKey],
+          }
+        : rawTokens[tokenKey];
+
+    return categoryTokens;
+  }, {});
+};
 
 export const evaluateConfig = (config: IConfig): IEvaluatedConfig => {
-  const originalTokens = Object.keys(defaultTokens).reduce<IGlobalTokens<IToken>>((aggr, key) => {
-    const toExtract =
-      config.tokens && (config.tokens as any)[key]
-        ? (config.tokens as any)[key]
-        : config.tokens
-        ? {}
-        : (defaultTokens as any)[key];
-
-    (aggr as any)[key] = Object.keys(toExtract).reduce<{ [token: string]: IToken }>((subAggr, subKey) => {
-      subAggr[subKey] =
-        typeof toExtract[subKey] === 'string'
-          ? {
-              value: toExtract[subKey],
-            }
-          : toExtract[subKey];
-
-      return subAggr;
-    }, {});
-
-    return aggr;
+  const originalTokens = Object.keys(defaultTokens).reduce<IGlobalTokens<IToken>>((tokens, category) => {
+    (tokens as any)[category] = getCategoryTokens(config, category);
+    return tokens;
   }, {} as IGlobalTokens<IToken>);
 
   // Reverse themes lookup to tokens instead
@@ -115,23 +117,22 @@ export const evaluateConfig = (config: IConfig): IEvaluatedConfig => {
   }, {} as IEvaluatedThemes);
 
   // Evaluated variables where values are replaced by CSS variable
-  const tokens = Object.keys(originalTokens).reduce<IGlobalTokens<IToken>>((aggr, key) => {
-    (aggr as any)[key] = Object.keys((originalTokens as any)[key]).reduce<{ [token: string]: IToken }>(
-      (subAggr, subKey) => {
-        subAggr[subKey] = {
-          ...(originalTokens as any)[key][subKey],
-          value:
-            themesByTokens[key] && themesByTokens[key][subKey]
-              ? `var(--${key}-${subKey})`
-              : (originalTokens as any)[key][subKey].value,
-        };
+  const tokens = Object.keys(originalTokens).reduce<IGlobalTokens<IToken>>((tokens, categoryKey) => {
+    (tokens as any)[categoryKey] = Object.keys((originalTokens as any)[categoryKey]).reduce<{
+      [token: string]: IToken;
+    }>((categoryTokens, tokenKey) => {
+      categoryTokens[tokenKey] = {
+        ...(originalTokens as any)[categoryKey][tokenKey],
+        value:
+          themesByTokens[categoryKey] && themesByTokens[categoryKey][tokenKey]
+            ? `var(--${categoryKey}-${tokenKey})`
+            : (originalTokens as any)[categoryKey][tokenKey].value,
+      };
 
-        return subAggr;
-      },
-      {},
-    );
+      return categoryTokens;
+    }, {});
 
-    return aggr;
+    return tokens;
   }, {} as IGlobalTokens<IToken>);
 
   // Call any dynamic classname tokens with both the original variables and
@@ -164,8 +165,14 @@ export const evaluateConfig = (config: IConfig): IEvaluatedConfig => {
 
 export const getUserConfig = () => {
   try {
-    return require(join(process.cwd(), 'classy-ui.config.js'));
+    const config = require(join(process.cwd(), 'classy-ui.config.js'));
+    if (typeof config === 'function') {
+      return config({ tokens: defaultTokens, screens: defaultScreens });
+    } else {
+      return config;
+    }
   } catch (error) {
+    console.error(error);
     return {};
   }
 };
