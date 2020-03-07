@@ -35,7 +35,7 @@ export const fixSpecificity = (classnames: string) => {
   }
   classnames = '';
   for (const n of a.values()) {
-    classnames += n + ' ';
+    classnames += `${n} `;
   }
   return classnames;
 };
