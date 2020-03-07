@@ -146,6 +146,8 @@ export const themes: {
 export const group: TGroup;
 export const compose: TCompose;
 export const tokens: TTokens;
+export const c: TCompose;
+export const t: TTokens;
 
 ${Object.keys(config.screens)
   .map(
