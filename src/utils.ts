@@ -72,6 +72,15 @@ export const deepAssign = (
 
   return a;
 };
+
+const camelToSnake = (string: string) => {
+  return string
+    .replace(/[\w]([A-Z])/g, function(m) {
+      return m[0] + '_' + m[1];
+    })
+    .toLowerCase();
+};
+
 const getCategoryTokens = (config: IConfig, category: string): { [token: string]: IToken } => {
   const rawTokens =
     config.tokens && (config.tokens as any)[category]
@@ -79,17 +88,29 @@ const getCategoryTokens = (config: IConfig, category: string): { [token: string]
       : config.tokens
       ? {}
       : (defaultTokens as any)[category];
-      
-  return Object.keys(rawTokens).reduce<{ [token: string]: IToken }>((categoryTokens, tokenKey) => {
-    categoryTokens[tokenKey] =
-      typeof rawTokens[tokenKey] === 'string'
-        ? {
-            value: rawTokens[tokenKey],
-          }
-        : rawTokens[tokenKey];
 
-    return categoryTokens;
-  }, {});
+  const categoryTokens: { [key: string]: IToken } = {};
+  const flattenObjectToTokens = (tokensObject: any, parent = '') => {
+    Object.keys(tokensObject).forEach((subTokenKey: string) => {
+      // covert to snake uppercase, if not already so
+      const camelSubTokenKey =
+        subTokenKey.search(/^[A-Z_0-9]+$/) >= 0 ? subTokenKey : camelToSnake(subTokenKey).toUpperCase();
+      const categoryTokenKey = parent.length > 0 ? `${parent}_${camelSubTokenKey}` : camelSubTokenKey;
+      if (typeof tokensObject[subTokenKey] === 'string') {
+        categoryTokens[categoryTokenKey] = {
+          value: tokensObject[subTokenKey],
+        };
+      } else if (typeof tokensObject[subTokenKey] === 'object') {
+        if (tokensObject[subTokenKey].value) {
+          categoryTokens[categoryTokenKey] = tokensObject[subTokenKey];
+        } else {
+          flattenObjectToTokens(tokensObject[subTokenKey], categoryTokenKey);
+        }
+      }
+    });
+  };
+  flattenObjectToTokens(rawTokens, '');
+  return categoryTokens;
 };
 
 export const evaluateConfig = (config: IConfig): IEvaluatedConfig => {
