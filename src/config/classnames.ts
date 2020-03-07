@@ -599,6 +599,24 @@ const classnames: IClassnames = {
       'The flex-direction CSS property sets how flex items are placed in the flex container defining the main axis and the direction (normal or reversed).',
     ),
   },
+  flexWrap: {
+    tokens: {
+      NOWRAP: {
+        value: 'nowrap',
+      },
+      WRAP: {
+        value: 'wrap',
+      },
+      WRAP_REVERSE: {
+        value: 'wrap-reverse',
+      },
+    },
+    css: (name, value) => `${name} {\n  flex-wrap: ${value};\n}`,
+    description: describeClassname(
+      'flex-wrap',
+      'The flex-wrap CSS property sets whether flex items are forced onto one line or can wrap onto multiple lines. If wrapping is allowed, it sets the direction that lines are stacked.',
+    ),
+  },
   boxShadow: {
     tokens: ({ shadows }) => shadows,
     css: (name, value) => `${name} {\n  box-shadow: ${value};\n}`,
