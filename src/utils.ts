@@ -73,12 +73,12 @@ export const deepAssign = (
   return a;
 };
 
-const camelToSnake = (string: string) => {
+const camelToUpperSnake = (string: string) => {
   return string
     .replace(/[\w]([A-Z])/g, function(m) {
       return m[0] + '_' + m[1];
     })
-    .toLowerCase();
+    .toUpperCase();
 };
 
 const getCategoryTokens = (config: IConfig, category: string): { [token: string]: IToken } => {
@@ -94,7 +94,7 @@ const getCategoryTokens = (config: IConfig, category: string): { [token: string]
     Object.keys(tokensObject).forEach((subTokenKey: string) => {
       // covert to snake uppercase, if not already so
       const camelSubTokenKey =
-        subTokenKey.search(/^[A-Z_0-9]+$/) >= 0 ? subTokenKey : camelToSnake(subTokenKey).toUpperCase();
+        subTokenKey.search(/^[A-Z_0-9]+$/) >= 0 ? subTokenKey : camelToUpperSnake(subTokenKey);
       const categoryTokenKey = parent.length > 0 ? `${parent}_${camelSubTokenKey}` : camelSubTokenKey;
       if (typeof tokensObject[subTokenKey] === 'string') {
         categoryTokens[categoryTokenKey] = {
