@@ -617,6 +617,30 @@ const classnames: IClassnames = {
       'The flex-wrap CSS property sets whether flex items are forced onto one line or can wrap onto multiple lines. If wrapping is allowed, it sets the direction that lines are stacked.',
     ),
   },
+  flexBasis: {
+    tokens: ({ flexBases }) => flexBases,
+    css: (name, value) => `${name} {\n  flex-basis: ${value};\n}`,
+    description: describeClassname(
+      'flex-basis',
+      'The flex-basis CSS property sets the initial main size of a flex item. It sets the size of the content box unless otherwise set with box-sizing.',
+    ),
+  },
+  flexGrow: {
+    tokens: ({ flexGrows }) => flexGrows,
+    css: (name, value) => `${name} {\n  flex-grow: ${value};\n}`,
+    description: describeClassname(
+      'flex-grow',
+      'The flex-grow CSS property sets the flex grow factor of a flex item main size. It specifies how much of the remaining space in the flex container should be assigned to the item (the flex grow factor)',
+    ),
+  },
+  flexShrink: {
+    tokens: ({ flexShrinks }) => flexShrinks,
+    css: (name, value) => `${name} {\n  flex-shrink: ${value};\n}`,
+    description: describeClassname(
+      'flex-shrink',
+      'The flex-shrink CSS property sets the flex shrink factor of a flex item. If the size of all flex items is larger than the flex container, items shrink to fit according to flex-shrink.',
+    ),
+  },
   boxShadow: {
     tokens: ({ shadows }) => shadows,
     css: (name, value) => `${name} {\n  box-shadow: ${value};\n}`,
