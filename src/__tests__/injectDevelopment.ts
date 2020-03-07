@@ -2,6 +2,7 @@ import { transform } from '../config/transform-config-to-classes';
 import { IExtractedClass, IExtractedClasses } from '../types';
 import { createClassObjects, createExtractedClasses, evaluateConfig, injectDevelopment } from '../utils';
 
+// tslint:disable-next-line
 const config = evaluateConfig(require('../../classy-ui.config.js'));
 const classes = transform(config);
 

@@ -1,5 +1,4 @@
 import { join } from 'path';
-
 // @ts-ignore
 import reduceCalc from 'reduce-css-calc';
 
@@ -114,9 +113,9 @@ const getCategoryTokens = (config: IConfig, category: string): { [token: string]
 };
 
 export const evaluateConfig = (config: IConfig): IEvaluatedConfig => {
-  const originalTokens = Object.keys(defaultTokens).reduce<IGlobalTokens<IToken>>((tokens, category) => {
-    (tokens as any)[category] = getCategoryTokens(config, category);
-    return tokens;
+  const originalTokens = Object.keys(defaultTokens).reduce<IGlobalTokens<IToken>>((currentTokens, category) => {
+    (currentTokens as any)[category] = getCategoryTokens(config, category);
+    return currentTokens;
   }, {} as IGlobalTokens<IToken>);
 
   // Reverse themes lookup to tokens instead
@@ -138,8 +137,8 @@ export const evaluateConfig = (config: IConfig): IEvaluatedConfig => {
   }, {} as IEvaluatedThemes);
 
   // Evaluated variables where values are replaced by CSS variable
-  const tokens = Object.keys(originalTokens).reduce<IGlobalTokens<IToken>>((tokens, categoryKey) => {
-    (tokens as any)[categoryKey] = Object.keys((originalTokens as any)[categoryKey]).reduce<{
+  const tokens = Object.keys(originalTokens).reduce<IGlobalTokens<IToken>>((currentTokens, categoryKey) => {
+    (currentTokens as any)[categoryKey] = Object.keys((originalTokens as any)[categoryKey]).reduce<{
       [token: string]: IToken;
     }>((categoryTokens, tokenKey) => {
       categoryTokens[tokenKey] = {
@@ -153,7 +152,7 @@ export const evaluateConfig = (config: IConfig): IEvaluatedConfig => {
       return categoryTokens;
     }, {});
 
-    return tokens;
+    return currentTokens;
   }, {} as IGlobalTokens<IToken>);
 
   // Call any dynamic classname tokens with both the original variables and
@@ -193,6 +192,7 @@ export const getUserConfig = () => {
       return config;
     }
   } catch (error) {
+    // tslint:disable-next-line
     console.error(error);
     return {};
   }
@@ -235,10 +235,10 @@ export const createProductionCss = (productionClassesByType: IClassesByType, con
   return css;
 };
 
-export const camelToDash = (string: string) => {
-  return string
-    .replace(/[\w]([A-Z])/g, function(m) {
-      return m[0] + '-' + m[1];
+export const camelToDash = (str: string) => {
+  return str
+    .replace(/[\w]([A-Z])/g, m => {
+      return `${m[0]}-${m[1]}`;
     })
     .toLowerCase();
 };
@@ -420,17 +420,17 @@ export const createProductionClassObjects = (
 
   if (classes[id].derived) {
     return classes[id].derived!.reduce((aggr, key) => {
-      const shortClassname = generateCharsFromNumber(
+      const derivedShortClassname = generateCharsFromNumber(
         evaluatedProductionShortnames.classnames.indexOf(key) === -1
           ? evaluatedProductionShortnames.classnames.push(key)
           : evaluatedProductionShortnames.classnames.indexOf(key) + 1,
       );
-      const shortToken = generateCharsFromNumber(
+      const derivedShortToken = generateCharsFromNumber(
         evaluatedProductionShortnames.tokens.indexOf(token) === -1
           ? evaluatedProductionShortnames.tokens.push(token)
           : evaluatedProductionShortnames.tokens.indexOf(token) + 1,
       );
-      const shortDecorators = decorators
+      const derivedShortDecorators = decorators
         .concat(composition === 'compose' ? [] : composition)
         .sort()
         .map(decorator =>
@@ -443,7 +443,9 @@ export const createProductionClassObjects = (
         .join('');
       return aggr.concat({
         id: `${camelToDash(key)}-${token}`,
-        name: `${shortDecorators.length ? `${shortDecorators}:` : ''}${shortClassname}__${shortToken}`,
+        name: `${
+          derivedShortDecorators.length ? `${derivedShortDecorators}:` : ''
+        }${derivedShortClassname}__${derivedShortToken}`,
         decorators,
         composition,
       });
@@ -537,6 +539,6 @@ export const generateCharsFromNumber = (num: number) => {
 };
 
 export const hyphenToCamelCase = (str: string) =>
-  str.replace(/-([a-z])/g, function(g) {
+  str.replace(/-([a-z])/g, g => {
     return g[1].toUpperCase();
   });
