@@ -1,3 +1,8 @@
 {
-  "video": false
+  "video": false,
+  "fixturesFolder": false,
+  "pluginsFile": false,
+  "screenshotsFolder": false,
+  "supportFile": false,
+  "integrationFolder": "integration"
 }
