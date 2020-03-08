@@ -1,6 +1,6 @@
 {
   "name": "classy-ui",
-  "version": "10.0.0",
+  "version": "10.0.1",
   "description": "Design tokens at your fingertips",
   "author": "Christian Alfoni <christianalfoni@gmail.com>",
   "license": "MIT",
@@ -47,21 +47,17 @@
     "dist",
     "macro",
     "plugin",
-    "runtime",
-    "tokens"
+    "runtime"
   ],
   "dependencies": {
     "@babel/helper-module-imports": "^7.8.3",
-    "@types/node": "^8.0.0",
     "autoprefixer": "^9.7.4",
-    "classnames": "^2.2.6",
     "clean-css": "^4.2.3",
-    "normalize.css": "^8.0.1",
     "postcss": "^7.0.27",
-    "reduce-css-calc": "^2.1.7",
-    "tslib": "^1.9.3"
+    "reduce-css-calc": "^2.1.7"
   },
   "devDependencies": {
+    "@types/node": "^8.0.0",
     "@babel/core": "^7.8.7",
     "@babel/preset-typescript": "^7.8.3",
     "@storybook/html": "^5.3.14",
@@ -93,6 +89,7 @@
     "tslint": "^5.20.1",
     "tslint-config-prettier": "^1.13.0",
     "tslint-plugin-prettier": "^2.0.0",
-    "typescript": "^3.8.2"
+    "typescript": "^3.8.2",
+    "tslib": "^1.9.3"
   }
 }

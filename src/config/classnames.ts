@@ -618,8 +618,8 @@ const classnames: IClassnames = {
     ),
   },
   flexBasis: {
-    tokens: ({ space }) => ({
-      ...space,
+    tokens: ({ flex }) => ({
+      ...flex,
       AUTO: {
         value: 'auto',
       },
@@ -646,7 +646,7 @@ const classnames: IClassnames = {
     ),
   },
   flexGrow: {
-    tokens: ({ flex }) => flex,
+    tokens: ({ flex, space }) => ({ ...flex, ...space }),
     css: (name, value) => `${name} {\n  flex-grow: ${value};\n}`,
     description: describeClassname(
       'flex-grow',
@@ -654,7 +654,7 @@ const classnames: IClassnames = {
     ),
   },
   flexShrink: {
-    tokens: ({ flex }) => flex,
+    tokens: ({ flex, space }) => ({ ...flex, ...space }),
     css: (name, value) => `${name} {\n  flex-shrink: ${value};\n}`,
     description: describeClassname(
       'flex-shrink',
