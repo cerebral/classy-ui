@@ -171,8 +171,11 @@ export const getUserConfig = () => {
       return config;
     }
   } catch (error) {
-    // tslint:disable-next-line
-    console.error(error);
+    if (!error.toString().includes('Cannot find module')) {
+      // tslint:disable-next-line
+      throw error;
+    }
+
     return {};
   }
 };
