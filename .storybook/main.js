@@ -9,5 +9,5 @@ module.exports = {
 
     return config;
   },
-  stories: ['../stories/*.ts'],
+  stories: ['../integration/*.stories.ts'],
 };
