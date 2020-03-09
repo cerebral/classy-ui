@@ -23,12 +23,12 @@ const classes = transformConfigToClasses(config);
 
 if (process.env.NODE_ENV !== 'test') {
   try {
-    const esTypesPath = join(__dirname, '..', '..', 'es', 'classy-ui.d.ts');
-    const libTypesPath = join(__dirname, '..', '..', 'lib', 'classy-ui.d.ts');
+    const rootPath = join(process.cwd(), 'classy-ui.d.ts');
+    const libPath = join(__dirname, '..', '..', 'lib', 'classy-ui.d.ts');
     const types = transformClassesToTypes(config);
 
-    writeFileSync(esTypesPath, types);
-    writeFileSync(libTypesPath, types);
+    writeFileSync(rootPath, types);
+    writeFileSync(libPath, types);
   } catch {
     // Codesandbox or some other unwritable environment
   }

@@ -16,5 +16,5 @@
     "resolveJsonModule": true,
     "strict": true
   },
-  "exclude": ["node_modules", "dist", "es", "lib", "stories"]
+  "exclude": ["node_modules", "dist", "es", "lib", "integration"]
 }

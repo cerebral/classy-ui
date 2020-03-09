@@ -46,6 +46,7 @@ function convertClassnameToType(baseClass: string, token: string, config: IEvalu
 
 export const transform = (config: IEvaluatedConfig) => {
   return `
+declare module 'classy-ui' {
 export type TClassname = string & "CLASSNAME";
 export enum Themes {
   ${config.themeNames
@@ -159,5 +160,5 @@ ${Object.keys(config.screens)
 `,
   )
   .join('\n')}
-`;
+}`;
 };
