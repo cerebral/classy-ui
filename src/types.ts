@@ -44,6 +44,7 @@ export interface IToken {
 }
 
 export interface IGlobalTokens<T> {
+  breakpoints: { [token: string]: T };
   space: { [token: string]: T };
   fontSizes: { [token: string]: T };
   colors: { [token: string]: T };
@@ -67,13 +68,13 @@ export interface IGlobalTokens<T> {
 }
 
 export interface IScreens {
-  [key: string]: (css: string) => string;
+  [key: string]: (css: string, breakpoints: { [token: string]: string }) => string;
 }
 
 export interface IConfig {
   tokens?: Partial<IGlobalTokens<string | IToken>>;
   screens?: {
-    [name: string]: (css: string) => string;
+    [name: string]: (css: string, breakpoints: { [tokens: string]: string }) => string;
   };
   themes?: {
     [name: string]: {
@@ -93,7 +94,7 @@ export interface IEvaluatedThemes {
 export interface IEvaluatedConfig {
   tokens: IGlobalTokens<IToken>;
   screens: {
-    [name: string]: (css: string) => string;
+    [name: string]: (css: string, breakpoints: { [token: string]: string }) => string;
   };
   classnames: IEvaluatedClassnames;
   themeNames: string[];

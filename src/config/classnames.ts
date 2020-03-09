@@ -618,8 +618,8 @@ const classnames: IClassnames = {
     ),
   },
   flexBasis: {
-    tokens: ({ flex }) => ({
-      ...flex,
+    tokens: ({ size }) => ({
+      ...size,
       AUTO: {
         value: 'auto',
       },
@@ -646,7 +646,7 @@ const classnames: IClassnames = {
     ),
   },
   flexGrow: {
-    tokens: ({ flex, space }) => ({ ...flex, ...space }),
+    tokens: ({ flex, size }) => ({ ...flex, ...size }),
     css: (name, value) => `${name} {\n  flex-grow: ${value};\n}`,
     description: describeClassname(
       'flex-grow',
@@ -654,7 +654,7 @@ const classnames: IClassnames = {
     ),
   },
   flexShrink: {
-    tokens: ({ flex, space }) => ({ ...flex, ...space }),
+    tokens: ({ flex, size }) => ({ ...flex, ...size }),
     css: (name, value) => `${name} {\n  flex-shrink: ${value};\n}`,
     description: describeClassname(
       'flex-shrink',
@@ -1329,7 +1329,7 @@ const classnames: IClassnames = {
     ),
   },
   maxWidth: {
-    tokens: ({ size }) => size,
+    tokens: ({ size, breakpoints }) => ({ ...size, ...breakpoints }),
     css: (name, value) => `${name} {\n  max-width: ${value};\n}`,
     description: describeClassname(
       'max-width',
@@ -1345,7 +1345,7 @@ const classnames: IClassnames = {
     ),
   },
   minWidth: {
-    tokens: ({ size }) => size,
+    tokens: ({ size, breakpoints }) => ({ ...size, ...breakpoints }),
     css: (name, value) => `${name} {\n  min-width: ${value};\n}`,
     description: describeClassname(
       'min-width',
@@ -1609,11 +1609,12 @@ const classnames: IClassnames = {
     ),
   },
   width: {
-    tokens: ({ size }) => ({
+    tokens: ({ size, breakpoints }) => ({
       auto: {
         value: 'auto',
       },
       ...size,
+      ...breakpoints,
       SPAN_1_2: {
         value: '50%',
       },

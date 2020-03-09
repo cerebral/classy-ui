@@ -1,5 +1,5 @@
 import { IEvaluatedConfig } from '../types';
-import { allowedPseudoDecorators, camelToDash } from '../utils';
+import { allowedPseudoDecorators, camelToDash, getScreens } from '../utils';
 
 function convertClassnameToType(baseClass: string, token: string, config: IEvaluatedConfig) {
   const cssConstructor = config.classnames[baseClass].css;
@@ -115,7 +115,7 @@ ${allowedPseudoDecorators
   )
   .join('\n')}
 }
-export type TCompose = (...args: Array<IDecorators | TGroup | Themes | TClassname | boolean>) => TClassname;
+export type TCompose = (...args: Array<IDecorators | TGroup | Themes | TClassname | boolean | ''>) => TClassname;
 export type TTokens = { 
   ${Object.keys(config.classnames)
     .reduce<string[]>((aggr, baseClass) => {
@@ -152,7 +152,7 @@ ${Object.keys(config.screens)
     screen => `
   /**
    * \`\`\`css
-   * \\${config.screens[screen](`\n      $token\n`)}
+   * \\${config.screens[screen](`\n      $token\n`, getScreens(config))}
    * \`\`\`
    */
   export const ${screen}: TCompose;

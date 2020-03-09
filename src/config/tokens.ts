@@ -1,6 +1,12 @@
 import { IGlobalTokens, IToken } from '../types';
 
 const tokens: IGlobalTokens<string | IToken> = {
+  breakpoints: {
+    MOBILE: '640px',
+    TABLET: '768px',
+    LAPTOP: '1024px',
+    DESKTOP: '1280px',
+  },
   fontStyles: {
     FONT_STYLE_NORMAL: 'normal',
     FONT_STYLE_ITALIC: 'italic',

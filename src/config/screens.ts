@@ -1,10 +1,10 @@
 import { IScreens } from '../types';
 
 const screens: IScreens = {
-  mobile: css => `@media (max-width: 640px) {${css}}`,
-  tablet: css => `@media (max-width: 768px) {${css}}`,
-  laptop: css => `@media (max-width: 1024px) {${css}}`,
-  desktop: css => `@media (max-width: 1280px) {${css}}`,
+  mobile: (css, breakpoints) => `@media (min-width: ${breakpoints.MOBILE}) {${css}}`,
+  tablet: (css, breakpoints) => `@media (min-width: ${breakpoints.TABLET}) {${css}}`,
+  laptop: (css, breakpoints) => `@media (min-width: ${breakpoints.LAPTOP}) {${css}}`,
+  desktop: (css, breakpoints) => `@media (min-width: ${breakpoints.DESKTOP}) {${css}}`,
 };
 
 export default screens;
