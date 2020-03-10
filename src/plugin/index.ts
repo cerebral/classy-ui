@@ -25,10 +25,12 @@ if (process.env.NODE_ENV !== 'test') {
   try {
     const rootPath = join(process.cwd(), 'classy-ui.d.ts');
     const libPath = join(__dirname, '..', '..', 'lib', 'classy-ui.d.ts');
+    const esPath = join(__dirname, '..', '..', 'es', 'classy-ui.d.ts');
     const types = transformClassesToTypes(config);
 
     writeFileSync(rootPath, types);
     writeFileSync(libPath, types);
+    writeFileSync(esPath, types);
   } catch {
     // Codesandbox or some other unwritable environment
   }

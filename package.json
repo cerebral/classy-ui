@@ -9,7 +9,7 @@
   "jsnext:main": "es/index.js",
   "module": "es/index.js",
   "scripts": {
-    "build": "npm run build:lib & npm run build:es",
+    "build": "npm run build:lib & npm run build:es && node lib/config/create-types-script",
     "build:lib": "tsc --outDir lib --module commonjs",
     "build:es": "tsc --outDir es --module es2015",
     "build:storybook": "NODE_ENV=production build-storybook -s ./public",
