@@ -434,8 +434,8 @@ export const createProductionClassObjects = (
       return aggr.concat({
         id: `${camelToDash(key)}-${token}`,
         name: `${
-          derivedShortDecorators.length ? `${derivedShortDecorators}:` : ''
-        }${derivedShortClassname}__${derivedShortToken}`,
+          derivedShortDecorators.length ? `${derivedShortDecorators}-` : ''
+        }${derivedShortClassname}_${derivedShortToken}`,
         decorators,
         composition,
       });
@@ -466,7 +466,7 @@ export const createProductionClassObjects = (
   return [
     {
       id,
-      name: `${shortDecorators.length ? `${shortDecorators}:` : ''}${shortClassname}__${shortToken}`,
+      name: `${shortDecorators.length ? `${shortDecorators}-` : ''}${shortClassname}_${shortToken}`,
       decorators,
       composition,
     },
