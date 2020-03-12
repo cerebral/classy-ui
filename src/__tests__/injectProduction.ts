@@ -5,11 +5,12 @@ import {
   createProductionClassObjects,
   createProductionCss,
   evaluateConfig,
+  getUserConfig,
   injectProduction,
 } from '../utils';
 
 // tslint:disable-next-line
-const config = evaluateConfig(require('../../classy-ui.config.js'));
+const config = evaluateConfig(getUserConfig());
 const classes = transform(config);
 
 describe('INJECT PRODUCTION', () => {

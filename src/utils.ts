@@ -192,10 +192,21 @@ export const getUserConfig = () => {
       return config;
     }
   } catch (error) {
-    // tslint:disable-next-line
-    console.error(error);
+    if (!error.toString().includes('Cannot find module')) {
+      // tslint:disable-next-line
+      throw error;
+    }
+
     return {};
   }
+};
+
+export const getScreens = (config: IEvaluatedConfig) => {
+  return Object.keys(config.tokens.breakpoints).reduce((breakAggr, key) => {
+    breakAggr[key] = config.tokens.breakpoints[key].value;
+
+    return breakAggr;
+  }, {} as any);
 };
 
 export const createProductionCss = (productionClassesByType: IClassesByType, config: IEvaluatedConfig) => {
@@ -210,7 +221,7 @@ export const createProductionCss = (productionClassesByType: IClassesByType, con
       const screenCss = productionClassesByType.screens[screen].reduce((aggr, classCss) => {
         return aggr + classCss;
       }, '');
-      css += config.screens[screen](screenCss);
+      css += config.screens[screen](screenCss, getScreens(config));
     }
   });
 
@@ -322,7 +333,7 @@ export const injectDevelopment = (classCollection: IExtractedClasses, classes: I
         let css = '';
 
         if (composition in config.screens) {
-          css += config.screens[extractedClass.composition](classEntry);
+          css += config.screens[extractedClass.composition](classEntry, getScreens(config));
         } else {
           css = classEntry;
         }
@@ -444,8 +455,8 @@ export const createProductionClassObjects = (
       return aggr.concat({
         id: `${camelToDash(key)}-${token}`,
         name: `${
-          derivedShortDecorators.length ? `${derivedShortDecorators}:` : ''
-        }${derivedShortClassname}__${derivedShortToken}`,
+          derivedShortDecorators.length ? `${derivedShortDecorators}-` : ''
+        }${derivedShortClassname}_${derivedShortToken}`,
         decorators,
         composition,
       });
@@ -476,7 +487,7 @@ export const createProductionClassObjects = (
   return [
     {
       id,
-      name: `${shortDecorators.length ? `${shortDecorators}:` : ''}${shortClassname}__${shortToken}`,
+      name: `${shortDecorators.length ? `${shortDecorators}-` : ''}${shortClassname}_${shortToken}`,
       decorators,
       composition,
     },

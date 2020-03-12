@@ -1,9 +1,9 @@
 import { transform } from '../config/transform-config-to-classes';
 import { IExtractedClass, IExtractedClasses } from '../types';
-import { createClassObjects, createExtractedClasses, evaluateConfig, injectDevelopment } from '../utils';
+import { createClassObjects, createExtractedClasses, evaluateConfig, getUserConfig, injectDevelopment } from '../utils';
 
 // tslint:disable-next-line
-const config = evaluateConfig(require('../../classy-ui.config.js'));
+const config = evaluateConfig(getUserConfig());
 const classes = transform(config);
 
 describe('INJECT DEVELOPMENT', () => {

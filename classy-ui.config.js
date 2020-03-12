@@ -1,6 +1,7 @@
 // Used for testing
-module.exports = {
+module.exports = ({ tokens, screens }) => ({
   tokens: {
+    breakpoints: tokens.breakpoints,
     colors: {
       RED: 'red',
       BLUE: 'blue',
@@ -11,6 +12,7 @@ module.exports = {
       SPACE_1: '1rem',
     },
   },
+  screens,
   themes: {
     dark: {
       colors: {
@@ -19,4 +21,4 @@ module.exports = {
       },
     },
   },
-};
+});

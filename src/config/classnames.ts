@@ -618,7 +618,27 @@ const classnames: IClassnames = {
     ),
   },
   flexBasis: {
-    tokens: ({ flexBases }) => flexBases,
+    tokens: ({ size }) => ({
+      ...size,
+      AUTO: {
+        value: 'auto',
+      },
+      FILL: {
+        value: 'fill',
+      },
+      MAX_CONTENT: {
+        value: 'max-content',
+      },
+      MIN_CONTENT: {
+        value: 'min-content',
+      },
+      FIT_CONTENT: {
+        value: 'fit-content',
+      },
+      CONTENT: {
+        value: 'content',
+      },
+    }),
     css: (name, value) => `${name} {\n  flex-basis: ${value};\n}`,
     description: describeClassname(
       'flex-basis',
@@ -626,7 +646,7 @@ const classnames: IClassnames = {
     ),
   },
   flexGrow: {
-    tokens: ({ flexGrows }) => flexGrows,
+    tokens: ({ flex, size }) => ({ ...flex, ...size }),
     css: (name, value) => `${name} {\n  flex-grow: ${value};\n}`,
     description: describeClassname(
       'flex-grow',
@@ -634,7 +654,7 @@ const classnames: IClassnames = {
     ),
   },
   flexShrink: {
-    tokens: ({ flexShrinks }) => flexShrinks,
+    tokens: ({ flex, size }) => ({ ...flex, ...size }),
     css: (name, value) => `${name} {\n  flex-shrink: ${value};\n}`,
     description: describeClassname(
       'flex-shrink',
@@ -1309,7 +1329,7 @@ const classnames: IClassnames = {
     ),
   },
   maxWidth: {
-    tokens: ({ size }) => size,
+    tokens: ({ size, breakpoints }) => ({ ...size, ...breakpoints }),
     css: (name, value) => `${name} {\n  max-width: ${value};\n}`,
     description: describeClassname(
       'max-width',
@@ -1325,7 +1345,7 @@ const classnames: IClassnames = {
     ),
   },
   minWidth: {
-    tokens: ({ size }) => size,
+    tokens: ({ size, breakpoints }) => ({ ...size, ...breakpoints }),
     css: (name, value) => `${name} {\n  min-width: ${value};\n}`,
     description: describeClassname(
       'min-width',
@@ -1589,11 +1609,12 @@ const classnames: IClassnames = {
     ),
   },
   width: {
-    tokens: ({ size }) => ({
+    tokens: ({ size, breakpoints }) => ({
       auto: {
         value: 'auto',
       },
       ...size,
+      ...breakpoints,
       SPAN_1_2: {
         value: '50%',
       },
