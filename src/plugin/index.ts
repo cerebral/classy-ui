@@ -102,6 +102,10 @@ export function processReferences(babel: any, state: any, refs: any) {
     processTokens(refs.tokens, isProduction);
   }
 
+  if (refs.t) {
+    processTokens(refs.t, isProduction);
+  }
+
   if (refs.group) {
     processGroup(refs.group);
   }
@@ -118,6 +122,10 @@ export function processReferences(babel: any, state: any, refs: any) {
 
   if (refs.compose) {
     processCompose(refs.compose);
+  }
+
+  if (refs.c) {
+    processCompose(refs.c);
   }
 
   // We require access to the babel options, so have to do it here
@@ -151,7 +159,7 @@ export function processReferences(babel: any, state: any, refs: any) {
         if (
           t.isImportSpecifier(b.path.node) &&
           b.path.parent.source.value.startsWith('classy-ui') &&
-          b.identifier.name === 'compose'
+          b.identifier.name === 'compose' || b.identifier.name === 'c'
         ) {
           throw path.buildCodeFrameError(`CLASSY-UI: don't nest c/compose calls`);
         }
