@@ -162,5 +162,9 @@ declare module 'classy-ui' {
   `,
     )
     .join('\n')}
+}
+
+declare module 'classy-ui/macro' {
+  export * from 'classy-ui';
 }`;
 };
