@@ -134,6 +134,21 @@ export interface IDecorators {
    */
   focusWithin: IDecorators;
 
+
+  /**
+   * ```css
+   * $token::before {}
+   * ```
+   */
+  before: IDecorators;
+
+  /**
+   * ```css
+   * $token::after {}
+   * ```
+   */
+  after: IDecorators;
+
 }
 export type TCompose = (...args: Array<IDecorators | TGroup | Themes | TClassname | boolean | ''>) => TClassname;
 export type TTokens = { 

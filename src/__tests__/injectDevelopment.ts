@@ -22,6 +22,13 @@ describe('INJECT DEVELOPMENT', () => {
 
     expect(injectDevelopment(classCollection, classes, config)).toMatchSnapshot();
   });
+  test('should inject with pseudo element', () => {
+    const classCollection: IExtractedClasses = createExtractedClasses(
+      createClassObjects({ composition: 'compose', baseClass: 'color', token: 'RED', decorators: ['before'] }, classes),
+    );
+
+    expect(injectDevelopment(classCollection, classes, config)).toMatchSnapshot();
+  });
   test('should inject with breakpoint', () => {
     const classCollection: IExtractedClasses = createExtractedClasses(
       createClassObjects({ composition: 'tablet', baseClass: 'color', token: 'RED', decorators: [] }, classes),
@@ -40,6 +47,16 @@ describe('INJECT DEVELOPMENT', () => {
     const classCollection: IExtractedClasses = createExtractedClasses(
       createClassObjects(
         { composition: 'compose', baseClass: 'color', token: 'RED', decorators: ['hover', 'firstChild'] },
+        classes,
+      ),
+    );
+
+    expect(injectDevelopment(classCollection, classes, config)).toMatchSnapshot();
+  });
+  test('should inject with both pseudo selectors and pseudo elements', () => {
+    const classCollection: IExtractedClasses = createExtractedClasses(
+      createClassObjects(
+        { composition: 'compose', baseClass: 'color', token: 'RED', decorators: ['hover', 'before'] },
         classes,
       ),
     );

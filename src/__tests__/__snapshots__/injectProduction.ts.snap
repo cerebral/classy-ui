@@ -62,6 +62,12 @@ exports[`INJECT PRODUCTION should inject themes 1`] = `
 }}:root{--colors-GREEN:green;}.themes-dark{--colors-GREEN:yellow;}"
 `;
 
+exports[`INJECT PRODUCTION should inject with both pseudo selectors and pseudo elements 1`] = `
+".AB-A_A:hover::before {
+  color: red;
+}.themes-dark{}"
+`;
+
 exports[`INJECT PRODUCTION should inject with breakpoint 1`] = `
 "@media (max-width: 768px) {.A-A_A {
   color: red;
@@ -70,6 +76,12 @@ exports[`INJECT PRODUCTION should inject with breakpoint 1`] = `
 
 exports[`INJECT PRODUCTION should inject with multiple pseudo selectors 1`] = `
 ".AB-A_A:hover:first-child {
+  color: red;
+}.themes-dark{}"
+`;
+
+exports[`INJECT PRODUCTION should inject with pseudo element 1`] = `
+".A-A_A::before {
   color: red;
 }.themes-dark{}"
 `;

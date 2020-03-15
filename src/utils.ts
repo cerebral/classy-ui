@@ -31,6 +31,8 @@ export const allowedPseudoDecorators = [
   'focusWithin',
 ];
 
+export const allowedPseudoElementDecorators = ['before', 'after'];
+
 export const getClassesFromConfig = (classnameKey: string, config: IEvaluatedConfig) => {
   const classname = config.classnames[classnameKey];
 
@@ -240,9 +242,10 @@ export const createClassEntry = (name: string, decorators: string[], css: (name:
   const pseudoDecorators = decorators
     .filter(decorator => allowedPseudoDecorators.includes(decorator))
     .map(decorator => camelToDash(decorator));
+  const pseudoElementDecorators = decorators.filter(decorator => allowedPseudoElementDecorators.includes(decorator));
   const evaluatedName = `.${name.replace(/\:/g, '\\:')}${
     pseudoDecorators.length ? `:${pseudoDecorators.join(':')}` : ''
-  }`;
+  }${pseudoElementDecorators.length ? `::${pseudoElementDecorators.join('::')}` : ''}`;
 
   return `${groupDecorators.length ? `.group:${groupDecorators.join(':')} ` : ''}${css(evaluatedName)}`;
 };

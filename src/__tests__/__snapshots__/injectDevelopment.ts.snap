@@ -72,6 +72,15 @@ Array [
 ]
 `;
 
+exports[`INJECT DEVELOPMENT should inject with both pseudo selectors and pseudo elements 1`] = `
+Array [
+  "before:hover:color__RED",
+  ".before\\\\:hover\\\\:color__RED:hover::before {
+  color: red;
+}",
+]
+`;
+
 exports[`INJECT DEVELOPMENT should inject with breakpoint 1`] = `
 Array [
   "tablet:color__RED",
@@ -85,6 +94,15 @@ exports[`INJECT DEVELOPMENT should inject with multiple pseudo selectors 1`] = `
 Array [
   "firstChild:hover:color__RED",
   ".firstChild\\\\:hover\\\\:color__RED:hover:first-child {
+  color: red;
+}",
+]
+`;
+
+exports[`INJECT DEVELOPMENT should inject with pseudo element 1`] = `
+Array [
+  "before:color__RED",
+  ".before\\\\:color__RED::before {
   color: red;
 }",
 ]
