@@ -142,12 +142,37 @@ export interface IDecorators {
    */
   before: IDecorators;
 
+
   /**
    * ```css
    * $token::after {}
    * ```
    */
   after: IDecorators;
+
+
+  /**
+   * ```css
+   * $token::first-line {}
+   * ```
+   */
+  firstLine: IDecorators;
+
+
+  /**
+   * ```css
+   * $token::first-letter {}
+   * ```
+   */
+  firstLetter: IDecorators;
+
+
+  /**
+   * ```css
+   * $token::selection {}
+   * ```
+   */
+  selection: IDecorators;
 
 }
 export type TCompose = (...args: Array<IDecorators | TGroup | Themes | TClassname | boolean | ''>) => TClassname;
