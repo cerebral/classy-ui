@@ -1,5 +1,5 @@
 import { IEvaluatedConfig } from '../types';
-import { allowedPseudoDecorators, camelToDash, getScreens } from '../utils';
+import { allowedPseudoDecorators, allowedPseudoElementDecorators, camelToDash, getScreens } from '../utils';
 
 function convertClassnameToType(baseClass: string, token: string, config: IEvaluatedConfig) {
   const cssConstructor = config.classnames[baseClass].css;
@@ -115,9 +115,21 @@ declare module 'classy-ui' {
   `,
     )
     .join('\n')}
+  ${allowedPseudoElementDecorators
+    .map(
+      decorator => `
+    /**
+     * \`\`\`css
+     * $token::${camelToDash(decorator)} {}
+     * \`\`\`
+     */
+    ${decorator}: IDecorators;
+  `,
+    )
+    .join('\n')}
   }
   export type TCompose = (...args: Array<IDecorators | TGroup | Themes | TClassname | boolean | ''>) => TClassname;
-  export type TTokens = { 
+  export type TTokens = {
     ${Object.keys(config.classnames)
       .reduce<string[]>((aggr, baseClass) => {
         return aggr.concat(`
