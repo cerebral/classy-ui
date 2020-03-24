@@ -28,7 +28,15 @@ if (process.env.NODE_ENV !== 'test') {
     const esPath = join(__dirname, '..', '..', 'es', 'classy-ui.d.ts');
     const types = transformClassesToTypes(config);
 
-    writeFileSync(rootPath, types);
+    writeFileSync(
+      rootPath,
+      `
+declare module 'classy-ui' {\n${types}\n}
+declare module 'classy-ui/macro' {
+  export * from 'classy-ui'
+}
+`,
+    );
     writeFileSync(libPath, types);
     writeFileSync(esPath, types);
   } catch {
