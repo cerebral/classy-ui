@@ -159,5 +159,14 @@ import { compose, tokens, mobile } from 'classy-ui'
 
 compose(tokens.color.RED, mobile(tokens.color.RED))`,
     },
+    {
+      title: 'should allow factory usage with screens',
+      code: `
+import { compose, tokens, mobile } from 'classy-ui'
+
+const myFactory = () => compose(tokens.color.RED)
+
+const result = compose(mobile(myFactory()))`,
+    },
   ],
 });

@@ -1,5 +1,28 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`classy-ui should allow factory usage with screens: should allow factory usage with screens 1`] = `
+
+import { compose, tokens, mobile } from 'classy-ui'
+
+const myFactory = () => compose(tokens.color.RED)
+
+const result = compose(mobile(myFactory()))
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+import { addClasses as _addClasses } from 'classy-ui/runtime';
+import { fixSpecificity as _fixSpecificity2 } from 'classy-ui/runtime';
+import { fixSpecificity as _fixSpecificity } from 'classy-ui/runtime';
+
+const myFactory = () => 'color__RED ';
+
+const result = _fixSpecificity2(_fixSpecificity(myFactory()));
+
+_addClasses(['color__RED', '.color__RED {\\n  color: red;\\n}']);
+
+
+`;
+
 exports[`classy-ui should allow group with conditional after it: should allow group with conditional after it 1`] = `
 
 import { compose, group, tokens } from 'classy-ui'
