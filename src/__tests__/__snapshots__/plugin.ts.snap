@@ -10,16 +10,11 @@ const result = compose(mobile(myFactory()))
 
       ↓ ↓ ↓ ↓ ↓ ↓
 
-import { addClasses as _addClasses } from 'classy-ui/runtime';
-import { fixSpecificity as _fixSpecificity2 } from 'classy-ui/runtime';
-import { fixSpecificity as _fixSpecificity } from 'classy-ui/runtime';
-
-const myFactory = () => 'color__RED ';
-
-const result = _fixSpecificity2(_fixSpecificity(myFactory()));
-
-_addClasses(['color__RED', '.color__RED {\\n  color: red;\\n}']);
-
+SyntaxError: unknown: CLASSY-UI: using dynamic values isn't allowed here
+[0m [90m 3 | [39m[36mconst[39m myFactory [33m=[39m () [33m=>[39m compose(tokens[33m.[39mcolor[33m.[39m[33mRED[39m)[0m
+[0m [90m 4 | [39m[0m
+[0m[31m[1m>[22m[39m[90m 5 | [39m[36mconst[39m result [33m=[39m compose(mobile(myFactory()))[0m
+[0m [90m   | [39m                              [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[0m
 
 `;
 
@@ -34,7 +29,7 @@ compose(group, true ? tokens.color.RED : ' ')
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 import { fixSpecificity as _fixSpecificity } from 'classy-ui/runtime';
 
-_fixSpecificity((true ? 'color__RED ' : ' ') + 'group ');
+_fixSpecificity(true ? 'color__RED ' : ' ', 'group');
 
 _addClasses(['color__RED', '.color__RED {\\n  color: red;\\n}']);
 
@@ -127,10 +122,10 @@ import { fixSpecificity as _fixSpecificity } from 'classy-ui/runtime';
 const buttonBlue = 'color__BLUE ';
 const buttonGreen = 'color__GREEN ';
 
-const buttonRed = _fixSpecificity(buttonBlue + buttonGreen + 'color__RED ');
+const buttonRed = _fixSpecificity(buttonBlue, buttonGreen, 'color__RED');
 
 {
-  className: _fixSpecificity2(buttonRed + 'hover:color__GREEN ');
+  className: _fixSpecificity2(buttonRed, 'hover:color__GREEN');
 }
 
 _addClasses([
@@ -160,7 +155,7 @@ import { fixSpecificity as _fixSpecificity } from 'classy-ui/runtime';
 const aCompose = 'color__BLUE background-color__BLUE ';
 const moreCompose = 'color__GREEN background-color__GREEN ';
 
-_fixSpecificity(aCompose + moreCompose + 'color__RED background-color__RED ');
+_fixSpecificity(aCompose, moreCompose, 'color__RED background-color__RED');
 
 _addClasses([
   'color__BLUE',
@@ -290,7 +285,7 @@ compose(group, someFunction())
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 import { fixSpecificity as _fixSpecificity } from 'classy-ui/runtime';
 
-_fixSpecificity(someFunction() + 'group ');
+_fixSpecificity(someFunction(), 'group');
 
 _addClasses([]);
 

@@ -28,16 +28,18 @@ export const addClasses = (classes: string[]) => {
   }
 };
 
-export const fixSpecificity = (classnames: string) => {
+export const fixSpecificity = (...classnames: string[]) => {
   const a = new Map();
-  for (const n of classnames.split(' ')) {
-    a.set(n.substr(0, n.indexOf(process.env.NODE_ENV === 'production' ? '_' : '__')), n);
+  for (const name of classnames) {
+    for (const n of name.split(' ')) {
+      a.set(n.substr(0, n.indexOf(process.env.NODE_ENV === 'production' ? '_' : '__')), n);
+    }
   }
-  classnames = '';
+  let classname = '';
   for (const n of a.values()) {
-    classnames += `${n} `;
+    classname += `${n} `;
   }
-  return classnames;
+  return classname;
 };
 
 const throwError = () => {
