@@ -1,23 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`classy-ui should allow factory usage with screens: should allow factory usage with screens 1`] = `
-
-import { compose, tokens, mobile } from 'classy-ui'
-
-const myFactory = () => compose(tokens.color.RED)
-
-const result = compose(mobile(myFactory()))
-
-      ↓ ↓ ↓ ↓ ↓ ↓
-
-SyntaxError: unknown: CLASSY-UI: using dynamic values isn't allowed here
-[0m [90m 3 | [39m[36mconst[39m myFactory [33m=[39m () [33m=>[39m compose(tokens[33m.[39mcolor[33m.[39m[33mRED[39m)[0m
-[0m [90m 4 | [39m[0m
-[0m[31m[1m>[22m[39m[90m 5 | [39m[36mconst[39m result [33m=[39m compose(mobile(myFactory()))[0m
-[0m [90m   | [39m                              [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[0m
-
-`;
-
 exports[`classy-ui should allow group with conditional after it: should allow group with conditional after it 1`] = `
 
 import { compose, group, tokens } from 'classy-ui'
@@ -305,6 +287,24 @@ c('themes-dark ');
 
 _addClasses([]);
 
+
+`;
+
+exports[`classy-ui should not allow factory usage with screens: should not allow factory usage with screens 1`] = `
+
+import { compose, tokens, mobile } from 'classy-ui'
+
+const myFactory = () => compose(tokens.color.RED)
+
+const result = compose(mobile(myFactory()))
+
+      ↓ ↓ ↓ ↓ ↓ ↓
+
+SyntaxError: unknown: CLASSY-UI: using dynamic values isn't allowed here
+[0m [90m 3 | [39m[36mconst[39m myFactory [33m=[39m () [33m=>[39m compose(tokens[33m.[39mcolor[33m.[39m[33mRED[39m)[0m
+[0m [90m 4 | [39m[0m
+[0m[31m[1m>[22m[39m[90m 5 | [39m[36mconst[39m result [33m=[39m compose(mobile(myFactory()))[0m
+[0m [90m   | [39m                              [31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[31m[1m^[22m[39m[0m
 
 `;
 

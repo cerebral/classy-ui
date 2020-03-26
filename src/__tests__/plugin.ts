@@ -161,7 +161,7 @@ compose(tokens.color.RED, mobile(tokens.color.RED))`,
     },
     {
       error: true,
-      title: 'should allow factory usage with screens',
+      title: 'should not allow factory usage with screens',
       code: `
 import { compose, tokens, mobile } from 'classy-ui'
 

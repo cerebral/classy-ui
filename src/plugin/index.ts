@@ -151,7 +151,7 @@ export function processReferences(babel: any, state: any, refs: any) {
     state.file.ast.program.body.push(runtimeCall);
   }
 
-  function processCompose(cRefs: any[], allowDynamicValuesInExpression:boolean = true) {
+  function processCompose(cRefs: any[], allowDynamicValuesInExpression = true) {
     cRefs.forEach((path: any) => {
       if (t.isCallExpression(path.parentPath.parent)) {
         const b = path.scope.getBinding(path.parent.callee.name);
@@ -228,7 +228,7 @@ export function processReferences(babel: any, state: any, refs: any) {
     });
   }
 
-  function convertToExpression(classAttribs: any[], allowDynamicValuesInExpression: boolean = true) {
+  function convertToExpression(classAttribs: any[], allowDynamicValuesInExpression = true) {
     if (classAttribs.length === 0) {
       return t.stringLiteral(' ');
     }
@@ -256,12 +256,15 @@ export function processReferences(babel: any, state: any, refs: any) {
       return t.stringLiteral(strings.join(''));
     }
 
+    let max: number;
+    let start: number;
+
     if (strings.length === 0) {
       if (needsRuntime) {
         return t.callExpression(addNamed(state.file.path, 'fixSpecificity', 'classy-ui/runtime'), others);
       } else {
-        const max = others.length - 1;
-        let start = others[max];
+        max = others.length - 1;
+        start = others[max];
         for (let i = max - 1; i >= 0; i--) {
           start = t.binaryExpression('+', others[i], start);
         }
@@ -270,11 +273,14 @@ export function processReferences(babel: any, state: any, refs: any) {
     }
 
     if (needsRuntime) {
-      return t.callExpression(addNamed(state.file.path, 'fixSpecificity', 'classy-ui/runtime'), [...others, t.stringLiteral(strings.join('').trim())]);
+      return t.callExpression(addNamed(state.file.path, 'fixSpecificity', 'classy-ui/runtime'), [
+        ...others,
+        t.stringLiteral(strings.join('').trim()),
+      ]);
     }
 
-    const max = others.length - 1;
-    let start = others[max];
+    max = others.length - 1;
+    start = others[max];
     for (let i = max - 1; i >= 0; i--) {
       start = t.binaryExpression('+', others[i], start);
     }
