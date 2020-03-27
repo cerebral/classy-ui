@@ -1,6 +1,6 @@
 {
   "name": "classy-ui",
-  "version": "10.2.1",
+  "version": "11.0.0",
   "description": "Design tokens at your fingertips",
   "author": "Christian Alfoni <christianalfoni@gmail.com>",
   "license": "MIT",
@@ -10,7 +10,7 @@
     "build": "npm run build:lib && node lib/config/create-types-script",
     "build:lib": "tsc --outDir lib --module commonjs",
     "build:storybook": "NODE_ENV=production build-storybook -s ./public",
-    "clean": "rimraf es lib coverage",
+    "clean": "rimraf es lib coverage storybook-static node_modules/.cache/storybook",
     "typecheck": "tsc --noEmit",
     "lint": "tslint --project tsconfig.json --format stylish",
     "format": "prettier '**/*.{md,js,jsx,json,ts,tsx}' --write",

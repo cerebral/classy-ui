@@ -6008,7 +6008,7 @@ null
   
     /**
      * ```css
-     * \@media (max-width: 640px) {
+     * \@media (min-width: 640px) {
       $token
 }
      * ```
@@ -6018,7 +6018,7 @@ null
 
     /**
      * ```css
-     * \@media (max-width: 768px) {
+     * \@media (min-width: 768px) {
       $token
 }
      * ```
@@ -6028,7 +6028,7 @@ null
 
     /**
      * ```css
-     * \@media (max-width: 1024px) {
+     * \@media (min-width: 1024px) {
       $token
 }
      * ```
@@ -6038,7 +6038,7 @@ null
 
     /**
      * ```css
-     * \@media (max-width: 1280px) {
+     * \@media (min-width: 1280px) {
       $token
 }
      * ```
