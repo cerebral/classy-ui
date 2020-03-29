@@ -1,6 +1,6 @@
 {
   "name": "classy-ui",
-  "version": "11.0.1",
+  "version": "11.0.2",
   "description": "Design tokens at your fingertips",
   "author": "Christian Alfoni <christianalfoni@gmail.com>",
   "license": "MIT",
@@ -8,7 +8,7 @@
   "main": "lib/index.js",
   "types": "lib/classy-ui.d.ts",
   "scripts": {
-    "build": "npm run build:lib && node lib/config/create-types-script",
+    "build": "npm run build:lib",
     "build:lib": "tsc --outDir lib --module commonjs",
     "build:storybook": "NODE_ENV=production build-storybook -s ./public",
     "clean": "rimraf es lib coverage storybook-static node_modules/.cache/storybook",
@@ -25,7 +25,7 @@
     "test:cypress:development": "cypress run --spec \"integration/development.spec.js\"",
     "test:cypress:production": "cypress run --spec \"integration/production.spec.js\"",
     "test:watch": "jest --env=jsdom --watch --updateSnapshot",
-    "prepublishOnly": "npm run build && npm run test && npm run test:development && npm run test:production",
+    "prepublishOnly": "npm run build && npm run test && npm run test:development && npm run test:production && node lib/config/create-types-script",
     "prebuild": "npm run clean",
     "postbuild": "rimraf {lib,es}/**/__tests__ {lib,es}/**/*.{spec,test}.{js,d.ts,js.map}",
     "posttest": "npm run typecheck && npm run lint",
