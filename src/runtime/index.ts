@@ -2,29 +2,56 @@ const isBrowser = typeof document !== 'undefined';
 
 const classCache = new Set<string>();
 
-let style: HTMLStyleElement;
+const screenStyles: HTMLStyleElement[] = [];
+let commonStyle: HTMLStyleElement;
+
 if (isBrowser) {
-  style = document.createElement('style');
+  commonStyle = document.createElement('style');
   const head = document.querySelector('head');
-  head?.appendChild(style);
+  head?.appendChild(commonStyle);
 }
 
-export const addClasses = (classes: string[]) => {
-  let css = '';
-  for (let x = 0; x < classes.length; x += 2) {
-    const className = classes[x];
+export const addClasses = (classes: Array<string | number>) => {
+  let commonCss = '';
+  const screenCss: { [index: string]: string } = {};
+  for (let x = 0; x < classes.length; x += 3) {
+    const className = classes[x] as string;
 
     if (classCache.has(className)) {
       continue;
     }
     classCache.add(className);
     const cssString = classes[x + 1];
+    const styleIndex = classes[x + 2] as number;
 
-    css += `${cssString}\n`;
+    if (styleIndex === -1) {
+      commonCss += `${cssString}\n`;
+    } else {
+      screenCss[styleIndex] = `${screenCss[styleIndex] || ''}${cssString}\n`;
+    }
   }
 
   if (isBrowser) {
-    style.appendChild(document.createTextNode(css));
+    if (commonCss) {
+      commonStyle.appendChild(document.createTextNode(commonCss));
+    }
+
+    // We have to insert screens in order due to specificity issues
+    Object.keys(screenCss).forEach(stringIndex => {
+      const index = Number(stringIndex);
+
+      if (!screenStyles[index]) {
+        screenStyles[index] = document.createElement('style');
+
+        const nextExistingStyleTag = screenStyles.slice(index)[1];
+        const elToInsertBefore = nextExistingStyleTag || commonStyle;
+        const head = document.querySelector('head');
+
+        head?.insertBefore(screenStyles[index], elToInsertBefore);
+      }
+
+      screenStyles[index].appendChild(document.createTextNode(screenCss[stringIndex]));
+    });
   }
 };
 
