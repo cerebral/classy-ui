@@ -24,7 +24,7 @@ Array [
 exports[`INJECT DEVELOPMENT should inject both pseudo selector and breakpoint 1`] = `
 Array [
   "hover:tablet:color__RED",
-  "@media (max-width: 768px) {.hover\\\\:tablet\\\\:color__RED:hover {
+  "@media (min-width: 768px) {.hover\\\\:tablet\\\\:color__RED:hover {
   color: red;
 }}",
 ]
@@ -43,11 +43,11 @@ Array [
 exports[`INJECT DEVELOPMENT should inject multiple 1`] = `
 Array [
   "tablet:color__RED",
-  "@media (max-width: 768px) {.tablet\\\\:color__RED {
+  "@media (min-width: 768px) {.tablet\\\\:color__RED {
   color: red;
 }}",
   "hover:tablet:color__BLUE",
-  "@media (max-width: 768px) {.hover\\\\:tablet\\\\:color__BLUE:hover {
+  "@media (min-width: 768px) {.hover\\\\:tablet\\\\:color__BLUE:hover {
   color: blue;
 }}",
 ]
@@ -65,7 +65,7 @@ Array [
 exports[`INJECT DEVELOPMENT should inject themes 1`] = `
 Array [
   "tablet:color__GREEN",
-  "@media (max-width: 768px) {.tablet\\\\:color__GREEN {
+  "@media (min-width: 768px) {.tablet\\\\:color__GREEN {
   color: var(--colors-GREEN);
 }}:root{--colors-GREEN:green;}
 .themes-dark{--colors-GREEN:yellow;}",
@@ -84,7 +84,7 @@ Array [
 exports[`INJECT DEVELOPMENT should inject with breakpoint 1`] = `
 Array [
   "tablet:color__RED",
-  "@media (max-width: 768px) {.tablet\\\\:color__RED {
+  "@media (min-width: 768px) {.tablet\\\\:color__RED {
   color: red;
 }}",
 ]

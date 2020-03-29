@@ -1,7 +1,5 @@
 {
   "name": "classy-ui/plugin",
   "private": true,
-  "main": "../lib/plugin",
-  "module": "../es/plugin",
-  "jsnext:main": "../es/plugin"
+  "main": "../lib/plugin"
 }

@@ -1,4 +1,4 @@
 {
   "presets": ["@babel/preset-typescript"],
-  "plugins": [["classy-ui/plugin", { "output": "public" }]]
+  "plugins": [["classy-ui/plugin", { "output": "storybook-static" }]]
 }

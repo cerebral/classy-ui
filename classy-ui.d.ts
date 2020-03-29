@@ -1,107 +1,5 @@
 
 declare module 'classy-ui' {
-export type TClassname = string & "CLASSNAME";
-export enum Themes {
-  dark = "themes-dark"
-}
-export type TGroup = 'GROUP'
-export interface IDecorators {
-  /**
-   * ```css
-   * group:hover $token {}
-   * ```
-   */
-  groupHover: IDecorators;
-  /**
-   * ```css
-   * group:focus $token {}
-   * ```
-   */
-  groupFocus: IDecorators;
-  /**
-   * ```css
-   * group:active $token {}
-   * ```
-   */
-  groupActive: IDecorators;
-  /**
-   * ```css
-   * group:first-child $token {}
-   * ```
-   */
-  groupFirstChild: IDecorators;
-  /**
-   * ```css
-   * group:last-child $token {}
-   * ```
-   */
-  groupLastChild: IDecorators;
-  /**
-   * ```css
-   * group:odd-child $token {}
-   * ```
-   */
-  groupOddChild: IDecorators;
-  /**
-   * ```css
-   * group:even-child $token {}
-   * ```
-   */
-  groupEvenChild: IDecorators;
-  /**
-   * ```css
-   * group:focus-within $token {}
-   * ```
-   */
-  groupFocusWithin: IDecorators;
-
-  /**
-   * ```css
-   * $token:hover {}
-   * ```
-   */
-  hover: IDecorators;
-
-
-  /**
-   * ```css
-   * $token:focus {}
-   * ```
-   */
-  focus: IDecorators;
-
-
-  /**
-   * ```css
-   * $token:active {}
-   * ```
-   */
-  active: IDecorators;
-
-
-  /**
-   * ```css
-   * $token:disabled {}
-   * ```
-   */
-  disabled: IDecorators;
-
-
-  /**
-   * ```css
-   * $token:visited {}
-   * ```
-   */
-  visited: IDecorators;
-
-
-  /**
-   * ```css
-   * $token:first-child {}
-   * ```
-   */
-  firstChild: IDecorators;
-
 
   /**
    * ```css
@@ -178,14 +76,152 @@ export interface IDecorators {
 export type TCompose = (...args: Array<IDecorators | TGroup | Themes | TClassname | boolean | ''>) => TClassname;
 export type TTokens = { 
   
+  export type TClassname = string & "CLASSNAME";
+  export enum Themes {
+    dark = "themes-dark"
+  }
+  export type TGroup = 'GROUP'
+  export interface IDecorators {
+    /**
+     * ```css
+     * group:hover $token {}
+     * ```
+     */
+    groupHover: IDecorators;
+    /**
+     * ```css
+     * group:focus $token {}
+     * ```
+     */
+    groupFocus: IDecorators;
+    /**
+     * ```css
+     * group:active $token {}
+     * ```
+     */
+    groupActive: IDecorators;
+    /**
+     * ```css
+     * group:first-child $token {}
+     * ```
+     */
+    groupFirstChild: IDecorators;
+    /**
+     * ```css
+     * group:last-child $token {}
+     * ```
+     */
+    groupLastChild: IDecorators;
+    /**
+     * ```css
+     * group:odd-child $token {}
+     * ```
+     */
+    groupOddChild: IDecorators;
+    /**
+     * ```css
+     * group:even-child $token {}
+     * ```
+     */
+    groupEvenChild: IDecorators;
+    /**
+     * ```css
+     * group:focus-within $token {}
+     * ```
+     */
+    groupFocusWithin: IDecorators;
   
-/**
-  * ### box-sizing
+    /**
+     * ```css
+     * $token:hover {}
+     * ```
+     */
+    hover: IDecorators;
+  
+
+    /**
+     * ```css
+     * $token:focus {}
+     * ```
+     */
+    focus: IDecorators;
+  
+
+    /**
+     * ```css
+     * $token:active {}
+     * ```
+     */
+    active: IDecorators;
+  
+
+    /**
+     * ```css
+     * $token:disabled {}
+     * ```
+     */
+    disabled: IDecorators;
+  
+
+    /**
+     * ```css
+     * $token:visited {}
+     * ```
+     */
+    visited: IDecorators;
+  
+
+    /**
+     * ```css
+     * $token:first-child {}
+     * ```
+     */
+    firstChild: IDecorators;
+  
+
+    /**
+     * ```css
+     * $token:last-child {}
+     * ```
+     */
+    lastChild: IDecorators;
+  
+
+    /**
+     * ```css
+     * $token:odd-child {}
+     * ```
+     */
+    oddChild: IDecorators;
+  
+
+    /**
+     * ```css
+     * $token:even-child {}
+     * ```
+     */
+    evenChild: IDecorators;
+  
+
+    /**
+     * ```css
+     * $token:focus-within {}
+     * ```
+     */
+    focusWithin: IDecorators;
+  
+  }
+  export type TCompose = (...args: Array<IDecorators | TGroup | Themes | TClassname | boolean | ''>) => TClassname;
+  export type TTokens = { 
+    
+    
+  /**
+    * ### box-sizing
 Sets how the total width and height of an element is calculated.
 [Mozilla Developer Network: box-sizing](https://developer.mozilla.org/en-US/docs/Web/CSS/box-sizing).
-  */
-  boxSizing: {
-    
+    */
+    boxSizing: {
+      
   /**
    
    
@@ -195,7 +231,7 @@ Sets how the total width and height of an element is calculated.
    * }
    * ```
    */
-  "CONTENT_BOX": IDecorators;
+  readonly CONTENT_BOX: IDecorators;
   
 
   /**
@@ -207,19 +243,19 @@ Sets how the total width and height of an element is calculated.
    * }
    * ```
    */
-  "BORDER_BOX": IDecorators;
+  readonly BORDER_BOX: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### display
+
+    
+  /**
+    * ### display
 The display CSS property sets whether an element is treated as a block or inline element and the layout used for its children, such as flow layout, grid or flex.
 [Mozilla Developer Network: display](https://developer.mozilla.org/en-US/docs/Web/CSS/display).
-  */
-  display: {
-    
+    */
+    display: {
+      
   /**
    
    
@@ -229,7 +265,7 @@ The display CSS property sets whether an element is treated as a block or inline
    * }
    * ```
    */
-  "BLOCK": IDecorators;
+  readonly BLOCK: IDecorators;
   
 
   /**
@@ -241,7 +277,7 @@ The display CSS property sets whether an element is treated as a block or inline
    * }
    * ```
    */
-  "INLINE_BLOCK": IDecorators;
+  readonly INLINE_BLOCK: IDecorators;
   
 
   /**
@@ -253,7 +289,7 @@ The display CSS property sets whether an element is treated as a block or inline
    * }
    * ```
    */
-  "INLINE": IDecorators;
+  readonly INLINE: IDecorators;
   
 
   /**
@@ -265,7 +301,7 @@ The display CSS property sets whether an element is treated as a block or inline
    * }
    * ```
    */
-  "INLINE_FLEX": IDecorators;
+  readonly INLINE_FLEX: IDecorators;
   
 
   /**
@@ -277,7 +313,7 @@ The display CSS property sets whether an element is treated as a block or inline
    * }
    * ```
    */
-  "TABLE": IDecorators;
+  readonly TABLE: IDecorators;
   
 
   /**
@@ -289,7 +325,7 @@ The display CSS property sets whether an element is treated as a block or inline
    * }
    * ```
    */
-  "TABLE_ROW": IDecorators;
+  readonly TABLE_ROW: IDecorators;
   
 
   /**
@@ -301,7 +337,7 @@ The display CSS property sets whether an element is treated as a block or inline
    * }
    * ```
    */
-  "TABLE_CELL": IDecorators;
+  readonly TABLE_CELL: IDecorators;
   
 
   /**
@@ -313,7 +349,7 @@ The display CSS property sets whether an element is treated as a block or inline
    * }
    * ```
    */
-  "GRID": IDecorators;
+  readonly GRID: IDecorators;
   
 
   /**
@@ -325,7 +361,7 @@ The display CSS property sets whether an element is treated as a block or inline
    * }
    * ```
    */
-  "FLEX": IDecorators;
+  readonly FLEX: IDecorators;
   
 
   /**
@@ -337,19 +373,19 @@ The display CSS property sets whether an element is treated as a block or inline
    * }
    * ```
    */
-  "HIDDEN": IDecorators;
+  readonly HIDDEN: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### table-layout
+
+    
+  /**
+    * ### table-layout
 The table-layout CSS property sets the algorithm used to lay out <table> cells, rows, and columns.
 [Mozilla Developer Network: table-layout](https://developer.mozilla.org/en-US/docs/Web/CSS/table-layout).
-  */
-  tableLayout: {
-    
+    */
+    tableLayout: {
+      
   /**
    
    
@@ -359,7 +395,7 @@ The table-layout CSS property sets the algorithm used to lay out <table> cells, 
    * }
    * ```
    */
-  "AUTO": IDecorators;
+  readonly AUTO: IDecorators;
   
 
   /**
@@ -371,19 +407,19 @@ The table-layout CSS property sets the algorithm used to lay out <table> cells, 
    * }
    * ```
    */
-  "FIXED": IDecorators;
+  readonly FIXED: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### position
+
+    
+  /**
+    * ### position
 The position CSS property sets how an element is positioned in a document. The top, right, bottom, and left properties determine the final location of positioned elements.
 [Mozilla Developer Network: position](https://developer.mozilla.org/en-US/docs/Web/CSS/position).
-  */
-  position: {
-    
+    */
+    position: {
+      
   /**
    
    
@@ -393,7 +429,7 @@ The position CSS property sets how an element is positioned in a document. The t
    * }
    * ```
    */
-  "STATIC": IDecorators;
+  readonly STATIC: IDecorators;
   
 
   /**
@@ -405,7 +441,7 @@ The position CSS property sets how an element is positioned in a document. The t
    * }
    * ```
    */
-  "FIXED": IDecorators;
+  readonly FIXED: IDecorators;
   
 
   /**
@@ -417,7 +453,7 @@ The position CSS property sets how an element is positioned in a document. The t
    * }
    * ```
    */
-  "ABSOLUTE": IDecorators;
+  readonly ABSOLUTE: IDecorators;
   
 
   /**
@@ -429,7 +465,7 @@ The position CSS property sets how an element is positioned in a document. The t
    * }
    * ```
    */
-  "RELATIVE": IDecorators;
+  readonly RELATIVE: IDecorators;
   
 
   /**
@@ -441,19 +477,19 @@ The position CSS property sets how an element is positioned in a document. The t
    * }
    * ```
    */
-  "STICKY": IDecorators;
+  readonly STICKY: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### background-attachment
+
+    
+  /**
+    * ### background-attachment
 The background-attachment CSS property sets whether a background image's position is fixed within the viewport, or scrolls with its containing block.
 [Mozilla Developer Network: background-attachment](https://developer.mozilla.org/en-US/docs/Web/CSS/background-attachment).
-  */
-  backgroundAttachment: {
-    
+    */
+    backgroundAttachment: {
+      
   /**
    
    
@@ -463,7 +499,7 @@ The background-attachment CSS property sets whether a background image's positio
    * }
    * ```
    */
-  "FIXED": IDecorators;
+  readonly FIXED: IDecorators;
   
 
   /**
@@ -475,7 +511,7 @@ The background-attachment CSS property sets whether a background image's positio
    * }
    * ```
    */
-  "LOCAL": IDecorators;
+  readonly LOCAL: IDecorators;
   
 
   /**
@@ -487,19 +523,19 @@ The background-attachment CSS property sets whether a background image's positio
    * }
    * ```
    */
-  "SCROLL": IDecorators;
+  readonly SCROLL: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### background-color
+
+    
+  /**
+    * ### background-color
 The background-color CSS property sets the background color of an element.
 [Mozilla Developer Network: background-color](https://developer.mozilla.org/en-US/docs/Web/CSS/background-color).
-  */
-  backgroundColor: {
-    
+    */
+    backgroundColor: {
+      
   /**
    
    
@@ -509,7 +545,7 @@ The background-color CSS property sets the background color of an element.
    * }
    * ```
    */
-  "RED": IDecorators;
+  readonly RED: IDecorators;
   
 
   /**
@@ -521,7 +557,7 @@ The background-color CSS property sets the background color of an element.
    * }
    * ```
    */
-  "BLUE": IDecorators;
+  readonly BLUE: IDecorators;
   
 
   /**
@@ -533,7 +569,7 @@ The background-color CSS property sets the background color of an element.
    * }
    * ```
    */
-  "GREEN": IDecorators;
+  readonly GREEN: IDecorators;
   
 
   /**
@@ -545,19 +581,19 @@ The background-color CSS property sets the background color of an element.
    * }
    * ```
    */
-  "PURPLE": IDecorators;
+  readonly PURPLE: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### background-position
+
+    
+  /**
+    * ### background-position
 The background-position CSS property sets the initial position for each background image. The position is relative to the position layer set by background-origin.
 [Mozilla Developer Network: background-position](https://developer.mozilla.org/en-US/docs/Web/CSS/background-position).
-  */
-  backgroundPosition: {
-    
+    */
+    backgroundPosition: {
+      
   /**
    
    
@@ -567,7 +603,7 @@ The background-position CSS property sets the initial position for each backgrou
    * }
    * ```
    */
-  "BOTTOM": IDecorators;
+  readonly BOTTOM: IDecorators;
   
 
   /**
@@ -579,7 +615,7 @@ The background-position CSS property sets the initial position for each backgrou
    * }
    * ```
    */
-  "CENTER": IDecorators;
+  readonly CENTER: IDecorators;
   
 
   /**
@@ -591,7 +627,7 @@ The background-position CSS property sets the initial position for each backgrou
    * }
    * ```
    */
-  "LEFT": IDecorators;
+  readonly LEFT: IDecorators;
   
 
   /**
@@ -603,7 +639,7 @@ The background-position CSS property sets the initial position for each backgrou
    * }
    * ```
    */
-  "LEFT_BOTTOM": IDecorators;
+  readonly LEFT_BOTTOM: IDecorators;
   
 
   /**
@@ -615,7 +651,7 @@ The background-position CSS property sets the initial position for each backgrou
    * }
    * ```
    */
-  "LEFT_TOP": IDecorators;
+  readonly LEFT_TOP: IDecorators;
   
 
   /**
@@ -627,7 +663,7 @@ The background-position CSS property sets the initial position for each backgrou
    * }
    * ```
    */
-  "RIGHT": IDecorators;
+  readonly RIGHT: IDecorators;
   
 
   /**
@@ -639,7 +675,7 @@ The background-position CSS property sets the initial position for each backgrou
    * }
    * ```
    */
-  "RIGHT_BOTTOM": IDecorators;
+  readonly RIGHT_BOTTOM: IDecorators;
   
 
   /**
@@ -651,7 +687,7 @@ The background-position CSS property sets the initial position for each backgrou
    * }
    * ```
    */
-  "RIGHT_TOP": IDecorators;
+  readonly RIGHT_TOP: IDecorators;
   
 
   /**
@@ -663,19 +699,19 @@ The background-position CSS property sets the initial position for each backgrou
    * }
    * ```
    */
-  "TOP": IDecorators;
+  readonly TOP: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### background-repeat
+
+    
+  /**
+    * ### background-repeat
 The background-repeat CSS property sets how background images are repeated. A background image can be repeated along the horizontal and vertical axes, or not repeated at all.
 [Mozilla Developer Network: background-repeat](https://developer.mozilla.org/en-US/docs/Web/CSS/background-repeat).
-  */
-  backgroundRepeat: {
-    
+    */
+    backgroundRepeat: {
+      
   /**
    
    
@@ -685,7 +721,7 @@ The background-repeat CSS property sets how background images are repeated. A ba
    * }
    * ```
    */
-  "REPEAT": IDecorators;
+  readonly REPEAT: IDecorators;
   
 
   /**
@@ -697,7 +733,7 @@ The background-repeat CSS property sets how background images are repeated. A ba
    * }
    * ```
    */
-  "NO_REPEAT": IDecorators;
+  readonly NO_REPEAT: IDecorators;
   
 
   /**
@@ -709,7 +745,7 @@ The background-repeat CSS property sets how background images are repeated. A ba
    * }
    * ```
    */
-  "REPEAT_X": IDecorators;
+  readonly REPEAT_X: IDecorators;
   
 
   /**
@@ -721,7 +757,7 @@ The background-repeat CSS property sets how background images are repeated. A ba
    * }
    * ```
    */
-  "REPEAT_Y": IDecorators;
+  readonly REPEAT_Y: IDecorators;
   
 
   /**
@@ -733,7 +769,7 @@ The background-repeat CSS property sets how background images are repeated. A ba
    * }
    * ```
    */
-  "REPEAT_ROUND": IDecorators;
+  readonly REPEAT_ROUND: IDecorators;
   
 
   /**
@@ -745,19 +781,19 @@ The background-repeat CSS property sets how background images are repeated. A ba
    * }
    * ```
    */
-  "REPEAT_SPACE": IDecorators;
+  readonly REPEAT_SPACE: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### background-size
+
+    
+  /**
+    * ### background-size
 The background-size CSS property sets the size of the element's background image. The image can be left to its natural size, stretched, or constrained to fit the available space.
 [Mozilla Developer Network: background-size](https://developer.mozilla.org/en-US/docs/Web/CSS/background-size).
-  */
-  backgroundSize: {
-    
+    */
+    backgroundSize: {
+      
   /**
    
    
@@ -767,7 +803,7 @@ The background-size CSS property sets the size of the element's background image
    * }
    * ```
    */
-  "AUTO": IDecorators;
+  readonly AUTO: IDecorators;
   
 
   /**
@@ -779,7 +815,7 @@ The background-size CSS property sets the size of the element's background image
    * }
    * ```
    */
-  "COVER": IDecorators;
+  readonly COVER: IDecorators;
   
 
   /**
@@ -791,74 +827,74 @@ The background-size CSS property sets the size of the element's background image
    * }
    * ```
    */
-  "CONTAIN": IDecorators;
+  readonly CONTAIN: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### border-radius
+
+    
+  /**
+    * ### border-radius
 The border-radius CSS property rounds the corners of an element's outer border edge. You can set a single radius to make circular corners, or two radii to make elliptical corners.
 [Mozilla Developer Network: border-radius](https://developer.mozilla.org/en-US/docs/Web/CSS/border-radius).
-  */
-  borderRadius: {
-    
-  }
-
-
+    */
+    borderRadius: {
+      
+    }
   
-/**
-  * ### border-top-left-radius
+
+    
+  /**
+    * ### border-top-left-radius
 The border-top-left-radius CSS property rounds the top-left corner of an element.
 [Mozilla Developer Network: border-top-left-radius](https://developer.mozilla.org/en-US/docs/Web/CSS/border-top-left-radius).
-  */
-  borderTopLeftRadius: {
-    
-  }
-
-
+    */
+    borderTopLeftRadius: {
+      
+    }
   
-/**
-  * ### border-top-right-radius
+
+    
+  /**
+    * ### border-top-right-radius
 The border-top-right-radius CSS property rounds the top-right corner of an element.
 [Mozilla Developer Network: border-top-right-radius](https://developer.mozilla.org/en-US/docs/Web/CSS/border-top-right-radius).
-  */
-  borderTopRightRadius: {
-    
-  }
-
-
+    */
+    borderTopRightRadius: {
+      
+    }
   
-/**
-  * ### border-bottom-right-radius
+
+    
+  /**
+    * ### border-bottom-right-radius
 The border-bottom-right-radius CSS property rounds the bottom-right corner of an element.
 [Mozilla Developer Network: border-bottom-right-radius](https://developer.mozilla.org/en-US/docs/Web/CSS/border-bottom-right-radius).
-  */
-  borderBottomRightRadius: {
-    
-  }
-
-
+    */
+    borderBottomRightRadius: {
+      
+    }
   
-/**
-  * ### border-bottom-left-radius
+
+    
+  /**
+    * ### border-bottom-left-radius
 The border-bottom-left-radius CSS property rounds the bottom-left corner of an element.
 [Mozilla Developer Network: border-bottom-left-radius](https://developer.mozilla.org/en-US/docs/Web/CSS/border-bottom-left-radius).
-  */
-  borderBottomLeftRadius: {
-    
-  }
-
-
+    */
+    borderBottomLeftRadius: {
+      
+    }
   
-/**
-  * ### border-color
+
+    
+  /**
+    * ### border-color
 The border-color shorthand CSS property sets the color of an element's border.
 [Mozilla Developer Network: border-color](https://developer.mozilla.org/en-US/docs/Web/CSS/border-color).
-  */
-  borderColor: {
-    
+    */
+    borderColor: {
+      
   /**
    
    
@@ -877,7 +913,7 @@ The border-color shorthand CSS property sets the color of an element's border.
    * }
    * ```
    */
-  "RED": IDecorators;
+  readonly RED: IDecorators;
   
 
   /**
@@ -898,7 +934,7 @@ The border-color shorthand CSS property sets the color of an element's border.
    * }
    * ```
    */
-  "BLUE": IDecorators;
+  readonly BLUE: IDecorators;
   
 
   /**
@@ -919,7 +955,7 @@ The border-color shorthand CSS property sets the color of an element's border.
    * }
    * ```
    */
-  "GREEN": IDecorators;
+  readonly GREEN: IDecorators;
   
 
   /**
@@ -940,19 +976,19 @@ The border-color shorthand CSS property sets the color of an element's border.
    * }
    * ```
    */
-  "PURPLE": IDecorators;
+  readonly PURPLE: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### border-top-color
+
+    
+  /**
+    * ### border-top-color
 The border-top-color CSS property sets the color of an element's top border. 
 [Mozilla Developer Network: border-top-color](https://developer.mozilla.org/en-US/docs/Web/CSS/border-top-color).
-  */
-  borderTopColor: {
-    
+    */
+    borderTopColor: {
+      
   /**
    
    
@@ -962,7 +998,7 @@ The border-top-color CSS property sets the color of an element's top border.
    * }
    * ```
    */
-  "RED": IDecorators;
+  readonly RED: IDecorators;
   
 
   /**
@@ -974,7 +1010,7 @@ The border-top-color CSS property sets the color of an element's top border.
    * }
    * ```
    */
-  "BLUE": IDecorators;
+  readonly BLUE: IDecorators;
   
 
   /**
@@ -986,7 +1022,7 @@ The border-top-color CSS property sets the color of an element's top border.
    * }
    * ```
    */
-  "GREEN": IDecorators;
+  readonly GREEN: IDecorators;
   
 
   /**
@@ -998,19 +1034,19 @@ The border-top-color CSS property sets the color of an element's top border.
    * }
    * ```
    */
-  "PURPLE": IDecorators;
+  readonly PURPLE: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### border-right-color
+
+    
+  /**
+    * ### border-right-color
 The border-right-color CSS property sets the color of an element's right border. 
 [Mozilla Developer Network: border-right-color](https://developer.mozilla.org/en-US/docs/Web/CSS/border-right-color).
-  */
-  borderRightColor: {
-    
+    */
+    borderRightColor: {
+      
   /**
    
    
@@ -1020,7 +1056,7 @@ The border-right-color CSS property sets the color of an element's right border.
    * }
    * ```
    */
-  "RED": IDecorators;
+  readonly RED: IDecorators;
   
 
   /**
@@ -1032,7 +1068,7 @@ The border-right-color CSS property sets the color of an element's right border.
    * }
    * ```
    */
-  "BLUE": IDecorators;
+  readonly BLUE: IDecorators;
   
 
   /**
@@ -1044,7 +1080,7 @@ The border-right-color CSS property sets the color of an element's right border.
    * }
    * ```
    */
-  "GREEN": IDecorators;
+  readonly GREEN: IDecorators;
   
 
   /**
@@ -1056,19 +1092,19 @@ The border-right-color CSS property sets the color of an element's right border.
    * }
    * ```
    */
-  "PURPLE": IDecorators;
+  readonly PURPLE: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### border-bottom-color
+
+    
+  /**
+    * ### border-bottom-color
 The border-bottom-color CSS property sets the color of an element's bottom border. 
 [Mozilla Developer Network: border-bottom-color](https://developer.mozilla.org/en-US/docs/Web/CSS/border-bottom-color).
-  */
-  borderBottomColor: {
-    
+    */
+    borderBottomColor: {
+      
   /**
    
    
@@ -1078,7 +1114,7 @@ The border-bottom-color CSS property sets the color of an element's bottom borde
    * }
    * ```
    */
-  "RED": IDecorators;
+  readonly RED: IDecorators;
   
 
   /**
@@ -1090,7 +1126,7 @@ The border-bottom-color CSS property sets the color of an element's bottom borde
    * }
    * ```
    */
-  "BLUE": IDecorators;
+  readonly BLUE: IDecorators;
   
 
   /**
@@ -1102,7 +1138,7 @@ The border-bottom-color CSS property sets the color of an element's bottom borde
    * }
    * ```
    */
-  "GREEN": IDecorators;
+  readonly GREEN: IDecorators;
   
 
   /**
@@ -1114,19 +1150,19 @@ The border-bottom-color CSS property sets the color of an element's bottom borde
    * }
    * ```
    */
-  "PURPLE": IDecorators;
+  readonly PURPLE: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### border-left-color
+
+    
+  /**
+    * ### border-left-color
 The border-left-color CSS property sets the color of an element's left border.
 [Mozilla Developer Network: border-left-color](https://developer.mozilla.org/en-US/docs/Web/CSS/border-left-color).
-  */
-  borderLeftColor: {
-    
+    */
+    borderLeftColor: {
+      
   /**
    
    
@@ -1136,7 +1172,7 @@ The border-left-color CSS property sets the color of an element's left border.
    * }
    * ```
    */
-  "RED": IDecorators;
+  readonly RED: IDecorators;
   
 
   /**
@@ -1148,7 +1184,7 @@ The border-left-color CSS property sets the color of an element's left border.
    * }
    * ```
    */
-  "BLUE": IDecorators;
+  readonly BLUE: IDecorators;
   
 
   /**
@@ -1160,7 +1196,7 @@ The border-left-color CSS property sets the color of an element's left border.
    * }
    * ```
    */
-  "GREEN": IDecorators;
+  readonly GREEN: IDecorators;
   
 
   /**
@@ -1172,74 +1208,74 @@ The border-left-color CSS property sets the color of an element's left border.
    * }
    * ```
    */
-  "PURPLE": IDecorators;
+  readonly PURPLE: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### border-width
+
+    
+  /**
+    * ### border-width
 The border-width shorthand CSS property sets the width of an element's border.
 [Mozilla Developer Network: border-width](https://developer.mozilla.org/en-US/docs/Web/CSS/border-width).
-  */
-  borderWidth: {
-    
-  }
-
-
+    */
+    borderWidth: {
+      
+    }
   
-/**
-  * ### border-top-width
+
+    
+  /**
+    * ### border-top-width
 The border-top-width CSS property sets the width of the top border of an element.
 [Mozilla Developer Network: border-top-width](https://developer.mozilla.org/en-US/docs/Web/CSS/border-top-width).
-  */
-  borderTopWidth: {
-    
-  }
-
-
+    */
+    borderTopWidth: {
+      
+    }
   
-/**
-  * ### border-right-width
+
+    
+  /**
+    * ### border-right-width
 The border-right-width CSS property sets the width of the right border of an element.
 [Mozilla Developer Network: border-right-width](https://developer.mozilla.org/en-US/docs/Web/CSS/border-right-width).
-  */
-  borderRightWidth: {
-    
-  }
-
-
+    */
+    borderRightWidth: {
+      
+    }
   
-/**
-  * ### border-bottom-width
+
+    
+  /**
+    * ### border-bottom-width
 The border-bottom-width CSS property sets the width of the bottom border of an element.
 [Mozilla Developer Network: border-bottom-width](https://developer.mozilla.org/en-US/docs/Web/CSS/border-bottom-width).
-  */
-  borderBottomWidth: {
-    
-  }
-
-
+    */
+    borderBottomWidth: {
+      
+    }
   
-/**
-  * ### border-left-width
+
+    
+  /**
+    * ### border-left-width
 The border-left-width CSS property sets the width of the left border of an element.
 [Mozilla Developer Network: border-left-width](https://developer.mozilla.org/en-US/docs/Web/CSS/border-left-width).
-  */
-  borderLeftWidth: {
-    
-  }
-
-
+    */
+    borderLeftWidth: {
+      
+    }
   
-/**
-  * ### border-style
+
+    
+  /**
+    * ### border-style
 The border-style shorthand CSS property sets the line style for all four sides of an element's border.
 [Mozilla Developer Network: border-style](https://developer.mozilla.org/en-US/docs/Web/CSS/border-style).
-  */
-  borderStyle: {
-    
+    */
+    borderStyle: {
+      
   /**
    
    
@@ -1258,7 +1294,7 @@ The border-style shorthand CSS property sets the line style for all four sides o
    * }
    * ```
    */
-  "SOLID": IDecorators;
+  readonly SOLID: IDecorators;
   
 
   /**
@@ -1279,7 +1315,7 @@ The border-style shorthand CSS property sets the line style for all four sides o
    * }
    * ```
    */
-  "DASHED": IDecorators;
+  readonly DASHED: IDecorators;
   
 
   /**
@@ -1300,7 +1336,7 @@ The border-style shorthand CSS property sets the line style for all four sides o
    * }
    * ```
    */
-  "DOTTED": IDecorators;
+  readonly DOTTED: IDecorators;
   
 
   /**
@@ -1321,7 +1357,7 @@ The border-style shorthand CSS property sets the line style for all four sides o
    * }
    * ```
    */
-  "DOUBLE": IDecorators;
+  readonly DOUBLE: IDecorators;
   
 
   /**
@@ -1342,19 +1378,19 @@ The border-style shorthand CSS property sets the line style for all four sides o
    * }
    * ```
    */
-  "NONE": IDecorators;
+  readonly NONE: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### border-top-style
+
+    
+  /**
+    * ### border-top-style
 The border-top-style CSS property sets the line style of an element's top border.
 [Mozilla Developer Network: border-top-style](https://developer.mozilla.org/en-US/docs/Web/CSS/border-top-style).
-  */
-  borderTopStyle: {
-    
+    */
+    borderTopStyle: {
+      
   /**
    
    
@@ -1364,7 +1400,7 @@ The border-top-style CSS property sets the line style of an element's top border
    * }
    * ```
    */
-  "SOLID": IDecorators;
+  readonly SOLID: IDecorators;
   
 
   /**
@@ -1376,7 +1412,7 @@ The border-top-style CSS property sets the line style of an element's top border
    * }
    * ```
    */
-  "DASHED": IDecorators;
+  readonly DASHED: IDecorators;
   
 
   /**
@@ -1388,7 +1424,7 @@ The border-top-style CSS property sets the line style of an element's top border
    * }
    * ```
    */
-  "DOTTED": IDecorators;
+  readonly DOTTED: IDecorators;
   
 
   /**
@@ -1400,7 +1436,7 @@ The border-top-style CSS property sets the line style of an element's top border
    * }
    * ```
    */
-  "DOUBLE": IDecorators;
+  readonly DOUBLE: IDecorators;
   
 
   /**
@@ -1412,19 +1448,19 @@ The border-top-style CSS property sets the line style of an element's top border
    * }
    * ```
    */
-  "NONE": IDecorators;
+  readonly NONE: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### border-right-style
+
+    
+  /**
+    * ### border-right-style
 The border-right-style CSS property sets the line style of an element's right border.
 [Mozilla Developer Network: border-right-style](https://developer.mozilla.org/en-US/docs/Web/CSS/border-right-style).
-  */
-  borderRightStyle: {
-    
+    */
+    borderRightStyle: {
+      
   /**
    
    
@@ -1434,7 +1470,7 @@ The border-right-style CSS property sets the line style of an element's right bo
    * }
    * ```
    */
-  "SOLID": IDecorators;
+  readonly SOLID: IDecorators;
   
 
   /**
@@ -1446,7 +1482,7 @@ The border-right-style CSS property sets the line style of an element's right bo
    * }
    * ```
    */
-  "DASHED": IDecorators;
+  readonly DASHED: IDecorators;
   
 
   /**
@@ -1458,7 +1494,7 @@ The border-right-style CSS property sets the line style of an element's right bo
    * }
    * ```
    */
-  "DOTTED": IDecorators;
+  readonly DOTTED: IDecorators;
   
 
   /**
@@ -1470,7 +1506,7 @@ The border-right-style CSS property sets the line style of an element's right bo
    * }
    * ```
    */
-  "DOUBLE": IDecorators;
+  readonly DOUBLE: IDecorators;
   
 
   /**
@@ -1482,19 +1518,19 @@ The border-right-style CSS property sets the line style of an element's right bo
    * }
    * ```
    */
-  "NONE": IDecorators;
+  readonly NONE: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### border-bottom-style
+
+    
+  /**
+    * ### border-bottom-style
 The border-bottom-style CSS property sets the line style of an element's bottom border.
 [Mozilla Developer Network: border-bottom-style](https://developer.mozilla.org/en-US/docs/Web/CSS/border-bottom-style).
-  */
-  borderBottomStyle: {
-    
+    */
+    borderBottomStyle: {
+      
   /**
    
    
@@ -1504,7 +1540,7 @@ The border-bottom-style CSS property sets the line style of an element's bottom 
    * }
    * ```
    */
-  "SOLID": IDecorators;
+  readonly SOLID: IDecorators;
   
 
   /**
@@ -1516,7 +1552,7 @@ The border-bottom-style CSS property sets the line style of an element's bottom 
    * }
    * ```
    */
-  "DASHED": IDecorators;
+  readonly DASHED: IDecorators;
   
 
   /**
@@ -1528,7 +1564,7 @@ The border-bottom-style CSS property sets the line style of an element's bottom 
    * }
    * ```
    */
-  "DOTTED": IDecorators;
+  readonly DOTTED: IDecorators;
   
 
   /**
@@ -1540,7 +1576,7 @@ The border-bottom-style CSS property sets the line style of an element's bottom 
    * }
    * ```
    */
-  "DOUBLE": IDecorators;
+  readonly DOUBLE: IDecorators;
   
 
   /**
@@ -1552,19 +1588,19 @@ The border-bottom-style CSS property sets the line style of an element's bottom 
    * }
    * ```
    */
-  "NONE": IDecorators;
+  readonly NONE: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### border-left-style
+
+    
+  /**
+    * ### border-left-style
 The border-left-style CSS property sets the line style of an element's left border.
 [Mozilla Developer Network: border-left-style](https://developer.mozilla.org/en-US/docs/Web/CSS/border-left-style).
-  */
-  borderLeftStyle: {
-    
+    */
+    borderLeftStyle: {
+      
   /**
    
    
@@ -1574,7 +1610,7 @@ The border-left-style CSS property sets the line style of an element's left bord
    * }
    * ```
    */
-  "SOLID": IDecorators;
+  readonly SOLID: IDecorators;
   
 
   /**
@@ -1586,7 +1622,7 @@ The border-left-style CSS property sets the line style of an element's left bord
    * }
    * ```
    */
-  "DASHED": IDecorators;
+  readonly DASHED: IDecorators;
   
 
   /**
@@ -1598,7 +1634,7 @@ The border-left-style CSS property sets the line style of an element's left bord
    * }
    * ```
    */
-  "DOTTED": IDecorators;
+  readonly DOTTED: IDecorators;
   
 
   /**
@@ -1610,7 +1646,7 @@ The border-left-style CSS property sets the line style of an element's left bord
    * }
    * ```
    */
-  "DOUBLE": IDecorators;
+  readonly DOUBLE: IDecorators;
   
 
   /**
@@ -1622,19 +1658,19 @@ The border-left-style CSS property sets the line style of an element's left bord
    * }
    * ```
    */
-  "NONE": IDecorators;
+  readonly NONE: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### border-collapse
+
+    
+  /**
+    * ### border-collapse
 The border-collapse CSS property sets whether cells inside a <table> have shared or separate borders.
 [Mozilla Developer Network: border-collapse](https://developer.mozilla.org/en-US/docs/Web/CSS/border-collapse).
-  */
-  borderCollapse: {
-    
+    */
+    borderCollapse: {
+      
   /**
    
    
@@ -1644,7 +1680,7 @@ The border-collapse CSS property sets whether cells inside a <table> have shared
    * }
    * ```
    */
-  "COLLAPSE": IDecorators;
+  readonly COLLAPSE: IDecorators;
   
 
   /**
@@ -1656,19 +1692,19 @@ The border-collapse CSS property sets whether cells inside a <table> have shared
    * }
    * ```
    */
-  "SEPARATE": IDecorators;
+  readonly SEPARATE: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### overflow
+
+    
+  /**
+    * ### overflow
 The overflow shorthand CSS property sets what to do when an element's content is too big to fit in its block formatting context.
 [Mozilla Developer Network: overflow](https://developer.mozilla.org/en-US/docs/Web/CSS/overflow).
-  */
-  overflow: {
-    
+    */
+    overflow: {
+      
   /**
    
    
@@ -1681,7 +1717,7 @@ The overflow shorthand CSS property sets what to do when an element's content is
    * }
    * ```
    */
-  "AUTO": IDecorators;
+  readonly AUTO: IDecorators;
   
 
   /**
@@ -1696,7 +1732,7 @@ The overflow shorthand CSS property sets what to do when an element's content is
    * }
    * ```
    */
-  "HIDDEN": IDecorators;
+  readonly HIDDEN: IDecorators;
   
 
   /**
@@ -1711,7 +1747,7 @@ The overflow shorthand CSS property sets what to do when an element's content is
    * }
    * ```
    */
-  "VISIBLE": IDecorators;
+  readonly VISIBLE: IDecorators;
   
 
   /**
@@ -1726,19 +1762,19 @@ The overflow shorthand CSS property sets what to do when an element's content is
    * }
    * ```
    */
-  "SCROLL": IDecorators;
+  readonly SCROLL: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### overflow-x
+
+    
+  /**
+    * ### overflow-x
 The overflow-x CSS property sets what shows when content overflows a block-level element's left and right edges. This may be nothing, a scroll bar, or the overflow content.
 [Mozilla Developer Network: overflow-x](https://developer.mozilla.org/en-US/docs/Web/CSS/overflow-x).
-  */
-  overflowX: {
-    
+    */
+    overflowX: {
+      
   /**
    
    
@@ -1748,7 +1784,7 @@ The overflow-x CSS property sets what shows when content overflows a block-level
    * }
    * ```
    */
-  "AUTO": IDecorators;
+  readonly AUTO: IDecorators;
   
 
   /**
@@ -1760,7 +1796,7 @@ The overflow-x CSS property sets what shows when content overflows a block-level
    * }
    * ```
    */
-  "HIDDEN": IDecorators;
+  readonly HIDDEN: IDecorators;
   
 
   /**
@@ -1772,7 +1808,7 @@ The overflow-x CSS property sets what shows when content overflows a block-level
    * }
    * ```
    */
-  "VISIBLE": IDecorators;
+  readonly VISIBLE: IDecorators;
   
 
   /**
@@ -1784,19 +1820,19 @@ The overflow-x CSS property sets what shows when content overflows a block-level
    * }
    * ```
    */
-  "SCROLL": IDecorators;
+  readonly SCROLL: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### overflow-y
+
+    
+  /**
+    * ### overflow-y
 The overflow-y CSS property sets what shows when content overflows a block-level element's top and bottom edges. This may be nothing, a scroll bar, or the overflow content.
 [Mozilla Developer Network: overflow-y](https://developer.mozilla.org/en-US/docs/Web/CSS/overflow-y).
-  */
-  overflowY: {
-    
+    */
+    overflowY: {
+      
   /**
    
    
@@ -1806,7 +1842,7 @@ The overflow-y CSS property sets what shows when content overflows a block-level
    * }
    * ```
    */
-  "AUTO": IDecorators;
+  readonly AUTO: IDecorators;
   
 
   /**
@@ -1818,7 +1854,7 @@ The overflow-y CSS property sets what shows when content overflows a block-level
    * }
    * ```
    */
-  "HIDDEN": IDecorators;
+  readonly HIDDEN: IDecorators;
   
 
   /**
@@ -1830,7 +1866,7 @@ The overflow-y CSS property sets what shows when content overflows a block-level
    * }
    * ```
    */
-  "VISIBLE": IDecorators;
+  readonly VISIBLE: IDecorators;
   
 
   /**
@@ -1842,19 +1878,19 @@ The overflow-y CSS property sets what shows when content overflows a block-level
    * }
    * ```
    */
-  "SCROLL": IDecorators;
+  readonly SCROLL: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### visibility
+
+    
+  /**
+    * ### visibility
 The visibility CSS property shows or hides an element without changing the layout of a document. The property can also hide rows or columns in a <table>.
 [Mozilla Developer Network: visibility](https://developer.mozilla.org/en-US/docs/Web/CSS/visibility).
-  */
-  visibility: {
-    
+    */
+    visibility: {
+      
   /**
    
    
@@ -1864,7 +1900,7 @@ The visibility CSS property shows or hides an element without changing the layou
    * }
    * ```
    */
-  "VISIBLE": IDecorators;
+  readonly VISIBLE: IDecorators;
   
 
   /**
@@ -1876,19 +1912,19 @@ The visibility CSS property shows or hides an element without changing the layou
    * }
    * ```
    */
-  "HIDDEN": IDecorators;
+  readonly HIDDEN: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### -webkit-overflow-scrolling
+
+    
+  /**
+    * ### -webkit-overflow-scrolling
 The -webkit-overflow-scrolling CSS property controls whether or not touch devices use momentum-based scrolling for a given element.
 [Mozilla Developer Network: -webkit-overflow-scrolling](https://developer.mozilla.org/en-US/docs/Web/CSS/-webkit-overflow-scrolling).
-  */
-  overflowScrolling: {
-    
+    */
+    overflowScrolling: {
+      
   /**
    
    
@@ -1898,7 +1934,7 @@ The -webkit-overflow-scrolling CSS property controls whether or not touch device
    * }
    * ```
    */
-  "TOUCH": IDecorators;
+  readonly TOUCH: IDecorators;
   
 
   /**
@@ -1910,19 +1946,19 @@ The -webkit-overflow-scrolling CSS property controls whether or not touch device
    * }
    * ```
    */
-  "AUTO": IDecorators;
+  readonly AUTO: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### align-items
+
+    
+  /**
+    * ### align-items
 The CSS align-items property sets the align-self value on all direct children as a group. In Flexbox, it controls the alignment of items on the Cross Axis. In Grid Layout, it controls the alignment of items on the Block Axis within their grid area.
 [Mozilla Developer Network: align-items](https://developer.mozilla.org/en-US/docs/Web/CSS/align-items).
-  */
-  alignItems: {
-    
+    */
+    alignItems: {
+      
   /**
    
    
@@ -1932,7 +1968,7 @@ The CSS align-items property sets the align-self value on all direct children as
    * }
    * ```
    */
-  "STRETCH": IDecorators;
+  readonly STRETCH: IDecorators;
   
 
   /**
@@ -1944,7 +1980,7 @@ The CSS align-items property sets the align-self value on all direct children as
    * }
    * ```
    */
-  "START": IDecorators;
+  readonly START: IDecorators;
   
 
   /**
@@ -1956,7 +1992,7 @@ The CSS align-items property sets the align-self value on all direct children as
    * }
    * ```
    */
-  "CENTER": IDecorators;
+  readonly CENTER: IDecorators;
   
 
   /**
@@ -1968,7 +2004,7 @@ The CSS align-items property sets the align-self value on all direct children as
    * }
    * ```
    */
-  "END": IDecorators;
+  readonly END: IDecorators;
   
 
   /**
@@ -1980,19 +2016,19 @@ The CSS align-items property sets the align-self value on all direct children as
    * }
    * ```
    */
-  "BASELINE": IDecorators;
+  readonly BASELINE: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### flex-direction
+
+    
+  /**
+    * ### flex-direction
 The flex-direction CSS property sets how flex items are placed in the flex container defining the main axis and the direction (normal or reversed).
 [Mozilla Developer Network: flex-direction](https://developer.mozilla.org/en-US/docs/Web/CSS/flex-direction).
-  */
-  flexDirection: {
-    
+    */
+    flexDirection: {
+      
   /**
    
    
@@ -2002,7 +2038,7 @@ The flex-direction CSS property sets how flex items are placed in the flex conta
    * }
    * ```
    */
-  "ROW": IDecorators;
+  readonly ROW: IDecorators;
   
 
   /**
@@ -2014,7 +2050,7 @@ The flex-direction CSS property sets how flex items are placed in the flex conta
    * }
    * ```
    */
-  "ROW_REVERSE": IDecorators;
+  readonly ROW_REVERSE: IDecorators;
   
 
   /**
@@ -2026,7 +2062,7 @@ The flex-direction CSS property sets how flex items are placed in the flex conta
    * }
    * ```
    */
-  "COLUMN": IDecorators;
+  readonly COLUMN: IDecorators;
   
 
   /**
@@ -2038,19 +2074,19 @@ The flex-direction CSS property sets how flex items are placed in the flex conta
    * }
    * ```
    */
-  "COLUMN_REVERSE": IDecorators;
+  readonly COLUMN_REVERSE: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### flex-wrap
+
+    
+  /**
+    * ### flex-wrap
 The flex-wrap CSS property sets whether flex items are forced onto one line or can wrap onto multiple lines. If wrapping is allowed, it sets the direction that lines are stacked.
 [Mozilla Developer Network: flex-wrap](https://developer.mozilla.org/en-US/docs/Web/CSS/flex-wrap).
-  */
-  flexWrap: {
-    
+    */
+    flexWrap: {
+      
   /**
    
    
@@ -2060,7 +2096,7 @@ The flex-wrap CSS property sets whether flex items are forced onto one line or c
    * }
    * ```
    */
-  "NOWRAP": IDecorators;
+  readonly NOWRAP: IDecorators;
   
 
   /**
@@ -2072,7 +2108,7 @@ The flex-wrap CSS property sets whether flex items are forced onto one line or c
    * }
    * ```
    */
-  "WRAP": IDecorators;
+  readonly WRAP: IDecorators;
   
 
   /**
@@ -2084,19 +2120,19 @@ The flex-wrap CSS property sets whether flex items are forced onto one line or c
    * }
    * ```
    */
-  "WRAP_REVERSE": IDecorators;
+  readonly WRAP_REVERSE: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### flex-basis
+
+    
+  /**
+    * ### flex-basis
 The flex-basis CSS property sets the initial main size of a flex item. It sets the size of the content box unless otherwise set with box-sizing.
 [Mozilla Developer Network: flex-basis](https://developer.mozilla.org/en-US/docs/Web/CSS/flex-basis).
-  */
-  flexBasis: {
-    
+    */
+    flexBasis: {
+      
   /**
    
    
@@ -2106,7 +2142,7 @@ The flex-basis CSS property sets the initial main size of a flex item. It sets t
    * }
    * ```
    */
-  "AUTO": IDecorators;
+  readonly AUTO: IDecorators;
   
 
   /**
@@ -2118,7 +2154,7 @@ The flex-basis CSS property sets the initial main size of a flex item. It sets t
    * }
    * ```
    */
-  "FILL": IDecorators;
+  readonly FILL: IDecorators;
   
 
   /**
@@ -2130,7 +2166,7 @@ The flex-basis CSS property sets the initial main size of a flex item. It sets t
    * }
    * ```
    */
-  "MAX_CONTENT": IDecorators;
+  readonly MAX_CONTENT: IDecorators;
   
 
   /**
@@ -2142,7 +2178,7 @@ The flex-basis CSS property sets the initial main size of a flex item. It sets t
    * }
    * ```
    */
-  "MIN_CONTENT": IDecorators;
+  readonly MIN_CONTENT: IDecorators;
   
 
   /**
@@ -2154,7 +2190,7 @@ The flex-basis CSS property sets the initial main size of a flex item. It sets t
    * }
    * ```
    */
-  "FIT_CONTENT": IDecorators;
+  readonly FIT_CONTENT: IDecorators;
   
 
   /**
@@ -2166,63 +2202,63 @@ The flex-basis CSS property sets the initial main size of a flex item. It sets t
    * }
    * ```
    */
-  "CONTENT": IDecorators;
+  readonly CONTENT: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### flex-grow
+
+    
+  /**
+    * ### flex-grow
 The flex-grow CSS property sets the flex grow factor of a flex item main size. It specifies how much of the remaining space in the flex container should be assigned to the item (the flex grow factor)
 [Mozilla Developer Network: flex-grow](https://developer.mozilla.org/en-US/docs/Web/CSS/flex-grow).
-  */
-  flexGrow: {
-    
-  }
-
-
+    */
+    flexGrow: {
+      
+    }
   
-/**
-  * ### flex-shrink
+
+    
+  /**
+    * ### flex-shrink
 The flex-shrink CSS property sets the flex shrink factor of a flex item. If the size of all flex items is larger than the flex container, items shrink to fit according to flex-shrink.
 [Mozilla Developer Network: flex-shrink](https://developer.mozilla.org/en-US/docs/Web/CSS/flex-shrink).
-  */
-  flexShrink: {
-    
-  }
-
-
+    */
+    flexShrink: {
+      
+    }
   
-/**
-  * ### box-shadow
+
+    
+  /**
+    * ### box-shadow
 The box-shadow CSS property adds shadow effects around an element's frame. You can set multiple effects separated by commas. A box shadow is described by X and Y offsets relative to the element, blur and spread radius, and color.
 [Mozilla Developer Network: box-shadow](https://developer.mozilla.org/en-US/docs/Web/CSS/box-shadow).
-  */
-  boxShadow: {
-    
-  }
-
-
+    */
+    boxShadow: {
+      
+    }
   
-/**
-  * ### text-shadow
+
+    
+  /**
+    * ### text-shadow
 The text-shadow CSS property adds shadows to text. It accepts a comma-separated list of shadows to be applied to the text and any of its decorations. Each shadow is described by some combination of X and Y offsets from the element, blur radius, and color.
 [Mozilla Developer Network: text-shadow](https://developer.mozilla.org/en-US/docs/Web/CSS/text-shadow).
-  */
-  textShadow: {
-    
-  }
-
-
+    */
+    textShadow: {
+      
+    }
   
-/**
-  * ### outline
+
+    
+  /**
+    * ### outline
 The outline CSS property is a shorthand to set various outline properties in a single declaration: outline-style, outline-width, and outline-color.
 [Mozilla Developer Network: outline](https://developer.mozilla.org/en-US/docs/Web/CSS/outline).
-  */
-  outline: {
-    
+    */
+    outline: {
+      
   /**
    
    
@@ -2232,19 +2268,19 @@ The outline CSS property is a shorthand to set various outline properties in a s
    * }
    * ```
    */
-  "NONE": IDecorators;
+  readonly NONE: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### pointer-events
+
+    
+  /**
+    * ### pointer-events
 The pointer-events CSS property sets under what circumstances (if any) a particular graphic element can become the target of pointer events.
 [Mozilla Developer Network: pointer-events](https://developer.mozilla.org/en-US/docs/Web/CSS/pointer-events).
-  */
-  pointerEvents: {
-    
+    */
+    pointerEvents: {
+      
   /**
    
    
@@ -2253,7 +2289,7 @@ The pointer-events CSS property sets under what circumstances (if any) a particu
    *   pointer-events: none}
    * ```
    */
-  "NONE": IDecorators;
+  readonly NONE: IDecorators;
   
 
   /**
@@ -2264,19 +2300,19 @@ The pointer-events CSS property sets under what circumstances (if any) a particu
    *   pointer-events: auto}
    * ```
    */
-  "AUTO": IDecorators;
+  readonly AUTO: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### resize
+
+    
+  /**
+    * ### resize
 The resize CSS property sets whether an element is resizable, and if so, in which directions.
 [Mozilla Developer Network: resize](https://developer.mozilla.org/en-US/docs/Web/CSS/resize).
-  */
-  resize: {
-    
+    */
+    resize: {
+      
   /**
    
    
@@ -2286,7 +2322,7 @@ The resize CSS property sets whether an element is resizable, and if so, in whic
    * }
    * ```
    */
-  "BOTH": IDecorators;
+  readonly BOTH: IDecorators;
   
 
   /**
@@ -2298,7 +2334,7 @@ The resize CSS property sets whether an element is resizable, and if so, in whic
    * }
    * ```
    */
-  "NONE": IDecorators;
+  readonly NONE: IDecorators;
   
 
   /**
@@ -2310,7 +2346,7 @@ The resize CSS property sets whether an element is resizable, and if so, in whic
    * }
    * ```
    */
-  "VERTICAL": IDecorators;
+  readonly VERTICAL: IDecorators;
   
 
   /**
@@ -2322,19 +2358,19 @@ The resize CSS property sets whether an element is resizable, and if so, in whic
    * }
    * ```
    */
-  "HORIZONTAL": IDecorators;
+  readonly HORIZONTAL: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### user-select
+
+    
+  /**
+    * ### user-select
 The user-select CSS property controls whether the user can select text. This doesn't have any effect on content loaded as chrome, except in textboxes.
 [Mozilla Developer Network: user-select](https://developer.mozilla.org/en-US/docs/Web/CSS/user-select).
-  */
-  userSelect: {
-    
+    */
+    userSelect: {
+      
   /**
    
    
@@ -2344,7 +2380,7 @@ The user-select CSS property controls whether the user can select text. This doe
    * }
    * ```
    */
-  "NONE": IDecorators;
+  readonly NONE: IDecorators;
   
 
   /**
@@ -2356,7 +2392,7 @@ The user-select CSS property controls whether the user can select text. This doe
    * }
    * ```
    */
-  "TEXT": IDecorators;
+  readonly TEXT: IDecorators;
   
 
   /**
@@ -2368,7 +2404,7 @@ The user-select CSS property controls whether the user can select text. This doe
    * }
    * ```
    */
-  "ALL": IDecorators;
+  readonly ALL: IDecorators;
   
 
   /**
@@ -2380,19 +2416,19 @@ The user-select CSS property controls whether the user can select text. This doe
    * }
    * ```
    */
-  "AUTO": IDecorators;
+  readonly AUTO: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### cursor
+
+    
+  /**
+    * ### cursor
 The cursor CSS property sets the type of cursor, if any, to show when the mouse pointer is over an element.
 [Mozilla Developer Network: cursor](https://developer.mozilla.org/en-US/docs/Web/CSS/cursor).
-  */
-  cursor: {
-    
+    */
+    cursor: {
+      
   /**
    
    
@@ -2402,7 +2438,7 @@ The cursor CSS property sets the type of cursor, if any, to show when the mouse 
    * }
    * ```
    */
-  "AUTO": IDecorators;
+  readonly AUTO: IDecorators;
   
 
   /**
@@ -2414,7 +2450,7 @@ The cursor CSS property sets the type of cursor, if any, to show when the mouse 
    * }
    * ```
    */
-  "DEFAULT": IDecorators;
+  readonly DEFAULT: IDecorators;
   
 
   /**
@@ -2426,7 +2462,7 @@ The cursor CSS property sets the type of cursor, if any, to show when the mouse 
    * }
    * ```
    */
-  "POINTER": IDecorators;
+  readonly POINTER: IDecorators;
   
 
   /**
@@ -2438,7 +2474,7 @@ The cursor CSS property sets the type of cursor, if any, to show when the mouse 
    * }
    * ```
    */
-  "WAIT": IDecorators;
+  readonly WAIT: IDecorators;
   
 
   /**
@@ -2450,7 +2486,7 @@ The cursor CSS property sets the type of cursor, if any, to show when the mouse 
    * }
    * ```
    */
-  "TEXT": IDecorators;
+  readonly TEXT: IDecorators;
   
 
   /**
@@ -2462,7 +2498,7 @@ The cursor CSS property sets the type of cursor, if any, to show when the mouse 
    * }
    * ```
    */
-  "MOVE": IDecorators;
+  readonly MOVE: IDecorators;
   
 
   /**
@@ -2474,19 +2510,19 @@ The cursor CSS property sets the type of cursor, if any, to show when the mouse 
    * }
    * ```
    */
-  "NOT_ALLOWED": IDecorators;
+  readonly NOT_ALLOWED: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### fill
+
+    
+  /**
+    * ### fill
 The fill attribute has two different meanings. For shapes and text it's a presentation attribute that defines the color (or any SVG paint servers like gradients or patterns) used to paint the element; for animation it defines the final state of the animation.
 [Mozilla Developer Network: fill](https://developer.mozilla.org/en-US/docs/Web/CSS/fill).
-  */
-  fill: {
-    
+    */
+    fill: {
+      
   /**
    
    
@@ -2496,19 +2532,19 @@ The fill attribute has two different meanings. For shapes and text it's a presen
    * }
    * ```
    */
-  "CURRENT": IDecorators;
+  readonly CURRENT: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### appearance
+
+    
+  /**
+    * ### appearance
 The appearance CSS property is used to display an element using platform-native styling based on the operating system's theme.
 [Mozilla Developer Network: appearance](https://developer.mozilla.org/en-US/docs/Web/CSS/appearance).
-  */
-  appearance: {
-    
+    */
+    appearance: {
+      
   /**
    
    
@@ -2518,41 +2554,41 @@ The appearance CSS property is used to display an element using platform-native 
    * }
    * ```
    */
-  "NONE": IDecorators;
+  readonly NONE: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### font-weight
+
+    
+  /**
+    * ### font-weight
 The font-weight CSS property sets the weight (or boldness) of the font. The weights available depend on the font-family you are using.
 [Mozilla Developer Network: font-weight](https://developer.mozilla.org/en-US/docs/Web/CSS/font-weight).
-  */
-  fontWeight: {
-    
-  }
-
-
+    */
+    fontWeight: {
+      
+    }
   
-/**
-  * ### font-family
+
+    
+  /**
+    * ### font-family
 The font-family CSS property specifies a prioritized list of one or more font family names and/or generic family names for the selected element.
 [Mozilla Developer Network: font-family](https://developer.mozilla.org/en-US/docs/Web/CSS/font-family).
-  */
-  fontFamily: {
-    
-  }
-
-
+    */
+    fontFamily: {
+      
+    }
   
-/**
-  * ### color
+
+    
+  /**
+    * ### color
 Sets the foreground color value of an element's text and text decorations, and sets the currentcolor value.
 [Mozilla Developer Network: color](https://developer.mozilla.org/en-US/docs/Web/CSS/color).
-  */
-  color: {
-    
+    */
+    color: {
+      
   /**
    
    
@@ -2562,7 +2598,7 @@ Sets the foreground color value of an element's text and text decorations, and s
    * }
    * ```
    */
-  "RED": IDecorators;
+  readonly RED: IDecorators;
   
 
   /**
@@ -2574,7 +2610,7 @@ Sets the foreground color value of an element's text and text decorations, and s
    * }
    * ```
    */
-  "BLUE": IDecorators;
+  readonly BLUE: IDecorators;
   
 
   /**
@@ -2586,7 +2622,7 @@ Sets the foreground color value of an element's text and text decorations, and s
    * }
    * ```
    */
-  "GREEN": IDecorators;
+  readonly GREEN: IDecorators;
   
 
   /**
@@ -2598,19 +2634,19 @@ Sets the foreground color value of an element's text and text decorations, and s
    * }
    * ```
    */
-  "PURPLE": IDecorators;
+  readonly PURPLE: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### text-align
+
+    
+  /**
+    * ### text-align
 The text-align CSS property sets the horizontal alignment of a block element or table-cell box. This means it works like vertical-align but in the horizontal direction.
 [Mozilla Developer Network: text-align](https://developer.mozilla.org/en-US/docs/Web/CSS/text-align).
-  */
-  textAlign: {
-    
+    */
+    textAlign: {
+      
   /**
    
    
@@ -2620,7 +2656,7 @@ The text-align CSS property sets the horizontal alignment of a block element or 
    * }
    * ```
    */
-  "LEFT": IDecorators;
+  readonly LEFT: IDecorators;
   
 
   /**
@@ -2632,7 +2668,7 @@ The text-align CSS property sets the horizontal alignment of a block element or 
    * }
    * ```
    */
-  "CENTER": IDecorators;
+  readonly CENTER: IDecorators;
   
 
   /**
@@ -2644,7 +2680,7 @@ The text-align CSS property sets the horizontal alignment of a block element or 
    * }
    * ```
    */
-  "RIGHT": IDecorators;
+  readonly RIGHT: IDecorators;
   
 
   /**
@@ -2656,30 +2692,30 @@ The text-align CSS property sets the horizontal alignment of a block element or 
    * }
    * ```
    */
-  "JUSTIFY": IDecorators;
+  readonly JUSTIFY: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### font-size
+
+    
+  /**
+    * ### font-size
 The font-size CSS property sets the size of the font. This property is also used to compute the size of em, ex, and other relative <length> units.
 [Mozilla Developer Network: font-size](https://developer.mozilla.org/en-US/docs/Web/CSS/font-size).
-  */
-  fontSize: {
-    
-  }
-
-
+    */
+    fontSize: {
+      
+    }
   
-/**
-  * ### text-decoration-line
+
+    
+  /**
+    * ### text-decoration-line
 The text-decoration-line CSS property sets the kind of decoration that is used on text in an element, such as an underline or overline.
 [Mozilla Developer Network: text-decoration-line](https://developer.mozilla.org/en-US/docs/Web/CSS/text-decoration-line).
-  */
-  textDecorationLine: {
-    
+    */
+    textDecorationLine: {
+      
   /**
    
    
@@ -2689,7 +2725,7 @@ The text-decoration-line CSS property sets the kind of decoration that is used o
    * }
    * ```
    */
-  "UNDERLINE": IDecorators;
+  readonly UNDERLINE: IDecorators;
   
 
   /**
@@ -2701,7 +2737,7 @@ The text-decoration-line CSS property sets the kind of decoration that is used o
    * }
    * ```
    */
-  "LINE_THROUGH": IDecorators;
+  readonly LINE_THROUGH: IDecorators;
   
 
   /**
@@ -2713,19 +2749,19 @@ The text-decoration-line CSS property sets the kind of decoration that is used o
    * }
    * ```
    */
-  "NONE": IDecorators;
+  readonly NONE: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### text-decoration-color
+
+    
+  /**
+    * ### text-decoration-color
 The text-decoration-color CSS property sets the color of decorations added to text by text-decoration-line.
 [Mozilla Developer Network: text-decoration-color](https://developer.mozilla.org/en-US/docs/Web/CSS/text-decoration-color).
-  */
-  textDecorationColor: {
-    
+    */
+    textDecorationColor: {
+      
   /**
    
    
@@ -2735,7 +2771,7 @@ The text-decoration-color CSS property sets the color of decorations added to te
    * }
    * ```
    */
-  "RED": IDecorators;
+  readonly RED: IDecorators;
   
 
   /**
@@ -2747,7 +2783,7 @@ The text-decoration-color CSS property sets the color of decorations added to te
    * }
    * ```
    */
-  "BLUE": IDecorators;
+  readonly BLUE: IDecorators;
   
 
   /**
@@ -2759,7 +2795,7 @@ The text-decoration-color CSS property sets the color of decorations added to te
    * }
    * ```
    */
-  "GREEN": IDecorators;
+  readonly GREEN: IDecorators;
   
 
   /**
@@ -2771,19 +2807,19 @@ The text-decoration-color CSS property sets the color of decorations added to te
    * }
    * ```
    */
-  "PURPLE": IDecorators;
+  readonly PURPLE: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### text-decoration-style
+
+    
+  /**
+    * ### text-decoration-style
 The text-decoration-style CSS property sets the style of the lines specified by text-decoration-line. The style applies to all lines that are set with text-decoration-line.
 [Mozilla Developer Network: text-decoration-style](https://developer.mozilla.org/en-US/docs/Web/CSS/text-decoration-style).
-  */
-  textDecorationStyle: {
-    
+    */
+    textDecorationStyle: {
+      
   /**
    
    
@@ -2793,7 +2829,7 @@ The text-decoration-style CSS property sets the style of the lines specified by 
    * }
    * ```
    */
-  "SOLID": IDecorators;
+  readonly SOLID: IDecorators;
   
 
   /**
@@ -2805,7 +2841,7 @@ The text-decoration-style CSS property sets the style of the lines specified by 
    * }
    * ```
    */
-  "DOUBLE": IDecorators;
+  readonly DOUBLE: IDecorators;
   
 
   /**
@@ -2817,7 +2853,7 @@ The text-decoration-style CSS property sets the style of the lines specified by 
    * }
    * ```
    */
-  "DOTTED": IDecorators;
+  readonly DOTTED: IDecorators;
   
 
   /**
@@ -2829,7 +2865,7 @@ The text-decoration-style CSS property sets the style of the lines specified by 
    * }
    * ```
    */
-  "DASHED": IDecorators;
+  readonly DASHED: IDecorators;
   
 
   /**
@@ -2841,19 +2877,19 @@ The text-decoration-style CSS property sets the style of the lines specified by 
    * }
    * ```
    */
-  "WAVY": IDecorators;
+  readonly WAVY: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### text-decoration-thickness
+
+    
+  /**
+    * ### text-decoration-thickness
 The text-decoration-thickness CSS property sets the thickness, or width, of the decoration line that is used on text in an element, such as a line-through, underline, or overline.
 [Mozilla Developer Network: text-decoration-thickness](https://developer.mozilla.org/en-US/docs/Web/CSS/text-decoration-thickness).
-  */
-  textDecorationThickness: {
-    
+    */
+    textDecorationThickness: {
+      
   /**
    
    
@@ -2863,7 +2899,7 @@ The text-decoration-thickness CSS property sets the thickness, or width, of the 
    * }
    * ```
    */
-  "AUTO": IDecorators;
+  readonly AUTO: IDecorators;
   
 
   /**
@@ -2875,19 +2911,19 @@ The text-decoration-thickness CSS property sets the thickness, or width, of the 
    * }
    * ```
    */
-  "FROM_FONT": IDecorators;
+  readonly FROM_FONT: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### -webkit-font-smoothing
+
+    
+  /**
+    * ### -webkit-font-smoothing
 The font-smooth CSS property controls the application of anti-aliasing when fonts are rendered.
 [Mozilla Developer Network: -webkit-font-smoothing](https://developer.mozilla.org/en-US/docs/Web/CSS/-webkit-font-smoothing).
-  */
-  fontSmoothing: {
-    
+    */
+    fontSmoothing: {
+      
   /**
    
    
@@ -2897,7 +2933,7 @@ The font-smooth CSS property controls the application of anti-aliasing when font
    * }
    * ```
    */
-  "ANTIALIASED": IDecorators;
+  readonly ANTIALIASED: IDecorators;
   
 
   /**
@@ -2909,30 +2945,30 @@ The font-smooth CSS property controls the application of anti-aliasing when font
    * }
    * ```
    */
-  "SUBPIXEL_ANTIALIASED": IDecorators;
+  readonly SUBPIXEL_ANTIALIASED: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### font-style
+
+    
+  /**
+    * ### font-style
 The font-style CSS property sets whether a font should be styled with a normal, italic, or oblique face from its font-family.
 [Mozilla Developer Network: font-style](https://developer.mozilla.org/en-US/docs/Web/CSS/font-style).
-  */
-  fontStyle: {
-    
-  }
-
-
+    */
+    fontStyle: {
+      
+    }
   
-/**
-  * ### text-transform
+
+    
+  /**
+    * ### text-transform
 The text-transform CSS property specifies how to capitalize an element's text. It can be used to make text appear in all-uppercase or all-lowercase, or with each word capitalized. It also can help improve legibility for ruby.
 [Mozilla Developer Network: text-transform](https://developer.mozilla.org/en-US/docs/Web/CSS/text-transform).
-  */
-  textTransform: {
-    
+    */
+    textTransform: {
+      
   /**
    
    
@@ -2941,7 +2977,7 @@ The text-transform CSS property specifies how to capitalize an element's text. I
    *   text-transform: uppercase}
    * ```
    */
-  "UPPERCASE": IDecorators;
+  readonly UPPERCASE: IDecorators;
   
 
   /**
@@ -2952,7 +2988,7 @@ The text-transform CSS property specifies how to capitalize an element's text. I
    *   text-transform: lowercase}
    * ```
    */
-  "LOWERCASE": IDecorators;
+  readonly LOWERCASE: IDecorators;
   
 
   /**
@@ -2963,7 +2999,7 @@ The text-transform CSS property specifies how to capitalize an element's text. I
    *   text-transform: capitalize}
    * ```
    */
-  "CAPITALIZE": IDecorators;
+  readonly CAPITALIZE: IDecorators;
   
 
   /**
@@ -2974,19 +3010,19 @@ The text-transform CSS property specifies how to capitalize an element's text. I
    *   text-transform: none}
    * ```
    */
-  "NONE": IDecorators;
+  readonly NONE: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### vertical-align
+
+    
+  /**
+    * ### vertical-align
 The vertical-align CSS property sets vertical alignment of an inline, inline-block or table-cell box.
 [Mozilla Developer Network: vertical-align](https://developer.mozilla.org/en-US/docs/Web/CSS/vertical-align).
-  */
-  verticalAlign: {
-    
+    */
+    verticalAlign: {
+      
   /**
    
    
@@ -2996,7 +3032,7 @@ The vertical-align CSS property sets vertical alignment of an inline, inline-blo
    * }
    * ```
    */
-  "BASELINE": IDecorators;
+  readonly BASELINE: IDecorators;
   
 
   /**
@@ -3008,7 +3044,7 @@ The vertical-align CSS property sets vertical alignment of an inline, inline-blo
    * }
    * ```
    */
-  "TOP": IDecorators;
+  readonly TOP: IDecorators;
   
 
   /**
@@ -3020,7 +3056,7 @@ The vertical-align CSS property sets vertical alignment of an inline, inline-blo
    * }
    * ```
    */
-  "MIDDLE": IDecorators;
+  readonly MIDDLE: IDecorators;
   
 
   /**
@@ -3032,7 +3068,7 @@ The vertical-align CSS property sets vertical alignment of an inline, inline-blo
    * }
    * ```
    */
-  "BOTTOM": IDecorators;
+  readonly BOTTOM: IDecorators;
   
 
   /**
@@ -3044,7 +3080,7 @@ The vertical-align CSS property sets vertical alignment of an inline, inline-blo
    * }
    * ```
    */
-  "SUB": IDecorators;
+  readonly SUB: IDecorators;
   
 
   /**
@@ -3056,7 +3092,7 @@ The vertical-align CSS property sets vertical alignment of an inline, inline-blo
    * }
    * ```
    */
-  "SUPER": IDecorators;
+  readonly SUPER: IDecorators;
   
 
   /**
@@ -3068,7 +3104,7 @@ The vertical-align CSS property sets vertical alignment of an inline, inline-blo
    * }
    * ```
    */
-  "TEXT_TOP": IDecorators;
+  readonly TEXT_TOP: IDecorators;
   
 
   /**
@@ -3080,19 +3116,19 @@ The vertical-align CSS property sets vertical alignment of an inline, inline-blo
    * }
    * ```
    */
-  "TEXT_BOTTOM": IDecorators;
+  readonly TEXT_BOTTOM: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### height
+
+    
+  /**
+    * ### height
 The height CSS property specifies the height of an element. By default, the property defines the height of the content area. If box-sizing is set to border-box, however, it instead determines the height of the border area.
 [Mozilla Developer Network: height](https://developer.mozilla.org/en-US/docs/Web/CSS/height).
-  */
-  height: {
-    
+    */
+    height: {
+      
   /**
    
    
@@ -3102,19 +3138,19 @@ The height CSS property specifies the height of an element. By default, the prop
    * }
    * ```
    */
-  "AUTO": IDecorators;
+  readonly AUTO: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### white-space
+
+    
+  /**
+    * ### white-space
 The white-space CSS property sets how white space inside an element is handled.
 [Mozilla Developer Network: white-space](https://developer.mozilla.org/en-US/docs/Web/CSS/white-space).
-  */
-  whitespace: {
-    
+    */
+    whitespace: {
+      
   /**
    
    
@@ -3124,7 +3160,7 @@ The white-space CSS property sets how white space inside an element is handled.
    * }
    * ```
    */
-  "NORMAL": IDecorators;
+  readonly NORMAL: IDecorators;
   
 
   /**
@@ -3136,7 +3172,7 @@ The white-space CSS property sets how white space inside an element is handled.
    * }
    * ```
    */
-  "NO_WRAP": IDecorators;
+  readonly NO_WRAP: IDecorators;
   
 
   /**
@@ -3148,7 +3184,7 @@ The white-space CSS property sets how white space inside an element is handled.
    * }
    * ```
    */
-  "PRE": IDecorators;
+  readonly PRE: IDecorators;
   
 
   /**
@@ -3160,7 +3196,7 @@ The white-space CSS property sets how white space inside an element is handled.
    * }
    * ```
    */
-  "PRE_LINE": IDecorators;
+  readonly PRE_LINE: IDecorators;
   
 
   /**
@@ -3172,19 +3208,19 @@ The white-space CSS property sets how white space inside an element is handled.
    * }
    * ```
    */
-  "PRE_WRAP": IDecorators;
+  readonly PRE_WRAP: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### top
+
+    
+  /**
+    * ### top
 The top CSS property participates in specifying the vertical position of a positioned element. It has no effect on non-positioned elements.
 [Mozilla Developer Network: top](https://developer.mozilla.org/en-US/docs/Web/CSS/top).
-  */
-  top: {
-    
+    */
+    top: {
+      
   /**
    
    
@@ -3194,7 +3230,7 @@ The top CSS property participates in specifying the vertical position of a posit
    * }
    * ```
    */
-  "AUTO": IDecorators;
+  readonly AUTO: IDecorators;
   
 
   /**
@@ -3206,19 +3242,19 @@ The top CSS property participates in specifying the vertical position of a posit
    * }
    * ```
    */
-  "SPACE_1": IDecorators;
+  readonly SPACE_1: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### overflow-wrap
+
+    
+  /**
+    * ### overflow-wrap
 The overflow-wrap CSS property applies to inline elements, setting whether the browser should insert line breaks within an otherwise unbreakable string to prevent text from overflowing its line box.
 [Mozilla Developer Network: overflow-wrap](https://developer.mozilla.org/en-US/docs/Web/CSS/overflow-wrap).
-  */
-  overflowWrap: {
-    
+    */
+    overflowWrap: {
+      
   /**
    
    
@@ -3228,7 +3264,7 @@ The overflow-wrap CSS property applies to inline elements, setting whether the b
    * }
    * ```
    */
-  "NORMAL": IDecorators;
+  readonly NORMAL: IDecorators;
   
 
   /**
@@ -3240,19 +3276,19 @@ The overflow-wrap CSS property applies to inline elements, setting whether the b
    * }
    * ```
    */
-  "BREAK_WORD": IDecorators;
+  readonly BREAK_WORD: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### word-break
+
+    
+  /**
+    * ### word-break
 The word-break CSS property sets whether line breaks appear wherever the text would otherwise overflow its content box.
 [Mozilla Developer Network: word-break](https://developer.mozilla.org/en-US/docs/Web/CSS/word-break).
-  */
-  wordBreak: {
-    
+    */
+    wordBreak: {
+      
   /**
    
    
@@ -3262,7 +3298,7 @@ The word-break CSS property sets whether line breaks appear wherever the text wo
    * }
    * ```
    */
-  "NORMAL": IDecorators;
+  readonly NORMAL: IDecorators;
   
 
   /**
@@ -3274,19 +3310,19 @@ The word-break CSS property sets whether line breaks appear wherever the text wo
    * }
    * ```
    */
-  "BREAK_ALL": IDecorators;
+  readonly BREAK_ALL: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### text-overflow
+
+    
+  /**
+    * ### text-overflow
 The text-overflow CSS property sets how hidden overflow content is signaled to users. It can be clipped or display an ellipsis ('…').
 [Mozilla Developer Network: text-overflow](https://developer.mozilla.org/en-US/docs/Web/CSS/text-overflow).
-  */
-  textOverflow: {
-    
+    */
+    textOverflow: {
+      
   /**
    
    
@@ -3296,7 +3332,7 @@ The text-overflow CSS property sets how hidden overflow content is signaled to u
    * }
    * ```
    */
-  "CLIP": IDecorators;
+  readonly CLIP: IDecorators;
   
 
   /**
@@ -3308,19 +3344,19 @@ The text-overflow CSS property sets how hidden overflow content is signaled to u
    * }
    * ```
    */
-  "ELLIPSIS": IDecorators;
+  readonly ELLIPSIS: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### right
+
+    
+  /**
+    * ### right
 The right CSS property participates in specifying the horizontal position of a positioned element. It has no effect on non-positioned elements.
 [Mozilla Developer Network: right](https://developer.mozilla.org/en-US/docs/Web/CSS/right).
-  */
-  right: {
-    
+    */
+    right: {
+      
   /**
    
    
@@ -3330,7 +3366,7 @@ The right CSS property participates in specifying the horizontal position of a p
    * }
    * ```
    */
-  "AUTO": IDecorators;
+  readonly AUTO: IDecorators;
   
 
   /**
@@ -3342,19 +3378,19 @@ The right CSS property participates in specifying the horizontal position of a p
    * }
    * ```
    */
-  "SPACE_1": IDecorators;
+  readonly SPACE_1: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### left
+
+    
+  /**
+    * ### left
 The left CSS property participates in specifying the horizontal position of a positioned element. It has no effect on non-positioned elements.
 [Mozilla Developer Network: left](https://developer.mozilla.org/en-US/docs/Web/CSS/left).
-  */
-  left: {
-    
+    */
+    left: {
+      
   /**
    
    
@@ -3364,7 +3400,7 @@ The left CSS property participates in specifying the horizontal position of a po
    * }
    * ```
    */
-  "AUTO": IDecorators;
+  readonly AUTO: IDecorators;
   
 
   /**
@@ -3376,19 +3412,19 @@ The left CSS property participates in specifying the horizontal position of a po
    * }
    * ```
    */
-  "SPACE_1": IDecorators;
+  readonly SPACE_1: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### bottom
+
+    
+  /**
+    * ### bottom
 The bottom CSS property participates in specifying the vertical position of a positioned element. It has no effect on non-positioned elements.
 [Mozilla Developer Network: bottom](https://developer.mozilla.org/en-US/docs/Web/CSS/bottom).
-  */
-  bottom: {
-    
+    */
+    bottom: {
+      
   /**
    
    
@@ -3398,7 +3434,7 @@ The bottom CSS property participates in specifying the vertical position of a po
    * }
    * ```
    */
-  "AUTO": IDecorators;
+  readonly AUTO: IDecorators;
   
 
   /**
@@ -3410,16 +3446,14 @@ The bottom CSS property participates in specifying the vertical position of a po
    * }
    * ```
    */
-  "SPACE_1": IDecorators;
+  readonly SPACE_1: IDecorators;
   
-  }
-
-
+    }
   
 /**
-  * ### letter-space
-The letter-space CSS property sets the space behavior between text characters.
-[Mozilla Developer Network: letter-space](https://developer.mozilla.org/en-US/docs/Web/CSS/letter-space).
+  * ### letter-spacing
+The letter-spacing CSS property sets the space behavior between text characters.
+[Mozilla Developer Network: letter-spacing](https://developer.mozilla.org/en-US/docs/Web/CSS/letter-spacing).
   */
   letterSpacing: {
     
@@ -3427,24 +3461,26 @@ The letter-space CSS property sets the space behavior between text characters.
 
 
   
-/**
-  * ### letter-height
+
+    
+  /**
+    * ### letter-height
 The line-height CSS property sets the height of a line box. It's commonly used to set the distance between lines of text. On block-level elements, it specifies the minimum height of line boxes within the element. On non-replaced inline elements, it specifies the height that is used to calculate line box height.
 [Mozilla Developer Network: letter-height](https://developer.mozilla.org/en-US/docs/Web/CSS/letter-height).
-  */
-  lineHeight: {
-    
-  }
-
-
+    */
+    lineHeight: {
+      
+    }
   
-/**
-  * ### list-style-type
+
+    
+  /**
+    * ### list-style-type
 The list-style-type CSS property sets the marker (such as a disc, character, or custom counter style) of a list item element.
 [Mozilla Developer Network: list-style-type](https://developer.mozilla.org/en-US/docs/Web/CSS/list-style-type).
-  */
-  listStyleType: {
-    
+    */
+    listStyleType: {
+      
   /**
    
    
@@ -3454,7 +3490,7 @@ The list-style-type CSS property sets the marker (such as a disc, character, or 
    * }
    * ```
    */
-  "NONE": IDecorators;
+  readonly NONE: IDecorators;
   
 
   /**
@@ -3466,7 +3502,7 @@ The list-style-type CSS property sets the marker (such as a disc, character, or 
    * }
    * ```
    */
-  "DISC": IDecorators;
+  readonly DISC: IDecorators;
   
 
   /**
@@ -3478,19 +3514,19 @@ The list-style-type CSS property sets the marker (such as a disc, character, or 
    * }
    * ```
    */
-  "DECIMAL": IDecorators;
+  readonly DECIMAL: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### list-style-position
+
+    
+  /**
+    * ### list-style-position
 The list-style-position CSS property sets the position of the ::marker relative to a list item.
 [Mozilla Developer Network: list-style-position](https://developer.mozilla.org/en-US/docs/Web/CSS/list-style-position).
-  */
-  listStylePosition: {
-    
+    */
+    listStylePosition: {
+      
   /**
    
    
@@ -3500,7 +3536,7 @@ The list-style-position CSS property sets the position of the ::marker relative 
    * }
    * ```
    */
-  "INSIDE": IDecorators;
+  readonly INSIDE: IDecorators;
   
 
   /**
@@ -3512,19 +3548,19 @@ The list-style-position CSS property sets the position of the ::marker relative 
    * }
    * ```
    */
-  "OUTSIDE": IDecorators;
+  readonly OUTSIDE: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### float
+
+    
+  /**
+    * ### float
 The float CSS property places an element on the left or right side of its container, allowing text and inline elements to wrap around it. The element is removed from the normal flow of the page, though still remaining a part of the flow (in contrast to absolute positioning).
 [Mozilla Developer Network: float](https://developer.mozilla.org/en-US/docs/Web/CSS/float).
-  */
-  float: {
-    
+    */
+    float: {
+      
   /**
    
    
@@ -3534,7 +3570,7 @@ The float CSS property places an element on the left or right side of its contai
    * }
    * ```
    */
-  "RIGHT": IDecorators;
+  readonly RIGHT: IDecorators;
   
 
   /**
@@ -3546,7 +3582,7 @@ The float CSS property places an element on the left or right side of its contai
    * }
    * ```
    */
-  "LEFT": IDecorators;
+  readonly LEFT: IDecorators;
   
 
   /**
@@ -3558,19 +3594,19 @@ The float CSS property places an element on the left or right side of its contai
    * }
    * ```
    */
-  "NONE": IDecorators;
+  readonly NONE: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### align-content
+
+    
+  /**
+    * ### align-content
 The CSS align-content property sets the distribution of space between and around content items along a flexbox's cross-axis or a grid's block axis.
 [Mozilla Developer Network: align-content](https://developer.mozilla.org/en-US/docs/Web/CSS/align-content).
-  */
-  alignContent: {
-    
+    */
+    alignContent: {
+      
   /**
    
    
@@ -3580,7 +3616,7 @@ The CSS align-content property sets the distribution of space between and around
    * }
    * ```
    */
-  "START": IDecorators;
+  readonly START: IDecorators;
   
 
   /**
@@ -3592,7 +3628,7 @@ The CSS align-content property sets the distribution of space between and around
    * }
    * ```
    */
-  "CENTER": IDecorators;
+  readonly CENTER: IDecorators;
   
 
   /**
@@ -3604,7 +3640,7 @@ The CSS align-content property sets the distribution of space between and around
    * }
    * ```
    */
-  "END": IDecorators;
+  readonly END: IDecorators;
   
 
   /**
@@ -3616,7 +3652,7 @@ The CSS align-content property sets the distribution of space between and around
    * }
    * ```
    */
-  "BETWEEN": IDecorators;
+  readonly BETWEEN: IDecorators;
   
 
   /**
@@ -3628,19 +3664,19 @@ The CSS align-content property sets the distribution of space between and around
    * }
    * ```
    */
-  "AROUND": IDecorators;
+  readonly AROUND: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### align-self
+
+    
+  /**
+    * ### align-self
 The align-self CSS property overrides a grid or flex item's align-items value. In Grid, it aligns the item inside the grid area. In Flexbox, it aligns the item on the cross axis.
 [Mozilla Developer Network: align-self](https://developer.mozilla.org/en-US/docs/Web/CSS/align-self).
-  */
-  alignSelf: {
-    
+    */
+    alignSelf: {
+      
   /**
    
    
@@ -3650,7 +3686,7 @@ The align-self CSS property overrides a grid or flex item's align-items value. I
    * }
    * ```
    */
-  "AUTO": IDecorators;
+  readonly AUTO: IDecorators;
   
 
   /**
@@ -3662,7 +3698,7 @@ The align-self CSS property overrides a grid or flex item's align-items value. I
    * }
    * ```
    */
-  "START": IDecorators;
+  readonly START: IDecorators;
   
 
   /**
@@ -3674,7 +3710,7 @@ The align-self CSS property overrides a grid or flex item's align-items value. I
    * }
    * ```
    */
-  "CENTER": IDecorators;
+  readonly CENTER: IDecorators;
   
 
   /**
@@ -3686,7 +3722,7 @@ The align-self CSS property overrides a grid or flex item's align-items value. I
    * }
    * ```
    */
-  "END": IDecorators;
+  readonly END: IDecorators;
   
 
   /**
@@ -3698,19 +3734,19 @@ The align-self CSS property overrides a grid or flex item's align-items value. I
    * }
    * ```
    */
-  "STRETCH": IDecorators;
+  readonly STRETCH: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### justify-content
+
+    
+  /**
+    * ### justify-content
 The CSS justify-content property defines how the browser distributes space between and around content items along the main-axis of a flex container, and the inline axis of a grid container.
 [Mozilla Developer Network: justify-content](https://developer.mozilla.org/en-US/docs/Web/CSS/justify-content).
-  */
-  justifyContent: {
-    
+    */
+    justifyContent: {
+      
   /**
    
    
@@ -3720,7 +3756,7 @@ The CSS justify-content property defines how the browser distributes space betwe
    * }
    * ```
    */
-  "START": IDecorators;
+  readonly START: IDecorators;
   
 
   /**
@@ -3732,7 +3768,7 @@ The CSS justify-content property defines how the browser distributes space betwe
    * }
    * ```
    */
-  "CENTER": IDecorators;
+  readonly CENTER: IDecorators;
   
 
   /**
@@ -3744,7 +3780,7 @@ The CSS justify-content property defines how the browser distributes space betwe
    * }
    * ```
    */
-  "END": IDecorators;
+  readonly END: IDecorators;
   
 
   /**
@@ -3756,7 +3792,7 @@ The CSS justify-content property defines how the browser distributes space betwe
    * }
    * ```
    */
-  "BETWEEN": IDecorators;
+  readonly BETWEEN: IDecorators;
   
 
   /**
@@ -3768,19 +3804,19 @@ The CSS justify-content property defines how the browser distributes space betwe
    * }
    * ```
    */
-  "AROUND": IDecorators;
+  readonly AROUND: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### margin
+
+    
+  /**
+    * ### margin
 The margin CSS property sets the margin area on all four sides of an element. It is a shorthand for margin-top, margin-right, margin-bottom, and margin-left.
 [Mozilla Developer Network: margin](https://developer.mozilla.org/en-US/docs/Web/CSS/margin).
-  */
-  margin: {
-    
+    */
+    margin: {
+      
   /**
    
    
@@ -3799,7 +3835,7 @@ The margin CSS property sets the margin area on all four sides of an element. It
    * }
    * ```
    */
-  "SPACE_1": IDecorators;
+  readonly SPACE_1: IDecorators;
   
 
   /**
@@ -3820,7 +3856,7 @@ The margin CSS property sets the margin area on all four sides of an element. It
    * }
    * ```
    */
-  "NEGATIVE_SPACE_1": IDecorators;
+  readonly NEGATIVE_SPACE_1: IDecorators;
   
 
   /**
@@ -3841,19 +3877,19 @@ The margin CSS property sets the margin area on all four sides of an element. It
    * }
    * ```
    */
-  "AUTO": IDecorators;
+  readonly AUTO: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### margin-vertical (Classy-UI)
+
+    
+  /**
+    * ### margin-vertical (Classy-UI)
 The margin CSS property sets the margin area on vertical sides of an element. It is a shorthand for margin-top and margin-bottom.
 null
-  */
-  marginVertical: {
-    
+    */
+    marginVertical: {
+      
   /**
    
    
@@ -3866,7 +3902,7 @@ null
    * }
    * ```
    */
-  "SPACE_1": IDecorators;
+  readonly SPACE_1: IDecorators;
   
 
   /**
@@ -3881,7 +3917,7 @@ null
    * }
    * ```
    */
-  "NEGATIVE_SPACE_1": IDecorators;
+  readonly NEGATIVE_SPACE_1: IDecorators;
   
 
   /**
@@ -3896,19 +3932,19 @@ null
    * }
    * ```
    */
-  "AUTO": IDecorators;
+  readonly AUTO: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### margin-horizontal (Classy-UI)
+
+    
+  /**
+    * ### margin-horizontal (Classy-UI)
 The margin CSS property sets the margin area on horizontal sides of an element. It is a shorthand for margin-left and margin-right.
 null
-  */
-  marginHorizontal: {
-    
+    */
+    marginHorizontal: {
+      
   /**
    
    
@@ -3921,7 +3957,7 @@ null
    * }
    * ```
    */
-  "SPACE_1": IDecorators;
+  readonly SPACE_1: IDecorators;
   
 
   /**
@@ -3936,7 +3972,7 @@ null
    * }
    * ```
    */
-  "NEGATIVE_SPACE_1": IDecorators;
+  readonly NEGATIVE_SPACE_1: IDecorators;
   
 
   /**
@@ -3951,19 +3987,19 @@ null
    * }
    * ```
    */
-  "AUTO": IDecorators;
+  readonly AUTO: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### max-height
+
+    
+  /**
+    * ### max-height
 The max-height CSS property sets the maximum height of an element. It prevents the used value of the height property from becoming larger than the value specified for max-height.
 [Mozilla Developer Network: max-height](https://developer.mozilla.org/en-US/docs/Web/CSS/max-height).
-  */
-  maxHeight: {
-    
+    */
+    maxHeight: {
+      
   /**
    
    
@@ -3973,7 +4009,7 @@ The max-height CSS property sets the maximum height of an element. It prevents t
    * }
    * ```
    */
-  "FULL": IDecorators;
+  readonly FULL: IDecorators;
   
 
   /**
@@ -3985,19 +4021,19 @@ The max-height CSS property sets the maximum height of an element. It prevents t
    * }
    * ```
    */
-  "SCREEN": IDecorators;
+  readonly SCREEN: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### max-width
+
+    
+  /**
+    * ### max-width
 The max-width CSS property sets the maximum width of an element. It prevents the used value of the width property from becoming larger than the value specified by max-width.
 [Mozilla Developer Network: max-width](https://developer.mozilla.org/en-US/docs/Web/CSS/max-width).
-  */
-  maxWidth: {
-    
+    */
+    maxWidth: {
+      
   /**
    
    
@@ -4007,7 +4043,7 @@ The max-width CSS property sets the maximum width of an element. It prevents the
    * }
    * ```
    */
-  "MOBILE": IDecorators;
+  readonly MOBILE: IDecorators;
   
 
   /**
@@ -4019,7 +4055,7 @@ The max-width CSS property sets the maximum width of an element. It prevents the
    * }
    * ```
    */
-  "TABLET": IDecorators;
+  readonly TABLET: IDecorators;
   
 
   /**
@@ -4031,7 +4067,7 @@ The max-width CSS property sets the maximum width of an element. It prevents the
    * }
    * ```
    */
-  "LAPTOP": IDecorators;
+  readonly LAPTOP: IDecorators;
   
 
   /**
@@ -4043,30 +4079,30 @@ The max-width CSS property sets the maximum width of an element. It prevents the
    * }
    * ```
    */
-  "DESKTOP": IDecorators;
+  readonly DESKTOP: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### min-height
+
+    
+  /**
+    * ### min-height
 The min-height CSS property sets the minimum height of an element. It prevents the used value of the height property from becoming smaller than the value specified for min-height.
 [Mozilla Developer Network: min-height](https://developer.mozilla.org/en-US/docs/Web/CSS/min-height).
-  */
-  minHeight: {
-    
-  }
-
-
+    */
+    minHeight: {
+      
+    }
   
-/**
-  * ### min-width
+
+    
+  /**
+    * ### min-width
 The min-width CSS property sets the minimum width of an element. It prevents the used value of the width property from becoming smaller than the value specified for min-width.
 [Mozilla Developer Network: min-width](https://developer.mozilla.org/en-US/docs/Web/CSS/min-width).
-  */
-  minWidth: {
-    
+    */
+    minWidth: {
+      
   /**
    
    
@@ -4076,7 +4112,7 @@ The min-width CSS property sets the minimum width of an element. It prevents the
    * }
    * ```
    */
-  "MOBILE": IDecorators;
+  readonly MOBILE: IDecorators;
   
 
   /**
@@ -4088,7 +4124,7 @@ The min-width CSS property sets the minimum width of an element. It prevents the
    * }
    * ```
    */
-  "TABLET": IDecorators;
+  readonly TABLET: IDecorators;
   
 
   /**
@@ -4100,7 +4136,7 @@ The min-width CSS property sets the minimum width of an element. It prevents the
    * }
    * ```
    */
-  "LAPTOP": IDecorators;
+  readonly LAPTOP: IDecorators;
   
 
   /**
@@ -4112,19 +4148,19 @@ The min-width CSS property sets the minimum width of an element. It prevents the
    * }
    * ```
    */
-  "DESKTOP": IDecorators;
+  readonly DESKTOP: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### object-fit
+
+    
+  /**
+    * ### object-fit
 The object-fit CSS property sets how the content of a replaced element, such as an <img> or <video>, should be resized to fit its container.
 [Mozilla Developer Network: object-fit](https://developer.mozilla.org/en-US/docs/Web/CSS/object-fit).
-  */
-  objectFit: {
-    
+    */
+    objectFit: {
+      
   /**
    
    
@@ -4134,7 +4170,7 @@ The object-fit CSS property sets how the content of a replaced element, such as 
    * }
    * ```
    */
-  "CONTAIN": IDecorators;
+  readonly CONTAIN: IDecorators;
   
 
   /**
@@ -4146,7 +4182,7 @@ The object-fit CSS property sets how the content of a replaced element, such as 
    * }
    * ```
    */
-  "COVER": IDecorators;
+  readonly COVER: IDecorators;
   
 
   /**
@@ -4158,7 +4194,7 @@ The object-fit CSS property sets how the content of a replaced element, such as 
    * }
    * ```
    */
-  "FILL": IDecorators;
+  readonly FILL: IDecorators;
   
 
   /**
@@ -4170,7 +4206,7 @@ The object-fit CSS property sets how the content of a replaced element, such as 
    * }
    * ```
    */
-  "NONE": IDecorators;
+  readonly NONE: IDecorators;
   
 
   /**
@@ -4182,19 +4218,19 @@ The object-fit CSS property sets how the content of a replaced element, such as 
    * }
    * ```
    */
-  "SCALE_DOWN": IDecorators;
+  readonly SCALE_DOWN: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### object-position
+
+    
+  /**
+    * ### object-position
 The object-position CSS property specifies the alignment of the selected replaced element's contents within the element's box. Areas of the box which aren't covered by the replaced element's object will show the element's background.
 [Mozilla Developer Network: object-position](https://developer.mozilla.org/en-US/docs/Web/CSS/object-position).
-  */
-  objectPosition: {
-    
+    */
+    objectPosition: {
+      
   /**
    
    
@@ -4204,7 +4240,7 @@ The object-position CSS property specifies the alignment of the selected replace
    * }
    * ```
    */
-  "BOTTOM": IDecorators;
+  readonly BOTTOM: IDecorators;
   
 
   /**
@@ -4216,7 +4252,7 @@ The object-position CSS property specifies the alignment of the selected replace
    * }
    * ```
    */
-  "CENTER": IDecorators;
+  readonly CENTER: IDecorators;
   
 
   /**
@@ -4228,7 +4264,7 @@ The object-position CSS property specifies the alignment of the selected replace
    * }
    * ```
    */
-  "LEFT": IDecorators;
+  readonly LEFT: IDecorators;
   
 
   /**
@@ -4240,7 +4276,7 @@ The object-position CSS property specifies the alignment of the selected replace
    * }
    * ```
    */
-  "LEFT_BOTTOM": IDecorators;
+  readonly LEFT_BOTTOM: IDecorators;
   
 
   /**
@@ -4252,7 +4288,7 @@ The object-position CSS property specifies the alignment of the selected replace
    * }
    * ```
    */
-  "LEFT_TOP": IDecorators;
+  readonly LEFT_TOP: IDecorators;
   
 
   /**
@@ -4264,7 +4300,7 @@ The object-position CSS property specifies the alignment of the selected replace
    * }
    * ```
    */
-  "RIGHT": IDecorators;
+  readonly RIGHT: IDecorators;
   
 
   /**
@@ -4276,7 +4312,7 @@ The object-position CSS property specifies the alignment of the selected replace
    * }
    * ```
    */
-  "RIGHT_BOTTOM": IDecorators;
+  readonly RIGHT_BOTTOM: IDecorators;
   
 
   /**
@@ -4288,7 +4324,7 @@ The object-position CSS property specifies the alignment of the selected replace
    * }
    * ```
    */
-  "RIGHT_TOP": IDecorators;
+  readonly RIGHT_TOP: IDecorators;
   
 
   /**
@@ -4300,30 +4336,30 @@ The object-position CSS property specifies the alignment of the selected replace
    * }
    * ```
    */
-  "TOP": IDecorators;
+  readonly TOP: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### opacity
+
+    
+  /**
+    * ### opacity
 The opacity CSS property sets the opacity of an element. Opacity is the degree to which content behind an element is hidden, and is the opposite of transparency.
 [Mozilla Developer Network: opacity](https://developer.mozilla.org/en-US/docs/Web/CSS/opacity).
-  */
-  opacity: {
-    
-  }
-
-
+    */
+    opacity: {
+      
+    }
   
-/**
-  * ### order
+
+    
+  /**
+    * ### order
 The order CSS property sets the order to lay out an item in a flex or grid container. Items in a container are sorted by ascending order value and then by their source code order.
 [Mozilla Developer Network: order](https://developer.mozilla.org/en-US/docs/Web/CSS/order).
-  */
-  order: {
-    
+    */
+    order: {
+      
   /**
    
    
@@ -4333,7 +4369,7 @@ The order CSS property sets the order to lay out an item in a flex or grid conta
    * }
    * ```
    */
-  "FIRST": IDecorators;
+  readonly FIRST: IDecorators;
   
 
   /**
@@ -4345,7 +4381,7 @@ The order CSS property sets the order to lay out an item in a flex or grid conta
    * }
    * ```
    */
-  "LAST": IDecorators;
+  readonly LAST: IDecorators;
   
 
   /**
@@ -4357,7 +4393,7 @@ The order CSS property sets the order to lay out an item in a flex or grid conta
    * }
    * ```
    */
-  "NONE": IDecorators;
+  readonly NONE: IDecorators;
   
 
   /**
@@ -4369,7 +4405,7 @@ The order CSS property sets the order to lay out an item in a flex or grid conta
    * }
    * ```
    */
-  "ORDER_1": IDecorators;
+  readonly ORDER_1: IDecorators;
   
 
   /**
@@ -4381,7 +4417,7 @@ The order CSS property sets the order to lay out an item in a flex or grid conta
    * }
    * ```
    */
-  "ORDER_2": IDecorators;
+  readonly ORDER_2: IDecorators;
   
 
   /**
@@ -4393,7 +4429,7 @@ The order CSS property sets the order to lay out an item in a flex or grid conta
    * }
    * ```
    */
-  "ORDER_3": IDecorators;
+  readonly ORDER_3: IDecorators;
   
 
   /**
@@ -4405,7 +4441,7 @@ The order CSS property sets the order to lay out an item in a flex or grid conta
    * }
    * ```
    */
-  "ORDER_4": IDecorators;
+  readonly ORDER_4: IDecorators;
   
 
   /**
@@ -4417,7 +4453,7 @@ The order CSS property sets the order to lay out an item in a flex or grid conta
    * }
    * ```
    */
-  "ORDER_5": IDecorators;
+  readonly ORDER_5: IDecorators;
   
 
   /**
@@ -4429,7 +4465,7 @@ The order CSS property sets the order to lay out an item in a flex or grid conta
    * }
    * ```
    */
-  "ORDER_6": IDecorators;
+  readonly ORDER_6: IDecorators;
   
 
   /**
@@ -4441,7 +4477,7 @@ The order CSS property sets the order to lay out an item in a flex or grid conta
    * }
    * ```
    */
-  "ORDER_7": IDecorators;
+  readonly ORDER_7: IDecorators;
   
 
   /**
@@ -4453,7 +4489,7 @@ The order CSS property sets the order to lay out an item in a flex or grid conta
    * }
    * ```
    */
-  "ORDER_8": IDecorators;
+  readonly ORDER_8: IDecorators;
   
 
   /**
@@ -4465,7 +4501,7 @@ The order CSS property sets the order to lay out an item in a flex or grid conta
    * }
    * ```
    */
-  "ORDER_9": IDecorators;
+  readonly ORDER_9: IDecorators;
   
 
   /**
@@ -4477,7 +4513,7 @@ The order CSS property sets the order to lay out an item in a flex or grid conta
    * }
    * ```
    */
-  "ORDER_10": IDecorators;
+  readonly ORDER_10: IDecorators;
   
 
   /**
@@ -4489,7 +4525,7 @@ The order CSS property sets the order to lay out an item in a flex or grid conta
    * }
    * ```
    */
-  "ORDER_11": IDecorators;
+  readonly ORDER_11: IDecorators;
   
 
   /**
@@ -4501,19 +4537,19 @@ The order CSS property sets the order to lay out an item in a flex or grid conta
    * }
    * ```
    */
-  "ORDER_12": IDecorators;
+  readonly ORDER_12: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### padding
+
+    
+  /**
+    * ### padding
 The padding CSS property sets the padding area on all four sides of an element. It is a shorthand for padding-top, padding-right, padding-bottom, and padding-left.
 [Mozilla Developer Network: padding](https://developer.mozilla.org/en-US/docs/Web/CSS/padding).
-  */
-  padding: {
-    
+    */
+    padding: {
+      
   /**
    
    
@@ -4532,19 +4568,19 @@ The padding CSS property sets the padding area on all four sides of an element. 
    * }
    * ```
    */
-  "SPACE_1": IDecorators;
+  readonly SPACE_1: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### padding-vertical (Classy-UI)
+
+    
+  /**
+    * ### padding-vertical (Classy-UI)
 The padding CSS property sets the padding area on the vertical sides of an element. It is a shorthand for padding-top and padding-bottom.
 null
-  */
-  paddingVertical: {
-    
+    */
+    paddingVertical: {
+      
   /**
    
    
@@ -4557,19 +4593,19 @@ null
    * }
    * ```
    */
-  "SPACE_1": IDecorators;
+  readonly SPACE_1: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### padding-horizontal (Classy-UI)
+
+    
+  /**
+    * ### padding-horizontal (Classy-UI)
 The padding CSS property sets the padding area on the horizontal sides of an element. It is a shorthand for padding-left and padding-right.
 null
-  */
-  paddingHorizontal: {
-    
+    */
+    paddingHorizontal: {
+      
   /**
    
    
@@ -4582,19 +4618,19 @@ null
    * }
    * ```
    */
-  "SPACE_1": IDecorators;
+  readonly SPACE_1: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### padding-top
+
+    
+  /**
+    * ### padding-top
 The padding-top CSS property sets the height of the padding area on the top of an element.
 [Mozilla Developer Network: padding-top](https://developer.mozilla.org/en-US/docs/Web/CSS/padding-top).
-  */
-  paddingTop: {
-    
+    */
+    paddingTop: {
+      
   /**
    
    
@@ -4604,19 +4640,19 @@ The padding-top CSS property sets the height of the padding area on the top of a
    * }
    * ```
    */
-  "SPACE_1": IDecorators;
+  readonly SPACE_1: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### padding-right
+
+    
+  /**
+    * ### padding-right
 The padding-right CSS property sets the width of the padding area on the right of an element.
 [Mozilla Developer Network: padding-right](https://developer.mozilla.org/en-US/docs/Web/CSS/padding-right).
-  */
-  paddingRight: {
-    
+    */
+    paddingRight: {
+      
   /**
    
    
@@ -4626,19 +4662,19 @@ The padding-right CSS property sets the width of the padding area on the right o
    * }
    * ```
    */
-  "SPACE_1": IDecorators;
+  readonly SPACE_1: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### padding-bottom
+
+    
+  /**
+    * ### padding-bottom
 The padding-bottom CSS property sets the height of the padding area on the bottom of an element.
 [Mozilla Developer Network: padding-bottom](https://developer.mozilla.org/en-US/docs/Web/CSS/padding-bottom).
-  */
-  paddingBottom: {
-    
+    */
+    paddingBottom: {
+      
   /**
    
    
@@ -4648,19 +4684,19 @@ The padding-bottom CSS property sets the height of the padding area on the botto
    * }
    * ```
    */
-  "SPACE_1": IDecorators;
+  readonly SPACE_1: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### padding-left
+
+    
+  /**
+    * ### padding-left
 The padding-left CSS property sets the width of the padding area on the left of an element.
 [Mozilla Developer Network: padding-left](https://developer.mozilla.org/en-US/docs/Web/CSS/padding-left).
-  */
-  paddingLeft: {
-    
+    */
+    paddingLeft: {
+      
   /**
    
    
@@ -4670,19 +4706,19 @@ The padding-left CSS property sets the width of the padding area on the left of 
    * }
    * ```
    */
-  "SPACE_1": IDecorators;
+  readonly SPACE_1: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### margin-top
+
+    
+  /**
+    * ### margin-top
 The margin-top CSS property sets the margin area on the top of an element. A positive value places it farther from its neighbors, while a negative value places it closer.
 [Mozilla Developer Network: margin-top](https://developer.mozilla.org/en-US/docs/Web/CSS/margin-top).
-  */
-  marginTop: {
-    
+    */
+    marginTop: {
+      
   /**
    
    
@@ -4692,7 +4728,7 @@ The margin-top CSS property sets the margin area on the top of an element. A pos
    * }
    * ```
    */
-  "SPACE_1": IDecorators;
+  readonly SPACE_1: IDecorators;
   
 
   /**
@@ -4704,7 +4740,7 @@ The margin-top CSS property sets the margin area on the top of an element. A pos
    * }
    * ```
    */
-  "NEGATIVE_SPACE_1": IDecorators;
+  readonly NEGATIVE_SPACE_1: IDecorators;
   
 
   /**
@@ -4716,19 +4752,19 @@ The margin-top CSS property sets the margin area on the top of an element. A pos
    * }
    * ```
    */
-  "AUTO": IDecorators;
+  readonly AUTO: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### margin-right
+
+    
+  /**
+    * ### margin-right
 The margin-right CSS property sets the margin area on the right of an element. A positive value places it farther from its neighbors, while a negative value places it closer.
 [Mozilla Developer Network: margin-right](https://developer.mozilla.org/en-US/docs/Web/CSS/margin-right).
-  */
-  marginRight: {
-    
+    */
+    marginRight: {
+      
   /**
    
    
@@ -4738,7 +4774,7 @@ The margin-right CSS property sets the margin area on the right of an element. A
    * }
    * ```
    */
-  "SPACE_1": IDecorators;
+  readonly SPACE_1: IDecorators;
   
 
   /**
@@ -4750,7 +4786,7 @@ The margin-right CSS property sets the margin area on the right of an element. A
    * }
    * ```
    */
-  "NEGATIVE_SPACE_1": IDecorators;
+  readonly NEGATIVE_SPACE_1: IDecorators;
   
 
   /**
@@ -4762,19 +4798,19 @@ The margin-right CSS property sets the margin area on the right of an element. A
    * }
    * ```
    */
-  "AUTO": IDecorators;
+  readonly AUTO: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### margin-bottom
+
+    
+  /**
+    * ### margin-bottom
 The margin-bottom CSS property sets the margin area on the bottom of an element. A positive value places it farther from its neighbors, while a negative value places it closer.
 [Mozilla Developer Network: margin-bottom](https://developer.mozilla.org/en-US/docs/Web/CSS/margin-bottom).
-  */
-  marginBottom: {
-    
+    */
+    marginBottom: {
+      
   /**
    
    
@@ -4784,7 +4820,7 @@ The margin-bottom CSS property sets the margin area on the bottom of an element.
    * }
    * ```
    */
-  "SPACE_1": IDecorators;
+  readonly SPACE_1: IDecorators;
   
 
   /**
@@ -4796,7 +4832,7 @@ The margin-bottom CSS property sets the margin area on the bottom of an element.
    * }
    * ```
    */
-  "NEGATIVE_SPACE_1": IDecorators;
+  readonly NEGATIVE_SPACE_1: IDecorators;
   
 
   /**
@@ -4808,19 +4844,19 @@ The margin-bottom CSS property sets the margin area on the bottom of an element.
    * }
    * ```
    */
-  "AUTO": IDecorators;
+  readonly AUTO: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### ::placeholder
+
+    
+  /**
+    * ### ::placeholder
 The ::placeholder CSS pseudo-element represents the placeholder text in an <input> or <textarea> element.
 [Mozilla Developer Network: ::placeholder](https://developer.mozilla.org/en-US/docs/Web/CSS/::placeholder).
-  */
-  placeholder: {
-    
+    */
+    placeholder: {
+      
   /**
    
    
@@ -4830,7 +4866,7 @@ The ::placeholder CSS pseudo-element represents the placeholder text in an <inpu
    * }
    * ```
    */
-  "RED": IDecorators;
+  readonly RED: IDecorators;
   
 
   /**
@@ -4842,7 +4878,7 @@ The ::placeholder CSS pseudo-element represents the placeholder text in an <inpu
    * }
    * ```
    */
-  "BLUE": IDecorators;
+  readonly BLUE: IDecorators;
   
 
   /**
@@ -4854,7 +4890,7 @@ The ::placeholder CSS pseudo-element represents the placeholder text in an <inpu
    * }
    * ```
    */
-  "GREEN": IDecorators;
+  readonly GREEN: IDecorators;
   
 
   /**
@@ -4866,19 +4902,19 @@ The ::placeholder CSS pseudo-element represents the placeholder text in an <inpu
    * }
    * ```
    */
-  "PURPLE": IDecorators;
+  readonly PURPLE: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### margin-left
+
+    
+  /**
+    * ### margin-left
 The margin-left CSS property sets the margin area on the left of an element. A positive value places it farther from its neighbors, while a negative value places it closer.
 [Mozilla Developer Network: margin-left](https://developer.mozilla.org/en-US/docs/Web/CSS/margin-left).
-  */
-  marginLeft: {
-    
+    */
+    marginLeft: {
+      
   /**
    
    
@@ -4888,7 +4924,7 @@ The margin-left CSS property sets the margin area on the left of an element. A p
    * }
    * ```
    */
-  "SPACE_1": IDecorators;
+  readonly SPACE_1: IDecorators;
   
 
   /**
@@ -4900,7 +4936,7 @@ The margin-left CSS property sets the margin area on the left of an element. A p
    * }
    * ```
    */
-  "NEGATIVE_SPACE_1": IDecorators;
+  readonly NEGATIVE_SPACE_1: IDecorators;
   
 
   /**
@@ -4912,19 +4948,19 @@ The margin-left CSS property sets the margin area on the left of an element. A p
    * }
    * ```
    */
-  "AUTO": IDecorators;
+  readonly AUTO: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### stroke
+
+    
+  /**
+    * ### stroke
 The stroke attribute is a presentation attribute defining the color (or any SVG paint servers like gradients or patterns) used to paint the outline of the shape.
 [Mozilla Developer Network: stroke](https://developer.mozilla.org/en-US/docs/Web/CSS/stroke).
-  */
-  stroke: {
-    
+    */
+    stroke: {
+      
   /**
    
    
@@ -4934,19 +4970,19 @@ The stroke attribute is a presentation attribute defining the color (or any SVG 
    * }
    * ```
    */
-  "CURRENT": IDecorators;
+  readonly CURRENT: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### width
+
+    
+  /**
+    * ### width
 The width attribute defines the horizontal length of an element in the user coordinate system.
 [Mozilla Developer Network: width](https://developer.mozilla.org/en-US/docs/Web/CSS/width).
-  */
-  width: {
-    
+    */
+    width: {
+      
   /**
    
    
@@ -4956,7 +4992,7 @@ The width attribute defines the horizontal length of an element in the user coor
    * }
    * ```
    */
-  "auto": IDecorators;
+  readonly auto: IDecorators;
   
 
   /**
@@ -4968,7 +5004,7 @@ The width attribute defines the horizontal length of an element in the user coor
    * }
    * ```
    */
-  "MOBILE": IDecorators;
+  readonly MOBILE: IDecorators;
   
 
   /**
@@ -4980,7 +5016,7 @@ The width attribute defines the horizontal length of an element in the user coor
    * }
    * ```
    */
-  "TABLET": IDecorators;
+  readonly TABLET: IDecorators;
   
 
   /**
@@ -4992,7 +5028,7 @@ The width attribute defines the horizontal length of an element in the user coor
    * }
    * ```
    */
-  "LAPTOP": IDecorators;
+  readonly LAPTOP: IDecorators;
   
 
   /**
@@ -5004,7 +5040,7 @@ The width attribute defines the horizontal length of an element in the user coor
    * }
    * ```
    */
-  "DESKTOP": IDecorators;
+  readonly DESKTOP: IDecorators;
   
 
   /**
@@ -5016,7 +5052,7 @@ The width attribute defines the horizontal length of an element in the user coor
    * }
    * ```
    */
-  "SPAN_1_2": IDecorators;
+  readonly SPAN_1_2: IDecorators;
   
 
   /**
@@ -5028,7 +5064,7 @@ The width attribute defines the horizontal length of an element in the user coor
    * }
    * ```
    */
-  "SPAN_1_3": IDecorators;
+  readonly SPAN_1_3: IDecorators;
   
 
   /**
@@ -5040,7 +5076,7 @@ The width attribute defines the horizontal length of an element in the user coor
    * }
    * ```
    */
-  "SPAN_2_3": IDecorators;
+  readonly SPAN_2_3: IDecorators;
   
 
   /**
@@ -5052,7 +5088,7 @@ The width attribute defines the horizontal length of an element in the user coor
    * }
    * ```
    */
-  "SPAN_1_4": IDecorators;
+  readonly SPAN_1_4: IDecorators;
   
 
   /**
@@ -5064,7 +5100,7 @@ The width attribute defines the horizontal length of an element in the user coor
    * }
    * ```
    */
-  "SPAN_2_4": IDecorators;
+  readonly SPAN_2_4: IDecorators;
   
 
   /**
@@ -5076,7 +5112,7 @@ The width attribute defines the horizontal length of an element in the user coor
    * }
    * ```
    */
-  "SPAN_3_4": IDecorators;
+  readonly SPAN_3_4: IDecorators;
   
 
   /**
@@ -5088,7 +5124,7 @@ The width attribute defines the horizontal length of an element in the user coor
    * }
    * ```
    */
-  "SPAN_1_5": IDecorators;
+  readonly SPAN_1_5: IDecorators;
   
 
   /**
@@ -5100,7 +5136,7 @@ The width attribute defines the horizontal length of an element in the user coor
    * }
    * ```
    */
-  "SPAN_2_5": IDecorators;
+  readonly SPAN_2_5: IDecorators;
   
 
   /**
@@ -5112,7 +5148,7 @@ The width attribute defines the horizontal length of an element in the user coor
    * }
    * ```
    */
-  "SPAN_3_5": IDecorators;
+  readonly SPAN_3_5: IDecorators;
   
 
   /**
@@ -5124,7 +5160,7 @@ The width attribute defines the horizontal length of an element in the user coor
    * }
    * ```
    */
-  "SPAN_4_5": IDecorators;
+  readonly SPAN_4_5: IDecorators;
   
 
   /**
@@ -5136,7 +5172,7 @@ The width attribute defines the horizontal length of an element in the user coor
    * }
    * ```
    */
-  "SPAN_1_6": IDecorators;
+  readonly SPAN_1_6: IDecorators;
   
 
   /**
@@ -5148,7 +5184,7 @@ The width attribute defines the horizontal length of an element in the user coor
    * }
    * ```
    */
-  "SPAN_2_6": IDecorators;
+  readonly SPAN_2_6: IDecorators;
   
 
   /**
@@ -5160,7 +5196,7 @@ The width attribute defines the horizontal length of an element in the user coor
    * }
    * ```
    */
-  "SPAN_3_6": IDecorators;
+  readonly SPAN_3_6: IDecorators;
   
 
   /**
@@ -5172,7 +5208,7 @@ The width attribute defines the horizontal length of an element in the user coor
    * }
    * ```
    */
-  "SPAN_4_6": IDecorators;
+  readonly SPAN_4_6: IDecorators;
   
 
   /**
@@ -5184,7 +5220,7 @@ The width attribute defines the horizontal length of an element in the user coor
    * }
    * ```
    */
-  "SPAN_5_6": IDecorators;
+  readonly SPAN_5_6: IDecorators;
   
 
   /**
@@ -5196,7 +5232,7 @@ The width attribute defines the horizontal length of an element in the user coor
    * }
    * ```
    */
-  "SPAN_1_12": IDecorators;
+  readonly SPAN_1_12: IDecorators;
   
 
   /**
@@ -5208,7 +5244,7 @@ The width attribute defines the horizontal length of an element in the user coor
    * }
    * ```
    */
-  "SPAN_2_12": IDecorators;
+  readonly SPAN_2_12: IDecorators;
   
 
   /**
@@ -5220,7 +5256,7 @@ The width attribute defines the horizontal length of an element in the user coor
    * }
    * ```
    */
-  "SPAN_3_12": IDecorators;
+  readonly SPAN_3_12: IDecorators;
   
 
   /**
@@ -5232,7 +5268,7 @@ The width attribute defines the horizontal length of an element in the user coor
    * }
    * ```
    */
-  "SPAN_4_12": IDecorators;
+  readonly SPAN_4_12: IDecorators;
   
 
   /**
@@ -5244,7 +5280,7 @@ The width attribute defines the horizontal length of an element in the user coor
    * }
    * ```
    */
-  "SPAN_5_12": IDecorators;
+  readonly SPAN_5_12: IDecorators;
   
 
   /**
@@ -5256,7 +5292,7 @@ The width attribute defines the horizontal length of an element in the user coor
    * }
    * ```
    */
-  "SPAN_6_12": IDecorators;
+  readonly SPAN_6_12: IDecorators;
   
 
   /**
@@ -5268,7 +5304,7 @@ The width attribute defines the horizontal length of an element in the user coor
    * }
    * ```
    */
-  "SPAN_7_12": IDecorators;
+  readonly SPAN_7_12: IDecorators;
   
 
   /**
@@ -5280,7 +5316,7 @@ The width attribute defines the horizontal length of an element in the user coor
    * }
    * ```
    */
-  "SPAN_8_12": IDecorators;
+  readonly SPAN_8_12: IDecorators;
   
 
   /**
@@ -5292,7 +5328,7 @@ The width attribute defines the horizontal length of an element in the user coor
    * }
    * ```
    */
-  "SPAN_9_12": IDecorators;
+  readonly SPAN_9_12: IDecorators;
   
 
   /**
@@ -5304,7 +5340,7 @@ The width attribute defines the horizontal length of an element in the user coor
    * }
    * ```
    */
-  "SPAN_10_12": IDecorators;
+  readonly SPAN_10_12: IDecorators;
   
 
   /**
@@ -5316,30 +5352,30 @@ The width attribute defines the horizontal length of an element in the user coor
    * }
    * ```
    */
-  "SPAN_11_12": IDecorators;
+  readonly SPAN_11_12: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### z-index
+
+    
+  /**
+    * ### z-index
 The z-index CSS property sets the z-order of a positioned element and its descendants or flex items. Overlapping elements with a larger z-index cover those with a smaller one.
 [Mozilla Developer Network: z-index](https://developer.mozilla.org/en-US/docs/Web/CSS/z-index).
-  */
-  zIndex: {
-    
-  }
-
-
+    */
+    zIndex: {
+      
+    }
   
-/**
-  * ### gap
+
+    
+  /**
+    * ### gap
 The grid-gap CSS property sets the gaps (gutters) between rows and columns. It is a shorthand for row-gap and column-gap.
 [Mozilla Developer Network: gap](https://developer.mozilla.org/en-US/docs/Web/CSS/gap).
-  */
-  gridGap: {
-    
+    */
+    gridGap: {
+      
   /**
    
    
@@ -5352,19 +5388,19 @@ The grid-gap CSS property sets the gaps (gutters) between rows and columns. It i
    * }
    * ```
    */
-  "SPACE_1": IDecorators;
+  readonly SPACE_1: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### grid-row-gap
+
+    
+  /**
+    * ### grid-row-gap
 The row-gap CSS property sets the size of the gap (gutter) between an element's grid rows.
 [Mozilla Developer Network: grid-row-gap](https://developer.mozilla.org/en-US/docs/Web/CSS/grid-row-gap).
-  */
-  gridRowGap: {
-    
+    */
+    gridRowGap: {
+      
   /**
    
    
@@ -5374,19 +5410,19 @@ The row-gap CSS property sets the size of the gap (gutter) between an element's 
    * }
    * ```
    */
-  "SPACE_1": IDecorators;
+  readonly SPACE_1: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### grid-column-gap
+
+    
+  /**
+    * ### grid-column-gap
 The column-gap CSS property sets the size of the gap (gutter) between an element's grid columns.
 [Mozilla Developer Network: grid-column-gap](https://developer.mozilla.org/en-US/docs/Web/CSS/grid-column-gap).
-  */
-  gridColumnGap: {
-    
+    */
+    gridColumnGap: {
+      
   /**
    
    
@@ -5396,63 +5432,63 @@ The column-gap CSS property sets the size of the gap (gutter) between an element
    * }
    * ```
    */
-  "SPACE_1": IDecorators;
+  readonly SPACE_1: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### grid-template-columns
+
+    
+  /**
+    * ### grid-template-columns
 The grid-template-columns CSS property defines the line names and track sizing functions of the grid columns.
 [Mozilla Developer Network: grid-template-columns](https://developer.mozilla.org/en-US/docs/Web/CSS/grid-template-columns).
-  */
-  gridTemplateColumns: {
-    
-  }
-
-
+    */
+    gridTemplateColumns: {
+      
+    }
   
-/**
-  * ### grid-column
+
+    
+  /**
+    * ### grid-column
 The grid-column CSS property is a shorthand property for grid-column-start and grid-column-end specifying a grid item's size and location within the grid column by contributing a line, a span, or nothing (automatic) to its grid placement, thereby specifying the inline-start and inline-end edge of its grid area.
 [Mozilla Developer Network: grid-column](https://developer.mozilla.org/en-US/docs/Web/CSS/grid-column).
-  */
-  gridColumn: {
-    
-  }
-
-
+    */
+    gridColumn: {
+      
+    }
   
-/**
-  * ### grid-column-start
+
+    
+  /**
+    * ### grid-column-start
 The grid-column-start CSS property specifies a grid item’s start position within the grid column by contributing a line, a span, or nothing (automatic) to its grid placement. This start position defines the block-start edge of the grid area.
 [Mozilla Developer Network: grid-column-start](https://developer.mozilla.org/en-US/docs/Web/CSS/grid-column-start).
-  */
-  gridColumnStart: {
-    
-  }
-
-
+    */
+    gridColumnStart: {
+      
+    }
   
-/**
-  * ### grid-column-end
+
+    
+  /**
+    * ### grid-column-end
 The grid-column-end CSS property specifies a grid item’s end position within the grid column by contributing a line, a span, or nothing (automatic) to its grid placement, thereby specifying the block-end edge of its grid area.
 [Mozilla Developer Network: grid-column-end](https://developer.mozilla.org/en-US/docs/Web/CSS/grid-column-end).
-  */
-  gridColumnEnd: {
-    
-  }
-
-
+    */
+    gridColumnEnd: {
+      
+    }
   
-/**
-  * ### transform-origin
+
+    
+  /**
+    * ### transform-origin
 The transform-origin CSS property sets the origin for an element's transformations.
 [Mozilla Developer Network: transform-origin](https://developer.mozilla.org/en-US/docs/Web/CSS/transform-origin).
-  */
-  transformOrigin: {
-    
+    */
+    transformOrigin: {
+      
   /**
    
    
@@ -5462,7 +5498,7 @@ The transform-origin CSS property sets the origin for an element's transformatio
    * }
    * ```
    */
-  "CENTER": IDecorators;
+  readonly CENTER: IDecorators;
   
 
   /**
@@ -5474,7 +5510,7 @@ The transform-origin CSS property sets the origin for an element's transformatio
    * }
    * ```
    */
-  "TOP": IDecorators;
+  readonly TOP: IDecorators;
   
 
   /**
@@ -5486,7 +5522,7 @@ The transform-origin CSS property sets the origin for an element's transformatio
    * }
    * ```
    */
-  "TOP_RIGHT": IDecorators;
+  readonly TOP_RIGHT: IDecorators;
   
 
   /**
@@ -5498,7 +5534,7 @@ The transform-origin CSS property sets the origin for an element's transformatio
    * }
    * ```
    */
-  "RIGHT": IDecorators;
+  readonly RIGHT: IDecorators;
   
 
   /**
@@ -5510,7 +5546,7 @@ The transform-origin CSS property sets the origin for an element's transformatio
    * }
    * ```
    */
-  "BOTTOM_RIGHT": IDecorators;
+  readonly BOTTOM_RIGHT: IDecorators;
   
 
   /**
@@ -5522,7 +5558,7 @@ The transform-origin CSS property sets the origin for an element's transformatio
    * }
    * ```
    */
-  "BOTTOM": IDecorators;
+  readonly BOTTOM: IDecorators;
   
 
   /**
@@ -5534,7 +5570,7 @@ The transform-origin CSS property sets the origin for an element's transformatio
    * }
    * ```
    */
-  "BOTTOM_LEFT": IDecorators;
+  readonly BOTTOM_LEFT: IDecorators;
   
 
   /**
@@ -5546,7 +5582,7 @@ The transform-origin CSS property sets the origin for an element's transformatio
    * }
    * ```
    */
-  "LEFT": IDecorators;
+  readonly LEFT: IDecorators;
   
 
   /**
@@ -5558,19 +5594,19 @@ The transform-origin CSS property sets the origin for an element's transformatio
    * }
    * ```
    */
-  "TOP_LEFT": IDecorators;
+  readonly TOP_LEFT: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### transform
+
+    
+  /**
+    * ### transform
 The transform CSS property lets you rotate, scale, skew, or translate an element. It modifies the coordinate space of the CSS visual formatting model.
 [Mozilla Developer Network: transform](https://developer.mozilla.org/en-US/docs/Web/CSS/transform).
-  */
-  scale: {
-    
+    */
+    scale: {
+      
   /**
    
    
@@ -5580,7 +5616,7 @@ The transform CSS property lets you rotate, scale, skew, or translate an element
    * }
    * ```
    */
-  "NONE": IDecorators;
+  readonly NONE: IDecorators;
   
 
   /**
@@ -5592,7 +5628,7 @@ The transform CSS property lets you rotate, scale, skew, or translate an element
    * }
    * ```
    */
-  "SCALE_50": IDecorators;
+  readonly SCALE_50: IDecorators;
   
 
   /**
@@ -5604,7 +5640,7 @@ The transform CSS property lets you rotate, scale, skew, or translate an element
    * }
    * ```
    */
-  "SCALE_75": IDecorators;
+  readonly SCALE_75: IDecorators;
   
 
   /**
@@ -5616,7 +5652,7 @@ The transform CSS property lets you rotate, scale, skew, or translate an element
    * }
    * ```
    */
-  "SCALE_90": IDecorators;
+  readonly SCALE_90: IDecorators;
   
 
   /**
@@ -5628,7 +5664,7 @@ The transform CSS property lets you rotate, scale, skew, or translate an element
    * }
    * ```
    */
-  "SCALE_95": IDecorators;
+  readonly SCALE_95: IDecorators;
   
 
   /**
@@ -5640,7 +5676,7 @@ The transform CSS property lets you rotate, scale, skew, or translate an element
    * }
    * ```
    */
-  "SCALE_100": IDecorators;
+  readonly SCALE_100: IDecorators;
   
 
   /**
@@ -5652,7 +5688,7 @@ The transform CSS property lets you rotate, scale, skew, or translate an element
    * }
    * ```
    */
-  "SCALE_105": IDecorators;
+  readonly SCALE_105: IDecorators;
   
 
   /**
@@ -5664,7 +5700,7 @@ The transform CSS property lets you rotate, scale, skew, or translate an element
    * }
    * ```
    */
-  "SCALE_110": IDecorators;
+  readonly SCALE_110: IDecorators;
   
 
   /**
@@ -5676,7 +5712,7 @@ The transform CSS property lets you rotate, scale, skew, or translate an element
    * }
    * ```
    */
-  "SCALE_125": IDecorators;
+  readonly SCALE_125: IDecorators;
   
 
   /**
@@ -5688,19 +5724,19 @@ The transform CSS property lets you rotate, scale, skew, or translate an element
    * }
    * ```
    */
-  "SCALE_150": IDecorators;
+  readonly SCALE_150: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### transform
+
+    
+  /**
+    * ### transform
 The transform CSS property lets you rotate, scale, skew, or translate an element. It modifies the coordinate space of the CSS visual formatting model.
 [Mozilla Developer Network: transform](https://developer.mozilla.org/en-US/docs/Web/CSS/transform).
-  */
-  rotate: {
-    
+    */
+    rotate: {
+      
   /**
    
    
@@ -5710,7 +5746,7 @@ The transform CSS property lets you rotate, scale, skew, or translate an element
    * }
    * ```
    */
-  "NEGATIVE_DEG_180": IDecorators;
+  readonly NEGATIVE_DEG_180: IDecorators;
   
 
   /**
@@ -5722,7 +5758,7 @@ The transform CSS property lets you rotate, scale, skew, or translate an element
    * }
    * ```
    */
-  "NEGATIVE_DEG_90": IDecorators;
+  readonly NEGATIVE_DEG_90: IDecorators;
   
 
   /**
@@ -5734,7 +5770,7 @@ The transform CSS property lets you rotate, scale, skew, or translate an element
    * }
    * ```
    */
-  "NEGATIVE_DEG_45": IDecorators;
+  readonly NEGATIVE_DEG_45: IDecorators;
   
 
   /**
@@ -5746,7 +5782,7 @@ The transform CSS property lets you rotate, scale, skew, or translate an element
    * }
    * ```
    */
-  "NONE": IDecorators;
+  readonly NONE: IDecorators;
   
 
   /**
@@ -5758,7 +5794,7 @@ The transform CSS property lets you rotate, scale, skew, or translate an element
    * }
    * ```
    */
-  "DEG_45": IDecorators;
+  readonly DEG_45: IDecorators;
   
 
   /**
@@ -5770,7 +5806,7 @@ The transform CSS property lets you rotate, scale, skew, or translate an element
    * }
    * ```
    */
-  "DEG_90": IDecorators;
+  readonly DEG_90: IDecorators;
   
 
   /**
@@ -5782,19 +5818,19 @@ The transform CSS property lets you rotate, scale, skew, or translate an element
    * }
    * ```
    */
-  "DEG_180": IDecorators;
+  readonly DEG_180: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### transform
+
+    
+  /**
+    * ### transform
 The transform CSS property lets you rotate, scale, skew, or translate an element. It modifies the coordinate space of the CSS visual formatting model.
 [Mozilla Developer Network: transform](https://developer.mozilla.org/en-US/docs/Web/CSS/transform).
-  */
-  translate: {
-    
+    */
+    translate: {
+      
   /**
    
    
@@ -5804,7 +5840,7 @@ The transform CSS property lets you rotate, scale, skew, or translate an element
    * }
    * ```
    */
-  "SPACE_1": IDecorators;
+  readonly SPACE_1: IDecorators;
   
 
   /**
@@ -5816,7 +5852,7 @@ The transform CSS property lets you rotate, scale, skew, or translate an element
    * }
    * ```
    */
-  "NEGATIVE_SPACE_1": IDecorators;
+  readonly NEGATIVE_SPACE_1: IDecorators;
   
 
   /**
@@ -5828,7 +5864,7 @@ The transform CSS property lets you rotate, scale, skew, or translate an element
    * }
    * ```
    */
-  "NEG_FULL": IDecorators;
+  readonly NEG_FULL: IDecorators;
   
 
   /**
@@ -5840,7 +5876,7 @@ The transform CSS property lets you rotate, scale, skew, or translate an element
    * }
    * ```
    */
-  "NEG_HALF": IDecorators;
+  readonly NEG_HALF: IDecorators;
   
 
   /**
@@ -5852,7 +5888,7 @@ The transform CSS property lets you rotate, scale, skew, or translate an element
    * }
    * ```
    */
-  "HALF": IDecorators;
+  readonly HALF: IDecorators;
   
 
   /**
@@ -5864,19 +5900,19 @@ The transform CSS property lets you rotate, scale, skew, or translate an element
    * }
    * ```
    */
-  "FULL": IDecorators;
+  readonly FULL: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### transition-property
+
+    
+  /**
+    * ### transition-property
 The transition-property CSS property sets the CSS properties to which a transition effect should be applied.
 [Mozilla Developer Network: transition-property](https://developer.mozilla.org/en-US/docs/Web/CSS/transition-property).
-  */
-  transitionProperty: {
-    
+    */
+    transitionProperty: {
+      
   /**
    
    
@@ -5886,7 +5922,7 @@ The transition-property CSS property sets the CSS properties to which a transiti
    * }
    * ```
    */
-  "NONE": IDecorators;
+  readonly NONE: IDecorators;
   
 
   /**
@@ -5898,7 +5934,7 @@ The transition-property CSS property sets the CSS properties to which a transiti
    * }
    * ```
    */
-  "ALL": IDecorators;
+  readonly ALL: IDecorators;
   
 
   /**
@@ -5910,7 +5946,7 @@ The transition-property CSS property sets the CSS properties to which a transiti
    * }
    * ```
    */
-  "DEFAULT": IDecorators;
+  readonly DEFAULT: IDecorators;
   
 
   /**
@@ -5922,7 +5958,7 @@ The transition-property CSS property sets the CSS properties to which a transiti
    * }
    * ```
    */
-  "COLORS": IDecorators;
+  readonly COLORS: IDecorators;
   
 
   /**
@@ -5934,7 +5970,7 @@ The transition-property CSS property sets the CSS properties to which a transiti
    * }
    * ```
    */
-  "OPACITY": IDecorators;
+  readonly OPACITY: IDecorators;
   
 
   /**
@@ -5946,41 +5982,41 @@ The transition-property CSS property sets the CSS properties to which a transiti
    * }
    * ```
    */
-  "TRANSFORM": IDecorators;
+  readonly TRANSFORM: IDecorators;
   
-  }
-
-
+    }
   
-/**
-  * ### transition-timing-function
+
+    
+  /**
+    * ### transition-timing-function
 The transition-timing-function CSS property sets how intermediate values are calculated for CSS properties being affected by a transition effect.
 [Mozilla Developer Network: transition-timing-function](https://developer.mozilla.org/en-US/docs/Web/CSS/transition-timing-function).
-  */
-  transitionTimingFunction: {
-    
-  }
-
-
+    */
+    transitionTimingFunction: {
+      
+    }
   
-/**
-  * ### transition-duration
+
+    
+  /**
+    * ### transition-duration
 The transition-duration CSS property sets the length of time a transition animation should take to complete. By default, the value is 0s, meaning that no animation will occur.
 [Mozilla Developer Network: transition-duration](https://developer.mozilla.org/en-US/docs/Web/CSS/transition-duration).
-  */
-  transitionDuration: {
-    
-  }
-
-
+    */
+    transitionDuration: {
+      
+    }
   
-/**
-  * ### utils (Classy-UI)
+
+    
+  /**
+    * ### utils (Classy-UI)
 A set of utility tokens, you're welcome :-)
 null
-  */
-  utils: {
-    
+    */
+    utils: {
+      
   /**
    
    
@@ -5992,7 +6028,7 @@ null
    * }
    * ```
    */
-  "CLEARFIX": IDecorators;
+  readonly CLEARFIX: IDecorators;
   
 
   /**
@@ -6012,7 +6048,7 @@ null
    * }
    * ```
    */
-  "SCREEN_READER": IDecorators;
+  readonly SCREEN_READER: IDecorators;
   
 
   /**
@@ -6031,57 +6067,61 @@ null
    * }
    * ```
    */
-  "NOT_SCREEN_READER": IDecorators;
+  readonly NOT_SCREEN_READER: IDecorators;
+  
+    }
   
   }
 
-}
+  export const themes: {
+    dark: Themes.dark
+  };
+  export const group: TGroup;
+  export const compose: TCompose;
+  export const tokens: TTokens;
 
-export const themes: {
-  dark: Themes.dark
-};
-export const group: TGroup;
-export const compose: TCompose;
-export const tokens: TTokens;
-
-
-  /**
-   * ```css
-   * \@media (max-width: 640px) {
+  
+    /**
+     * ```css
+     * \@media (min-width: 640px) {
       $token
 }
-   * ```
-   */
-  export const mobile: TCompose;
+     * ```
+     */
+    export const mobile: TCompose;
+  
 
-
-  /**
-   * ```css
-   * \@media (max-width: 768px) {
+    /**
+     * ```css
+     * \@media (min-width: 768px) {
       $token
 }
-   * ```
-   */
-  export const tablet: TCompose;
+     * ```
+     */
+    export const tablet: TCompose;
+  
 
-
-  /**
-   * ```css
-   * \@media (max-width: 1024px) {
+    /**
+     * ```css
+     * \@media (min-width: 1024px) {
       $token
 }
-   * ```
-   */
-  export const laptop: TCompose;
+     * ```
+     */
+    export const laptop: TCompose;
+  
 
-
-  /**
-   * ```css
-   * \@media (max-width: 1280px) {
+    /**
+     * ```css
+     * \@media (min-width: 1280px) {
       $token
 }
-   * ```
-   */
-  export const desktop: TCompose;
+     * ```
+     */
+    export const desktop: TCompose;
+  
 
+}
+declare module 'classy-ui/macro' {
+  export * from 'classy-ui'
 }

@@ -1132,10 +1132,10 @@ const classnames: IClassnames = {
   },
   letterSpacing: {
     tokens: ({ letterSpacings }) => letterSpacings,
-    css: (name, value) => `${name} {\n  letter-space: ${value};\n}`,
+    css: (name, value) => `${name} {\n  letter-spacing: ${value};\n}`,
     description: describeClassname(
-      'letter-space',
-      'The letter-space CSS property sets the space behavior between text characters.',
+      'letter-spacing',
+      'The letter-spacing CSS property sets the space behavior between text characters.',
     ),
   },
   lineHeight: {

@@ -25,12 +25,18 @@ if (process.env.NODE_ENV !== 'test') {
   try {
     const rootPath = join(process.cwd(), 'classy-ui.d.ts');
     const libPath = join(__dirname, '..', '..', 'lib', 'classy-ui.d.ts');
-    const esPath = join(__dirname, '..', '..', 'es', 'classy-ui.d.ts');
     const types = transformClassesToTypes(config);
 
-    writeFileSync(rootPath, types);
+    writeFileSync(
+      rootPath,
+      `
+declare module 'classy-ui' {\n${types}\n}
+declare module 'classy-ui/macro' {
+  export * from 'classy-ui'
+}
+`,
+    );
     writeFileSync(libPath, types);
-    writeFileSync(esPath, types);
   } catch {
     // Codesandbox or some other unwritable environment
   }
@@ -112,7 +118,8 @@ export function processReferences(babel: any, state: any, refs: any) {
 
   Object.keys(config.screens).forEach(screenCompose => {
     if (refs[screenCompose]) {
-      processCompose(refs[screenCompose]);
+      // Process as compose but don't allow variables here
+      processCompose(refs[screenCompose], false);
     }
   });
 
@@ -144,7 +151,7 @@ export function processReferences(babel: any, state: any, refs: any) {
     state.file.ast.program.body.push(runtimeCall);
   }
 
-  function processCompose(cRefs: any[]) {
+  function processCompose(cRefs: any[], allowDynamicValuesInExpression = true) {
     cRefs.forEach((path: any) => {
       if (t.isCallExpression(path.parentPath.parent)) {
         const b = path.scope.getBinding(path.parent.callee.name);
@@ -158,9 +165,9 @@ export function processReferences(babel: any, state: any, refs: any) {
       }
 
       const statementPath = path.parentPath;
-      const args = statementPath.node.arguments;
+      const args = statementPath.get('arguments');
 
-      statementPath.replaceWith(convertToExpression(args));
+      statementPath.replaceWith(convertToExpression(args, allowDynamicValuesInExpression));
     });
   }
 
@@ -221,7 +228,7 @@ export function processReferences(babel: any, state: any, refs: any) {
     });
   }
 
-  function convertToExpression(classAttribs: any[]) {
+  function convertToExpression(classAttribs: any[], allowDynamicValuesInExpression = true) {
     if (classAttribs.length === 0) {
       return t.stringLiteral(' ');
     }
@@ -229,16 +236,18 @@ export function processReferences(babel: any, state: any, refs: any) {
     let needsRuntime = false;
     const strings: string[] = [];
     const others: any[] = [];
-    for (const item of classAttribs) {
-      if (t.isStringLiteral(item)) {
-        strings.push(item.value);
-      } else {
+    for (const itemPath of classAttribs) {
+      if (t.isStringLiteral(itemPath.node)) {
+        strings.push(itemPath.node.value);
+      } else if (allowDynamicValuesInExpression) {
         needsRuntime = true;
-        if (t.isLogicalExpression(item) && item.operator === '&&') {
-          others.push(t.conditionalExpression(item.left, item.right, t.stringLiteral(' ')));
+        if (t.isLogicalExpression(itemPath.node) && itemPath.node.operator === '&&') {
+          others.push(t.conditionalExpression(itemPath.node.left, itemPath.node.right, t.stringLiteral(' ')));
         } else {
-          others.push(item);
+          others.push(itemPath.node);
         }
+      } else {
+        throw itemPath.buildCodeFrameError(`CLASSY-UI: using dynamic values isn't allowed here`);
       }
     }
 
@@ -247,27 +256,36 @@ export function processReferences(babel: any, state: any, refs: any) {
       return t.stringLiteral(strings.join(''));
     }
 
-    const max = others.length - 1;
-    let start = others[max];
-    for (let i = max - 1; i >= 0; i--) {
-      start = t.binaryExpression('+', others[i], start);
-    }
+    let max: number;
+    let start: number;
 
     if (strings.length === 0) {
       if (needsRuntime) {
-        return t.callExpression(addNamed(state.file.path, 'fixSpecificity', 'classy-ui/runtime'), [start]);
+        return t.callExpression(addNamed(state.file.path, 'fixSpecificity', 'classy-ui/runtime'), others);
       } else {
+        max = others.length - 1;
+        start = others[max];
+        for (let i = max - 1; i >= 0; i--) {
+          start = t.binaryExpression('+', others[i], start);
+        }
         return start;
       }
     }
 
-    start = t.binaryExpression('+', start, t.stringLiteral(strings.join('')));
-
     if (needsRuntime) {
-      return t.callExpression(addNamed(state.file.path, 'fixSpecificity', 'classy-ui/runtime'), [start]);
+      return t.callExpression(addNamed(state.file.path, 'fixSpecificity', 'classy-ui/runtime'), [
+        ...others,
+        t.stringLiteral(strings.join('').trim()),
+      ]);
     }
 
-    return start;
+    max = others.length - 1;
+    start = others[max];
+    for (let i = max - 1; i >= 0; i--) {
+      start = t.binaryExpression('+', others[i], start);
+    }
+
+    return t.binaryExpression('+', start, t.stringLiteral(strings.join('')));
   }
 
   function collectGlobally(classObj: IExtractedClass) {
