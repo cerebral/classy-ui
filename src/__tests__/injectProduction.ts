@@ -60,6 +60,29 @@ describe('INJECT PRODUCTION', () => {
       createProductionCss(injectProduction(productionClassesByType, classCollection, classes, config), config),
     ).toMatchSnapshot();
   });
+  test('should inject with pseudo element', () => {
+    const classCollection: IExtractedClasses = createExtractedClasses(
+      createProductionClassObjects(
+        { composition: 'compose', baseClass: 'color', token: 'RED', decorators: ['before'] },
+        classes,
+        {
+          classnames: [],
+          tokens: [],
+          decorators: [],
+        },
+      ),
+    );
+    const productionClassesByType: IClassesByType = {
+      screens: {},
+      common: {},
+      themeTokens: {},
+      rootTokens: {},
+    };
+
+    expect(
+      createProductionCss(injectProduction(productionClassesByType, classCollection, classes, config), config),
+    ).toMatchSnapshot();
+  });
   test('should inject with breakpoint', () => {
     const classCollection: IExtractedClasses = createExtractedClasses(
       createProductionClassObjects(
@@ -110,6 +133,29 @@ describe('INJECT PRODUCTION', () => {
     const classCollection: IExtractedClasses = createExtractedClasses(
       createProductionClassObjects(
         { composition: 'compose', baseClass: 'color', token: 'RED', decorators: ['hover', 'firstChild'] },
+        classes,
+        {
+          classnames: [],
+          tokens: [],
+          decorators: [],
+        },
+      ),
+    );
+    const productionClassesByType: IClassesByType = {
+      screens: {},
+      common: {},
+      themeTokens: {},
+      rootTokens: {},
+    };
+
+    expect(
+      createProductionCss(injectProduction(productionClassesByType, classCollection, classes, config), config),
+    ).toMatchSnapshot();
+  });
+  test('should inject with both pseudo selectors and pseudo elements', () => {
+    const classCollection: IExtractedClasses = createExtractedClasses(
+      createProductionClassObjects(
+        { composition: 'compose', baseClass: 'color', token: 'RED', decorators: ['hover', 'before'] },
         classes,
         {
           classnames: [],

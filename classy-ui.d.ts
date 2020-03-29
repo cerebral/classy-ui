@@ -1,6 +1,81 @@
 
 declare module 'classy-ui' {
 
+  /**
+   * ```css
+   * $token:last-child {}
+   * ```
+   */
+  lastChild: IDecorators;
+
+
+  /**
+   * ```css
+   * $token:odd-child {}
+   * ```
+   */
+  oddChild: IDecorators;
+
+
+  /**
+   * ```css
+   * $token:even-child {}
+   * ```
+   */
+  evenChild: IDecorators;
+
+
+  /**
+   * ```css
+   * $token:focus-within {}
+   * ```
+   */
+  focusWithin: IDecorators;
+
+
+  /**
+   * ```css
+   * $token::before {}
+   * ```
+   */
+  before: IDecorators;
+
+
+  /**
+   * ```css
+   * $token::after {}
+   * ```
+   */
+  after: IDecorators;
+
+
+  /**
+   * ```css
+   * $token::first-line {}
+   * ```
+   */
+  firstLine: IDecorators;
+
+
+  /**
+   * ```css
+   * $token::first-letter {}
+   * ```
+   */
+  firstLetter: IDecorators;
+
+
+  /**
+   * ```css
+   * $token::selection {}
+   * ```
+   */
+  selection: IDecorators;
+
+}
+export type TCompose = (...args: Array<IDecorators | TGroup | Themes | TClassname | boolean | ''>) => TClassname;
+export type TTokens = { 
+  
   export type TClassname = string & "CLASSNAME";
   export enum Themes {
     dark = "themes-dark"
