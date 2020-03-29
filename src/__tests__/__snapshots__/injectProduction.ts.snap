@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`INJECT PRODUCTION should group breakpoints 1`] = `
-"@media (min-width: 768px) {.A-A_A {
+"@media (max-width: 768px) {.A-A_A {
   color: red;
 }.A-A_B {
   color: blue;
@@ -17,7 +17,7 @@ exports[`INJECT PRODUCTION should group themes 1`] = `
 `;
 
 exports[`INJECT PRODUCTION should group themes and breakpoints 1`] = `
-"@media (min-width: 768px) {.A-A_A {
+"@media (max-width: 768px) {.A-A_A {
   color: red;
 }.A-A_B {
   color: var(--colors-PURPLE);
@@ -37,13 +37,13 @@ exports[`INJECT PRODUCTION should handle references classnames 1`] = `
 `;
 
 exports[`INJECT PRODUCTION should inject both pseudo selector and breakpoint 1`] = `
-"@media (min-width: 768px) {.AB-A_A:hover {
+"@media (max-width: 768px) {.AB-A_A:hover {
   color: red;
 }}.themes-dark{}"
 `;
 
 exports[`INJECT PRODUCTION should inject multiple 1`] = `
-"@media (min-width: 768px) {.A-A_A {
+"@media (max-width: 768px) {.A-A_A {
   color: red;
 }.BA-A_B:hover {
   color: blue;
@@ -57,7 +57,7 @@ exports[`INJECT PRODUCTION should inject simple 1`] = `
 `;
 
 exports[`INJECT PRODUCTION should inject themes 1`] = `
-"@media (min-width: 768px) {.A-A_A {
+"@media (max-width: 768px) {.A-A_A {
   color: var(--colors-GREEN);
 }}:root{--colors-GREEN:green;}.themes-dark{--colors-GREEN:yellow;}"
 `;
@@ -69,7 +69,7 @@ exports[`INJECT PRODUCTION should inject with both pseudo selectors and pseudo e
 `;
 
 exports[`INJECT PRODUCTION should inject with breakpoint 1`] = `
-"@media (min-width: 768px) {.A-A_A {
+"@media (max-width: 768px) {.A-A_A {
   color: red;
 }}.themes-dark{}"
 `;

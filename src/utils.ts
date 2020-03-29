@@ -191,12 +191,10 @@ export const getScreens = (config: IEvaluatedConfig) => {
 };
 
 export const createProductionCss = (productionClassesByType: IClassesByType, config: IEvaluatedConfig) => {
-  let css = Object.keys(productionClassesByType.common).reduce(
-    (aggr, name) => aggr + productionClassesByType.common[name],
-    '',
-  );
+  let css = '';
 
-  const screenKeys = Object.keys(productionClassesByType.screens);
+  // We start with media queries in order as they need to override everything else
+  const screenKeys = Object.keys(config.screens);
   screenKeys.forEach(screen => {
     if (productionClassesByType.screens[screen].length) {
       const screenCss = productionClassesByType.screens[screen].reduce((aggr, classCss) => {
@@ -205,6 +203,11 @@ export const createProductionCss = (productionClassesByType: IClassesByType, con
       css += config.screens[screen](screenCss, getScreens(config));
     }
   });
+
+  css += Object.keys(productionClassesByType.common).reduce(
+    (aggr, name) => aggr + productionClassesByType.common[name],
+    '',
+  );
 
   const variableKeys = Object.keys(productionClassesByType.rootTokens);
 

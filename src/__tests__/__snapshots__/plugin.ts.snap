@@ -31,7 +31,7 @@ import { addClasses as _addClasses } from 'classy-ui/runtime';
 
 _addClasses([
   'hover:tablet:color__RED',
-  '@media (min-width: 768px) {.hover\\\\:tablet\\\\:color__RED:hover {\\n  color: red;\\n}}',
+  '@media (max-width: 768px) {.hover\\\\:tablet\\\\:color__RED:hover {\\n  color: red;\\n}}',
 ]);
 
 
@@ -48,7 +48,7 @@ tablet(tokens.color.RED)
 import { addClasses as _addClasses } from 'classy-ui/runtime';
 ('tablet:color__RED ');
 
-_addClasses(['tablet:color__RED', '@media (min-width: 768px) {.tablet\\\\:color__RED {\\n  color: red;\\n}}']);
+_addClasses(['tablet:color__RED', '@media (max-width: 768px) {.tablet\\\\:color__RED {\\n  color: red;\\n}}']);
 
 
 `;
@@ -323,7 +323,7 @@ _addClasses([
   'color__RED',
   '.color__RED {\\n  color: red;\\n}',
   'mobile:color__RED',
-  '@media (min-width: 640px) {.mobile\\\\:color__RED {\\n  color: red;\\n}}',
+  '@media (max-width: 640px) {.mobile\\\\:color__RED {\\n  color: red;\\n}}',
 ]);
 
 
