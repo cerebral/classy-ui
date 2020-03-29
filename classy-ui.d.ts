@@ -3375,16 +3375,16 @@ The bottom CSS property participates in specifying the vertical position of a po
   
     }
   
-
+/**
+  * ### letter-spacing
+The letter-spacing CSS property sets the space behavior between text characters.
+[Mozilla Developer Network: letter-spacing](https://developer.mozilla.org/en-US/docs/Web/CSS/letter-spacing).
+  */
+  letterSpacing: {
     
-  /**
-    * ### letter-space
-The letter-space CSS property sets the space behavior between text characters.
-[Mozilla Developer Network: letter-space](https://developer.mozilla.org/en-US/docs/Web/CSS/letter-space).
-    */
-    letterSpacing: {
-      
-    }
+  }
+
+
   
 
     
