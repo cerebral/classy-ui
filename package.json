@@ -1,11 +1,12 @@
 {
   "name": "classy-ui",
-  "version": "11.0.0",
+  "version": "11.0.1",
   "description": "Design tokens at your fingertips",
   "author": "Christian Alfoni <christianalfoni@gmail.com>",
   "license": "MIT",
   "repository": "git+https://github.com/cerebral/classy-ui.git",
   "main": "lib/index.js",
+  "types": "lib/classy-ui.d.ts",
   "scripts": {
     "build": "npm run build:lib && node lib/config/create-types-script",
     "build:lib": "tsc --outDir lib --module commonjs",
