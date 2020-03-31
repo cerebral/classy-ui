@@ -1,9 +1,8 @@
-import { writeFileSync } from 'fs';
-import { join } from 'path';
-
 import { addNamed } from '@babel/helper-module-imports';
 import autoprefixer from 'autoprefixer';
 import CleanCSS from 'clean-css';
+import { writeFileSync } from 'fs';
+import { join } from 'path';
 import postcss from 'postcss';
 
 import { transform as transformClassesToTypes } from '../config/transform-classes-to-types';

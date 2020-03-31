@@ -1,5 +1,4 @@
 import { join } from 'path';
-
 // @ts-ignore
 import reduceCalc from 'reduce-css-calc';
 
