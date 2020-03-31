@@ -129,21 +129,21 @@ const classnames: IClassnames = {
     tokens: {
       BORDER_BOX: {
         value: 'border-box',
-        description: 'The background is positioned relative to the border box.'
+        description: 'The background is positioned relative to the border box.',
       },
       PADDING_BOX: {
         value: 'padding-box',
-        description: 'The background is positioned relative to the padding box.'
+        description: 'The background is positioned relative to the padding box.',
       },
       CONTENT_BOX: {
         value: 'content-box',
-        description: 'The background is positioned relative to the content box.'
+        description: 'The background is positioned relative to the content box.',
       },
     },
     css: (name, value) => `${name} {\n  background-origin: ${value};\n}`,
     description: describeClassname(
       'background-origin',
-      'The background-origin CSS property sets the background's origin: from the border start, inside the border, or inside the padding.',
+      "The background-origin CSS property sets the background's origin: from the border start, inside the border, or inside the padding.",
     ),
   },
   backgroundPosition: {
