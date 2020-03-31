@@ -1,8 +1,9 @@
+import { writeFileSync } from 'fs';
+import { join } from 'path';
+
 import { addNamed } from '@babel/helper-module-imports';
 import autoprefixer from 'autoprefixer';
 import CleanCSS from 'clean-css';
-import { writeFileSync } from 'fs';
-import { join } from 'path';
 import postcss from 'postcss';
 
 import { transform as transformClassesToTypes } from '../config/transform-classes-to-types';
@@ -144,7 +145,11 @@ export function processReferences(babel: any, state: any, refs: any) {
   } else {
     const runtimeCall = t.expressionStatement(
       t.callExpression(addNamed(state.file.path, 'addClasses', 'classy-ui/runtime'), [
-        t.arrayExpression(injectDevelopment(classCollection, classes, config).map(value => t.stringLiteral(value))),
+        t.arrayExpression(
+          injectDevelopment(classCollection, classes, config).map(value =>
+            typeof value === 'string' ? t.stringLiteral(value) : t.numericLiteral(value),
+          ),
+        ),
       ]),
     );
 

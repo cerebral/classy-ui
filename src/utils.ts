@@ -1,4 +1,5 @@
 import { join } from 'path';
+
 // @ts-ignore
 import reduceCalc from 'reduce-css-calc';
 
@@ -196,7 +197,7 @@ export const createProductionCss = (productionClassesByType: IClassesByType, con
   // We start with media queries in order as they need to override everything else
   const screenKeys = Object.keys(config.screens);
   screenKeys.forEach(screen => {
-    if (productionClassesByType.screens[screen].length) {
+    if (productionClassesByType.screens[screen] && productionClassesByType.screens[screen].length) {
       const screenCss = productionClassesByType.screens[screen].reduce((aggr, classCss) => {
         return aggr + classCss;
       }, '');
@@ -344,10 +345,10 @@ export const injectDevelopment = (classCollection: IExtractedClasses, classes: I
           });
         }
 
-        return subAggr.concat([extractedClass.name, css]);
-      }, [] as string[]),
+        return subAggr.concat([extractedClass.name, css, Object.keys(config.screens).indexOf(composition)]);
+      }, [] as Array<string | number>),
     );
-  }, [] as string[]);
+  }, [] as Array<string | number>);
 };
 
 export const negative = (scale: { [key: string]: IToken }) => {
