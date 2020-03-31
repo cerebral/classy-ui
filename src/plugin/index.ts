@@ -27,7 +27,6 @@ if (process.env.NODE_ENV !== 'test') {
     const libPath = join(__dirname, '..', '..', 'lib', 'classy-ui.d.ts');
     const types = transformClassesToTypes(config);
 
-    console.log(types.substr(0, 50));
     writeFileSync(
       rootPath,
       `

@@ -1631,7 +1631,7 @@ const classnames: IClassnames = {
   },
   width: {
     tokens: ({ size, breakpoints }) => ({
-      auto: {
+      AUTO: {
         value: 'auto',
       },
       ...size,

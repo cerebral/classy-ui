@@ -44,10 +44,12 @@ export const addClasses = (classes: Array<string | number>) => {
         screenStyles[index] = document.createElement('style');
 
         const nextExistingStyleTag = screenStyles.slice(index)[1];
-        const elToInsertBefore = nextExistingStyleTag || commonStyle;
+        const elToInsertBefore = nextExistingStyleTag;
         const head = document.querySelector('head');
 
-        head?.insertBefore(screenStyles[index], elToInsertBefore);
+        elToInsertBefore
+          ? head?.insertBefore(screenStyles[index], elToInsertBefore)
+          : head?.appendChild(screenStyles[index]);
       }
 
       screenStyles[index].appendChild(document.createTextNode(screenCss[stringIndex]));

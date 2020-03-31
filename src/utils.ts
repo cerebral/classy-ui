@@ -192,23 +192,6 @@ export const getScreens = (config: IEvaluatedConfig) => {
 
 export const createProductionCss = (productionClassesByType: IClassesByType, config: IEvaluatedConfig) => {
   let css = '';
-
-  // We start with media queries in order as they need to override everything else
-  const screenKeys = Object.keys(config.screens);
-  screenKeys.forEach(screen => {
-    if (productionClassesByType.screens[screen] && productionClassesByType.screens[screen].length) {
-      const screenCss = productionClassesByType.screens[screen].reduce((aggr, classCss) => {
-        return aggr + classCss;
-      }, '');
-      css += config.screens[screen](screenCss, getScreens(config));
-    }
-  });
-
-  css += Object.keys(productionClassesByType.common).reduce(
-    (aggr, name) => aggr + productionClassesByType.common[name],
-    '',
-  );
-
   const variableKeys = Object.keys(productionClassesByType.rootTokens);
 
   if (variableKeys.length) {
@@ -226,6 +209,22 @@ export const createProductionCss = (productionClassesByType: IClassesByType, con
     );
     css += `.themes-${theme}{${variables}}`;
   });
+
+  // We end with media queries in order as they need to override everything else
+  const screenKeys = Object.keys(config.screens).reverse();
+  screenKeys.forEach(screen => {
+    if (productionClassesByType.screens[screen] && productionClassesByType.screens[screen].length) {
+      const screenCss = productionClassesByType.screens[screen].reduce((aggr, classCss) => {
+        return aggr + classCss;
+      }, '');
+      css += config.screens[screen](screenCss, getScreens(config));
+    }
+  });
+
+  css += Object.keys(productionClassesByType.common).reduce(
+    (aggr, name) => aggr + productionClassesByType.common[name],
+    '',
+  );
 
   return css;
 };
@@ -344,7 +343,15 @@ export const injectDevelopment = (classCollection: IExtractedClasses, classes: I
           });
         }
 
-        return subAggr.concat([extractedClass.name, css, Object.keys(config.screens).indexOf(composition)]);
+        return subAggr.concat([
+          extractedClass.name,
+          css,
+          // We reverse the keys so that the first key takes highest
+          // presedence
+          Object.keys(config.screens)
+            .reverse()
+            .indexOf(composition),
+        ]);
       }, [] as Array<string | number>),
     );
   }, [] as Array<string | number>);

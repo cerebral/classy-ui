@@ -31,7 +31,7 @@ Array [
   "@media (max-width: 768px) {.hover\\\\:tablet\\\\:color__RED:hover {
   color: red;
 }}",
-  1,
+  2,
 ]
 `;
 
@@ -52,12 +52,12 @@ Array [
   "@media (max-width: 768px) {.tablet\\\\:color__RED {
   color: red;
 }}",
-  1,
+  2,
   "hover:tablet:color__BLUE",
   "@media (max-width: 768px) {.hover\\\\:tablet\\\\:color__BLUE:hover {
   color: blue;
 }}",
-  1,
+  2,
 ]
 `;
 
@@ -78,7 +78,7 @@ Array [
   color: var(--colors-GREEN);
 }}:root{--colors-GREEN:green;}
 .themes-dark{--colors-GREEN:yellow;}",
-  1,
+  2,
 ]
 `;
 
@@ -98,7 +98,7 @@ Array [
   "@media (max-width: 768px) {.tablet\\\\:color__RED {
   color: red;
 }}",
-  1,
+  2,
 ]
 `;
 
