@@ -210,6 +210,11 @@ export const createProductionCss = (productionClassesByType: IClassesByType, con
     css += `.themes-${theme}{${variables}}`;
   });
 
+  css += Object.keys(productionClassesByType.common).reduce(
+    (aggr, name) => aggr + productionClassesByType.common[name],
+    '',
+  );
+
   // We end with media queries in order as they need to override everything else
   const screenKeys = Object.keys(config.screens).reverse();
   screenKeys.forEach(screen => {
@@ -220,11 +225,6 @@ export const createProductionCss = (productionClassesByType: IClassesByType, con
       css += config.screens[screen](screenCss, getScreens(config));
     }
   });
-
-  css += Object.keys(productionClassesByType.common).reduce(
-    (aggr, name) => aggr + productionClassesByType.common[name],
-    '',
-  );
 
   return css;
 };
