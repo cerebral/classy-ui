@@ -1,5 +1,5 @@
 /// <reference types="cypress" />
-import { getStory } from './utils';
+import { getStory, getIframeDocument } from './utils';
 
 context('Tokens', () => {
   it('Should compose simple tokens', () => {
@@ -37,5 +37,19 @@ context('Tokens', () => {
       .find('#el')
       .should('have.class', 'color__RED')
       .should('not.have.class', 'color__BLUE');
+  });
+  it('Should handle screen specificity', () => {
+    getStory('screen-specificity', 640)
+      .find('#el')
+      .should('have.css', 'color', 'rgb(0, 0, 255)');
+    getStory('screen-specificity', 760)
+      .find('#el')
+      .should('have.css', 'color', 'rgb(255, 0, 0)');
+    getStory('screen-specificity', 1000)
+      .find('#el')
+      .should('have.css', 'color', 'rgb(0, 128, 0)');
+    getStory('screen-specificity', 1200)
+      .find('#el')
+      .should('have.css', 'color', 'rgb(128, 0, 128)');
   });
 });

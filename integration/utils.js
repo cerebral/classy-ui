@@ -1,4 +1,4 @@
-const getIframeDocument = () => {
+export const getIframeDocument = () => {
   return (
     cy
       .get('#storybook-preview-iframe')
@@ -13,9 +13,16 @@ const getIframeDocument = () => {
   );
 };
 
-export const getStory = story => {
+const storybookSidebar = 210;
+
+export const getStory = (story, size) => {
   cy.visit('http://localhost:5400');
   cy.get('#explorertokens--' + story).click();
+  if (size) {
+    cy.viewport(size + storybookSidebar, 480);
+    cy.wait(200);
+  }
+
   return (
     getIframeDocument()
       // automatically retries until body is loaded

@@ -38,4 +38,18 @@ context('Tokens', () => {
       .should('have.class', 'A_A')
       .should('not.have.class', 'A_B');
   });
+  it('Should handle screen specificity', () => {
+    getStory('screen-specificity', 640)
+      .find('#el')
+      .should('have.css', 'color', 'rgb(0, 0, 255)');
+    getStory('screen-specificity', 760)
+      .find('#el')
+      .should('have.css', 'color', 'rgb(255, 0, 0)');
+    getStory('screen-specificity', 1000)
+      .find('#el')
+      .should('have.css', 'color', 'rgb(0, 128, 0)');
+    getStory('screen-specificity', 1200)
+      .find('#el')
+      .should('have.css', 'color', 'rgb(128, 0, 128)');
+  });
 });
