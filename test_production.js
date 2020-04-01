@@ -13,12 +13,12 @@ storybook.stdout.on('data', data => {
     }, 1000);
   }
 });
-
 storybook.on('close', code => {
   console.log(`Storybook process exited with code ${code}`);
 });
 
 process.on('exit', () => {
+  spawn('pkill', ['http-server']);
   storybook.kill();
   cypress && cypress.kill();
 });

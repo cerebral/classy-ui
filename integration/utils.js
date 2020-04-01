@@ -15,8 +15,8 @@ export const getIframeDocument = () => {
 
 const storybookSidebar = 210;
 
-export const getStory = (story, size) => {
-  cy.visit('http://localhost:5400');
+export const getStory = (port, story, size) => {
+  cy.visit('http://localhost:' + port);
   cy.get('#explorertokens--' + story).click();
   if (size) {
     cy.viewport(size + storybookSidebar, 480);

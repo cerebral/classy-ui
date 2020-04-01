@@ -3,13 +3,13 @@ import { getStory } from './utils';
 
 context('Tokens', () => {
   it('Should compose simple tokens', () => {
-    getStory('simple-token')
+    getStory(5600, 'simple-token')
       .find('#el')
       .should('have.class', 'A_A')
       .should('have.css', 'color', 'rgb(255, 0, 0)');
   });
   it('Should compose multiple tokens', () => {
-    getStory('multi-token')
+    getStory(5600, 'multi-token')
       .find('#el')
       .should('have.class', 'A_A')
       .should('have.class', 'B_B')
@@ -17,7 +17,7 @@ context('Tokens', () => {
       .should('have.css', 'background-color', 'rgb(0, 0, 255)');
   });
   it('Should compose variable', () => {
-    getStory('compose-in-token')
+    getStory(5600, 'compose-in-token')
       .find('#el')
       .should('have.class', 'A_A')
       .should('have.class', 'B_B')
@@ -25,7 +25,7 @@ context('Tokens', () => {
       .should('have.css', 'background-color', 'rgb(0, 0, 255)');
   });
   it('Should derive tokens', () => {
-    getStory('derived')
+    getStory(5600, 'derived')
       .find('#el')
       .should('have.class', 'C_C')
       .should('have.class', 'D_C')
@@ -33,22 +33,22 @@ context('Tokens', () => {
       .should('have.class', 'F_C');
   });
   it('Should handle specificity', () => {
-    getStory('specificity')
+    getStory(5600, 'specificity')
       .find('#el')
       .should('have.class', 'A_A')
       .should('not.have.class', 'A_B');
   });
   it('Should handle screen specificity', () => {
-    getStory('screen-specificity', 640)
+    getStory(5600, 'screen-specificity', 640)
       .find('#el')
       .should('have.css', 'color', 'rgb(0, 0, 255)');
-    getStory('screen-specificity', 760)
+    getStory(5600, 'screen-specificity', 760)
       .find('#el')
       .should('have.css', 'color', 'rgb(255, 0, 0)');
-    getStory('screen-specificity', 1000)
+    getStory(5600, 'screen-specificity', 1000)
       .find('#el')
       .should('have.css', 'color', 'rgb(0, 128, 0)');
-    getStory('screen-specificity', 1200)
+    getStory(5600, 'screen-specificity', 1200)
       .find('#el')
       .should('have.css', 'color', 'rgb(128, 0, 128)');
   });
