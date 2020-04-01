@@ -1,4 +1,4 @@
-const { spawn } = require('child_process');
+const { spawn, spawnSync } = require('child_process');
 const storybook = spawn('npm', ['run', 'test:storybook:production']);
 
 let cypress;
@@ -13,12 +13,13 @@ storybook.stdout.on('data', data => {
     }, 1000);
   }
 });
+storybook.stderr.on('data', () => {});
 storybook.on('close', code => {
   console.log(`Storybook process exited with code ${code}`);
 });
 
 process.on('exit', () => {
-  spawn('pkill', ['http-server']);
+  spawnSync('pkill', ['http-server']);
   storybook.kill();
   cypress && cypress.kill();
 });
